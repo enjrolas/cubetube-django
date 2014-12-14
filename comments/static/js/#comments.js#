@@ -1,5 +1,0 @@
-function addComment()
-{
-    var comment=$(.comment-content).
-    $.post("{% url 'addComment' %}"
-}

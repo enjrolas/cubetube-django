@@ -1,7 +1,0 @@
-<a class="thumbnail-link" href="{% url 'viz' viz.pk %}">
-<div class="viz-thumbnail" id="viz-{{ viz.pk }}">
-<div class="viz-thumbnail-name">{{ viz.name }}</div>
-<img class="viz-thumbnail-image" src="{{ thumbnailPhoto.photoURL }}">
-<div class="thumbnail-description">{{ viz.description }}</div>
-</div>
-</a>
