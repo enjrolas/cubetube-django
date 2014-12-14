@@ -1,0 +1,11 @@
+{% extends "viz/base.html" %}
+
+{% block content %}
+
+{% load thumbnail %}
+{% for viz in visualizations %}
+{% thumbnail viz %}
+viz<br/>
+{% endfor %}
+
+{% endblock %}

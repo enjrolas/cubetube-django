@@ -1,0 +1,49 @@
+{% extends "viz/base.html" %}
+{% load staticfiles %}
+{% block header %}
+{% include "viz/detail-header.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="viz-detail" id="viz-{{ viz.pk }}">
+<span class="viz-detail-name">{{ viz.name }}</span> by <span class="viz-detail-creator">{{ viz.creator }}</span>
+
+<div id="galleria">
+{% for photo in photos %}
+<a href="{{ photo.photoURL }}">
+<img src="{{ photo.photoURL }}" data-title="{{ photo.title }}" data-description="{{ photo.description }}">
+</a>
+{% endfor %}
+</div>
+
+<script>
+
+  // Load the classic theme
+  Galleria.loadTheme("{% static 'galleria/themes/classic/galleria.classic.min.js' %}");
+  
+  // Initialize Galleria
+  Galleria.run('#galleria');  
+</script>
+
+<div class="detail-description">{{ viz.description }}</div>
+<button type="button">Send to my cube</button>
+<div class="comments">
+<div class="comments-header">Comments:</div>
+<div class="comments-container">
+  {% for comment in comments %}
+  <div class="comment">
+    <span class="time">On {{ comment.posted }},</span><span class="commenter"> {{ comment.commenter }} said:</span>
+    <div class="comment-content">{{ comment.comment }}</div>
+  {% empty %}
+   <div class="no-comments">No comments yet.  What's on yer mind?</div>
+  {% endfor %}
+   <div class="new-comment">
+     <form action="{% url 'new-comment' %}">
+       <input type="textarea" id="comment" name="comment">
+       <input type="submit" value="say it">
+       </form>
+    </div>
+</div>
+</div>
+</div>
+{% endblock %}
