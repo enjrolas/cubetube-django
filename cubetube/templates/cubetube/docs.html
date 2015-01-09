@@ -1,0 +1,37 @@
+{% extends "cubetube/base.html" %}
+{% load staticfiles %}
+{% block header %}
+    <title>Cube tube</title>
+
+    <link rel="stylesheet" href="http://brick.a.ssl.fastly.net/EB+Garamond:400,400i/Fira+Sans:300,400,500,700">
+    <link type="text/css" rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <!-- <script type="text/javascript" src="js/jquery.min.js"></script> -->
+    <script src="http://cdn.jsdelivr.net/sparkjs/0.2.3/spark.min.js"></script>
+    <script type="text/javascript">
+      /*$(function(){
+      var tableOfContents = $(".table-of-contents");
+      var main=$(".main");
+      main.on("scroll", function(e) {
+    
+      console.log("keep them doggies scrollin");
+      if (this.scrollTop > 147) {
+
+      tableOfContents.addClass("fix-scroll");
+      } else {
+      tableOfContents.removeClass("fix-scroll");
+      }
+      
+      });
+     });*/
+    </script>
+</head>
+{% endblock %}
+{% block content %}
+
+    <main>
+        <div id="documentation" class="documentation">
+	  {% include "cubetube/getting-started.html" %}
+
+        </div>
+    </main>
+{% endblock %}

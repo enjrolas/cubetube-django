@@ -1,10 +1,11 @@
 from django.db import models
 
 class CubeUser(models.Model):
-    user=models.TextField()
+    email=models.TextField()
     accessToken=models.TextField()
+    nickname=models.TextField()
     def __str__(self):
-        return "%s" % (self.user)
+        return "%s" % (self.nickname)
 
 class Cube(models.Model):
     coreName=models.TextField()

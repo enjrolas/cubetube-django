@@ -1,8 +1,14 @@
+{% load staticfiles %}
 <a class="thumbnail-link" href="{% url 'viz' viz.pk %}">
-<div class="viz-thumbnail" id="viz-{{ viz.pk }}">
-<span class="viz-thumbnail-name">{{ viz.name }}</span>
-<span class="viz-thumbnail-author">by {{ viz.creator }}</span>
-<img class="viz-thumbnail-image" src="{{ thumbnailPhoto.photoURL }}">
-<div class="thumbnail-description">{{ viz.description }}</div>
-</div>
+  <div class="card" id="viz-{{ viz.pk }}">
+    <div class="img">
+      <img class="thumbnail" src="{{ thumbnailPhoto.file.url }}" alt="">
+      <a href="#" class="author">{{ viz.creator }}</a>
+    </div>
+    <h2>{{ viz.name }}</h2>
+    <p>{{ viz.tagline }}</p>
+  </div>
 </a>
+{% if nextPage %}
+<a class="scroll" href="{% url 'scroll' nextPage %}{% if vizType %}?vizType={{ vizType }}{% endif %}"></a>
+{% endif %}

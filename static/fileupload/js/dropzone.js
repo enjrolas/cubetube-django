@@ -1,0 +1,1 @@
+/home/glass/cubetube/fileupload/static/fileupload/js/dropzone.js
