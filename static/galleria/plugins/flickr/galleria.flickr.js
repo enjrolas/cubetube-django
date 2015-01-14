@@ -1,1 +1,0 @@
-/home/glass/cubetube/viz/static/galleria/plugins/flickr/galleria.flickr.js

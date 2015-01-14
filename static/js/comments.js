@@ -1,1 +1,0 @@
-/home/glass/cubetube/comments/static/js/comments.js
