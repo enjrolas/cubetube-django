@@ -57,7 +57,7 @@
 	  </div>
 	</div>
  {% if viz.sourceURL != "" %}     <div id="source-code"><br/>Check out the source code for this viz <a href="{{ viz.sourceURL }}">here</a>.</div> {% endif %}
- {% if binary != None %}      <div id="binary"><br/>Download the compiled binary <a href="{{ binary.file.url }}">here</a>.</div>  {% endif %}
+ {% if viz.vizType != "streaming" %}      <div id="binary"><br/>Download the compiled binary <a href="{{ binary.file.url }}">here</a>.</div>  {% endif %}
 
 {% if viz.vizType == "streaming" %}
 <div class="streaming-explanation">
