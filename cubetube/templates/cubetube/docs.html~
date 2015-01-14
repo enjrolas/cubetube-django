@@ -1,0 +1,169 @@
+{% extends "cubetube/base.html" %}
+{% load staticfiles %}
+{% block header %}
+    <title>Cube tube</title>
+
+    <link rel="stylesheet" href="http://brick.a.ssl.fastly.net/EB+Garamond:400,400i/Fira+Sans:300,400,500,700">
+    <link type="text/css" rel="stylesheet" href="{% static 'css/docs.css' %}" />
+    <!-- <script type="text/javascript" src="js/jquery.min.js"></script> -->
+    <script src="http://cdn.jsdelivr.net/sparkjs/0.2.3/spark.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+</head>
+{% endblock %}
+{% block content %}
+    <header>
+        <div class="wrapper">
+            <a href="#" class="logo">
+                <img src="i/logo.svg" alt="">
+                <span>CubeTube</span>
+            </a>
+            <div class="loginBtn">
+                <a href="index.html">LOG IN</a> / <a href="index.html">SIGN UP</a>
+            </div>
+        </div>
+
+        <div class="menu">
+            <ul class="wrapper">
+                <li><a href="create.html">CREATE</a>
+                </li>
+                <li><a href="#">DOCUMENTATION</a>
+                </li>
+                <li class="active"><a href="#">GALLERY</a>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <main>
+        <div id="documentation" class="documentation">
+
+            <div class="table-of-contents">
+                <div class="section-wrapper">
+                    <div class="section-header">Section headers</div>
+                    <a href="#" class="step-header">steps are underlined</a>
+                    <a href="#" class="step-header">The next step</a>
+                    <a href="#" class="step-header">Markup</a>
+                </div>
+
+                <div class="section-wrapper">
+                    <div class="section-header">Another section header</div>
+                    <a href="#" class="step-header">step 1</a>
+                    <a href="#" class="step-header">Step 2</a>
+                    <a href="#" class="step-header">Step 3</a>
+                </div>
+
+                <div class="section-wrapper">
+                    <div class="section-header">A final section header</div>
+                    <a href="#" class="step-header">step 1</a>
+                    <a href="#" class="step-header">Step 2</a>
+                </div>
+            </div>
+
+            <div class="contents">
+                <div class="section">
+                    <div class="section-title">L3D CUBE 8x8x8 SPECIFICATIONS</div>
+                    <div class="step">
+                        <div class="step-title">The Kit</div>
+                        <div class="step-image">
+                          <img src='https://dchtm6r471mui.cloudfront.net/hackpad.com_Sg7Iq7GM9Ju_p.243257_1419400811284_kit.png' />
+                        </div>
+                        <div class="step-text">
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-title">8x8x8 Cube Specifications</div>
+                        <div class="step-image"><img src='https://dchtm6r471mui.cloudfront.net/hackpad.com_Sg7Iq7GM9Ju_p.243257_1419400716129_frontoff.png' />
+                        </div>
+                        <div class="step-text">
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-title">Markup</div>
+                        <div class="step-image"><img src='https://hackpad-attachments.s3.amazonaws.com/hackpad.com_Sg7Iq7GM9Ju_p.242584_1419252032548_Screenshot 2014-12-15 13.24.35.png' />
+                        </div>
+                        <div class="step-text">
+                            <p>All the other markup is fair game</p>
+                            <p>
+                                <b>Bold, </b>
+                                <i>italics</i>,&nbsp;
+                            </p>
+                            <ul>
+                                <li>lists</li>
+                                <li>and more lists</li>
+                                <li>and more lists</li>
+                            </ul>
+                            <p>are all fine</p>
+                            <ul class="code">
+                                <li>if you want to include code, that&rsquo;s cool too</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+		            <div class="section">
+			                      <div class="section-title">ASSEMBLING YOUR 8x8x8 CUBE</div>
+					                      <div class="step">
+								                    <div class="step-title"></div>
+										                        <div class="step-image"><img src='https://dchtm6r471mui.cloudfront.net/hackpad.com_Sg7Iq7GM9Ju_p.243257_1419397531784_instructionsscreenshot.png' />
+													                      </div>
+													                    <div class="step-text">
+															                              <p>In 30 minutes flat, you can transform that box of parts into a 8x8x8 L3D Cube!  Full instructions here.</p>
+
+																		      <p>And extremely short assembly video <a href="#">here</a>.</p>
+																		                          </div>
+															                    </div>
+							                      <div class="step">
+										                    <div class="step-title">Step 2</div>
+												                        <div class="step-image"><img src='https://hackpad-attachments.s3.amazonaws.com/hackpad.com_Sg7Iq7GM9Ju_p.242584_1419387055357_Screenshot 2014-12-18 22.03.49.png' />
+															                      </div>
+															                    <div class="step-text">
+																	                              <p>this is step 2.&nbsp; It goes like this</p>
+																				                          </div>
+																	                    </div>
+									                      <div class="step">
+												                    <div class="step-title">Step 3</div>
+														                        <div class="step-image"><img src='https://hackpad-attachments.s3.amazonaws.com/hackpad.com_Sg7Iq7GM9Ju_p.242584_1419387075707_Screenshot 2014-11-03 17.00.00.png' />
+																	                      </div>
+																	                    <div class="step-text">
+																			                              <p>step 3 is like this</p>
+																						                          </div>
+																			                    </div>
+											                  </div>
+			                <div class="section">
+					                  <div class="section-title">POWERING UP</div>
+							                  <div class="step">
+									                        <div class="step-title"></div>
+												                    <div class="step-image"><img src='https://dchtm6r471mui.cloudfront.net/hackpad.com_Sg7Iq7GM9Ju_p.243257_1419400644427_underside.JPG' />
+														                          </div>
+														                        <div class="step-text">
+																	                          <p>Each L3D Cube comes with a 3-ft microUSB cable and 2A adapter.  5V, 500mA USB power can power the Default Demos and many of the apps you'll find on CubeTube - so your Cube can run off your computer, wall wart, or a battery pack. But we've also included the 2A adapter with 100VAC -  220VAC input for more intense visualizations (you will need to supply your own prong adapter if outside the US).</p>
+
+																				  <p>Note 1:  there is a 1.7A current limit built into the baseboard of the 8x8x8 Cubes.
+																				    </p>
+																				  <p>Note 2:  there is a bypass built into the baseboard of the 8x8x8 L3D Cubes which allows advanced users to get around the current limit for super bright cubing.  Some of these modifications are popping up on the Forum [add link], check them out!</p>
+																				                      </div>
+																	                </div>
+									              </div>
+					            <div class="section">
+						                      <div class="section-title">PLAYING DEFAULT DEMOS</div>
+								                      <div class="step">
+											                    <div class="step-title"></div>
+													                        <div class="step-image"><img src='https://dchtm6r471mui.cloudfront.net/hackpad.com_Sg7Iq7GM9Ju_p.243257_1419398065591_tiltcontrolscreenshot.png' />
+																                      </div>
+																                    <div class="step-text">
+																		      <p>The 8x8x8 L3D Cubes come pre-loaded with four demos:</p>
+																		                             <ul>
+																					           <li>Fireworks</li>
+																						       <li>Zplasma</li>
+																						           <li>Squarral</li>
+																							       <li>Purple Rain (sound reactive)</li>
+																							       </ul>
+																					     <p>The four demos will loop forever by default. You can stop the loop and play just one selected demo by tilting left, right, and forward.</p>
+
+																					     <p>The loop can be restarted by reconnecting to power.</p>
+
+																					                         </div>
+																		                    </div>
+										                  </div>
+						            </div>
+        </div>
+    </main>
+{% endblock %}

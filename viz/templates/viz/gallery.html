@@ -1,0 +1,15 @@
+{% extends "cubetube/base.html" %}
+{% block header %}
+{% include "viz/gallery-header.html" %}
+{% endblock %}
+
+{% block content %}
+{% load thumbnail %}
+<main>
+<div class="gallery">
+{% for viz in visualizations %}
+{% thumbnail viz nextPage vizType %}
+{% endfor %}
+</div>
+</main>
+{% endblock %}

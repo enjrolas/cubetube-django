@@ -1,0 +1,281 @@
+{% load staticfiles %}
+<div class="table-of-contents">
+  <div class="section-wrapper">
+      <div class="section-header">L3D CUBE SPECIFICATIONS</div>
+      <a href="#the-kit" class="step-header">The Kit</a>
+  </div>
+
+  <div class="section-wrapper">
+    <a href="#assembly" class="step-header">ASSEMBLING YOUR 8x8x8 CUBE</a>
+  </div>
+
+  <div class="section-wrapper">
+    <div class="section-header">POWERING UP</div>
+    <a href="#power" class="step-header">THE POWER</a>
+  </div>
+
+  <div class="section-wrapper">
+    <div class="section-header">PLAYING DEFAULT DEMOS</div>
+    <a href="#demos" class="step-header">Demos</a>
+  </div>
+
+  <div class="section-wrapper">
+    <div class="section-header">CONNECTING TO WIFI</div>
+    <a href="#connecting" class="step-header">Getting into Listening Mode</a>
+    <a href="#listening-mode" class="step-header">Getting into Listening Mode</a>
+    <a href="#spark-app" class="step-header">Using the Spark App for Connecting to WiFi</a>
+    <a href="#claiming" class="step-header">Claiming Your Core</a>
+    <a href="#switch-wifi" class="step-header">Switching to New WiFi Locations</a>
+  </div>
+
+  <div class="section-wrapper">
+    <div class="section-header">LOADING CUBETUBE APPS</div>
+  </div>
+
+  <div class="section-wrapper">
+    <div class="section-header">CODE FOR CUBES</div>
+    <a href="#native-code" class="step-header">Mode 1: Native Code</a>
+    <a href="#streaming-code" class="step-header">Mode 2: Streaming Code</a>
+  </div>
+
+  <div class="section-wrapper">
+    <div class="section-header">CONNECTING MULTIPLE CUBES (ADVANCED)</div>
+  </div>
+
+  <div class="section-wrapper">
+    <div class="section-header">OPENSOURCE LICENSE</div>
+  </div>
+
+  <div class="section-wrapper">
+    <div class="section-header">IMPROVEMENTS LIST</div>
+  </div>
+
+  <div class="section-wrapper">
+    <div class="section-header">TROUBLESHOOTING</div>
+  </div>
+
+</div>
+
+<div class="contents">
+
+      <div class="section">
+        <div class="section-title">L3D CUBE SPECIFICATIONS</div>
+        <div class="step"><a name="the-kit"/>
+         <div class="step-title">The Kit</div>
+         <div class="step-image"><img src='https://hackpad-attachments.s3.amazonaws.com/hackpad.com_Sg7Iq7GM9Ju_p.243257_1419400811284_kit.png'/></p></div>
+         <div class="step-text">
+            <p>Hello!&nbsp; Welcome to the wonderful world of 3D LED volumetric display!&nbsp;&nbsp;</p>
+            <p>If you&rsquo;re here in the Documentation section, you&rsquo;re likely one of the first owners of a <a href='https://www.kickstarter.com/projects/lookingglass/l3d-cube-the-3d-led-cube-from-the-future'/>L3D Cube</a>&nbsp; (8x8x8 edition) -- and this section of the site is intended to help you create and share applications on your Cubes.&nbsp;&nbsp;</p>
+            <p>If you&rsquo;ve any questions that aren&rsquo;t addressed here, head on over to the <a href="{% url 'forum' %}">Forum</a> or email Shawn &amp; Alex at info@lookingglassfactory.com.&nbsp;&nbsp;</p>
+          </div>
+         </div>
+         <div class="step">
+            <div class="step-title">8x8x8 Cube Specifications</div>
+            <div class="step-image"><img src='https://hackpad-attachments.s3.amazonaws.com/hackpad.com_Sg7Iq7GM9Ju_p.243257_1419400716129_frontoff.png'/></div>
+            <div class="step-text">
+               <p>There are two types of L3D Cubes so far:&nbsp; the 8x8x8 edition with 512 RGB LEDs and the 16x16x16 edition with 4096 RGB LEDs.&nbsp; This documentation section currently only addresses the 8x8x8 edition and will be expanded to include the larger 16x16x16 edition in Spring 2015.</p>
+               <p>Each L3D Cube 8x8x8 edition comes with 512 RGB LEDs mounted in an array, powered over USB, and connected to WiFi.&nbsp; The brain and WiFi connection center of the Cubes is a <a href='https://www.spark.io/'/>Spark Core</a>&nbsp; (soon to be a Spark Photon), which can be programmed like an Arduino.&nbsp; There&rsquo;s also a built in microphone and accelerometer in each Cube.&nbsp;&nbsp;</p>
+               <p>Each Cube can download new apps from CubeTube with a click of a mouse or finger -- no programming needed.&nbsp; But of course for coders out there, what you create for your Cube can now be shared on CubeTube with other Cube owners....including those that own L3D Cubes and other types of 3D LED cubes.</p>
+               <ul>
+                  <li><b>LEDs</b>:&nbsp; 512 RGB surface-mounted LEDs.&nbsp; The specific type of LED used is a WS2812B, made by WorldSemi.&nbsp; There are 8 LEDs to each LED reed, and each LED reed is identical, connected into a custom base PCB.</li>
+                  <li><b>Power:</b> 5V 1A USB power can power most applications on your Cube.&nbsp; We&rsquo;ve also included a 2A&nbsp; adapter. 100VAC - 220VAC input for higher power demand apps.&nbsp; And there&rsquo;s a bypass around the 1.7A current-limit we&rsquo;ve built into the Cubes too, for ridiculously bright applications.&nbsp;</li>
+                  <li><b>Casing</b>:&nbsp; Laser-cut acrylic housing</li>
+               </ul>
+            </div>
+         </div>
+      </div>
+
+      <div class="section">
+         <div class="section-title">ASSEMBLING YOUR 8x8x8 CUBE</div>
+         <div class="step">
+        <div class="step-title">assembly</div><a name="assembly"/>
+         <div class="step-image"><img src='https://hackpad-attachments.s3.amazonaws.com/hackpad.com_Sg7Iq7GM9Ju_p.243257_1419397531784_instructionsscreenshot.png'/></div>
+         <div class="step-text">
+            <p>In 30 minutes flat, you can transform that box of parts into a 8x8x8 L3D Cube!&nbsp; <a href='https://www.dropbox.com/sh/tyudi407wq55rf2/AADVB_WFlFF6lbwUJyrFKErga?dl=0'/>Full instructions here</a> .</p>
+            <p>And extremely short assembly video <a href='https://vimeo.com/112660603'/>here</a> .</p>
+         </div>
+       </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">POWERING UP</div>
+        <div class="step">
+          <div class="step-title">THE POWER</div><a name="power"/>
+          <div class="step-image"><img src='https://hackpad-attachments.s3.amazonaws.com/hackpad.com_Sg7Iq7GM9Ju_p.243257_1419400644427_underside.JPG'/></div>
+          <div class="step-text">
+            <p>Each L3D Cube comes with a 3-ft microUSB cable and 2A adapter.&nbsp; 5V, 500mA USB power can power the Default Demos and many of the apps you&rsquo;ll find on CubeTube - so your Cube <i>can</i> run off your computer, wall wart, or a battery pack. But we&rsquo;ve also included the 2A adapter with 100VAC -&nbsp; 220VAC input for more intense visualizations (you will need to supply your own prong adapter if outside the US).</p>
+            <p>Note 1:&nbsp; there is a 1.7A current limit built into the baseboard of the 8x8x8 Cubes.</p>
+            <p>Note 2:&nbsp; there is a bypass built into the baseboard of the 8x8x8 L3D Cubes which allows advanced users to get around the current limit for super bright cubing.&nbsp; Some of these modifications are popping up on the Forum, check them out!</p>
+          </div>
+        </div>
+      </div>
+
+    <div class="section">
+      <div class="section-title">PLAYING DEFAULT DEMOS</div>
+      <div class="step">
+      <div class="step-title">Demos</div><a name="demos"/>
+      <div class="step-image"><img src='https://hackpad-attachments.s3.amazonaws.com/hackpad.com_Sg7Iq7GM9Ju_p.243257_1419398065591_tiltcontrolscreenshot.png'/></div>
+      <div class="step-text">
+        <p>The 8x8x8 L3D Cubes come pre-loaded with four demos:</p>
+        <ul>
+         <li>Fireworks</li>
+         <li>Zplasma</li>
+         <li>Squarral</li>
+         <li>Purple Rain (sound reactive)</li>
+        </ul>
+      <p>The four demos will loop forever by default. You can stop the loop and play just one selected demo by tilting left, right, and forward.</p>
+      <p>The loop can be restarted by reconnecting to power.</p>
+      </div>
+
+      </div>
+
+    </div>
+
+  <div class="section">
+    <div class="section-title">CONNECTING TO WIFI</div>
+      <div class="step"><a name="connecting"/>
+        <div class="step-text">
+          <p>If you already have a L3D Cube, you&rsquo;re in the very earliest adopter group - a pioneer, you might say.&nbsp; You can connect your Cube to WiFi through the Spark App.&nbsp; These instructions for how to do so come directly from <a href='https://spark.io'/>spark.io</a> .</p>
+        </div>
+      </div>
+
+      <div class="step"><a name="listening-mode"/>
+        <div class="step-title">Getting into Listening Mode</div>
+        <div class="step-text">
+          <iframe class='vine-embed' src="https://vine.co/v/hFHPMue5lgd/embed/simple" width="320" height="320" frameborder='0'></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script></p>
+          <p>Each Cube is controlled by a Spark Core (soon to be a Spark Photon).&nbsp; This is the small circuit board that you plug your USB cable into for power.</p>
+          <p>When you plug in your 8x8x8 L3D Cube for the first time and switch the slider-switch at the back of your Cube to &quot;Online&quot;, you should see the Spark Core start to blink a blue light.&nbsp; If not, then press down the &quot;Join WiFi&quot; button next to the Spark Core.</p>
+          <p>Once your Spark Core on the underside of your Cube is blinking a blue light, it&rsquo;s ready to be connected to your local WiFi network via the Spark App.</p>
+        </div>
+      </div>
+
+      <div class="step"><a name="spark-app"/>
+        <div class="step-title">Using the Spark App for Connecting to WiFi</div>
+        <div class="step-image"><img src='https://hackpad-attachments.s3.amazonaws.com/hackpad.com_Sg7Iq7GM9Ju_p.243257_1419400090509_1.gif'/></div>
+        <div class="step-text">
+          <p>Download the Spark App to your phone from the <a href='https://itunes.apple.com/us/app/spark-core/id760157884?mt=8'/>App Store</a> or <a href='https://play.google.com/store/apps/details?id=io.spark.core.android&amp;hl=en'/>Google Play</a> . (If you don&rsquo;t have a phone that can download apps, no problem...you can still get your Cube online, it&rsquo;s just a little more involved of a process to <a href='http://docs.spark.io/connect/#connecting-your-core-connect-over-usb'/>Connect over USB</a>)</p>
+          <p>Once you&rsquo;ve downloaded the Spark Core app from the App Store or Google Play, you should create an account. Afterwards, you&rsquo;ll be asked&nbsp; to connect your Core.&nbsp;&nbsp;</p>
+          <p><i>NOTE: Your phone must be connected to the&nbsp; Wi-Fi network that you want to connect the Core to.&nbsp; Wi-Fi Hotspots&nbsp; generated from the phone you are running this app on typically will&nbsp; yield an error claiming there is no Wi-Fi available.&nbsp; In this case, please try to <a href='http://docs.spark.io/connect/#connecting-your-core-connect-over-usb'/>Connect over USB</a> and enter your Hotspot credentials manually.</i>&nbsp;&nbsp;&nbsp;</p>
+          <p>When connected to Wi-Fi, the app will automatically fill the SSID&nbsp; field with the name of the network that your phone is connected to.&nbsp;&nbsp; Enter your Wi-Fi password and hit connect.</p>
+          <p>This connection process can take up to a minute, so be patient. The closer your phone is to your Spark Core, the faster it will connect. Once the Core hears the signal, it will go through the following sequence of lights:</p>
+          <ul>
+            <li><b>Solid blue</b>: Credentials captured</li>
+            <li><b>Flashing green</b>: Connecting to Wi-Fi network</li>
+            <li><b>Flashing cyan</b>: Connecting to Spark Cloud</li>
+            <li><b>Breathing cyan</b>: Connected to Spark Cloud</li>
+          </ul>
+          <p>Once the Spark Core has connected, your phone will &quot;claim&quot; the Core&nbsp; and attach it to your account. Then you&rsquo;ll get to name your Core.&nbsp; If&nbsp; you&rsquo;re uncertain, you can confirm that the claim process was successful by logging into the <a href='https://www.spark.io/build'/>Spark Web IDE</a> and clicking the &quot;Cores&quot; icon at the bottom of the page.&nbsp; Is your Core listed?&nbsp; Great!&nbsp; The world is perfect.</p>
+          <p><i>NOTE: The Core <b>MUST</i></b><i> be online (breathing cyan)&nbsp; in order for the claiming process to work. If the Spark Core has been&nbsp; claimed by someone else, the app won&rsquo;t recognize it.</i></p>
+          <p>If you are connecting multiple Cores, you&rsquo;ll go through this naming&nbsp; process for each Core. You&rsquo;ll know which one is which by the rainbow signal.</p>
+        </div>
+      </div>
+
+      <div class="step"><a name="claiming" />
+        <div class="step-title">Claiming Your Core</div>
+          <div class="step-text">
+            <p>Once your Cube&rsquo;s Spark Core is connected to WiFi via the Spark App, it needs to be <i>claimed</i> in order to be associated with your account. This is what lets you control your Cube and keeps anyone else from doing so.</p>
+            <p>If you use the mobile app to set up your Core, it should claim it automatically. However if you connect your Core over USB, or if the claiming process is unsuccessful, you can claim it manually.</p>
+            <p>The easiest way to manually claim a Core over USB is to use the <a href='https://github.com/spark/spark-cli'/>Spark Command Line Interface</a>. Once you have this installed, you can simply type spark setup and follow the instructions.</p>
+            <p>Alternatively, if you have troubles installing the command line tool,&nbsp; you can get the Core&rsquo;s ID over serial and claim it via the build site. You can do this by opening a Serial connection to the Core and pressing&nbsp; the <b>i</b> key (see the above instuctions for connecting over USB). It should show you a number like this:</p>
+            <ul class="code">
+              <li># Example Core ID55ff68064989495329092587</li>
+            </ul>
+            <p>Then open up <a href='https://www.spark.io/build'/>Spark Build</a> and click the &rsquo;Cores&rsquo; icon. Click the button that says &rsquo;Add a Core&rsquo;, and enter your ID in the text box.</p>
+          </div>
+        </div>
+
+      <div class="step"><a name="switch-wifi" />
+        <div class="step-title">Switching to New WiFi Locations</div>
+        <div class="step-text">
+          <p>When you move to a new WiFi locations, you can get your Cube&rsquo;s Spark Core back into Listening Mode by clicking the big round &quot;Connect to WiFi&quot; button next to your Cube&rsquo;s Spark Core, on the underside of the Cube.&nbsp; This will not delete any programs you have stored in the internal memory of the Spark Core, and just clears the WiFi credentials and puts the Spark Core back into WiFi Listening Mode.&nbsp; Then repeat the process above to connect to the new WiFi location.</p>
+        </div>
+      </div>
+  </div>
+
+  <div class="section">
+   <div class="section-title">LOADING CUBETUBE APPS</div>
+   <div class="step">
+      <div class="step-text">
+      <p>CubeTube is in beta and available to the earliest Cube owners.&nbsp; Go to <a href='https://cubetube.org'/>CubeTube.org</a>&nbsp; and log in your Cube using the same user name and password you used to create an account on Spark.io or via the Spark App when you first connected your Cube to WiFi.</p>
+      <p>Then, when you click &quot;Load App&quot; on one of the CubeTube Apps, that App should automatically load onto your Cube, as long as your Cube is connected to WiFi.</p>
+    </div>
+    </div>
+  </div>
+
+    <div class="section">
+      <div class="section-title">CODE FOR CUBES</div>
+      <div class="step">
+        <div class="step-title">overview</div>
+
+      <div class="step-text">
+        <p>There are two types of programs that can control Cubes.&nbsp; One is Native code, which lives entirely in the internal memory of the Cubes.&nbsp; The second is Streaming code, which requires a computer to stream content to your cube.&nbsp;&nbsp;</p>
+        <p>Native code does not require WiFi.&nbsp; Streaming code requires WiFi, but is more powerful in the sense that you can connect peripherals to your computer to interact with your Cube (such as the Leap Motion, MakeyMakeys, Kinects...).&nbsp;&nbsp;</p>
+        <p>Streaming is required when controlling multiple cubes.</p>
+      </div>
+    </div>
+
+      <div class="step"><a name="native-code"/>
+        <div class="step-title">Mode 1: Native Code</div>
+        <div class="step-text">
+          <p>To get Native code Apps onto your Cube, it&rsquo;s a one step process.&nbsp;&nbsp; Just log into CubeTube as described above and then click on any of the Native code apps and that app will download to your Cube.</p>
+          <p>Native code is written in Wiring, which is the fancy name for the Arduino programming language.&nbsp; You can write code on the <a href='https://www.spark.io/build'/>Spark Web IDE</a> .</p>
+        </div>
+      </div>
+
+      <div class="step"><a name="streaming-code"/>
+        <div class="step-title">Mode 2: Streaming Code</div>
+        <div class="step-text">
+        <p>To get Streaming code working on your Cube, it&rsquo;s a two step process.&nbsp;&nbsp;</p>
+        <p><b>Step 1</b>:&nbsp; Log into CubeTube as described above and then load the <b>Listener App</b> onto your Cube.</p>
+        <p><b>Step 2</b>:&nbsp; Download the Streaming code from any of the Streaming Apps to your computer.&nbsp; We&rsquo;ve been running Streaming Apps in Processing, but folks are starting to write and stream python and Java Apps to their Cubes.</p>
+        <p>Make sure your computer is connected to WiFi, and then any Streaming Apps running on your computer should play in your Cube (loaded with Listener as described in Step 1).</p>
+        <p>If you are using Processing for your Streaming Apps, you&rsquo;ll need to download the L3D Library.&nbsp; More details here:&nbsp; <a href="https://github.com/enjrolas/L3D-library"></a>https://github.com/enjrolas/L3D-library</p>
+        <p>Alex has also put together a guide on designing graphics for your Cube in Streaming Mode here:&nbsp; <a href="http://www.instructables.com/id/How-to-Draw-Sweet-3D-Graphics-for-LED-cubes/"></a>http://www.instructables.com/id/How-to-Draw-Sweet-3D-Graphics-for-LED-cubes/</p>
+        <p>If you&rsquo;d like faster streaming, try using a dedicated nano-router, like <a href='http://www.amazon.com/TP-LINK-TL-WR702N-Wireless-Repeater-150Mpbs/dp/B007PTCFFW/ref=sr_1_1?ie=UTF8&amp;qid=1419504623&amp;sr=8-1&amp;keywords=travel+router'/>this one</a> for about $20.&nbsp;&nbsp;</p>
+        </div>
+      </div>
+    </div>
+
+  <div class="section">
+   <div class="section-title">CONNECTING MULTIPLE CUBES (ADVANCED)</div>
+   <p>Coming soon!</p>
+    </div>
+
+  <div class="section">
+   <div class="section-title">OPENSOURCE LICENSE</div>
+   <div class="step"><a name="opensource" />
+   <div class="step-title">HARDWARE &amp; SOFTWARE REPO</div>
+   <div class="step-text">
+   <p>Cube firmware:&nbsp; <a href="https://github.com/enjrolas/L3D-Software"></a><a href='https://github.com/enjrolas/L3D-Software'/>https://github.com/enjrolas/L3D-Software</a></p>
+   <p>Cube hardware:&nbsp; <a href="https://github.com/enjrolas/L3D-Hardware"></a><a href='https://github.com/enjrolas/L3D-Hardware'/>https://github.com/enjrolas/L3D-Hardware</a></p>
+   <p>Processing library:&nbsp; <a href="https://github.com/enjrolas/L3D-library"></a><a href='https://github.com/enjrolas/L3D-library'/>https://github.com/enjrolas/L3D-library</a></p>
+   <p>Here&rsquo;s an Instructable on <b><a href='http://www.instructables.com/id/How-to-Draw-Sweet-3D-Graphics-for-LED-cubes/'/>How to Draw Sweet 3D Graphics for LED cubes</a></b> - there&rsquo;s even a cube simulator so you don&rsquo;t even have to wait for your cubes to get started.</p>
+    </div>
+  </div>
+
+  <div class="section">
+   <div class="section-title">IMPROVEMENTS LIST</div>
+   <div class="step">
+     <div class="step-text">
+   <p>This is a list of hardware, firmware, &amp; software improvements we&rsquo;re strongly considering implementing in follow-up revs of the L3D Cube.&nbsp; These improvements are based on ideas at Looking Glass Lab &amp; within the community via the Kickstarter comment boards and the CubeTalk Forum.</p>
+   <ul>
+      <li>Increase thickness of acrylic to 3mm</li>
+      <li>Add a laser-cut hole for a barrel connector, for clean high-power arduino control of Cubes</li>
+      <li>Use Spark Photons rather than Spark Cores <b>(confirmed, to be implemented for all Cubes)</b></li>
+      <li>Web streaming of video games to cubes</li>
+      <li>Faster refresh rate during streaming</li>
+   </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+   <div class="section-title">TROUBLESHOOTING</div>
+   <div class="step">
+     <div class="step-text">
+   <p>The very first L3D Cube owners are just getting their Cubes now and we&rsquo;re in the process of making a Troubleshooting list.&nbsp; For now, if you&rsquo;re having trouble connecting your Cube to WiFi or downloading Apps from CubeTube, please head over to the Forum and post your question there...someone in the community or within the Looking Glass team will help out!&nbsp;&nbsp;</p>
+   <p>We will then compile the most frequently encountered issues here.&nbsp;&nbsp;</p>
+    </div>
+  </div>
+
+</div>

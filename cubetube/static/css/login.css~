@@ -1,0 +1,98 @@
+span#status{
+	margin:20px;
+	color: green;
+	float: right;
+}
+
+span#action{
+    margin:20px;
+    float:right;
+}
+#cube-selector{
+    float:right;
+    margin:20px;
+    padding:10px;
+}
+#upload-description{
+    float:left;
+}
+
+#logout{
+    float:right;
+    margin:20px;
+}
+
+#logoutButton{
+    font-size:18px;
+    padding:5px;
+}
+
+
+select#cubeName{
+    padding: 20px;
+    width:100px;
+    float:left;
+}
+#refresh-cubes{
+    float:left;
+    margin: 20px;
+}
+
+div#forms{
+	width: 80%;
+	margin: auto;
+	//height: 100px;
+	padding: 10px;
+	word-wrap:break-word;
+}
+
+div#login{
+	float:left;
+	width: 30%;
+	overflow:hidden;
+	padding: 20px;
+}
+
+div#create-user{
+	float: left;	
+	width: 30%;	
+	padding: 20px;
+}
+
+div#create-user-error{
+	color:red;
+}
+
+div#create-user-result{
+	color:blue;
+}
+
+div#login-error{
+	color:red;
+}
+
+div#login-result{
+	color:blue;
+}
+
+div#logout{
+	float:left;
+	width: 100%;
+	margin-top: 40px;
+	margin-left: 15%;
+}
+
+input{
+	display:block;
+	margin:10px;
+}
+
+.valid-nickname
+{
+    color: #00C000;
+}
+
+.invalid-nickname
+{
+    color: #C00000;
+}
