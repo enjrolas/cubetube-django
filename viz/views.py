@@ -92,10 +92,12 @@ def upload(request):
         viz.name=request.POST['viz-name']
         viz.tagline=request.POST['viz-tagline']
         viz.description=request.POST['viz-description']
-        viz.type=request.POST['viz-type']
+        log.debug("description: %s" % viz.description)
+        viz.vizType=request.POST['viz-type']
         viz.sourceURL=request.POST['viz-source-link']
         viz.tags=request.POST['viz-tags']
         viz.creator=user
+        log.debug("viz type is :%s" % viz.vizType)
         viz.save()
         for fileName in request.FILES.getlist('photo'):
             photo=Photo()

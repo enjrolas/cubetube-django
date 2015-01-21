@@ -31,10 +31,10 @@
 	    </div>
 	    <div class="dropdown"><span>Viz Type</span>
 	      <select class="typeSelector" name="viz-type">
-		<option value="spark" selected="selected">Native Spark</option>
-		<option value="streaming">Streaming</option>
-		<option value="arduino">Arduino</option>
-		<option value="other">Other</option>
+		<option value="spark" {% if viz.vizType == "spark" %}selected="selected"{% endif %}>Native Spark</option>
+		<option value="streaming" {% if viz.vizType == "streaming" %}selected="selected"{% endif %}>Streaming</option>
+		<option value="arduino" {% if viz.vizType == "arduino" %}selected="selected"{% endif %}>Arduino</option>
+		<option value="other" {% if viz.vizType == "other" %}selected="selected"{% endif %}>Other</option>
 		</select>
 	    </div>
 	   <div class="input"><span>Source Link</span>
