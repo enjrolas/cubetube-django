@@ -2,7 +2,11 @@
 <a class="thumbnail-link" href="{% url 'viz' viz.pk %}">
   <div class="card" id="viz-{{ viz.pk }}">
     <div class="img">
-      <img class="thumbnail" src="{{ thumbnailPhoto.file.url }}" alt="">
+      {% if thumbnailPhotoURL %}
+      <img class="thumbnail" src="{{ thumbnailPhotoURL }}" alt="">
+      {% else %}
+      <img class="thumbnail" src="{% static 'i/cubeGuy.png' %}" alt="">      
+      {% endif %}
       <a href="#" class="author">{{ viz.creator }}</a>
     </div>
     <h2>{{ viz.name }}</h2>

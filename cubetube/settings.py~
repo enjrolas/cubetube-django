@@ -4,7 +4,8 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-LISTENER_URL="http://media.cubetube.org/binaries/2014/12/25/firmware_26.bin"
+LISTENER_PK=12
+
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
