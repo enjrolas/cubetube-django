@@ -1,1 +1,1 @@
-/home/glass/cubetube/viz/static/galleria/plugins/flickr/galleria.flickr.js
+/Users/Tim/Documents/cubetube/cubetube-django/viz/static/galleria/plugins/flickr/galleria.flickr.js

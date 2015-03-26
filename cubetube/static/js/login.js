@@ -51,7 +51,7 @@ $(function(){
 function validateNickname()
 {
     var nick=encodeURIComponent($("#nickname").val());  //URL-encode the data
-    var url="http://cubetube.org/validateNickname/"+nick+"/";
+    var url="http://127.0.0.1:8000/validateNickname/"+nick+"/";
     console.log(url);
     $.get( url, function( data ) {	
 	console.log(data);
@@ -72,7 +72,7 @@ function validateNickname()
 
 function setNickname()
 {
-    $.post("http://cubetube.org/setNickname/",
+    $.post("http://127.0.0.1:8000/setNickname/",
 	   {
 	       email: username,
 	       accessToken: accessToken,

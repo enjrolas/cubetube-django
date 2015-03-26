@@ -1,1 +1,1 @@
-/home/glass/cubetube/viz/static/js/jscroll.js
+/Users/Tim/Documents/cubetube/cubetube-django/viz/static/js/jscroll.js

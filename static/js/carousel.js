@@ -1,1 +1,1 @@
-/home/glass/cubetube/viz/static/js/carousel.js
+/Users/Tim/Documents/cubetube/cubetube-django/viz/static/js/carousel.js

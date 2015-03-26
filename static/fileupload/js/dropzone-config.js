@@ -1,1 +1,1 @@
-/home/glass/cubetube/fileupload/static/fileupload/js/dropzone-config.js
+/Users/Tim/Documents/cubetube/cubetube-django/fileupload/static/fileupload/js/dropzone-config.js

@@ -1,1 +1,1 @@
-/home/glass/cubetube/comments/static/js/comments.js
+/Users/Tim/Documents/cubetube/cubetube-django/comments/static/js/comments.js

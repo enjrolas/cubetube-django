@@ -1,1 +1,1 @@
-/home/glass/cubetube/cubetube/static/js/login.js
+/Users/Tim/Documents/cubetube/cubetube-django/cubetube/static/js/login.js

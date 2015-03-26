@@ -259,6 +259,7 @@ function setLoggedIn()
     $("#login").hide();
     $("#create-user").hide();
     $("#nicknameForm").hide();
+    $(".requireLogin").show();
 }
 
 function setLoggedOut()
@@ -270,6 +271,7 @@ function setLoggedOut()
     $("#login").hide();
     $("#create-user").hide();
     $("#nicknameForm").hide();
+    $(".requireLogin").hide();
 }
 
 function showLogin()
