@@ -3,18 +3,11 @@
 
 var spark =require('spark');
 var accessToken=process.argv[2];
-var coreID=process.argv[2];
-var binaryPath=process.argv[2];
+var coreID=process.argv[3];
+var binaryPath=process.argv[4];
 
+//once we've logged in, program the core with the given core ID with a given binary located in the uploads directory of the server
 spark.on('login', function() {
-  // If login is successful we get and accessToken,
-  // we'll use that to call Spark API ListDevices
-    var devicesPr = spark.listDevices();
-
-    devicesPr.then(
-    // We get an array with devices back and we list them
-	function(devices){
-	    console.log('API call List Devices: ', devices);
 
       // callback to be executed by each core
 	    var signalCb = function(err, data) {
@@ -25,19 +18,8 @@ spark.on('login', function() {
 		}
 	    };
 
-      // We pass the firmware.ino file we want to flash to the core, we'll use the first
-      // core retrieved in devices array.
-	    var core = devices[0];
-	    core.flash('./path/to/your/file1.ino', signalCb);
-
-      // You can also call the sparj instance passing the device id.
-      // spark.flashCore(devices[0].id, ['./path/to/your/file1', './path/to/your/file2'], signalCb);
-	},
-	function(err) {
-	    console.log('API call failed: ', err);
-	}
-    );
+    spark.flashCore(coreID, binaryPath, signalCb);
 });
 
-// Login as usual
-spark.login({ username: 'email@example.com', password: 'password' });
+// Login first with the access token
+spark.login({ accessToken: accessToken });

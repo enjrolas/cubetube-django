@@ -1,1 +1,1 @@
-/Users/Tim/Documents/cubetube/cubetube-django/fileupload/static/fileupload/js/dropzone-config.js
+/Users/japhy/Dropbox/Manila Mantis/Looking Glass/3D display/LED cube/cubetube-django/fileupload/static/fileupload/js/dropzone-config.js

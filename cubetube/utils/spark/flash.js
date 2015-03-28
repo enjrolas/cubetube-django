@@ -18,6 +18,7 @@ spark.on('login', function() {
 		}
 	    };
 
+	    console.log("trying to flash core");
     spark.flashCore(coreID, binaryPath, signalCb);
 });
 

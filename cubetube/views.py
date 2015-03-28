@@ -25,7 +25,7 @@ def login(request):
     else:
         response='{"status":"newUser"}'
 
-    return HttpResponse(response, mimetype="application/json")
+    return HttpResponse(response, content_type="application/json")
 
 
 @csrf_exempt
@@ -39,7 +39,7 @@ def newUser(request):
         response='{ "status":"ok" }' 
     else:
         response='{ "status":"error", "error":"user already exists in database"}'
-    return HttpResponse(response, mimetype="application/json")
+    return HttpResponse(response, content_type="application/json")
 
 @csrf_exempt
 def validateNickname(request, nickname):
@@ -51,7 +51,7 @@ def validateNickname(request, nickname):
             response='{ "status":"ok" }' 
         else:
             response='{ "status":"error", "error":"nickname already exists in database"}'
-    return HttpResponse(response, mimetype="application/json")
+    return HttpResponse(response, content_type="application/json")
 
 
 @csrf_exempt
@@ -72,7 +72,7 @@ def setNickname(request):
             response='{ "status":"ok" , "nickname": "%s"}' %nickname
         else:
             response='{ "status":"error", "error":"nickname already exists in database"}'
-    return HttpResponse(response, mimetype="application/json")
+    return HttpResponse(response, content_type="application/json")
 
 @csrf_exempt
 def flash(request, id):
@@ -82,7 +82,7 @@ def flash(request, id):
     viz=binary.viz
     viz.views=viz.views+1
     viz.save()
-    p = subprocess.Popen(['node', '%s/utils/spark/flash.js' % settings.PROJECT_ROOT ,accessToken, coreID, binary.file.path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p = subprocess.Popen(['node', '%s/cubetube/utils/spark/flash.js' % settings.PROJECT_ROOT ,accessToken, coreID, "/media/%s" % binary.file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output=[]
     for line in p.stdout.readlines():
         print line,
@@ -99,7 +99,7 @@ def flash(request, id):
 
     retval = p.wait()
     response='{ "status":"ok" , "output": "%s" , "error" : "%s", "filepath", "%s"}' % (output, error, binary.file.path)
-    return HttpResponse(response, mimetype="application/json")
+    return HttpResponse(response, content_type="application/json")
 
 
 def docs(request):
