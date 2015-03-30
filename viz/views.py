@@ -1,10 +1,11 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from viz.models import Viz, Photo, Binary
+from viz.models import *
 from cube.models import CubeUser
 from comments.models import Comment
 from django.http import HttpResponse
 from django.utils.html import escape
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 import logging
 log = logging.getLogger(__name__)
 
@@ -22,6 +23,33 @@ def gallery(request):
         visualizations=vizs[:6]
     return render(request, "viz/gallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'vizType' : vizType, 'totalObjects' : totalObjects})
 
+@csrf_exempt
+def fork(request):
+    accessToken=request.POST['accessToken']
+    vizId=request.POST['vizId']
+    try:
+        user=CubeUser.objects.filter(accessToken=accessToken).get()
+    except CubeUser.DoesNotExist:
+        user = None
+    if user:
+        viz=Viz.objects.get(pk=vizId)
+        forked=Viz()
+        forked.name=viz.name
+        forked.tagline=viz.tagline
+        forked.description=viz.description
+        forked.vizType=viz.vizType;
+        forked.creator=user
+        forked.parent=viz
+        forked.save()
+        source=SourceCode.objects.filter(viz=viz)
+        for code in source:
+            newCode=SourceCode()
+            newCode.viz=forked
+            newCode.code=code.code
+            newCode.save()
+
+        return HttpResponse('{"id":%d}'%forked.pk, content_type="application/json")
+
 def viz(request, id):
     currentViz=Viz.objects.get(pk=id)
     try:
@@ -34,14 +62,14 @@ def viz(request, id):
     currentViz.save()  
     if currentViz.vizType=="streaming":
         binary=Binary.objects.get(pk=settings.LISTENER_PK)
-    return render(request, "viz/detail.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments})
+    if currentViz.vizType=='javascript':
+        source=SourceCode.objects.get(viz=currentViz)
+        return render(request, "viz/javascript.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments, 'source':source})
+    else:
+        return render(request, "viz/detail.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments})
 
 def create(request):
     return render(request, "viz/create.html")
-
-def createTest(request):
-    return render(request, "viz/create-test.html")
-
 
 def scroll(request, page):
     page=int(page)
@@ -58,6 +86,29 @@ def edit(request, id):
     except Viz.DoesNotExist:
         viz = None
     return render(request, "viz/create.html", { "viz": viz} )
+
+def save(request):
+    accessToken=request.POST['accessToken']
+    vizID=request.POST['vizID']
+    name=request.POST['name']
+    tagline=request.POST['tagline']
+    description=request.POST['description']
+    sourceCode=request.POST['sourceCode']
+
+    user=CubeUser.objects.get(accessToken=accessToken)
+    viz=Viz.objects.get(pk=vizID)
+    viz.name=name
+    viz.tagline=tagline
+    viz.description=description
+    viz.save()
+
+    code=SourceCode.get(viz=viz)
+    code.code=sourceCode
+    code.save()
+    return HttpResponse("ok")
+
+
+
 
 def authenticate(nickname, accessToken):
     authenticated=False

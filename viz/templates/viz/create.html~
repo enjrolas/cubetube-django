@@ -29,6 +29,14 @@
 	    <div class="textarea"><span>Description</span>
 	      <textarea name="viz-description" rows="5" placeholder="a place to give a detailed description of your project">{% if viz %}{{ viz.description }}{% endif %}</textarea>
 	    </div>
+	    <div class="dropdown"><span>Viz Type</span>
+	      <select class="typeSelector" name="viz-type">
+		<option value="spark" {% if viz.vizType == "spark" %}selected="selected"{% endif %}>Native Spark</option>
+		<option value="streaming" {% if viz.vizType == "streaming" %}selected="selected"{% endif %}>Streaming</option>
+		<option value="arduino" {% if viz.vizType == "arduino" %}selected="selected"{% endif %}>Arduino</option>
+		<option value="other" {% if viz.vizType == "other" %}selected="selected"{% endif %}>Other</option>
+		</select>
+	    </div>
 	   <div class="input"><span>Source Link</span>
 	     <input type="text" class="create-input" name="viz-source-link" placeholder="a link to your source code on github, pastebin, or anywhere else online"{% if viz %}value="{{ viz.sourceURL }}"{% endif %}>
 	   </div>

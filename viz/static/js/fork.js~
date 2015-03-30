@@ -1,0 +1,8 @@
+function fork ()
+{
+    $.post("{% url 'fork' %}",
+	   {"accessToken":accessToken, "vizId":{{ currentViz.pk }}},
+	   function(data){
+	       alert(data);
+	   });
+}
