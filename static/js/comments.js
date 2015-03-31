@@ -1,1 +1,1 @@
-/Users/japhy/Dropbox/Manila Mantis/Looking Glass/3D display/LED cube/cubetube-django/comments/static/js/comments.js
+/Users/Tim/Documents/cubetube/cubetube-django/comments/static/js/comments.js

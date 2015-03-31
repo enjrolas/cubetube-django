@@ -1,1 +1,1 @@
-/Users/japhy/Dropbox/Manila Mantis/Looking Glass/3D display/LED cube/cubetube-django/cubetube/static/js/jquery.simplemodal.js
+/Users/Tim/Documents/cubetube/cubetube-django/cubetube/static/js/jquery.simplemodal.js
