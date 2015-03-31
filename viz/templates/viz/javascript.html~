@@ -1,0 +1,87 @@
+{% extends "cubetube/base.html" %}
+{% load staticfiles %}
+{% block header %}
+{% include "viz/detail-header.html" %}
+
+	<!-- processing !-->
+	<script src="{% static 'js/processing.min.js'%}"></script>
+	<script src="{% static 'js/jsbeautify.js'%}"></script>
+	<script src="{% static 'js/processing-helper.js'%}"></script>
+
+	<!--  UI JS ~-->
+	<script src="{% static 'js/streaming-ui.js'%}"></script>
+	<script type="text/javascript">
+	
+	  global fork=function ()
+	  {
+          $.post("{% url 'fork' %}", 
+	  {"accessToken":accessToken, "vizId":{{ currentViz.pk }}}, 
+	  function(data){
+	  alert(data);
+	  });
+	  }
+	  
+
+
+
+	</script>
+	
+	<!--L3D code loading !-->
+	<script src="{% static 'js/loadCubeCode.js'%}"></script>
+
+	<!-- CODE MIRROR !-->
+	<link rel="stylesheet" href="{% static 'codeMirror/doc/docs.css'%}">
+	  <link rel="stylesheet" href="{% static 'codeMirror/lib/codemirror.css'%}">
+	    <link rel="stylesheet" href="{% static 'codeMirror/theme/tomorrow-night-eighties.css'%}">
+	      <script src="{% static 'codeMirror/lib/codemirror.js'%}"></script>
+	      <script src="{% static 'codeMirror/mode/javascript/javascript.js'%}"></script>
+	      <script src="{% static 'codeMirror/addon/selection/active-line.js'%}"></script>
+	      <script src="{% static 'codeMirror/addon/edit/matchbrackets.js'%}"></script>
+	      <style type="text/css">
+		<style>
+		  canvas 
+		  { 
+		  width: 500px; 
+		  height: 500px; 
+		  border: 1px solid;
+		  }
+		  body {
+		  background-color: #777777;
+		  }
+		  #code-wrapper{
+		  width: 500px;
+		  height: 500px;
+		  float:left;
+		  }
+		  #sketch-container{
+		  width: 400px;
+		  float:left;
+		  margin-left: 30px;
+		  }
+		  #output-wrapper{
+		  width: 100%;
+		  height: 200px;
+		  } 
+		</style>
+
+{% endblock %}
+
+{% block content %}
+<main>
+  <div id="show-code" onclick="showCode()"><button>show code</button></div>
+  <div id="hide-code" onclick="hideCode()"><button>hide code</button></div>
+  <div id="fork" onclick="fork()"><button>fork</button></div>
+		<div id="code-wrapper">
+		    <textarea rows="80" cols="120" id="code">{{ source.code }}</textarea>
+		  <img onclick="runSketch();" src="{% static 'i/run.png'%}" width="32px">  Run Sketch
+		  </div>
+
+		  <div id="sketch-container">
+		    <canvas id="sketch"></canvas>
+		  </div>
+		  <div id="output-wrapper">
+		    <h2>Output</h2>
+		    <textarea cols="222" rows="10" id="output" readonly="readonly">None.</textarea>
+		  </div>
+</main>
+{% endblock %}

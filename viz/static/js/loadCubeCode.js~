@@ -1,0 +1,25 @@
+var library;
+
+$(function(){
+  $.get('http://beta.cubetube.org/static/js/l3d-library.js', function(data) {
+	  library=data;
+      }, 'text');
+    
+    formatCode();  //applies codeMirror formatting to the code
+    hideCode();
+    runSketch();
+    
+  function formatCode()
+  {
+	  var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+		  lineNumbers: true,
+		  styleActiveLine: true,
+		  matchBrackets: true
+	      });
+      editor.setOption("theme", "tomorrow-night-eighties");
+
+  }
+
+
+    });
+
