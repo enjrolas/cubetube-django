@@ -13,10 +13,6 @@ class Cube {
     }
     void draw()
     {
-	background(0);
-	translate(width/2, height/2);
-	rotateY(mouseX/50);
-	rotateX(mouseY/50);
 	for (int x=0; x<size; x++)
 	    for (int y=0; y<size; y++)
 		for (int z=0; z<size; z++)
