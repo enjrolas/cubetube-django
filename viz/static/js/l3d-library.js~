@@ -18,7 +18,7 @@ class L3D {
 		for (int z=0; z<side; z++)
 		    {
 			pushMatrix();
-			translate(scale*x-center.x, scale*y-center.y, scale* z-center.z);
+			translate(scale*x-center.x, scale*(side-1-y)-center.y, scale* z-center.z);
 			color voxelColor=voxels[x][y][z];
 			stroke(255, 100);
 			if (brightness(voxelColor)>0)

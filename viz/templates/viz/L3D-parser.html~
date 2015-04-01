@@ -1,0 +1,13 @@
+<html>
+<head>
+	<!--L3D code loading !-->
+	<script src="{% static 'js/loadCubeCode.js'%}"></script>
+	<script>
+	  var sparkCode="{{ source.code }}";
+	  </script>
+</head>
+<body>
+<div id="code">
+</div>
+</body>
+</html>

@@ -72,6 +72,7 @@
       </Script>
 
     <script src="{% static 'js/login.js' %}"></script>
+<!--    <script src="{% static 'js/warp.js' %}"></script> -->
     {% block header %}
     {% endblock %}
 
@@ -80,8 +81,9 @@
   </head>
   <body>
 <header>
-
+<!-- <canvas id="c"> -->
         <div class="wrapper">
+
                 <a href="{% url 'gallery' %}" class="logo">
                         <img src="{% static 'i/logo.svg' %}" width='100' alt="">
 			<div id="site-name">
@@ -101,11 +103,12 @@
         <div class="menu">
                 <ul class="wrapper">
                   <li><a href="{% url 'forum' %}">FORUM</a></li>
-                  <li><a href="{% url 'create' %}">CREATE</a></li>
+                  <li class="requireLogin"><a href="{% url 'create' %}">CREATE</a></li>
                   <li><a href="{% url 'gallery' %}">GALLERY</a></li>
                   <li><a href="{% url 'docs' %}">GETTING STARTED</a></li>
                 </ul>
         </div>
+<!-- </canvas> -->
 </header>
 <div id="cube-container">
     <div id="cube-selector">

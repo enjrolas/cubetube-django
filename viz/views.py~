@@ -37,9 +37,16 @@ def fork(request):
         forked.name=viz.name
         forked.tagline=viz.tagline
         forked.description=viz.description
+        forked.vizType=viz.vizType;
         forked.creator=user
         forked.parent=viz
         forked.save()
+        source=SourceCode.objects.filter(viz=viz)
+        for code in source:
+            newCode=SourceCode()
+            newCode.viz=forked
+            newCode.code=code.code
+            newCode.save()
 
         return HttpResponse('{"id":%d}'%forked.pk, content_type="application/json")
 
@@ -64,10 +71,6 @@ def viz(request, id):
 def create(request):
     return render(request, "viz/create.html")
 
-def createTest(request):
-    return render(request, "viz/create-test.html")
-
-
 def scroll(request, page):
     page=int(page)
     vizType=request.GET.get('vizType')
@@ -83,6 +86,29 @@ def edit(request, id):
     except Viz.DoesNotExist:
         viz = None
     return render(request, "viz/create.html", { "viz": viz} )
+
+def save(request):
+    accessToken=request.POST['accessToken']
+    vizID=request.POST['vizID']
+    name=request.POST['name']
+    tagline=request.POST['tagline']
+    description=request.POST['description']
+    sourceCode=request.POST['sourceCode']
+
+    user=CubeUser.objects.get(accessToken=accessToken)
+    viz=Viz.objects.get(pk=vizID)
+    viz.name=name
+    viz.tagline=tagline
+    viz.description=description
+    viz.save()
+
+    code=SourceCode.get(viz=viz)
+    code.code=sourceCode
+    code.save()
+    return HttpResponse("ok")
+
+
+
 
 def authenticate(nickname, accessToken):
     authenticated=False
