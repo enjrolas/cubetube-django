@@ -22,7 +22,7 @@ class SourceCode(models.Model):
     created=models.DateTimeField(auto_now_add=True)
     updated=models.DateTimeField(auto_now=True)
     def __str__(self):
-        return "%s, created by %s on %s" %(self.viz.name, self.viz.creator, self.created)
+        return "%s code:  %s, created by %s on %s" %(self.viz.vizType, self.viz.name, self.viz.creator, self.created)
 
 class Photo(models.Model):
     viz=models.ForeignKey(Viz)

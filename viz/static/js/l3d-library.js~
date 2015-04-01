@@ -1,24 +1,24 @@
-
-class L3D {
+class Cube {
     color[][][] voxels;
-    int side;
+    int size;
     int scale;
     PVector center;
-    L3D()
+    Cube()
     {
-	side=8;
-	scale=height/2/side;
-	voxels=new color[side][side][side];
-	center=new PVector(scale*(side-1)/2, scale*(side-1)/2, scale*(side-1)/2);
+	size=8;
+	scale=height/size;
+	voxels=new color[size][size][size];
+	center=new PVector(scale*(size-1)/2, scale*(size-1)/2, scale*(size-1)/2);
+	//ortho();   //use orthographic projection (no perspective)
     }
     void draw()
     {
-	for (int x=0; x<side; x++)
-	    for (int y=0; y<side; y++)
-		for (int z=0; z<side; z++)
+	for (int x=0; x<size; x++)
+	    for (int y=0; y<size; y++)
+		for (int z=0; z<size; z++)
 		    {
 			pushMatrix();
-			translate(scale*x-center.x, scale*(side-1-y)-center.y, scale* z-center.z);
+			translate(scale*x-center.x, scale*(size-1-y)-center.y, scale* z-center.z);
 			color voxelColor=voxels[x][y][z];
 			stroke(255, 100);
 			if (brightness(voxelColor)>0)
@@ -29,19 +29,28 @@ class L3D {
 			popMatrix();
 		    }
     }
+    void setVoxel(float x, float y, float z, color col)
+    {
+	PVector pos=new PVector(x,y,z);
+	if ((pos.x>=0)&&(pos.x<size))
+	    if ((pos.y>=0)&&(pos.y<size))
+		if ((pos.z>=0)&&(pos.z<size))
+		    voxels[(int)pos.x][(int)pos.y][(int)pos.z]=col;
+    }
+
     void setVoxel(PVector pos, color col)
     {
-	if ((pos.x>=0)&&(pos.x<side))
-	    if ((pos.y>=0)&&(pos.y<side))
-		if ((pos.z>=0)&&(pos.z<side))
+	if ((pos.x>=0)&&(pos.x<size))
+	    if ((pos.y>=0)&&(pos.y<size))
+		if ((pos.z>=0)&&(pos.z<size))
 		    voxels[(int)pos.x][(int)pos.y][(int)pos.z]=col;
     }
 
     void background(color col)
     {
-	for (int x=0; x<side; x++)
-	    for (int y=0; y<side; y++)
-		for (int z=0; z<side; z++)
+	for (int x=0; x<size; x++)
+	    for (int y=0; y<size; y++)
+		for (int z=0; z<size; z++)
 		    voxels[x][y][z]=col;
     }
 
@@ -56,21 +65,69 @@ class L3D {
 			  col);
     }
 
+
+    void shell(float x, float y,float z, float r, color col)
+    {
+	float thickness =0.1;
+	for(int i=0;i<size;i++)
+	    for(int j=0;j<size;j++)
+		for(int k=0;k<size;k++)
+		    if(abs(sqrt(pow(i-x,2)+pow(j-y,2)+pow(k-z,2))-r)<thickness)
+			setVoxel(i,j,k,col);
+    }
+
+    /** Draw a shell (empty sphere).                                                                                                                                                     
+                                                                                                                                                                                     
+  @param x Position of the center of the shell.                                                                                                                                      
+  @param y Position of the center of the shell.                                                                                                                                      
+  @param z Position of the center of the shell.                                                                                                                                      
+  @param r Radius of the shell.                                                                                                                                                      
+  @param thickness Thickness of the shell.                                                                                                                                           
+  @param col Color of the shell.                                                                                                                                                     
+    */
+    void shell(float x, float y,float z, float r, float thickness, color col)
+    {
+	for(int i=0;i<size;i++)
+	    for(int j=0;j<size;j++)
+		for(int k=0;k<size;k++)
+		    if(abs(sqrt(pow(i-x,2)+pow(j-y,2)+pow(k-z,2))-r)<thickness)
+			setVoxel(i,j,k,col);
+    }
+
+    void shell(PVector p, float r, color col)
+    {
+	shell(p.x, p.y, p.z, r, col);
+    }
+
+    /** Draw a shell (empty sphere).                                                                                                                                                     
+                                                                                                                                                                                     
+  @param p Position of the center of the shell.                                                                                                                                      
+  @param r Radius of the shell.                                                                                                                                                      
+  @param thickness Thickness of the shell                                                                                                                                            
+  @param col Color of the shell.                                                                                                                                                     
+    */
+    void shell(PVector p, float r, float thickness, color col)
+    {
+	shell(p.x, p.y, p.z, r, thickness, col);
+    }
+
+    
+
     // returns the color at the integer location closest
     // to the PVector point
     color getVoxel(PVector pos) {
-	if ((pos.x>=0)&&(pos.x<side))
-	    if ((pos.y>=0)&&(pos.y<side))
-		if ((pos.z>=0)&&(pos.z<side))
+	if ((pos.x>=0)&&(pos.x<size))
+	    if ((pos.y>=0)&&(pos.y<size))
+		if ((pos.z>=0)&&(pos.z<size))
 		    return voxels[(int) pos.x][(int) pos.y][(int) pos.z];
 	return color(0);
     }
 
     // draws a line from point p1 to p2 and colors each of the points according
     // to the col parameter
-    // p1 and p2 can be outside of the cube, but it will only draw the parts of
+    // p1 and p2 can be outsize of the cube, but it will only draw the parts of
     // the line that fall
-    // inside the cube
+    // insize the cube
     void line(PVector p1, PVector p2, color col) {
 	// thanks to Anthony Thyssen for the original write of Bresenham's line
 	// algorithm in 3D
@@ -149,7 +206,7 @@ class L3D {
   
     // draws a line from point p1 to p2 and colors each of the points according
     // to the col parameter
-    // p1 and p2 can be outside of the cube, but it will only draw the parts of
+    // p1 and p2 can be outsize of the cube, but it will only draw the parts of
     // the line that fall
     // inside the cube
     void rainbowLine(PVector p1, PVector p2, color startColor, color endColor) {
