@@ -3,10 +3,12 @@ class Cube {
     int size;
     int scale;
     PVector center;
-    Cube()
-    {
+    PApplet parent;
+    Cube(PApplet _parent)
+    {	
+	parent=_parent;
 	size=8;
-	scale=height/size;
+	scale=height/size/2;
 	voxels=new color[size][size][size];
 	center=new PVector(scale*(size-1)/2, scale*(size-1)/2, scale*(size-1)/2);
 	//ortho();   //use orthographic projection (no perspective)
@@ -14,7 +16,7 @@ class Cube {
     void draw()
     {
 	//set the background color and mouse-controlled rotations
-	background(0);
+	parent.background(0);
 	translate(width/2, height/2);
 	rotateY(mouseX/60);
 	rotateX(mouseY/60);
