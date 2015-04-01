@@ -13,8 +13,14 @@ class Cube {
     }
     void draw()
     {
+	//set the background color and mouse-controlled rotations
+	background(0);
+	translate(width/2, height/2);
+	rotateY(mouseX/60);
+	rotateX(mouseY/60);
+
 	for (int x=0; x<size; x++)
-	    for (int y=0; y<size; y++)
+      	    for (int y=0; y<size; y++)
 		for (int z=0; z<size; z++)
 		    {
 			pushMatrix();

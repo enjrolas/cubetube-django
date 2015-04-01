@@ -55,8 +55,8 @@
 	<script type="text/javascript">
 	  var sparkCode;
 	  var translatedCode="";
-	  var canvasControl="background(0);\ntranslate(width/2, height/2);\nrotateY(mouseX/50);\nrotateX(mouseY/50);";
-
+	  var canvasControl="";  //background(0);\ntranslate(width/2, height/2);\nrotateY(mouseX/50);\nrotateX(mouseY/50);
+	                         //we don't need this, now that I moved it to the library draw() function
 	  var translation={};  //the translation list is for basic keyword find-and-replace
 	  translation["loop()"]="draw()";
 	  translation["cube.show()"]="cube.draw()";
