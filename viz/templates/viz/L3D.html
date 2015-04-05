@@ -59,7 +59,9 @@
 	
 	<!--L3D code loading !-->
 	<script src="{% static 'js/loadCubeCode.js'%}"></script>
-
+	<script>
+	  var sparkCode="{{ source.code }}";
+	  </script>
 	<!-- CODE MIRROR !-->
 	<link rel="stylesheet" href="{% static 'codeMirror/doc/docs.css'%}">
 	  <link rel="stylesheet" href="{% static 'codeMirror/lib/codemirror.css'%}">
@@ -138,7 +140,7 @@
   <div id="fork" onclick="fork({{ viz.pk }})"><button>fork</button></div>
 		<div id="code-wrapper" class="edit code">
 		    <textarea rows="80" cols="120" id="code" 	{% if viz.creator.nickname != request.COOKIES.nickname %} readonly="yes" {% endif %}>{{ source.code }}</textarea>
-=[		  <img onclick="runSketch();" src="{% static 'i/run.png'%}" width="32px">  Run Sketch
+		  <img onclick="runSketch();" src="{% static 'i/run.png'%}" width="32px">  Run Sketch
 		  </div>
 
 		  <div id="sketch-container">

@@ -65,8 +65,15 @@ def viz(request, id):
     if currentViz.vizType=='javascript':
         source=SourceCode.objects.get(viz=currentViz)
         return render(request, "viz/javascript.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments, 'source':source})
+    elif currentViz.vizType=='L3D':
+        source=SourceCode.objects.get(viz=currentViz)
+        return render(request, "viz/sparkPreview.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments, 'source':source})
     else:
         return render(request, "viz/detail.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments})
+
+def code(request, id):
+    code=SourceCode.objects.get(pk=id)
+    return HttpResponse(code.code, content_type="text/plain")
 
 def create(request):
     return render(request, "viz/create.html")

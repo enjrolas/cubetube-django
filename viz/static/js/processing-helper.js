@@ -45,6 +45,26 @@
     }
   };
 
+  global.runSparkSketch = function(callback) {
+	var output=$("#output");
+    try {
+      canvas = createCanvas();
+      var sketchCode=translatedCode.concat(library);
+      var sketch = Processing.compile(sketchCode);
+      if (callback) {
+	  if (!/exit\(\);/.test(sketchCode)) {
+          throw "exit() not found in sketch. Add the exit() command, and re-run the sketch.";
+        }
+        sketch.onExit = callback;
+        instance = new Processing(canvas, sketch);
+      } else {
+        instance = new Processing(canvas, sketch);
+      }
+    } catch (e) {
+	output.val("Error! Error was:\n" + e.toString());
+    }
+  };
+
   global.convertToJS = function() {
     try {
       output.value = js_beautify(Processing.compile(code.value).sourceCode).replace(/\n\n\n+/g, '\n\n');
