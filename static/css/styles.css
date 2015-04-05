@@ -2,15 +2,18 @@
  * Cubetube main styles
  * -- Its hip to be cube!
  */
+/**
+ * Vars & mixins
+ */
 html, body {
   margin: 0px;
   padding: 0px;
   background: blue; }
 
 header {
-  height: 400px;
+  height: 100px;
   background: #000; }
 
 footer {
   height: 400px;
-  background: #000; }
+  background: url(../images/cube-pattern.png); }
