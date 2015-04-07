@@ -2,7 +2,8 @@ from django.conf.urls import url
 from viz import views
 
 urlpatterns = [
-    url(r'^$', views.gallery, name='gallery'),
+    url(r'^$', views.index, name='index'),
+    url(r'^gallery/', views.gallery, name='gallery'),
     url(r'^viz/(?P<id>\d+)/$', views.viz, name='viz'),
     url(r'^scroll/(?P<page>\d+)/$', views.scroll, name='scroll'),
     url(r'^fork/', views.fork, name='fork'),

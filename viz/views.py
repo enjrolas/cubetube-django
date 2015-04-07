@@ -23,6 +23,15 @@ def gallery(request):
         visualizations=vizs[:6]
     return render(request, "viz/gallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'vizType' : vizType, 'totalObjects' : totalObjects})
 
+def index(request):
+    vizs=Viz.objects.all().order_by("-created")    
+    totalObjects=vizs.count()
+    if totalObjects<8:
+        visualizations=vizs[:totalObjects]
+    else:
+        visualizations=vizs[:8]
+    return render(request, "viz/index.html", { 'visualizations' : visualizations, 'totalObjects' : totalObjects})
+
 @csrf_exempt
 def fork(request):
     accessToken=request.POST['accessToken']
@@ -113,9 +122,6 @@ def save(request):
     code.code=sourceCode
     code.save()
     return HttpResponse("ok")
-
-
-
 
 def authenticate(nickname, accessToken):
     authenticated=False

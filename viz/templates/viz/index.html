@@ -1,0 +1,10 @@
+{% extends "cubetube/base.html" %}
+{% load card %}
+
+{% block content %}
+    <div class="viz-cards">
+        {% for viz in visualizations %}
+            {% card viz %}
+        {% endfor %}
+    </div>
+{% endblock %}
