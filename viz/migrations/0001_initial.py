@@ -56,6 +56,7 @@ class Migration(migrations.Migration):
                 ('tags', models.TextField(default=b'')),
                 ('views', models.IntegerField(default=0)),
                 ('vizType', models.TextField(default=b'spark')),
+                ('interactive', models.BooleanField(default=False)),
                 ('pageViews', models.IntegerField(default=0)),
                 ('creator', models.ForeignKey(to='cube.CubeUser')),
                 ('parent', models.ForeignKey(default=None, blank=True, to='viz.Viz', null=True)),
