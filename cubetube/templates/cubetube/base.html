@@ -1,21 +1,11 @@
 {% load staticfiles %}
 <html>
   <head>
-
-    <!-- META -->
-    <title> Cubetube - Its hip to be cube </title>
-
-    <!-- CSS -->
-    <link type="text/css" rel="stylesheet" href="{% static 'css/base.css' %}"/>
-
-    <!-- JS -->
-    <script src="//use.typekit.net/vkj1bxc.js"></script>
-    <script>try{Typekit.load();}catch(e){}</script>
+    {% include "cubetube/partials/_head.html" %}
 
 <!--
   <link rel="stylesheet" href="http://brick.a.ssl.fastly.net/EB+Garamond:400,400i/Fira+Sans:300,400,500,700">    
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
-  <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
   <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
   <script src="http://cdn.jsdelivr.net/sparkjs/0.2.3/spark.min.js"></script>
   <script src="{% static 'js/jquery.cookie.js' %}"></script>
@@ -72,14 +62,11 @@
   </Script>
 
   <script src="{% static 'js/login.js' %}"></script>
-    
-    {% block header %}
-    {% endblock %}
 -->
 
   </head>
   <body>
-    {% include "cubetube/partials/_header.html" %}
+    {% block header %}{% endblock %}
 
 <!-- 
   <div id="cube-container">
@@ -126,7 +113,7 @@
     {% block content %}{% endblock %}
 
     {% include "cubetube/partials/_footer.html" %}
-    {% include "cubetube/partials/_scripts.html" %}
+    {% include "cubetube/partials/_foot.html" %}
 
   </body>
 </html>

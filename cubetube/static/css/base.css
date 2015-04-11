@@ -83,6 +83,44 @@ h2 {
     background: #05b3ee; }
 
 /**
+ * Used on /viz directories
+ * -- Shows the vizualization, and code editor
+ */
+.viz-wrapper {
+  width: 800px;
+  border-top: 90px solid #f9f9f9;
+  height: 100%; }
+  .viz-wrapper .viz-nav {
+    height: 60px; }
+    .viz-wrapper .viz-nav .view-code {
+      background: #da003e;
+      color: #fff;
+      float: right;
+      padding: 8px 20px;
+      border-radius: 35px;
+      font-size: 14px;
+      font-weight: bold;
+      margin-top: 14px;
+      cursor: pointer; }
+  .viz-wrapper .viz-demo {
+    width: 100%;
+    height: 460px;
+    background: #1c1521; }
+  .viz-wrapper .inner-wrapper {
+    margin: auto;
+    width: 580; }
+  .viz-wrapper .viz-details {
+    padding-top: 30px; }
+    .viz-wrapper .viz-details .title {
+      font-color: #000;
+      font-weight: 800;
+      font-size: 30px;
+      padding-bottom: 5px; }
+    .viz-wrapper .viz-details .created {
+      color: #999999;
+      font-size: 14px; }
+
+/**
  * Cubetube SVG's
  * - Interactive
  * - Non interactive
@@ -108,7 +146,11 @@ nav {
   left: 0px;
   width: 100%;
   height: 90px;
-  background: #000; }
+  background: rgba(0, 0, 0, 0);
+  -webkit-transition: all 300ms ease;
+  -moz-transition: all 300ms ease;
+  -ms-transition: all 300ms ease;
+  transition: all 300ms ease; }
   nav .logo-box {
     margin-left: -20px;
     height: 90px;
@@ -142,12 +184,24 @@ nav {
   nav a {
     text-decoration: none;
     color: #fff; }
+  nav.small, nav.always-small {
+    box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.2);
+    background: #1c1521;
+    height: 60px; }
+    nav.small .logo-box, nav.always-small .logo-box {
+      height: 60px;
+      line-height: 34px;
+      padding-top: 14px; }
+      nav.small .logo-box img, nav.always-small .logo-box img {
+        height: 35px; }
+    nav.small li, nav.always-small li {
+      line-height: 61px; }
 
 header {
   width: 100%;
-  height: 600px;
+  height: 800px;
   background: #f9f9f9;
-  background: #000;
+  background: url(../images/header.jpg);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%; }

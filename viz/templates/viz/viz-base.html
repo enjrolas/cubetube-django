@@ -1,0 +1,14 @@
+<!-- 
+  Base viz view
+  Handles scripts mostly.
+-->
+{% load staticfiles %}
+<html>
+    <head>
+        {% include "cubetube/partials/_head.html" %}
+    </head>
+    <body class="viz-base">
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>

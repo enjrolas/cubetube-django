@@ -68,17 +68,19 @@ def viz(request, id):
     photos=Photo.objects.filter(viz=currentViz)  #get the main image associated with this viz, and use it as the photo
     comments=Comment.objects.filter(viz=currentViz)
     currentViz.pageViews=currentViz.pageViews+1
-    currentViz.save()  
-    if currentViz.vizType=="streaming":
-        binary=Binary.objects.get(pk=settings.LISTENER_PK)
-    if currentViz.vizType=='javascript':
-        source=SourceCode.objects.get(viz=currentViz)
-        return render(request, "viz/javascript.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments, 'source':source})
-    elif currentViz.vizType=='L3D':
-        source=SourceCode.objects.get(viz=currentViz)
-        return render(request, "viz/sparkPreview.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments, 'source':source})
-    else:
-        return render(request, "viz/detail.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments})
+    currentViz.save()
+    source=SourceCode.objects.get(viz=currentViz)
+    return render(request, "viz/viz.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments, 'source': source})
+    # if currentViz.vizType=="streaming":
+    #     binary=Binary.objects.get(pk=settings.LISTENER_PK)
+    # if currentViz.vizType=='javascript':
+    #     source=SourceCode.objects.get(viz=currentViz)
+    #     return render(request, "viz/javascript.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments, 'source':source})
+    # elif currentViz.vizType=='L3D':
+    #     source=SourceCode.objects.get(viz=currentViz)
+    #     return render(request, "viz/sparkPreview.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments, 'source':source})
+    # else:
+    #     return render(request, "viz/detail.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments})
 
 def code(request, id):
     code=SourceCode.objects.get(pk=id)

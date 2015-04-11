@@ -1,6 +1,10 @@
 {% extends "cubetube/base.html" %}
 {% load card %}
 
+{% block header %}
+    {% include "cubetube/partials/_header.html" with page="overview" large=1 %}
+{% endblock %}
+
 {% block content %}
     <div class="explore-title">
         <h1>

@@ -1,0 +1,127 @@
+<!-- 
+  Viz view, contains comments and details.
+  And also Code editing options.
+
+  - Currently duplicated from javascript.html (old code is in there)
+-->
+
+{% extends "viz/viz-base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+<div class="viz-wrapper">
+  <div class="viz-nav">
+    <a class="round-button view-code">View Code</a>
+    <div class="cube-options">
+      <!-- Send to cube/select cube -->
+    </div>
+  </div>
+  <div class="viz-demo">
+  </div>
+  <div class="viz-details">
+    <div class="inner-wrapper">
+      
+      <div class="viz-created">
+        <div class="title">
+          {{ viz.name }}
+        </div>
+        <div class="created">
+          Created by {{ viz.creator.nickname }} on {{ viz.created|date:"F d, Y" }}
+        </div>
+      </div>
+
+      <div class="viz-share">
+      </div>
+
+      <div class="viz-description">
+        {{ viz.description }}
+      </div>
+    </div>
+
+    <div class="viz-comments">
+      <div class="inner-wrapper">
+      {% for comment in comments %}
+        <div class="viz-comment">
+          <a href="#" class="author">{{ comment.commenter.nickname }}</a> <span class="said">said</span>
+          <p>{{ comment.comment }}</p>
+        </div>
+      {% endfor %}
+      </div>
+    </div>
+      
+  </div>
+
+  <div class="viz-next">
+  </div>
+</div>
+
+
+
+
+<!-- <main>
+      <div class="info">
+    <p class="bold">title:</p> <div class="projectTitle display">
+      {{ viz.name }}
+    </div>
+      {% if viz.creator.nickname == request.COOKIES.nickname %}
+    <div class="projectTitle edit">
+      <input id="name" value="{{ viz.name }}">
+    </div>
+    {% endif %}
+      {% if viz.creator.nickname == request.COOKIES.nickname %}
+      <button id="edit" class="display" onclick="edit()">edit</button>
+      <button id="edit" class="edit" onclick="save()">save</button>
+      {% endif %}
+    <p class="bold">By:</p>  <a href="#" class="author">{{ viz.creator }}</a><br/>
+    <p class="bold">tagline:</p> <div class="projectDetail display">
+      {{ viz.tagline }}
+    </div>  
+    
+    {% if viz.creator.nickname == request.COOKIES.nickname %}
+    <div class="projectDetail edit">
+      <input id="tagline" value="{{ viz.tagline }}">
+    </div>
+    {% endif %}
+
+      <div class="others">
+    </div>
+    <p class="bold">description:</p>  <div class="description display">{{ viz.description }} </div>
+    {% if viz.creator.nickname == request.COOKIES.nickname %}
+    <div class="description edit">
+      <input id="description" value="{{ viz.description }}">
+    </div>
+    {% endif %}
+      </div>
+      <button onclick="showCode();">show code</button>
+  <div id="fork" onclick="fork({{ viz.pk }})"><button>fork</button></div>
+        <div id="code-wrapper" class="edit code">
+            <textarea rows="80" cols="120" id="code"    {% if viz.creator.nickname != request.COOKIES.nickname %} readonly="yes" {% endif %}>{{ source.code }}</textarea>
+=[        <img onclick="runSketch();" src="{% static 'i/run.png'%}" width="32px">  Run Sketch
+          </div>
+
+          <div id="sketch-container">
+            <canvas id="sketch"></canvas>
+          </div>
+          <div id="output-wrapper">
+            <h2>Output</h2>
+            <textarea cols="222" rows="10" id="output" readonly="readonly">None.</textarea>
+          </div>
+    <div class="comment">
+      <h3>Comments</h3>
+      <div class="existingComments">
+      {% for comment in comments %}
+      <div class="commentEntry">
+    <a href="#" class="author">{{ comment.commenter.nickname }}</a> says:
+    <p>{{ comment.comment }}</p>
+    </div>
+      {% endfor %}
+      </div>
+      <div class="commentEntry requireLogin">
+    <a href="#" class="author author-self">You</a>
+    <div class="commentButton">OK</div>  
+    <textarea id="userComment" name="" rows="5" placeholder="What's on yer mind?"></textarea>
+    </div>
+      </div>
+    </div>
+</main> -->
+{% endblock %}

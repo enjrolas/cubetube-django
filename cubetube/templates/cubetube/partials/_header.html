@@ -1,4 +1,4 @@
-<nav>
+<nav class="{% if not large %}always-small{% endif %}">
     <div class="section">
         <a class="logo-box" href="/">
             <img src="/static/images/logo.svg" class="logo" />
@@ -24,6 +24,8 @@
         </ul>
     </div>
 </nav>
+
+{% if large %}
 <header>
     <div class="section">
         <div class="main-text">
@@ -38,3 +40,4 @@
         </div>
     </div>
 </header>
+{% endif %}
