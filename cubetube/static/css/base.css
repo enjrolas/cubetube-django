@@ -1,0 +1,270 @@
+/**
+ * Cubetube main styles
+ * -- Its hip to be cube!
+ */
+/**
+ * Vars & mixins
+ */
+/**
+ * Resets
+ */
+* {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased; }
+
+html, body {
+  margin: 0px;
+  padding: 0px;
+  background: #fff; }
+
+body {
+  font-family: "proxima-nova", sans-serif; }
+
+header {
+  height: 80px;
+  background: #fff; }
+
+h1, h2 {
+  text-align: center; }
+
+h1 {
+  color: #212121;
+  font-weight: 800;
+  font-size: 35px; }
+
+h2 {
+  font-weight: 400;
+  font-size: 18px;
+  color: #9199aa;
+  margin-bottom: 30px; }
+
+.blue {
+  color: #2bc6fb; }
+
+.section {
+  width: 1280px;
+  margin: auto; }
+
+/**
+ * App
+ */
+.explore-title {
+  margin-bottom: 70px;
+  padding-top: 100px; }
+
+.create-callout {
+  padding-top: 70px;
+  padding-bottom: 120px; }
+  .create-callout .shadowed-line {
+    margin-bottom: 110px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.05); }
+  .create-callout img {
+    margin: auto;
+    margin-bottom: 40px;
+    margin-top: 60px;
+    display: block; }
+
+.button {
+  display: block;
+  background: #2bc6fb;
+  color: #fff;
+  cursor: pointer;
+  margin: auto;
+  max-width: 260px;
+  padding: 12px;
+  font-size: 14px;
+  border-radius: 3px;
+  letter-spacing: 0.4px;
+  text-align: center;
+  font-weight: bold;
+  text-decoration: none; }
+  .button:active {
+    background: #05b3ee; }
+
+/**
+ * Cubetube SVG's
+ * - Interactive
+ * - Non interactive
+ */
+.regular .part {
+  -webkit-transition: fill 300ms;
+  -moz-transition: fill 300ms;
+  -ms-transition: fill 300ms;
+  transition: fill 300ms;
+  fill: #E5E5E5; }
+
+.cube-svg {
+  width: 25px;
+  height: 41px; }
+
+.laptop-svg {
+  height: 41px;
+  width: 27px; }
+
+nav {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 90px;
+  background: #000; }
+  nav .logo-box {
+    margin-left: -20px;
+    height: 90px;
+    font-weight: 800;
+    vertical-align: top;
+    line-height: 50px;
+    display: inline-block;
+    padding-top: 18px; }
+    nav .logo-box img {
+      height: 50px;
+      margin-right: 5px; }
+  nav ul {
+    list-style: none;
+    float: right;
+    padding: 0px;
+    margin: 0px;
+    height: 100%; }
+    nav ul li {
+      display: inline-block;
+      height: 100%;
+      margin-left: 40px;
+      position: relative;
+      line-height: 90px;
+      font-weight: bold;
+      float: right;
+      color: #fff; }
+  nav .login a {
+    border-radius: 30px;
+    border: 2px solid #fff;
+    padding: 7px 20px; }
+  nav a {
+    text-decoration: none;
+    color: #fff; }
+
+header {
+  width: 100%;
+  height: 600px;
+  background: #f9f9f9;
+  background: #000;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%; }
+  header .main-text {
+    float: left;
+    text-align: left;
+    height: 100%; }
+    header .main-text h1 {
+      font-family: "soleil";
+      text-align: left;
+      color: #fff;
+      font-weight: 800;
+      font-size: 83px;
+      line-height: 83px;
+      margin-top: 180px;
+      margin-bottom: 0px; }
+    header .main-text h2 {
+      text-align: left;
+      font-size: 18px;
+      margin-top: 30px; }
+
+/**
+ * Cubetube card styles
+ * -- Used to represent cards in the grid view
+ */
+.viz-cards {
+  text-align: center;
+  max-width: 1400px;
+  margin: auto; }
+  .viz-cards .button {
+    margin-top: 40px; }
+
+.viz-card {
+  -webkit-transition: box-shadow 300ms;
+  -moz-transition: box-shadow 300ms;
+  -ms-transition: box-shadow 300ms;
+  transition: box-shadow 300ms;
+  width: 295px;
+  height: 230px;
+  display: inline-block;
+  box-shadow: 1px 3px 3px 0px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  margin-left: 15px;
+  margin-right: 15px;
+  border-radius: 3px;
+  overflow: hidden;
+  text-align: left; }
+  .viz-card .viz-demo {
+    background: #282E30;
+    height: 160px; }
+  .viz-card .viz-info {
+    height: 70px;
+    padding-top: 16px;
+    padding-left: 20px;
+    padding-right: 20px; }
+  .viz-card .left {
+    float: left; }
+  .viz-card .right {
+    float: right; }
+  .viz-card .name,
+  .viz-card .author {
+    text-decoration: none;
+    display: block;
+    max-width: 200px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis; }
+  .viz-card .name {
+    color: #000;
+    font-weight: bold; }
+  .viz-card .author {
+    color: #9199aa;
+    font-style: italic; }
+  .viz-card:hover {
+    box-shadow: 1px 4px 5px 1px rgba(0, 0, 0, 0.1); }
+    .viz-card:hover .part {
+      fill: #da003e; }
+
+footer {
+  background: url(../images/cube-pattern.png);
+  color: #fff; }
+  footer a {
+    color: #fff;
+    text-decoration: none; }
+  footer .top {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    height: 110px;
+    padding-top: 50px;
+    letter-spacing: 0.2px;
+    font-size: 13px; }
+    footer .top .logo {
+      width: 30px;
+      margin-top: -10px;
+      margin-right: 5px; }
+    footer .top .logo-box {
+      vertical-align: top;
+      line-height: 15px;
+      font-weight: 800; }
+    footer .top ul {
+      float: right;
+      list-style: none;
+      margin: 0px;
+      padding: 0px;
+      font-weight: 700; }
+      footer .top ul li {
+        display: inline-block;
+        margin-left: 35px; }
+        footer .top ul li a {
+          padding-top: 10px;
+          padding-bottom: 10px;
+          padding-left: 5; }
+  footer .bottom {
+    height: 410px; }
+    footer .bottom .cta {
+      font-size: 30px;
+      text-align: center;
+      font-weight: bold;
+      padding-top: 110px; }
+    footer .bottom .button {
+      margin-top: 60px; }
