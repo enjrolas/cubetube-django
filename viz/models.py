@@ -11,6 +11,7 @@ class Viz(models.Model):
     tags=models.TextField(default="")
     views=models.IntegerField(default=0)
     vizType=models.TextField(default="spark")
+    interactive=models.BooleanField(default=False)
     pageViews=models.IntegerField(default=0)
     parent=models.ForeignKey('self', null=True, blank=True, default = None)
     def __str__(self):
