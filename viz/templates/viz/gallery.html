@@ -1,15 +1,10 @@
 {% extends "cubetube/base.html" %}
-{% block header %}
-{% include "viz/gallery-header.html" %}
-{% endblock %}
+{% load card %}
 
 {% block content %}
-{% load thumbnail %}
-<main>
-<div class="gallery">
-{% for viz in visualizations %}
-{% thumbnail viz nextPage vizType %}
-{% endfor %}
+<div class="viz-cards">
+    {% for viz in visualizations %}
+        {% card viz %}
+    {% endfor %}
 </div>
-</main>
 {% endblock %}

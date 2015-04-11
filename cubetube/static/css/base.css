@@ -49,7 +49,7 @@ h2 {
  * App
  */
 .explore-title {
-  margin-bottom: 70px;
+  margin-bottom: 20px;
   padding-top: 100px; }
 
 .create-callout {
@@ -174,11 +174,14 @@ header {
  * -- Used to represent cards in the grid view
  */
 .viz-cards {
+  padding-top: 40px;
   text-align: center;
   max-width: 1400px;
   margin: auto; }
   .viz-cards .button {
     margin-top: 40px; }
+  .viz-cards h2 {
+    margin-bottom: 0px; }
 
 .viz-card {
   -webkit-transition: box-shadow 300ms;

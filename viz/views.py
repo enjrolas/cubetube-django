@@ -17,10 +17,10 @@ def gallery(request):
         vizs=Viz.objects.all().order_by("-created")    
   
     totalObjects=vizs.count()
-    if totalObjects<6:
+    if totalObjects<8:
         visualizations=vizs[:totalObjects]
     else:
-        visualizations=vizs[:6]
+        visualizations=vizs[:8]
     return render(request, "viz/gallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'vizType' : vizType, 'totalObjects' : totalObjects})
 
 def index(request):
