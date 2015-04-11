@@ -2,13 +2,15 @@
 {% load card %}
 
 {% block content %}
-    <h1>
-        Explore the latest visualizations
-    </h1>
-    <h2>
-        Text explaining how easy is to share your visualizations online </br>
-        and get featured on the site etc.
-    </h2>
+    <div class="explore-title">
+        <h1>
+            Explore the latest visualizations
+        </h1>
+        <h2>
+            Text explaining how easy is to share your visualizations online </br>
+            and get featured on the site etc.
+        </h2>
+    </div>
     <div class="viz-cards">
         {% for viz in visualizations %}
             {% card viz %}

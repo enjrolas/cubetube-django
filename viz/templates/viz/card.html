@@ -6,10 +6,14 @@
   <div class="viz-info">
     <div class="left">
       <span class="name">{{ viz.name }}</span>
-      <span class="author">{{ viz.creator }}</span>
+      <span class="author">by {{ viz.creator }}</span>
     </div>
     <div class="right">
-      {{ viz.interactive }}
+      {% if viz.interactive == 1 %}
+        {% include "cubetube/partials/_interactive_svg.html" %}
+      {% else %}
+        {% include "cubetube/partials/_cube_svg.html" %}
+      {% endif %}
     </div>
   </div>
 <!-- <a class="thumbnail-link" >
