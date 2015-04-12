@@ -12,7 +12,7 @@
 {% logged_in_status as logged_in %}
 
 {% block content %}
-<div class="viz-wrapper">
+<div class="viz-wrapper" data-viz-type="{{ viz.vizType }}" data-viz-url="{% url 'code' source.pk %}">
   <div class="viz-nav">
     <a class="round-button view-code">View Code</a>
     {% if logged_in %}

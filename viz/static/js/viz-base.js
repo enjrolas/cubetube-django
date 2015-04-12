@@ -19,24 +19,46 @@ $(function(){
     }, 'text');
     
     formatCode();
-    runSketch();
+
+    // Handle different viz types.
+    var vizType = getVizType();
+    if( vizType === 'L3D') {
+
+        parseSparkCode( getVizUrl() );
+        runSparkSketch();
+
+    } else if ( vizType === 'javascript' ) {
+        runSketch();
+    }
 });
+
+
 
 /**
  * Functions
  */
+function getVizType() {
+    var $wrapper = $('.viz-wrapper');
+    return $wrapper.attr('data-viz-type');
+}
 
-function fork() {
+function getVizUrl() {
+    var $wrapper = $('.viz-wrapper');
+    return $wrapper.attr('data-viz-url');
+}
+
+function initializeSparkSketch() {
 
 }
 
-function edit() {
+function fork() {
+}
 
+function edit() {
 }
 
 // Load JAVASCRIPT code
 function loadCode() {
-
 }
 
 // Applies codeMirror formatting code.

@@ -49,7 +49,7 @@ global.runSketch = function(callback) {
 
   global.runSparkSketch = function(callback) {
 	var output=$(".output");
-    try {
+    // try {
       canvas = createCanvas();
       var sketchCode=translatedCode.concat(library);
       var sketch = Processing.compile(sketchCode);
@@ -62,9 +62,9 @@ global.runSketch = function(callback) {
       } else {
         instance = new Processing(canvas, sketch);
       }
-    } catch (e) {
-	output.val("Error! Error was:\n" + e.toString());
-    }
+    // } catch (e) {
+	// output.val("Error! Error was:\n" + e.toString());
+    // }
   };
 
   global.convertToJS = function() {
