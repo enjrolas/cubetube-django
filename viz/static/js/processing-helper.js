@@ -1,17 +1,19 @@
 (function(global) {
     
-  var canvas = document.getElementById('sketch'),
-    output = document.getElementById('output'),
+  var canvas = document.querySelector('.sketch'),
+    output = document.querySelector('.output'),
     instance = null;
 
   function createCanvas() {
+
     // Make a new canvas, in case we're switching from 2D to 3D contexts.
-    var container = document.getElementById('sketch-container');
-    var sketch = document.getElementById('sketch');
+    var sketch = document.querySelector('.demo-canvas');
+    var container = sketch.parentNode;
     container.removeChild(sketch);
 
     sketch = document.createElement('canvas');
     sketch.id = 'sketch';
+    sketch.className = 'demo-canvas';
     container.appendChild(sketch);
 
     return sketch;
@@ -25,11 +27,11 @@
     return checkbox.checked || checkbox.value;
   }
 
-  global.runSketch = function(callback) {
-	var output=$("#output");
-    try {
-      canvas = createCanvas();
-      var sketchCode=$("#code").val().concat(library);
+global.runSketch = function(callback) {
+	  var output=$(".output");
+      // try {
+          canvas = createCanvas();
+          var sketchCode=$(".code").val().concat(library);
       var sketch = Processing.compile(sketchCode);
       if (callback) {
 	  if (!/exit\(\);/.test(sketchCode)) {
@@ -40,13 +42,13 @@
       } else {
         instance = new Processing(canvas, sketch);
       }
-    } catch (e) {
-	output.val("Error! Error was:\n" + e.toString());
-    }
+ //    } catch (e) {
+	// output.val("Error! Error was:\n" + e.toString());
+ //    }
   };
 
   global.runSparkSketch = function(callback) {
-	var output=$("#output");
+	var output=$(".output");
     try {
       canvas = createCanvas();
       var sketchCode=translatedCode.concat(library);

@@ -1,8 +1,0 @@
-input{
-    width=45%;
-}
-
-input#viz-description{
-    width: 45%;
-    height: 200px;
-}

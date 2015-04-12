@@ -1,9 +1,0 @@
-function flash(binary){
-    window.spark.flash(['./path/file1', './path/file2'], function(err, data) {
-	if (err) {
-	    console.log('An error occurred while flashing the core:', err);
-    } else {
-	console.log('Core flashing started successfully:', data);
-    }
-    });
-}

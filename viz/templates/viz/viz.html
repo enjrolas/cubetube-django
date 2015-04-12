@@ -8,15 +8,21 @@
 {% extends "viz/viz-base.html" %}
 {% load staticfiles %}
 
+{% load utils %}
+{% logged_in_status as logged_in %}
+
 {% block content %}
 <div class="viz-wrapper">
   <div class="viz-nav">
     <a class="round-button view-code">View Code</a>
-    <div class="cube-options">
-      <!-- Send to cube/select cube -->
-    </div>
+    {% if logged_in %}
+      <div class="cube-options">
+        Logged in options here. Handled by statemanager.
+      </div>
+    {% endif %}
   </div>
   <div class="viz-demo">
+    <canvas class="demo-canvas"></canvas>
   </div>
   <div class="viz-details">
     <div class="inner-wrapper">
@@ -42,23 +48,34 @@
 
     <div class="viz-comments">
       <div class="inner-wrapper">
-      {% for comment in comments %}
-        <div class="viz-comment">
-          <a href="#" class="author">{{ comment.commenter.nickname }}</a> <span class="said">said</span>
-          <p>{{ comment.comment }}</p>
+        <div class="comments-title">
+          Comments:
         </div>
-      {% endfor %}
+        {% if not logged_in %}
+          <textarea class="comments-input" rows="5" placeholder="Please, share your thoughts!"></textarea>
+          <div class="input-button comments-confirm">Post Comment</div>  
+        {% endif %}
+        {% for comment in comments %}
+          <div class="viz-comment">
+            <a href="#" class="author">{{ comment.commenter.nickname }}</a> <span class="said">said</span>
+            <p>{{ comment.comment }}</p>
+          </div>
+        {% empty %}
+          <div class="no-comments">There are no comments yet...</div>
+        {% endfor %}
       </div>
     </div>
-      
   </div>
-
   <a class="viz-next">
     <div class="next-text">Up next</div>
     <div class="next-viz-name">Wall Bounce</div>
   </a>
-</div>
 
+  <div class="viz-code">
+    <textarea cols="222" rows="10" class="console output"></textarea>
+    <textarea rows="80" cols="120" id="code" class="code inout">{{ source.code }}</textarea>
+  </div>
+</div>
 
 
 
