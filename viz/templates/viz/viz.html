@@ -31,6 +31,8 @@
       </div>
 
       <div class="viz-share">
+        <div class="twitter">Twitter</div>
+        <div class="facebook">Facebook</div>
       </div>
 
       <div class="viz-description">
@@ -51,23 +53,16 @@
       
   </div>
 
-  <div class="viz-next">
-  </div>
+  <a class="viz-next">
+    <div class="next-text">Up next</div>
+    <div class="next-viz-name">Wall Bounce</div>
+  </a>
 </div>
 
 
 
 
 <!-- <main>
-      <div class="info">
-    <p class="bold">title:</p> <div class="projectTitle display">
-      {{ viz.name }}
-    </div>
-      {% if viz.creator.nickname == request.COOKIES.nickname %}
-    <div class="projectTitle edit">
-      <input id="name" value="{{ viz.name }}">
-    </div>
-    {% endif %}
       {% if viz.creator.nickname == request.COOKIES.nickname %}
       <button id="edit" class="display" onclick="edit()">edit</button>
       <button id="edit" class="edit" onclick="save()">save</button>

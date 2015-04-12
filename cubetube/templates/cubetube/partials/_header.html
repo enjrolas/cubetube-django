@@ -1,24 +1,27 @@
-<nav class="{% if not large %}always-small{% endif %}">
+{% load utils %}
+{% logged_in_status as logged_in %}
+
+<nav class="{% if not large %}always-small{% endif %} {{page}}">
     <div class="section">
         <a class="logo-box" href="/">
             <img src="/static/images/logo.svg" class="logo" />
             Cubetube
+            {{ logged_in }}
         </a>
         <ul class="items">
-
             <li class="login">
                 <a href="">Join or Log In</a>
             </li>
-            <li>
+            <li class="on-forum">
                 <a href="/forum">Forum</a>
             </li>
-            <li>
+            <li class="on-gallery">
                 <a href="/gallery">Gallery</a>
             </li>
-            <li>
+            <li class="on-docs">
                 <a href="/docs">Getting Started</a>
             </li>
-            <li>
+            <li class="on-overview">
                 <a href="/">Overview</a>
             </li>
         </ul>
@@ -41,3 +44,4 @@
     </div>
 </header>
 {% endif %}
+

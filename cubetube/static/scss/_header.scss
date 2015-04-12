@@ -80,7 +80,6 @@ nav {
             padding-top: 20px;
         }
     }
-
 }
 
 header {
@@ -113,5 +112,37 @@ header {
             font-size: 18px;
             margin-top: 30px;
         }
+    }
+}
+
+.overview {
+    .on-overview {
+        box-shadow: inset 0px 3px 0px $red;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+}
+
+.docs {
+    .on-docs {
+        box-shadow: inset 0px 3px 0px $red;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+}
+
+.forum {
+    .on-forum {
+        box-shadow: inset 0px 3px 0px $red;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+}
+
+.gallery {
+    .on-gallery {
+        box-shadow: inset 0px 3px 0px $red;
+        padding-left: 8px;
+        padding-right: 8px;
     }
 }

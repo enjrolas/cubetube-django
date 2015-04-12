@@ -1,7 +1,10 @@
-{% extends "cubetube/base.html" %}
+{% extends "cubetube/base.html"%}
 {% load staticfiles %}
+
 {% block header %}
+    {% include "cubetube/partials/_header.html" with page="docs" large=0 %}
 {% endblock %}
+
 {% block content %}
 <iframe id="forum_embed"
  src="javascript:void(0)"
