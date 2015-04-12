@@ -26,12 +26,12 @@
 
     // Canvas sits inside here.
     .viz-demo {
-        width: 100%;
+        width: 800px;
         height: 460px;
         background: $purple;
 
         canvas {
-            width: 100%;
+            width: 800px;
             height: 460px;
         }
     }
