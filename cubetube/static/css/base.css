@@ -83,6 +83,112 @@ h2 {
     background: #05b3ee; }
 
 /**
+ * - Popover appeared. Stop all scrolling. 
+ */
+.glass {
+  display: none;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.8); }
+
+.login-signup-popover {
+  display: none;
+  z-index: 15;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate3d(-50%, -50%, 0);
+  -moz-transform: translate3d(-50%, -50%, 0);
+  -ms-transform: translate3d(-50%, -50%, 0);
+  transform: translate3d(-50%, -50%, 0);
+  border-radius: 4px;
+  background: #fff;
+  width: 320px;
+  padding: 20px;
+  text-align: center; }
+  .login-signup-popover .tiny-logo {
+    position: absolute;
+    top: 20px;
+    left: 20px; }
+  .login-signup-popover .login-title {
+    font-weight: bold;
+    font-size: 30px; }
+  .login-signup-popover .grey {
+    opacity: 0.3; }
+  .login-signup-popover .link {
+    border-bottom: 1px solid;
+    cursor: pointer; }
+  .login-signup-popover p {
+    font-family: "roboto";
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 21px;
+    letter-spacing: 0.2px;
+    margin-top: 15px; }
+    .login-signup-popover p a {
+      color: #2bc6fb;
+      text-decoration: none; }
+  .login-signup-popover .input-areas {
+    position: absolute;
+    left: 0px;
+    bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px; }
+  .login-signup-popover .sigup-text {
+    margin-top: 25px; }
+  .login-signup-popover .inputs {
+    width: 100%;
+    border-radius: 3px;
+    background: #f9f9f9;
+    border: 1px solid #ddd; }
+    .login-signup-popover .inputs .password,
+    .login-signup-popover .inputs .nickname {
+      border-top: 1px solid #ddd; }
+    .login-signup-popover .inputs input {
+      width: 100%;
+      background: none;
+      border: 0px;
+      padding: 20px;
+      padding-left: 15px;
+      padding-right: 15px;
+      font-size: 14px;
+      outline: 0px; }
+  .login-signup-popover button {
+    width: 100%;
+    height: 55px;
+    border: 0px;
+    border-radius: 3px;
+    color: #fff;
+    background: #1c1521;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: "roboto";
+    margin-top: 20px;
+    cursor: pointer; }
+  .login-signup-popover.join {
+    height: 530px; }
+    .login-signup-popover.join .login-component {
+      display: none; }
+  .login-signup-popover.login {
+    height: 410px; }
+    .login-signup-popover.login p {
+      margin-top: 20px; }
+    .login-signup-popover.login .signup-component {
+      display: none; }
+  .login-signup-popover .content {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    padding: 20px;
+    padding-top: 65px; }
+
+/**
  * Used on /viz directories
  * -- Shows the vizualization, and code editor
  */

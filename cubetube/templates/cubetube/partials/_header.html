@@ -1,6 +1,10 @@
 {% load utils %}
 {% logged_in_status as logged_in %}
 
+{% if not logged_in %}
+    {% include "cubetube/partials/_login_components.html" %}
+{% endif %}
+
 <nav class="{% if not large %}always-small{% endif %} {{page}}">
     <div class="section">
         <a class="logo-box" href="/">
