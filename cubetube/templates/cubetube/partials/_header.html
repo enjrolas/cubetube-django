@@ -17,11 +17,11 @@
                     <a href="">Join or Log In</a>
                 </li>
             {% else %}
-                <li class="create">
-                    <a href="">Create</a>
+                <li class="user logout-user">
+                    <a class="logout" href="">{{ request.COOKIES.nickname }}</a>
                 </li>
-                <li class="user">
-                    <a href="">{{ request.COOKIES.nickname }}</a>
+                <li>
+                    <a class="create" href="">Create</a>
                 </li>
             {% endif %}
             <li class="on-forum">

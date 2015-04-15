@@ -40,8 +40,29 @@ $(function(){
             var nickname = $('.signup-component .nickname').val();
             var password = $('.signup-component .password').val();
             createNewUser(email, nickname, password);
-        })
+        });
+
+        /**
+         * Sign in
+         */
+        $('.login-component .login').click(function() {
+            var email = $('.login-component .email').val();
+            var password = $('.login-component .password').val();
+            sparkLogin(email, password);
+        });
     }
+
+    /**
+     * Log out
+     */
+    $('.logout').click(function(e) {
+        e.preventDefault();
+        $.removeCookie("accessToken", { path: '/' });
+        $.removeCookie("username", { path: '/' });
+        $.removeCookie("nickname", { path: '/' });
+        $.removeCookie("coreID", { path: '/' });
+        location.reload();
+    })
 });
 
 function createNewUser(email, nickname, password) {
@@ -51,10 +72,10 @@ function createNewUser(email, nickname, password) {
     
         // We try to login and get back an accessToken to verify user creation
         if (!err) {
-            sparkLogin(email, nickname, password);
+            sparkSignup(email, nickname, password);
         } else {
             if(err.message.indexOf("already exists")>-1) {
-                sparkLogin(email, nickname, password);
+                sparkSignup(email, nickname, password);
             } else {
                 displayCreateUserError(err.message);
             }
@@ -62,9 +83,9 @@ function createNewUser(email, nickname, password) {
     });
 }
 
-function sparkLogin(email, nickname, password) {
+// Signs up to spark, and then logs you in.
+function sparkSignup(email, nickname, password) {
     var loginPromise = window.spark.login({ username: email, password: password });
-    console.log(loginPromise);
     loginPromise.then(function(data){
         // They have logged in with spark.
 
@@ -82,9 +103,11 @@ function sparkLogin(email, nickname, password) {
             if( data['status'] == "ok" ) {
                 nickname=data['nickname'];
                 $.cookie("nickname", nickname, { expires: data.expires_in/86400 , path: '/'});
+                location.reload();
+
             // Create new user
             } else if ( data['status'] == "newUser" ) {
-                cubetubeLogin(email, accessToken, nickname)
+                cubetubeSignup(email, accessToken, nickname)
             }
         }).error(function(data) {});
 
@@ -93,7 +116,40 @@ function sparkLogin(email, nickname, password) {
     });
 }
 
-function cubetubeLogin(email, accessToken, nickname) {
+// Logs into spark, or errors.
+function sparkLogin(email, password) {
+    var loginPromise = window.spark.login({ username: email, password: password });
+    loginPromise.then(function(data){
+        // They have logged in with spark.
+
+        var accessToken = data.access_token;
+        $.cookie("accessToken", data.access_token, { expires: data.expires_in/86400 , path: '/'});
+
+        //let the server know that we're logged in
+        $.post("/login/", {
+            email: email,
+            accessToken: data.access_token,
+            dataType: 'script',
+        }).success(function(data) {
+            
+            // Logged in.
+            if( data['status'] == "ok" ) {
+                nickname=data['nickname'];
+                $.cookie("nickname", nickname, { expires: data.expires_in/86400 , path: '/'});
+                location.reload();
+            } else {
+                displayError('Sorry, no such user exists');
+            }
+        }).error(function(data) {
+            displayError('Sorry, no such user exists');
+        });
+
+    }, function(error){
+        displayError(error);
+    });
+}
+
+function cubetubeSignup(email, accessToken, nickname) {
     $.ajax({
         type: 'post',
         url: '/newUser/',
@@ -167,64 +223,9 @@ function displayError(error) {
 //    });
 
 
-// function validateNickname()
-// {
-//     var nick=encodeURIComponent($("#nickname").val());  //URL-encode the data
-//     var url="http://127.0.0.1:8000/validateNickname/"+nick+"/";
-//     console.log(url);
-//     $.get( url, function( data ) {	
-// 	console.log(data);
-// 	if(data['status']=='ok')
-// 	{
-// 	    $("#nickname-error").html("&#x2713;");
-// 	    $("#nickname-error").attr("class","valid-nickname");
-// 	    $("#set-nickname-button").prop("disabled",false);
-// 	}
-// 	else
-// 	{
-// 	    $("#nickname-error").text(data['error']);
-// 	    $("#nickname-error").attr("class","invalid-nickname");
-// 	    $("#set-nickname-button").prop("disabled",true);
-// 	}
-//     });
-// }
-
-// function setNickname()
-// {
-//     $.post("http://127.0.0.1:8000/setNickname/",
-// 	   {
-// 	       email: username,
-// 	       accessToken: accessToken,
-// 	       nickname: $("#nickname").val(),
-// 	       dataType: 'script',
-// 	   }).success(function(data)
-// 		      {
-// 			  setLoginData(data);
-// 			  setLoggedIn();
-			  
-// 		      }).error(function(data){
-// 			  console.log(data)});
-	
-// }
-
 // //login attempts to log into spark's server with the email/password combination
 // //retrieves the account's access token, and sets site-wide cookies with the user's
 // //email and access token.
-
-
-// function handleLoginResponse(data){
-// }
-
-// function handleLoginError(error) {
-//         if (error.message === 'invalid_client') {
-//           displayLoginError('Invalid username or password.');
-//         } else if (error.cors === 'rejected') {
-//           displayLoginError('Request rejected.');
-//         } else {
-//           displayLoginError('Unknown error.');
-//           console.log(error);
-//         }
-// }
 
 // function listCubes()
 // {
@@ -273,68 +274,6 @@ function displayError(error) {
 // }
 
 
-//this function attempts to create a user at the given email/pass combination
-//and if there's no glaring error, logs in with the email/pass combination
-function createUser(email, password)
-{
-
-}
-
-// //removes both cookies
-// function logout()
-// {
-//     $.removeCookie("accessToken", { path: '/' });
-//     $.removeCookie("username", { path: '/' });
-//     $.removeCookie("nickname", { path: '/' });
-//     $.removeCookie("coreID", { path: '/' });
-//     accessToken="";
-//     username="";
-//     nickname="";
-//     coreID="";
-//     setLoggedOut();
-// }
-
-// function setLoggedIn()
-// {
-//     updateStatus("logged in as "+nickname);
-//     $("#logout").show();
-//     $("#logged-out").hide();
-//     updateAction("log out");
-//     listCubes();
-//     dialog.dialog( "close" );
-//     createUserDialog.dialog( "close" );
-//     nicknameDialog.dialog("close");
-//     $("#cube-selector").show();
-//     $("#login").hide();
-//     $("#create-user").hide();
-//     $("#nicknameForm").hide();
-//     $(".requireLogin").show();
-// }
-
-// function setLoggedOut()
-// {
-//     updateStatus("you are logged out");
-//     $("#logged-out").show();
-//     $("#logout").hide();
-//     $("#cube-selector").hide();
-//     $("#login").hide();
-//     $("#create-user").hide();
-//     $("#nicknameForm").hide();
-//     $(".requireLogin").hide();
-// }
-
-// function showLogin()
-// {
-//     $("#login").show();
-//     $("#create-user").hide();
-// }
-
-// function showCreate()
-// {
-//     $("#login").hide();
-//     $("#create-user").show();
-// }
-
 // function loginWithAccessToken()
 // {
 //     var loginPromise = window.spark.login({ accessToken: accessToken });
@@ -359,31 +298,3 @@ function createUser(email, password)
 //     else
 // 	setLoggedOut();
 // }
-
-
-// //these functions just streamline updating the content of different divs on the page
-
-// function updateStatus(message) {
-//     $('#status').text(message);
-// }
-
-// function updateAction(message) {
-//     $('#action').text(message);
-// }
-
-// function displayLoginError(message) {
-//     $('#login-error').text(message);
-// }
-
-// function displayLoginResult(message) {
-//     $('#login-result').text(message);
-// }
-
-// function displayCreateUserError(message) {
-//     $('#create-user-error').text(message);
-// }
-
-// function displayCreateUserResult(message) {
-//     $('#create-user-result').text(message);
-// }
-

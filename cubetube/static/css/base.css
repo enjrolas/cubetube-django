@@ -347,6 +347,40 @@ nav {
       font-weight: bold;
       float: right;
       color: #fff; }
+  nav .create {
+    background: #2bc6fb;
+    border-radius: 30px;
+    padding: 6px 22px 6px 22px; }
+  nav .logout-user {
+    margin-left: 10px; }
+  nav .user .logout {
+    background: #da003e;
+    border-radius: 30px;
+    padding: 6px 22px 6px 22px;
+    position: relative;
+    -webkit-transition: color 300ms;
+    -moz-transition: color 300ms;
+    -ms-transition: color 300ms;
+    transition: color 300ms; }
+    nav .user .logout:after {
+      color: #fff;
+      content: "Log Out";
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      text-align: center;
+      height: 100%;
+      line-height: 32px;
+      opacity: 0;
+      -webkit-transition: opacity 300ms;
+      -moz-transition: opacity 300ms;
+      -ms-transition: opacity 300ms;
+      transition: opacity 300ms; }
+    nav .user .logout:hover {
+      color: rgba(255, 255, 255, 0); }
+      nav .user .logout:hover:after {
+        opacity: 1; }
   nav .login a {
     border-radius: 30px;
     border: 2px solid #fff;

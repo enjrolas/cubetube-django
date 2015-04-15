@@ -46,6 +46,45 @@ nav {
         }
     }
 
+    .create {
+        background: $blue;
+        border-radius: 30px;
+        padding: 6px 22px 6px 22px;
+    }
+
+    .logout-user {
+        margin-left: 10px;
+    }
+
+    .user .logout {
+        background: $red;
+        border-radius: 30px;
+        padding: 6px 22px 6px 22px;  
+        position: relative; 
+        @include transition(color 300ms);
+
+        &:after {
+            color: #fff;
+            content: "Log Out";
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            text-align: center;
+            height: 100%;
+            line-height: 32px;
+            opacity: 0;
+            @include transition(opacity 300ms);
+        }
+
+        &:hover {
+            color: rgba(255, 255, 255, 0);
+            &:after {
+                opacity: 1;
+            }
+        }
+    }
+
     .login a {
         border-radius: 30px;
         border: 2px solid #fff;
