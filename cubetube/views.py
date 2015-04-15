@@ -30,48 +30,31 @@ def login(request):
 
 @csrf_exempt
 def newUser(request):
-    email=request.POST['email']
-    accessToken=request.POST['accessToken']
+    email = request.POST['email']
+    accessToken = request.POST['accessToken']
+    nickname = request.POST['nickname']
+
     user=CubeUser.objects.filter(email=email).exists()
-    if user is None:
-        user=CubeUser(email=email, accessToken=accessToken, nickname=nickname)
-        user.save()
-        response='{ "status":"ok" }' 
-    else:
-        response='{ "status":"error", "error":"user already exists in database"}'
-    return HttpResponse(response, content_type="application/json")
-
-@csrf_exempt
-def validateNickname(request, nickname):
     names=CubeUser.objects.filter(nickname__iexact=nickname)  #ignore case
-    if not check(nickname):
-        response='{ "status":"error", "error", "nickname cannot contain spaces or funky characters"}'         
-    else:
-        if names.count()==0:
-            response='{ "status":"ok" }' 
-        else:
-            response='{ "status":"error", "error":"nickname already exists in database"}'
-    return HttpResponse(response, content_type="application/json")
 
-
-@csrf_exempt
-def setNickname(request):
-    email=request.POST['email']
-    accessToken=request.POST['accessToken']
-    nickname=request.POST['nickname']
-    names=CubeUser.objects.filter(nickname__iexact=nickname)  #ignore case
-    if not check(nickname):
-        response='{ "status":"error", "error", "nickname cannot contain spaces or funky characters"}'         
-    else:
-        if names.count()==0:
-            user=CubeUser()
-            user.email=email
-            user.accessToken=accessToken
-            user.nickname=nickname
-            user.save()
-            response='{ "status":"ok" , "nickname": "%s"}' %nickname
+    # No current user exists
+    if not user:
+        if not check(nickname):
+            response='{ "success": False, "status":"error", "error", "nickname cannot contain spaces or funky characters"}'
+        # Nickname is not being used.
         else:
-            response='{ "status":"error", "error":"nickname already exists in database"}'
+            if names.count()==0:
+                user=CubeUser()
+                user.email=email
+                user.accessToken=accessToken
+                user.nickname=nickname
+                user.save()
+                response='{ "status":"ok" , "nickname": "%s"}' %nickname
+            else:
+                response='{ "success": False, "status":"error", "error":"nickname already exists in database"}'
+    else:
+        response='{ "success": False, status":"error", "error":"user already exists in database"}'
+
     return HttpResponse(response, content_type="application/json")
 
 @csrf_exempt

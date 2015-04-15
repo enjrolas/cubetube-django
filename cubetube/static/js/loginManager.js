@@ -31,9 +31,91 @@ $(function(){
             $popover.hide();
             $glass.hide();
         });
-    }
 
+        /**
+         * Sign up... Registers a new user.
+         */
+        $('.signup-component .signup-button').click(function() {
+            var email = $('.signup-component .email').val();
+            var nickname = $('.signup-component .nickname').val();
+            var password = $('.signup-component .password').val();
+            createNewUser(email, nickname, password);
+        })
+    }
 });
+
+function createNewUser(email, nickname, password) {
+    
+    // Register with spark.
+    window.spark.createUser(email, password, function(err, data) {
+    
+        // We try to login and get back an accessToken to verify user creation
+        if (!err) {
+            sparkLogin(email, nickname, password);
+        } else {
+            if(err.message.indexOf("already exists")>-1) {
+                sparkLogin(email, nickname, password);
+            } else {
+                displayCreateUserError(err.message);
+            }
+        }
+    });
+}
+
+function sparkLogin(email, nickname, password) {
+    var loginPromise = window.spark.login({ username: email, password: password });
+    console.log(loginPromise);
+    loginPromise.then(function(data){
+        // They have logged in with spark.
+
+        var accessToken = data.access_token;
+        $.cookie("accessToken", data.access_token, { expires: data.expires_in/86400 , path: '/'});
+
+        //let the server know that we're logged in
+        $.post("/login/", {
+            email: email,
+            accessToken: data.access_token,
+            dataType: 'script',
+        }).success(function(data) {
+            
+            // Logged in.
+            if( data['status'] == "ok" ) {
+                nickname=data['nickname'];
+                $.cookie("nickname", nickname, { expires: data.expires_in/86400 , path: '/'});
+            // Create new user
+            } else if ( data['status'] == "newUser" ) {
+                cubetubeLogin(email, accessToken, nickname)
+            }
+        }).error(function(data) {});
+
+    }, function(error){
+        displayError(error);
+    });
+}
+
+function cubetubeLogin(email, accessToken, nickname) {
+    $.ajax({
+        type: 'post',
+        url: '/newUser/',
+        data: {
+            email: email,
+            accessToken: accessToken,
+            nickname: nickname
+        },
+        success: function( data ) {
+            nickname=data['nickname'];
+            $.cookie("nickname", nickname, { expires: data.expires_in/86400 , path: '/'});
+            location.reload();
+        },
+        error: function( errorMessage ) {
+            console.log( errorMessage );
+        }
+    })
+}
+
+function displayError(error) {
+    console.log( "Login error: ", error );
+}
 
 // var accessToken, username, nickname, coreID;  //global vars holding the user's accesstoken and email
 
@@ -49,11 +131,11 @@ $(function(){
 // 	    login( username, $("#login-form-password").val());
 // 	    });
 
-// 	$("#create-user-button").click( function(e){
-// 	    e.preventDefault();  //prevent the page from reloading
-// 	    username=$("#create-user-email").val();
-// 	    createUser(username, $("#create-user-password").val());
-// 		    });
+	// $("#create-user-button").click( function(e){
+	//     e.preventDefault();  //prevent the page from reloading
+	//     username=$("#create-user-email").val();
+	//     createUser(username, $("#create-user-password").val());
+	// 	    });
 
 // 	$("#logout").click(function(e) {
 // 		e.preventDefault();  //prevent the page from reloading
@@ -128,51 +210,9 @@ $(function(){
 // //login attempts to log into spark's server with the email/password combination
 // //retrieves the account's access token, and sets site-wide cookies with the user's
 // //email and access token.
-// function login( email, password)
-// {
-//     var loginPromise = window.spark.login({ username: email, password: password });
-//     loginPromise.then(function(data){
-// 	handleLoginResponse(data);
-// 		     },
-// 		      function(error){
-// 			  handleLoginError(error);
-// 		      });
-// }
+
 
 // function handleLoginResponse(data){
-
-// 	  accessToken=data.access_token;
-// 	  $.cookie("accessToken", data.access_token, { expires: data.expires_in/86400 , path: '/'});
-// 	  console.log(accessToken);
-
-// 	  //let the server know that we're logged in
-// 	  $.post("/login/",
-// 		 {
-// 		     email: username,
-// 		     accessToken: data.access_token,
-// 		     dataType: 'script',
-// 		 }).success(function(data)
-// 		 {
-// 		     if(data['status']=="ok")
-// 		     {
-// 			 setLoginData(data);
-// 		     }
-// 		     else if(data['status']=="newUser")
-// 		     {			 
-// 			 nicknameDialog.dialog("open");
-// 			 //$('#nicknameForm').show();
-// 			 $("#set-nickname-button").prop("disabled",true);
-// 		     }
-// 		     else{
-// 			 setLoginData(data);
-// //			 logout();
-// 		     }
-		     
-// 		 }).error(function(data)
-// 			  {
-// 			      console.log("error");
-
-// 			  });
 // }
 
 // function handleLoginError(error) {
@@ -184,16 +224,6 @@ $(function(){
 //           displayLoginError('Unknown error.');
 //           console.log(error);
 //         }
-// }
-
-// function setLoginData(data){
-// 			 nickname=data['nickname'];
-// 			 $.cookie("nickname", nickname, { expires: data.expires_in/86400 , path: '/'});
-// 			 $('#login-form-email').val('');
-// 			 $('#login-form-password').val('');
-// 			 displayLoginError('');
-// 			 //displayLoginResult(JSON.stringify(data));
-// 			 setLoggedIn();
 // }
 
 // function listCubes()
@@ -243,30 +273,12 @@ $(function(){
 // }
 
 
-// //this function attempts to create a user at the given email/pass combination
-// //and if there's no glaring error, logs in with the email/pass combination
-// function createUser(email, password)
-// {
-//     window.spark.createUser(email, password, function(err, data) {
-// 	    console.log('err on create user:', err);
-// 	    console.log('data on create user:', data);
+//this function attempts to create a user at the given email/pass combination
+//and if there's no glaring error, logs in with the email/pass combination
+function createUser(email, password)
+{
 
-//   if (!err) {
-// //      displayCreateUserResult(JSON.stringify(data));
-//       // We try to login and get back an accessToken to verify user creation
-//       console.log("trying to log in...");
-//       login(email, password);
-//   }
-//   else
-// 	{
-// 	    if(err.message.indexOf("already exists")>-1)
-// 		login(email, password);
-// 	    else
-// 		displayCreateUserError(err.message);	    
-// 	}	
-//     });
-
-// }
+}
 
 // //removes both cookies
 // function logout()

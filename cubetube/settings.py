@@ -174,7 +174,7 @@ LOGGING = {
         'logfile': {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
-            'filename': "/home/glass/logs/cubetube-django-debug",
+            'filename': "/Users/Tim/Documents/cubetube/cubetube-django/logs/logfile",
             'maxBytes': 50000,
             'backupCount': 2,
             'formatter': 'standard',
