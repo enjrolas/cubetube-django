@@ -420,8 +420,8 @@ nav {
         opacity: 1; }
   nav .login a {
     border-radius: 30px;
-    border: 2px solid #fff;
-    padding: 7px 20px; }
+    padding: 7px 20px;
+    background: #ee0026; }
   nav a {
     text-decoration: none;
     color: #fff; }

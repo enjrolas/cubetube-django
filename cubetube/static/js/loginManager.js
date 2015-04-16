@@ -138,10 +138,11 @@ function sparkLogin(email, password) {
                 $.cookie("nickname", nickname, { expires: data.expires_in/86400 , path: '/'});
                 location.reload();
             } else {
-                displayError('Sorry, no such user exists');
+                cubetubeSignup(email, accessToken, email.split('@')[0]);
             }
+
         }).error(function(data) {
-            displayError('Sorry, no such user exists');
+            cubetubeSignup(email, accessToken, email.split('@')[0]);
         });
 
     }, function(error){
