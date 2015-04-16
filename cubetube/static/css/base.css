@@ -65,6 +65,11 @@ h2 {
     margin-top: 60px;
     display: block; }
 
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both; }
+
 .button {
   display: block;
   background: #2bc6fb;
@@ -196,18 +201,31 @@ h2 {
   width: 800px;
   border-top: 90px solid #f9f9f9;
   height: 100%; }
+  .viz-wrapper .round-button {
+    font-family: roboto;
+    color: #fff;
+    float: right;
+    padding: 8px 20px;
+    border-radius: 3px;
+    font-size: 14px;
+    font-weight: normal;
+    margin-top: 14px;
+    cursor: pointer;
+    margin-left: 10px; }
+    .viz-wrapper .round-button img {
+      margin-left: 7px;
+      margin-bottom: -2px;
+      margin-right: -9px; }
+    .viz-wrapper .round-button:active {
+      opacity: 0.8; }
+  .viz-wrapper .button-red {
+    background: #ee0026; }
+  .viz-wrapper .button-grey {
+    border: 1px solid #ccc;
+    background: #F9F9F9;
+    color: #000; }
   .viz-wrapper .viz-nav {
     height: 60px; }
-    .viz-wrapper .viz-nav .view-code {
-      background: #da003e;
-      color: #fff;
-      float: right;
-      padding: 8px 20px;
-      border-radius: 35px;
-      font-size: 14px;
-      font-weight: bold;
-      margin-top: 14px;
-      cursor: pointer; }
   .viz-wrapper .viz-demo {
     width: 800px;
     height: 460px;
@@ -261,9 +279,28 @@ h2 {
   .viz-wrapper .viz-comments {
     background: #f9f9f9;
     padding-top: 30px;
-    padding-bottom: 50px;
+    padding-bottom: 35px;
     margin-top: 30px;
     border-top: 1px solid #ededed; }
+    .viz-wrapper .viz-comments .comments-title {
+      font-weight: 700;
+      font-size: 18;
+      margin-bottom: 9px; }
+    .viz-wrapper .viz-comments .comments-input {
+      width: 100%;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      padding: 15px;
+      font-family: roboto;
+      font-size: 12px;
+      box-shadow: inset 0px 2px 10px rgba(0, 0, 0, 0.05);
+      outline: 0px; }
+    .viz-wrapper .viz-comments .submit-comment {
+      float: left;
+      margin-left: 0px;
+      display: block; }
+    .viz-wrapper .viz-comments textarea::-webkit-input-placeholder {
+      font-style: italic !important; }
   .viz-wrapper .viz-next {
     display: block;
     text-decoration: none;
@@ -278,7 +315,7 @@ h2 {
       font-weight: 800;
       font-size: 16px; }
     .viz-wrapper .viz-next .next-viz-name {
-      color: #da003e;
+      color: #ee0026;
       font-weight: 800;
       font-size: 30px; }
   .viz-wrapper .viz-code {
@@ -354,7 +391,7 @@ nav {
   nav .logout-user {
     margin-left: 10px; }
   nav .user .logout {
-    background: #da003e;
+    background: #ee0026;
     border-radius: 30px;
     padding: 6px 22px 6px 22px;
     position: relative;
@@ -439,22 +476,22 @@ header {
     height: 6px; }
 
 .overview .on-overview {
-  box-shadow: inset 0px 3px 0px #da003e;
+  box-shadow: inset 0px 3px 0px #ee0026;
   padding-left: 8px;
   padding-right: 8px; }
 
 .docs .on-docs {
-  box-shadow: inset 0px 3px 0px #da003e;
+  box-shadow: inset 0px 3px 0px #ee0026;
   padding-left: 8px;
   padding-right: 8px; }
 
 .forum .on-forum {
-  box-shadow: inset 0px 3px 0px #da003e;
+  box-shadow: inset 0px 3px 0px #ee0026;
   padding-left: 8px;
   padding-right: 8px; }
 
 .gallery .on-gallery {
-  box-shadow: inset 0px 3px 0px #da003e;
+  box-shadow: inset 0px 3px 0px #ee0026;
   padding-left: 8px;
   padding-right: 8px; }
 
@@ -516,7 +553,7 @@ header {
   .viz-card:hover {
     box-shadow: 1px 4px 5px 1px rgba(0, 0, 0, 0.1); }
     .viz-card:hover .part {
-      fill: #da003e; }
+      fill: #ee0026; }
 
 footer {
   background: url(../images/cube-pattern.png);

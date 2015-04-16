@@ -71,6 +71,7 @@ def viz(request, id):
     currentViz.save()
     source=SourceCode.objects.get(viz=currentViz)
     return render(request, "viz/viz.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments, 'source': source})
+    
     # if currentViz.vizType=="streaming":
     #     binary=Binary.objects.get(pk=settings.LISTENER_PK)
     # if currentViz.vizType=='javascript':

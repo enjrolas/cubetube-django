@@ -2,118 +2,13 @@
 <html>
   <head>
     {% include "cubetube/partials/_head.html" %}
-
-<!--
-  <link rel="stylesheet" href="http://brick.a.ssl.fastly.net/EB+Garamond:400,400i/Fira+Sans:300,400,500,700">    
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
-  <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
-  <script src="http://cdn.jsdelivr.net/sparkjs/0.2.3/spark.min.js"></script>
-  <script src="{% static 'js/jquery.cookie.js' %}"></script>
-  <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}"> 
-  
-  <script type="text/javascript">
-  $(function(){
-  dialog = $( "#login" ).dialog({
-  position: { my: "top", at: "bottom", of: $("header") },
-  autoOpen: false,
-  height: 300,
-  width: 350,
-  modal: true,
-  buttons: {
-  Cancel: function() {
-  dialog.dialog( "close" );
-  }
-  },
-  close: function() {
-  }
-  });
-
-  createUserDialog = $( "#create-user" ).dialog({
-  position: { my: "top", at: "bottom", of: $("header") },
-  autoOpen: false,
-  height: 300,
-  width: 350,
-  modal: true,
-  buttons: {
-  Cancel: function() {
-  createUserDialog.dialog( "close" );
-  }
-  },
-  close: function() {
-  }
-  });
-
-  nicknameDialog = $( "#nicknameForm" ).dialog({
-  position: { my: "top", at: "bottom", of: $("header") },
-  autoOpen: false,
-  height: 300,
-  width: 350,
-  modal: true,
-  buttons: {
-  Cancel: function() {
-  nicknameDialog.dialog( "close" );
-  }
-  },
-  close: function() {
-  }
-  });
-
-  });
-  </Script>
-
-  <script src="{% static 'js/login.js' %}"></script>
--->
-
   </head>
   <body>
     {% block header %}{% endblock %}
 
-<!-- 
-  <div id="cube-container">
-  <div id="cube-selector">
-  <span id="upload-description">Upload programs to: </span><select id="cubeName"></select><button id="refreshCubes" onclick="listCubes()">Refresh list</button>
-  </div>
-  </div>
-
-  <div id="forms">
-  <div id="login">
-  Login with your <a href="http://spark.io">Spark.io</a> username and password<br/>
-  <form id="login-form">
-  <input id="login-form-email" type="text" class="login-input" placeholder="email">
-  <input id="login-form-password" type="password" class="login-input" placeholder="password">
-  <button id="login-form-button" class="login-button">Log In</button>
-  </form>
-  <div id="login-error"></div>
-  <div id="login-result"></div>
-  </div>
-
-  <div id="create-user">
-  This will make an account for you on cubetube, and also at <a href="http://spark.io">Spark.io</a><br/>
-  If you already have a spark account, just go ahead and enter the deets below<br/>
-  <form id="create-user-form">
-  <input id="create-user-email" type="text" class="create-user-input" placeholder="email address">
-  <input id="create-user-password" type="password"= class="create-user-input" placeholder="password">
-  <button id="create-user-button" class="create-user-button">Create user</button>
-  </form>
-  <div id="create-user-error"></div>
-  <div id="create-user-result"></div>
-  </div>
-
-  <div id="nicknameForm">    
-  <form id="nickname-form">
-  <input id="nickname" type="text" class="nickname-input" placeholder="nickname">
-  <span id="nickname-error"></span>
-  <button id="set-nickname-button" class="create-user-button">Make this my nickname</button>
-  </form>
-  </div>
-  </div>
--->
-
-    <!-- Page content -->
     {% block content %}{% endblock %}
 
     {% block footer %}{% endblock %}
     {% include "cubetube/partials/_foot.html" %}
-
   </body>
 </html>

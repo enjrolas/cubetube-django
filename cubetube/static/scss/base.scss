@@ -9,7 +9,7 @@
 
 $purple: #1c1521;
 $blue: #2bc6fb;
-$red: #da003e;
+$red: #EE0026;
 
 @mixin transform ($values) {
     -webkit-transform: $values;
@@ -101,6 +101,12 @@ h2 {
         margin-top: 60px;
         display: block;
     }
+}
+
+.clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
 }
 
 .button {
