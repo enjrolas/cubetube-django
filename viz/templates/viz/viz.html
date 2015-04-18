@@ -76,12 +76,11 @@
     </div>
   </div>
   {% if nextViz %}
-
+    <a class="viz-next" href="/viz/{{ nextViz.pk }}">
+      <div class="next-text">Up next</div>
+      <div class="next-viz-name">{{ nextViz.name }}</div>
+    </a>
   {% endif %}
-  <a class="viz-next" href="/viz/{{ nextViz.pk }}">
-    <div class="next-text">Up next</div>
-    <div class="next-viz-name">{{ nextViz.name }}</div>
-  </a>
 
   <div class="viz-code">
     <textarea cols="222" rows="10" class="console output"></textarea>
