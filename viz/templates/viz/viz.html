@@ -75,9 +75,12 @@
       </div>
     </div>
   </div>
-  <a class="viz-next">
+  {% if nextViz %}
+
+  {% endif %}
+  <a class="viz-next" href="/viz/{{ nextViz.pk }}">
     <div class="next-text">Up next</div>
-    <div class="next-viz-name">Wall Bounce</div>
+    <div class="next-viz-name">{{ nextViz.name }}</div>
   </a>
 
   <div class="viz-code">

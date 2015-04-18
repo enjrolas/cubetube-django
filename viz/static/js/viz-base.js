@@ -25,7 +25,9 @@ $(function(){
     if( vizType === 'L3D') {
 
         parseSparkCode( getVizUrl() );
-        runSparkSketch();
+        // setTimeout( function() {
+            runSparkSketch();
+        // }, 1);
 
     } else if ( vizType === 'javascript' ) {
         runSketch();

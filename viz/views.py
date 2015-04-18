@@ -70,6 +70,10 @@ def viz(request, id):
     currentViz.pageViews=currentViz.pageViews+1
     currentViz.save()
     source=SourceCode.objects.get(viz=currentViz)
+
+    nextViz = currentViz.get_previous_by_created()
+    if nextViz:
+        return render(request, "viz/viz.html", { 'nextViz': nextViz, 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments, 'source': source})    
     return render(request, "viz/viz.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments, 'source': source})
     
     # if currentViz.vizType=="streaming":
