@@ -143,10 +143,34 @@
             float: left;
             margin-left: 0px;
             display: block;
+            margin-right: 440px;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            resize: none;
         }
 
         textarea::-webkit-input-placeholder {
             font-style: italic !important;
+        }
+
+        .viz-comment {
+            float: left;
+            width: 100%;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding-bottom: 10px;
+            font-family: 'roboto';
+            font-size: 13px;
+
+            .author {
+                color: $blue;
+            }
+
+            p {
+                margin-top: 15px;
+            }
         }
     }
 

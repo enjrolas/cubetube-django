@@ -18,10 +18,10 @@ def login(request):
     if user:
         if accessToken==user.accessToken:
             response='{ "status":"ok", "nickname":"%s"}' % user.nickname
-        else:            
+        else:
             user.accessToken=accessToken
             user.save()
-            response='{ "status":"ok", "nickname":"%s"}' % user.nickname            
+            response='{ "status":"ok", "nickname":"%s"}' % user.nickname
     else:
         response='{"status":"newUser"}'
 

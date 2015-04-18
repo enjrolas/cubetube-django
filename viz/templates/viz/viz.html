@@ -13,7 +13,7 @@
 {% load utils %}
 {% logged_in_status as logged_in %}
 
-<div class="viz-wrapper" data-viz-type="{{ viz.vizType }}" data-viz-url="{% url 'code' source.pk %}">
+<div class="viz-wrapper" data-viz-type="{{ viz.vizType }}" data-viz-id="{{ viz.pk }}" data-viz-url="{% url 'code' source.pk %}">
   <div class="viz-nav">
     <a class="round-button button-red view-code">View Code</a>
     {% if logged_in %}
@@ -60,16 +60,18 @@
           <textarea class="comments-input" rows="3" placeholder="Please, share your thoughts!"></textarea>
           <a class="round-button button-grey submit-comment">Post Comment</a>
         {% endif %}
-        {% for comment in comments %}
-          <div class="viz-comment">
-            <a href="#" class="author">{{ comment.commenter.nickname }}</a> <span class="said">said</span>
-            <p>{{ comment.comment }}</p>
-          </div>
-        {% empty %}
-          {% if not logged_in %}
-            <div class="no-comments">Sign up, to be the first!</div>
-          {% endif %}
-        {% endfor %}
+        <div class="comments-go-here">
+          {% for comment in comments %}
+            <div class="viz-comment">
+              <span class="author">{{ comment.commenter.nickname }}</span> <span class="said">said</span>
+              <p>{{ comment.comment }}</p>
+            </div>
+          {% empty %}
+            {% if not logged_in %}
+              <div class="no-comments">Sign up, to be the first!</div>
+            {% endif %}
+          {% endfor %}
+        </div>
       </div>
     </div>
   </div>
