@@ -684,3 +684,8 @@ footer {
     margin-bottom: 20px; }
     .docs-main p b {
       color: #000; }
+
+.forum-iframe {
+  width: 100% !important;
+  height: 100% !important;
+  padding-top: 47px !important; }
