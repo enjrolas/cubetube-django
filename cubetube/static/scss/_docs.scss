@@ -102,6 +102,19 @@
         text-decoration: none;
     }
 
+    hr {
+        border-top: 0px;
+        border-bottom: 1px solid #ddd;
+        margin-top: 50px;
+        margin-bottom: 60px;
+        border-left: 0px;
+    }
+
+    ul {
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
     .question-section {
         background: #F9F9F9;
         padding: 10px 20px;
@@ -121,12 +134,20 @@
         }
     }
 
+    .preload-demo {
+        margin-top: 20px;
+    }
+
     .offline-image {
         position: absolute;
         bottom: -20px;
         right: -330px;
         width: 290px;
         border-bottom: 5px solid $blue;
+
+        &.baseboard {
+            bottom: -70px;
+        }
 
         img {
             width: 100%;

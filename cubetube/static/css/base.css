@@ -688,6 +688,15 @@ footer {
   .docs-main a {
     color: #2bc6fb;
     text-decoration: none; }
+  .docs-main hr {
+    border-top: 0px;
+    border-bottom: 1px solid #ddd;
+    margin-top: 50px;
+    margin-bottom: 60px;
+    border-left: 0px; }
+  .docs-main ul {
+    margin-top: 30px;
+    margin-bottom: 30px; }
   .docs-main .question-section {
     background: #F9F9F9;
     padding: 10px 20px;
@@ -701,12 +710,16 @@ footer {
     .docs-main .question-section p {
       color: #333;
       font-style: italic; }
+  .docs-main .preload-demo {
+    margin-top: 20px; }
   .docs-main .offline-image {
     position: absolute;
     bottom: -20px;
     right: -330px;
     width: 290px;
     border-bottom: 5px solid #2bc6fb; }
+    .docs-main .offline-image.baseboard {
+      bottom: -70px; }
     .docs-main .offline-image img {
       width: 100%; }
     .docs-main .offline-image p {
