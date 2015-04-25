@@ -84,7 +84,8 @@
         color: #000;
     }
 
-    p {
+    p, div {
+        position: relative;
         font-family: 'roboto';
         color: #9199aa;
         font-size: 14px;
@@ -93,6 +94,46 @@
 
         b {
             color: #000;
+        }
+    }
+
+    a {
+        color: $blue;
+        text-decoration: none;
+    }
+
+    .question-section {
+        background: #F9F9F9;
+        padding: 10px 20px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        margin-bottom: 40px;
+
+        img {
+            float: left;
+            margin-top: 17px;
+            padding-right: 20px;
+        }
+
+        p {
+            color: #333;
+            font-style: italic;
+        }
+    }
+
+    .offline-image {
+        position: absolute;
+        bottom: -20px;
+        right: -330px;
+        width: 290px;
+        border-bottom: 5px solid $blue;
+
+        img {
+            width: 100%;
+        }
+
+        p {
+            margin-bottom: 12px;
         }
     }
 }
