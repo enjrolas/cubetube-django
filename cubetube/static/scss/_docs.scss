@@ -23,6 +23,7 @@
     max-width: 1250px;
     margin: auto;
     padding-bottom: 50px;
+    position: relative;
 }
 
 .docs-nav {
@@ -31,10 +32,21 @@
     padding: 0px;
     float: left;
     border-right: 1px solid rgba(0,0,0,0.1);
+    background: #fff;
     margin-top: 0px;
     padding-top: 30px;
     width: 320px;
     padding-left: 15px;
+
+    &.fixed {
+        position: fixed;
+        top: 55px;
+    }
+
+    &.absolute {
+        position: absolute;
+        bottom: 0px;
+    }
 
     .bolder {
         font-family: "proxima-nova", sans-serif;

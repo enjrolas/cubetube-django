@@ -60,7 +60,7 @@
       There are two types of L3D Cubes so far:  the 8x8x8 edition with 512 RGB LEDs and the 16x16x16 edition with 4096 RGB LEDs.  This documentation section currently only addresses the 8x8x8 edition and will be expanded to include the larger 16x16x16 edition in Spring 2015.
     </p>
     <p>
-      Each L3D Cube 8x8x8 edition comes with 512 RGB LEDs mounted in an array, powered over USB, and connected to WiFi.  The brain and WiFi connection center of the Cubes is a Spark Core  (soon to be a Spark Photon), which can be programmed like an Arduino.  There’s also a built in microphone and accelerometer in each Cube.  
+      Each L3D Cube 8x8x8 edition comes with 512 RGB LEDs mounted in an array, powered over USB, and connected to WiFi.  The brain and WiFi connection center of the Cubes is a <a href="https://www.spark.io/">Spark Core</a> (soon to be a Spark Photon), which can be programmed like an Arduino.  There’s also a built in microphone and accelerometer in each Cube.  
     </p>
     <p>
       Each Cube can download new apps from CubeTube with a click of a mouse or finger -- no programming needed.  But of course for coders out there, what you create for your Cube can now be shared on CubeTube with other Cube owners....including those that own L3D Cubes and other types of 3D LED cubes.
@@ -145,7 +145,7 @@
     <!-- Connecting to WiFi -->
     <h1>Connecting to WiFi</h1>
     <p>
-      If you already have a L3D Cube, you’re in the very earliest adopter group - a pioneer, you might say.  You can connect your Cube to WiFi through the Spark App.  These are instructions for how to do so come directly from spark.io .
+      If you already have a L3D Cube, you’re in the very earliest adopter group - a pioneer, you might say.  You can connect your Cube to WiFi through the Spark App.  These are instructions for how to do so come directly from <a href="https://spark.io">spark.io</a>.
     </p>
     <h2>Getting into Listening Mode</h2>
     <p>
@@ -162,7 +162,7 @@
 
     <h2>Using the Spark App for Connecting to WiFi</h2>
     <p>
-      Download the Spark App to your phone from the App Store or Google Play . (If you don’t have a phone that can download apps, no problem...you can still get your Cube online, it’s just a little more involved of a process to Connect over USB)
+      <a name="spark-app">Download the Spark App to your phone from the </a><a href="https://itunes.apple.com/us/app/spark-core/id760157884?mt=8">App Store</a> or <a href="https://play.google.com/store/apps/details?id=io.spark.core.android&amp;hl=en">Google Play</a> . (If you don’t have a phone that can download apps, no problem...you can still get your Cube online, it’s just a little more involved of a process to <a href="http://docs.spark.io/connect/#connecting-your-core-connect-over-usb">Connect over USB</a>)
     </p>
     <div>
       Once you’ve downloaded the Spark Core app from the App Store or Google Play, you should create an account. Afterwards, you’ll be asked  to connect your Core,
@@ -180,7 +180,7 @@
         Your phone must be connected to the  Wi-Fi network that you want to connect the Core to.  Wi-Fi Hotspots generated from the phone you are running this app on typically will yield an error claiming there is no Wi-Fi available.  
       </p>
       <p>
-        In this case, please try to Connect over USB and enter your Hotspot credentials manually.
+        In this case, please try to <a href="http://docs.spark.io/connect/#connecting-your-core-connect-over-usb">Connect over USB</a> and enter your Hotspot credentials manually.
       </p>
     </div>
     <p>
@@ -198,7 +198,7 @@
       </ul>
     </p>
     <p>
-      Once the Spark Core has connected, your phone will "claim" the Core and attach it to your account. Then you’ll get to name your Core.  If  you’re uncertain, you can confirm that the claim process was successful by logging into the Spark Web IDE and clicking the "Cores" icon at the bottom of the page.  Is your Core listed?  Great!  The world is perfect.
+      Once the Spark Core has connected, your phone will "claim" the Core and attach it to your account. Then you’ll get to name your Core.  If  you’re uncertain, you can confirm that the claim process was successful by logging into the <a href="https://www.spark.io/build">Spark Web IDE</a> and clicking the "Cores" icon at the bottom of the page.  Is your Core listed?  Great!  The world is perfect.
     </p>
     <div class="question-section">
       The Core MUST be online (breathing cyan)  in order for the claiming process to work. 
@@ -216,7 +216,7 @@
       If you use the mobile app to set up your Core, it should claim it automatically. However if you connect your Core over USB, or if the claiming process is unsuccessful, you can claim it manually.
     </p>
     <p>
-      The easiest way to manually claim a Core over USB is to use the Spark Command Line Interface. Once you have this installed, you can simply type spark setup and follow the instructions.
+      The easiest way to manually claim a Core over USB is to use the <a href="https://github.com/spark/spark-cli">Spark Command Line Interface</a>. Once you have this installed, you can simply type spark setup and follow the instructions.
     </p>
     <p>
       Alternatively, if you have troubles installing the command line tool,  you can get the Core’s ID over serial and claim it via the build site. You can do this by opening a Serial connection to the Core and pressing  the i key (see the above instuctions for connecting over USB). It should show you a number like this:
@@ -225,7 +225,7 @@
       <b><i># Example Core ID55ff68064989495329092587</i></b>
     </p>
     <p>
-      Then open up Spark Build and click the ’Cores’ icon. Click the button that says ’Add a Core’, and enter your ID in the text box.
+      Then open up <a href="https://www.spark.io/build">Spark Build</a> and click the ’Cores’ icon. Click the button that says ’Add a Core’, and enter your ID in the text box.
     </p>
 
     <h2>Switching to New WiFi Locations</h2>
@@ -238,7 +238,7 @@
     <!-- Loading Cubetube Apps -->
     <h1>Loading Cubetube Apps</h1>
     <p>
-      CubeTube is in beta and available to the earliest Cube owners.  Go to CubeTube.org  and log in your Cube using the same user name and password you used to create an account on Spark.io or via the Spark App when you first connected your Cube to WiFi.
+      CubeTube is in beta and available to the earliest Cube owners.  Go to <a href="https://cubetube.org">CubeTube.org</a>  and log in your Cube using the same user name and password you used to create an account on Spark.io or via the Spark App when you first connected your Cube to WiFi.
     </p>
     <p>
       Then, when you click "Load App" on one of the CubeTube Apps, that App should automatically load onto your Cube, as long as your Cube is connected to WiFi.
@@ -264,7 +264,7 @@
       To get Native code Apps onto your Cube, it’s a one step process.   Just log into CubeTube as described above and then click on any of the Native code apps and that app will download to your Cube.
     </p>
     <p>
-      Native code is written in Wiring, which is the fancy name for the Arduino programming language.  You can write code on the Spark Web IDE.
+      Native code is written in Wiring, which is the fancy name for the Arduino programming language.  You can write code on the <a href="https://www.spark.io/build">Spark Web IDE</a>.
     </p>
 
     <h2>Mode 2: Streaming Code</h2>
@@ -290,7 +290,7 @@
       Streaming Mode here:  http://www.instructables.com/id/How-to-Draw-Sweet-3D-Graphics-for-LED-cubes/
     </p>
     <p>
-      If you’d like faster streaming, try using a dedicated nano-router, like this one for about $20.  
+      If you’d like faster streaming, try using a dedicated nano-router, like <a href="http://www.amazon.com/TP-LINK-TL-WR702N-Wireless-Repeater-150Mpbs/dp/B007PTCFFW/ref=sr_1_1?ie=UTF8&amp;qid=1419504623&amp;sr=8-1&amp;keywords=travel+router">this one</a> for about $20.  
     </p>
 
     <hr>
@@ -307,16 +307,16 @@
     <h1>Opensource License</h1>
     <h2>Hardware & Software Repo</h2>
     <div class="question-section no-padding">
-      Cube firmware:  https://github.com/enjrolas/L3D-Software
+      Cube firmware: <a href="https://github.com/enjrolas/L3D-Software">https://github.com/enjrolas/L3D-Software</a>
     </div>
     <div class="question-section no-padding">
-      Cube hardware:  https://github.com/enjrolas/L3D-Hardware
+      Cube hardware: <a href="https://github.com/enjrolas/L3D-Hardware">https://github.com/enjrolas/L3D-Hardware</a>
     </div>
     <div class="question-section no-padding">
-      Processing library:  https://github.com/enjrolas/L3D-library
+      Processing library: <a href="https://github.com/enjrolas/L3D-library">https://github.com/enjrolas/L3D-library</a>
     </div>
     <p>
-      Here’s an Instructable on How to Draw Sweet 3D Graphics for LED cubes - there’s even a cube simulator so you don’t even have to wait for your cubes to get started.
+      Here’s an Instructable on <a href="http://www.instructables.com/id/How-to-Draw-Sweet-3D-Graphics-for-LED-cubes/">How to Draw Sweet 3D Graphics for LED cubes</a> - there’s even a cube simulator so you don’t even have to wait for your cubes to get started.
     </p>
 
     <hr>
