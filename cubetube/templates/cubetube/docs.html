@@ -164,9 +164,25 @@
     <p>
       Download the Spark App to your phone from the App Store or Google Play . (If you don’t have a phone that can download apps, no problem...you can still get your Cube online, it’s just a little more involved of a process to Connect over USB)
     </p>
-    <p>
+    <div>
       Once you’ve downloaded the Spark Core app from the App Store or Google Play, you should create an account. Afterwards, you’ll be asked  to connect your Core,
-    </p>
+      <div class="offline-image spark">
+        <img src="/static/images/docs/spark-code-addition.png" />
+        <p>
+          Spark App Login screen on iOS.
+        </p>
+      </div>
+    </div>
+
+    <div class="question-section wifi-question">
+      <img src="/static/images/docs/wifi-symbol.png" />
+      <p>
+        Your phone must be connected to the  Wi-Fi network that you want to connect the Core to.  Wi-Fi Hotspots generated from the phone you are running this app on typically will yield an error claiming there is no Wi-Fi available.  
+      </p>
+      <p>
+        In this case, please try to Connect over USB and enter your Hotspot credentials manually.
+      </p>
+    </div>
     <p>
       When connected to Wi-Fi, the app will automatically fill the SSID  field with the name of the network that your phone is connected to.   Enter your Wi-Fi password and hit connect.
     </p>
@@ -174,8 +190,20 @@
       This connection process can take up to a minute, so be patient. The closer your phone is to your Spark Core, the faster it will connect. Once the Core hears the signal, it will go through the following sequence of lights:
     </p>
     <p>
+      <ul>
+        <li>Solid blue: Credentials captured</li>
+        <li>Flashing green: Connecting to Wi-Fi network</li>
+        <li>Flashing cyan: Connecting to Spark Cloud</li>
+        <li>Breathing cyan: Connected to Spark Cloud</li>
+      </ul>
+    </p>
+    <p>
       Once the Spark Core has connected, your phone will "claim" the Core and attach it to your account. Then you’ll get to name your Core.  If  you’re uncertain, you can confirm that the claim process was successful by logging into the Spark Web IDE and clicking the "Cores" icon at the bottom of the page.  Is your Core listed?  Great!  The world is perfect.
     </p>
+    <div class="question-section">
+      The Core MUST be online (breathing cyan)  in order for the claiming process to work. 
+      If the Spark Core has been  claimed by someone else, the app won’t recognize it.  
+    </div>
     <p>
       If you are connecting multiple Cores, you’ll go through this naming process for each Core. You’ll know which one is which by the rainbow signal.
     </p>
@@ -278,6 +306,15 @@
     <!-- Opensource License -->
     <h1>Opensource License</h1>
     <h2>Hardware & Software Repo</h2>
+    <div class="question-section no-padding">
+      Cube firmware:  https://github.com/enjrolas/L3D-Software
+    </div>
+    <div class="question-section no-padding">
+      Cube hardware:  https://github.com/enjrolas/L3D-Hardware
+    </div>
+    <div class="question-section no-padding">
+      Processing library:  https://github.com/enjrolas/L3D-library
+    </div>
     <p>
       Here’s an Instructable on How to Draw Sweet 3D Graphics for LED cubes - there’s even a cube simulator so you don’t even have to wait for your cubes to get started.
     </p>

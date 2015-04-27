@@ -698,11 +698,14 @@ footer {
     margin-top: 30px;
     margin-bottom: 30px; }
   .docs-main .question-section {
-    background: #F9F9F9;
+    background: #fcfcfc;
     padding: 10px 20px;
     border: 1px solid #ddd;
     border-radius: 3px;
-    margin-bottom: 40px; }
+    margin-bottom: 40px;
+    font-size: 13px; }
+    .docs-main .question-section.no-padding {
+      margin-bottom: 10px; }
     .docs-main .question-section img {
       float: left;
       margin-top: 17px;
@@ -710,6 +713,9 @@ footer {
     .docs-main .question-section p {
       color: #333;
       font-style: italic; }
+    .docs-main .question-section.wifi-question img {
+      padding-bottom: 50px;
+      padding-top: 40px; }
   .docs-main .preload-demo {
     margin-top: 20px; }
   .docs-main .offline-image {
@@ -720,6 +726,8 @@ footer {
     border-bottom: 5px solid #2bc6fb; }
     .docs-main .offline-image.baseboard {
       bottom: -70px; }
+    .docs-main .offline-image.spark {
+      bottom: -247px; }
     .docs-main .offline-image img {
       width: 100%; }
     .docs-main .offline-image p {

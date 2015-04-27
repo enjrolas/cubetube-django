@@ -116,11 +116,16 @@
     }
 
     .question-section {
-        background: #F9F9F9;
+        background: #fcfcfc;
         padding: 10px 20px;
         border: 1px solid #ddd;
         border-radius: 3px;
         margin-bottom: 40px;
+        font-size: 13px;
+
+        &.no-padding {
+            margin-bottom: 10px
+        }
 
         img {
             float: left;
@@ -131,6 +136,14 @@
         p {
             color: #333;
             font-style: italic;
+        }
+
+        &.wifi-question {
+
+            img {
+                padding-bottom: 50px;
+                padding-top: 40px;
+            }
         }
     }
 
@@ -147,6 +160,10 @@
 
         &.baseboard {
             bottom: -70px;
+        }
+
+        &.spark {
+            bottom: -247px;
         }
 
         img {
