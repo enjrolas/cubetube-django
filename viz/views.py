@@ -75,7 +75,6 @@ def viz(request, id):
     if nextViz:
         return render(request, "viz/viz.html", { 'nextViz': nextViz, 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments, 'source': source})    
     return render(request, "viz/viz.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments, 'source': source})
-    
     # if currentViz.vizType=="streaming":
     #     binary=Binary.objects.get(pk=settings.LISTENER_PK)
     # if currentViz.vizType=='javascript':
