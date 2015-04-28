@@ -668,7 +668,8 @@ footer {
   .docs-nav ul {
     color: rgba(0, 0, 0, 0.4); }
   .docs-nav li {
-    margin-bottom: 8px; }
+    margin-bottom: 8px;
+    cursor: pointer; }
   .docs-nav a {
     font-size: 14px;
     text-decoration: none;
