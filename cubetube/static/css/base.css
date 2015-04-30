@@ -45,6 +45,9 @@ h2 {
   width: 1280px;
   margin: auto; }
 
+.no-scroll {
+  overflow: hidden; }
+
 /**
  * App
  */
@@ -97,8 +100,8 @@ h2 {
   left: 0px;
   width: 100%;
   height: 100%;
-  z-index: 10;
-  background: rgba(0, 0, 0, 0.9); }
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.8); }
 
 .login-signup-popover {
   display: none;
@@ -199,7 +202,7 @@ h2 {
  */
 .viz-wrapper {
   width: 800px;
-  border-top: 90px solid #f9f9f9;
+  border-top: 58px solid #f9f9f9;
   height: 100%; }
   .viz-wrapper .round-button {
     font-family: roboto;
@@ -225,7 +228,9 @@ h2 {
     background: #F9F9F9;
     color: #000; }
   .viz-wrapper .viz-nav {
-    height: 60px; }
+    height: 60px;
+    padding-left: 10px;
+    padding-right: 10px; }
   .viz-wrapper .viz-demo {
     width: 800px;
     height: 460px;
@@ -337,6 +342,15 @@ h2 {
   .viz-wrapper .viz-code {
     display: none; }
 
+.viz-template {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  width: 800px;
+  height: 100%;
+  border: 0;
+  z-index: 2; }
+
 /**
  * Cubetube SVG's
  * - Interactive
@@ -364,7 +378,7 @@ nav {
   width: 100%;
   height: 90px;
   background: rgba(0, 0, 0, 0);
-  z-index: 2;
+  z-index: 3;
   -webkit-transition: all 300ms ease 0ms;
   -moz-transition: all 300ms ease 0ms;
   -ms-transition: all 300ms ease 0ms;

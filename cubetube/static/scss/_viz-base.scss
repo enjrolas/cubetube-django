@@ -5,7 +5,7 @@
 
 .viz-wrapper {
     width: 800px;
-    border-top: 90px solid #f9f9f9;
+    border-top: 58px solid #f9f9f9;
     height: 100%;
 
     .round-button {
@@ -43,6 +43,8 @@
 
     .viz-nav {
         height: 60px;
+        padding-left: 10px;
+        padding-right: 10px;
     }
 
     // Canvas sits inside here.
@@ -201,4 +203,14 @@
     .viz-code {
         display: none;
     }
+}
+
+.viz-template {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    width: 800px;
+    height: 100%;
+    border: 0;
+    z-index: 2;
 }

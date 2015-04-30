@@ -88,43 +88,12 @@
   </div>
 </div>
 
-
-
-<!-- <main>
-      {% if viz.creator.nickname == request.COOKIES.nickname %}
-      <button id="edit" class="display" onclick="edit()">edit</button>
-      <button id="edit" class="edit" onclick="save()">save</button>
-      {% endif %}
-    <p class="bold">By:</p>  <a href="#" class="author">{{ viz.creator }}</a><br/>
-    <p class="bold">tagline:</p> <div class="projectDetail display">
-      {{ viz.tagline }}
-    </div>  
-    
-    {% if viz.creator.nickname == request.COOKIES.nickname %}
-    <div class="projectDetail edit">
-      <input id="tagline" value="{{ viz.tagline }}">
-    </div>
-    {% endif %}
-
-      <div class="others">
-    </div>
-    <p class="bold">description:</p>  <div class="description display">{{ viz.description }} </div>
-    {% if viz.creator.nickname == request.COOKIES.nickname %}
-    <div class="description edit">
-      <input id="description" value="{{ viz.description }}">
-    </div>
-    {% endif %}
-      </div>
+<!-- 
       <button onclick="showCode();">show code</button>
   <div id="fork" onclick="fork({{ viz.pk }})"><button>fork</button></div>
         <div id="code-wrapper" class="edit code">
             <textarea rows="80" cols="120" id="code"    {% if viz.creator.nickname != request.COOKIES.nickname %} readonly="yes" {% endif %}>{{ source.code }}</textarea>
 =[        <img onclick="runSketch();" src="{% static 'i/run.png'%}" width="32px">  Run Sketch
-          </div>
-
-          <div id="sketch-container">
-            <canvas id="sketch"></canvas>
-          </div>
           <div id="output-wrapper">
             <h2>Output</h2>
             <textarea cols="222" rows="10" id="output" readonly="readonly">None.</textarea>
