@@ -24,10 +24,11 @@ $(function(){
     var vizType = getVizType();
     if( vizType === 'L3D') {
 
-        parseSparkCode( getVizUrl() );
-        setTimeout( function() {
-            runSparkSketch();
-        }, 1);
+        parseSparkCode( getVizUrl(), function() {
+            setTimeout( function() {
+                runSparkSketch();
+            }, 1);
+        } );
 
     } else if ( vizType === 'javascript' ) {
         runSketch();
