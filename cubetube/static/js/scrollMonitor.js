@@ -4,15 +4,21 @@
  */
 
 var $header = $('nav:not(.always-small)');
-if( $header.length ) {
+var $window = $(window);
 
-    var $window = $(window);
+if( $header.length ) {
     $window.scroll(function() {
-        var scrollPos = $window.scrollTop();
-        if( scrollPos !== 0 ) {
-            $header.addClass('small');
-        } else {
-            $header.removeClass('small');
-        }
+        checkScroll();
     })
 }
+
+function checkScroll() {
+    var scrollPos = $window.scrollTop();
+    if( scrollPos !== 0 ) {
+        $header.addClass('small');
+    } else {
+        $header.removeClass('small');
+    }
+}
+
+checkScroll();

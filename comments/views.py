@@ -21,8 +21,8 @@ def newComment(request):
         viz=Viz.objects.get(pk=id)
         comment.viz=viz
         comment.save()
-        response='{ "status":"ok" }'
+        response='{ "status":"ok", "nickname":"%s"}' % nickname            
     else: 
        response='{ "status":"error", "error":"user is not authenticated"}'       
-    return HttpResponse(response, mimetype="application/json")
+    return HttpResponse(response, content_type="application/json")
 

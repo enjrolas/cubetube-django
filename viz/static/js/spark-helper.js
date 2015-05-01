@@ -41,7 +41,7 @@ flagList["draw()"]=0;
 flagList["PVector"]=0;
 flagList["setup()"]=0;
 
-function parseSparkCode( url ) {
+function parseSparkCode( url, after ) {
 
     $.get(url, function(data) {
 
@@ -85,7 +85,7 @@ function parseSparkCode( url ) {
             if(flagList["Cube "]==1) {
                 parts=line.split(' ');
                 cubeObjectName=parts[1];
-                console.log("cube object name: "+cubeObjectName);
+                // console.log("cube object name: "+cubeObjectName);
                 flagList[cubeObjectName]="0";
                 line="Cube "+cubeObjectName+";";
                 jsCode[i]=line;
@@ -121,5 +121,7 @@ function parseSparkCode( url ) {
             $("#jsCode").append(line+"<br/>");
             translatedCode+=line+"\n";
         }
+
+        after();
     });
 }

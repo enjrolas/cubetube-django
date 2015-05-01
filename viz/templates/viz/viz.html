@@ -8,16 +8,21 @@
 {% extends "viz/viz-base.html" %}
 {% load staticfiles %}
 
+{% block content %}
+
 {% load utils %}
 {% logged_in_status as logged_in %}
 
-{% block content %}
-<div class="viz-wrapper" data-viz-type="{{ viz.vizType }}" data-viz-url="{% url 'code' source.pk %}">
+<div class="viz-wrapper" data-viz-type="{{ viz.vizType }}" data-viz-id="{{ viz.pk }}" data-viz-url="{% url 'code' source.pk %}">
   <div class="viz-nav">
-    <a class="round-button view-code">View Code</a>
+    <a class="round-button button-red view-code">View Code</a>
     {% if logged_in %}
       <div class="cube-options">
-        Logged in options here. Handled by statemanager.
+        <a class="round-button button-grey sent-to-cube">Send to Cube</a>
+        <div class="round-button button-grey select-cube">
+          Select Cube
+          <img src="/static/images/down-arrow.png" />
+        </div>
       </div>
     {% endif %}
   </div>
@@ -46,30 +51,36 @@
       </div>
     </div>
 
-    <div class="viz-comments">
+    <div class="viz-comments clearfix">
       <div class="inner-wrapper">
         <div class="comments-title">
           Comments:
         </div>
-        {% if not logged_in %}
-          <textarea class="comments-input" rows="5" placeholder="Please, share your thoughts!"></textarea>
-          <div class="input-button comments-confirm">Post Comment</div>  
+        {% if logged_in %}
+          <textarea class="comments-input" rows="3" placeholder="Please, share your thoughts!"></textarea>
+          <a class="round-button button-grey submit-comment">Post Comment</a>
         {% endif %}
-        {% for comment in comments %}
-          <div class="viz-comment">
-            <a href="#" class="author">{{ comment.commenter.nickname }}</a> <span class="said">said</span>
-            <p>{{ comment.comment }}</p>
-          </div>
-        {% empty %}
-          <div class="no-comments">There are no comments yet...</div>
-        {% endfor %}
+        <div class="comments-go-here">
+          {% for comment in comments %}
+            <div class="viz-comment">
+              <span class="author">{{ comment.commenter.nickname }}</span> <span class="said">said</span>
+              <p>{{ comment.comment }}</p>
+            </div>
+          {% empty %}
+            {% if not logged_in %}
+              <div class="no-comments">Sign up, to be the first!</div>
+            {% endif %}
+          {% endfor %}
+        </div>
       </div>
     </div>
   </div>
-  <a class="viz-next">
-    <div class="next-text">Up next</div>
-    <div class="next-viz-name">Wall Bounce</div>
-  </a>
+  {% if nextViz %}
+    <a class="viz-next" href="/viz/{{ nextViz.pk }}">
+      <div class="next-text">Up next</div>
+      <div class="next-viz-name">{{ nextViz.name }}</div>
+    </a>
+  {% endif %}
 
   <div class="viz-code">
     <textarea cols="222" rows="10" class="console output"></textarea>
@@ -77,43 +88,12 @@
   </div>
 </div>
 
-
-
-<!-- <main>
-      {% if viz.creator.nickname == request.COOKIES.nickname %}
-      <button id="edit" class="display" onclick="edit()">edit</button>
-      <button id="edit" class="edit" onclick="save()">save</button>
-      {% endif %}
-    <p class="bold">By:</p>  <a href="#" class="author">{{ viz.creator }}</a><br/>
-    <p class="bold">tagline:</p> <div class="projectDetail display">
-      {{ viz.tagline }}
-    </div>  
-    
-    {% if viz.creator.nickname == request.COOKIES.nickname %}
-    <div class="projectDetail edit">
-      <input id="tagline" value="{{ viz.tagline }}">
-    </div>
-    {% endif %}
-
-      <div class="others">
-    </div>
-    <p class="bold">description:</p>  <div class="description display">{{ viz.description }} </div>
-    {% if viz.creator.nickname == request.COOKIES.nickname %}
-    <div class="description edit">
-      <input id="description" value="{{ viz.description }}">
-    </div>
-    {% endif %}
-      </div>
+<!-- 
       <button onclick="showCode();">show code</button>
   <div id="fork" onclick="fork({{ viz.pk }})"><button>fork</button></div>
         <div id="code-wrapper" class="edit code">
             <textarea rows="80" cols="120" id="code"    {% if viz.creator.nickname != request.COOKIES.nickname %} readonly="yes" {% endif %}>{{ source.code }}</textarea>
 =[        <img onclick="runSketch();" src="{% static 'i/run.png'%}" width="32px">  Run Sketch
-          </div>
-
-          <div id="sketch-container">
-            <canvas id="sketch"></canvas>
-          </div>
           <div id="output-wrapper">
             <h2>Output</h2>
             <textarea cols="222" rows="10" id="output" readonly="readonly">None.</textarea>

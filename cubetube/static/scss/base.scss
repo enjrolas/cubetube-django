@@ -9,7 +9,7 @@
 
 $purple: #1c1521;
 $blue: #2bc6fb;
-$red: #da003e;
+$red: #EE0026;
 
 @mixin transform ($values) {
     -webkit-transform: $values;
@@ -75,6 +75,10 @@ h2 {
     margin: auto;
 }
 
+.no-scroll {
+    overflow: hidden;
+}
+
  /**
   * App
   */
@@ -103,6 +107,12 @@ h2 {
     }
 }
 
+.clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
 .button {
     display: block;
     background: $blue;
@@ -128,4 +138,7 @@ h2 {
 @import 'svgs';
 @import 'header';
 @import 'viz-card';
+@import 'gallery';
 @import 'footer';
+@import 'docs';
+@import 'forum';
