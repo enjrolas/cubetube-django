@@ -3,12 +3,12 @@ from cube.models import CubeUser
 
 class Viz(models.Model):
     name=models.TextField()
-    tagline=models.TextField()
+    tagline=models.TextField(blank=True)
     description=models.TextField()
     creator=models.ForeignKey(CubeUser)
     created=models.DateTimeField(auto_now_add=True)
-    sourceURL=models.TextField(default="")
-    tags=models.TextField(default="")
+    sourceURL=models.TextField(blank=True)
+    tags=models.TextField(blank=True)
     views=models.IntegerField(default=0)
     vizType=models.TextField(default="spark")
     interactive=models.BooleanField(default=False)

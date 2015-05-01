@@ -2,14 +2,17 @@ import os
 import sys
 import site
 
-# virtual environment paths site.addsitedir('/home/<sitehome>/virtualenv/.../lib/python2.7/site-packages/')
-site.addsitedir('/home/glass/cubetube/cubetube/lib/python2.7/site-packages/')
-path = '/home/glass/cubetube/'
+#site.addsitedir('/home/tim/cubetube/env/lib/python2.7/site-packages')
 
-if path not in sys.path:
-    sys.path.append(path)
+# Add the app's directory to the PYTHONPATH
+sys.path.append('/home/tim/cubetube')
+sys.path.append('/home/tim/cubetube/cubetube')
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'cubetube.settings'
 
-import django.core.handlers.wsgi
-application = django.core.handlers.wsgi.WSGIHandler()
+# Activate your virtual env
+#activate_env=os.path.expanduser("/home/tim/cubetube/env/bin/activate_this.py")
+#execfile(activate_env, dict(__file__=activate_env))
+
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
