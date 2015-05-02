@@ -2,6 +2,7 @@
 import os
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__name__))
 DEBUG = True
+DEVELOPMENT = False
 TEMPLATE_DEBUG = DEBUG
 
 LISTENER_PK=12
@@ -20,17 +21,32 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASES = {
+if DEVELOPMENT:
+    DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME':     os.path.join(PROJECT_ROOT, 'cubetube.db').replace('\\','/'),   # Or path to database file if using sqlite3.
-        # The following settings are not used with sqlite3:
-        'USER': 'cubetube',
+    'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+    'NAME':     '/home/tim/cubetube/cubetube.db',
+    # The following settings are not used with sqlite3:
+    'USER': 'cubetube',
         'PASSWORD': 'mp2TY888xj5yYCVd',
         'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '',                      # Set to empty string for default.
-    }
-}
+        }
+        }
+
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+            'NAME':    'tim-cubetube',   # Or path to database file if using sqlite3.
+            # The following settings are not used with sqlite3:
+                'USER': 'tim-cubetube',
+            'PASSWORD': 'VEYNR3SECShqYK6e',
+            'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+            'PORT': '',                      # Set to empty string for default.
+            }
+        }
+
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -123,7 +139,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(PROJECT_ROOT, 'cubetube/templates').replace('\\','/'),
+    '/home/tim/cubetube/cubetube/templates',
+#    os.path.join(PROJECT_ROOT, 'cubetube'),
 )
 
 from django.conf import global_settings
@@ -141,7 +158,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.admindocs',
- #   'south',
     'cube',
     'viz',
     'comments',
@@ -174,7 +190,7 @@ LOGGING = {
         'logfile': {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
-            'filename': "/Users/Tim/Documents/cubetube/cubetube-django/logs/logfile",
+            'filename': "/home/tim/logs/cubetube",
             'maxBytes': 50000,
             'backupCount': 2,
             'formatter': 'standard',
