@@ -53,6 +53,7 @@
         width: 800px;
         background: #fff;
         top: 58px;
+        z-index: 2;
     }
 
     // Canvas sits inside here.
@@ -60,10 +61,27 @@
         width: 800px;
         height: 460px;
         background: $purple;
+        position: relative;
 
         canvas {
             width: 800px;
             height: 460px;
+        }
+
+        .background-image {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.1);
+
+            background-size: cover;
+            background-position: 50% 50%;
+
+            &.no-image {
+                // Image that doesn't exist here.
+            }
         }
     }
 
@@ -217,6 +235,7 @@
         height: 100%;
         width: 600px;
         overflow: hidden;
+        z-index: 2;
 
         .CodeMirror {
             height: 100%;

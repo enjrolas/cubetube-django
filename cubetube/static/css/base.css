@@ -237,14 +237,25 @@ h2 {
     position: fixed;
     width: 800px;
     background: #fff;
-    top: 58px; }
+    top: 58px;
+    z-index: 2; }
   .viz-wrapper .viz-demo {
     width: 800px;
     height: 460px;
-    background: #1c1521; }
+    background: #1c1521;
+    position: relative; }
     .viz-wrapper .viz-demo canvas {
       width: 800px;
       height: 460px; }
+    .viz-wrapper .viz-demo .background-image {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.1);
+      background-size: cover;
+      background-position: 50% 50%; }
   .viz-wrapper .inner-wrapper {
     margin: auto;
     width: 580; }
@@ -354,7 +365,8 @@ h2 {
     border: 0px;
     height: 100%;
     width: 600px;
-    overflow: hidden; }
+    overflow: hidden;
+    z-index: 2; }
     .viz-wrapper .viz-code .CodeMirror {
       height: 100%; }
     .viz-wrapper .viz-code .viz-code-header {
