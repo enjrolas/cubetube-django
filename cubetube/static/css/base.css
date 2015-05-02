@@ -101,7 +101,8 @@ h2 {
   width: 100%;
   height: 100%;
   z-index: 2;
-  background: rgba(0, 0, 0, 0.8); }
+  background: rgba(0, 0, 0, 0.8);
+  cursor: pointer; }
 
 .login-signup-popover {
   display: none;
@@ -357,13 +358,21 @@ h2 {
     .viz-wrapper .viz-code .viz-code-header {
       height: 60px;
       padding-right: 10px; }
+    .viz-wrapper .viz-code .console {
+      padding: 10px;
+      height: 63px;
+      border: 0px;
+      outline: 0px; }
   .viz-wrapper.code-active .viz-nav {
     padding-right: 398px; }
   .viz-wrapper.code-active .viz-code {
     -webkit-transform: translateX(-380px);
     -moz-transform: translateX(-380px);
     -ms-transform: translateX(-380px);
-    transform: translateX(-380px); }
+    transform: translateX(-380px);
+    box-shadow: 0px 0px 35px 0px rgba(0, 0, 0, 0.3); }
+  .viz-wrapper.code-active canvas {
+    width: 420px; }
 
 .viz-template {
   position: fixed;

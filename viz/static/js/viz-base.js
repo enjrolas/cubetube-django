@@ -24,8 +24,8 @@ $(function(){
         parseSparkCode( getVizUrl(), function() {
             setTimeout( function() {
                 formatCode();
-                // runSparkSketch();
-                $( '.CodeMirror' ).height(window.innerHeight - 120)
+                runSparkSketch();
+                $( '.CodeMirror' ).height(window.innerHeight - 180)
             }, 1);
         } );
 
