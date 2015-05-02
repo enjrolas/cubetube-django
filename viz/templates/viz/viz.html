@@ -13,9 +13,18 @@
 {% load utils %}
 {% logged_in_status as logged_in %}
 
-<div class="viz-wrapper" data-viz-type="{{ viz.vizType }}" data-viz-id="{{ viz.pk }}" data-viz-url="{% url 'code' source.pk %}">
+{% if source %}
+  <div class="viz-wrapper" data-viz-type="{{ viz.vizType }}" data-viz-id="{{ viz.pk }}" data-viz-url="{% url 'code' source.pk %}">
+{% else %}
+  <div class="viz-wrapper" data-viz-type="{{ viz.vizType }}" data-viz-id="{{ viz.pk }}">
+{% endif %}
+
   <div class="viz-nav">
-    <a class="round-button button-red view-code">View Code</a>
+    
+    {% if source %}
+      <a class="round-button button-red view-code">View Code</a>
+    {% endif %}
+
     {% if logged_in %}
       <div class="cube-options">
         <a class="round-button button-grey sent-to-cube">Send to Cube</a>
@@ -27,7 +36,17 @@
     {% endif %}
   </div>
   <div class="viz-demo">
-    <canvas class="demo-canvas"></canvas>
+    {% if source %}
+      <canvas class="demo-canvas"></canvas>
+    {% else %}
+
+      {% if photo %}
+        <div class="background-image" style="background-image: url('{{photo.file.url}}')"></div>
+      {% else %}
+        <div class="background-image no-photo"></div>
+      {% endif %}
+
+    {% endif %}
   </div>
   <div class="viz-details">
     <div class="inner-wrapper">
@@ -82,6 +101,7 @@
     </a>
   {% endif %}
 
+  {% if source %}
   <div class="viz-code">
     <div class="viz-code-header">
       <a class="round-button button-red run-sketch">Run Sketch</a>
@@ -92,6 +112,7 @@
     </div>
     <textarea cols="120" rows="10" class="console output" readonly placeholder="Console output here..."></textarea>
   </div>
+  {% endif %}
 </div>
 
 {% endblock %}

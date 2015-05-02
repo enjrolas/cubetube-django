@@ -65,16 +65,28 @@ def viz(request, id):
         binary=Binary.objects.get(viz=currentViz)
     except Binary.DoesNotExist:
         binary=None
-    photos=Photo.objects.filter(viz=currentViz)  #get the main image associated with this viz, and use it as the photo
+    
+    try:
+        photo = Photo.objects.filter(viz=currentViz)[:1].get()  #get the main image associated with this viz, and use it as the photo
+    except Photo.DoesNotExist:
+        photo = False
+
     comments=Comment.objects.filter(viz=currentViz)
     currentViz.pageViews=currentViz.pageViews+1
     currentViz.save()
-    source=SourceCode.objects.get(viz=currentViz)
+
+    # 17 is the beginning of the new cube viz's
+    # @TODO: Change number for production
+    if int(id) >= 17:
+        source=SourceCode.objects.get(viz=currentViz)
+        photo = False
+    else:
+        source = False;
 
     nextViz = currentViz.get_previous_by_created()
     if nextViz:
-        return render(request, "viz/viz.html", { 'nextViz': nextViz, 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments, 'source': source})    
-    return render(request, "viz/viz.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments, 'source': source})
+        return render(request, "viz/viz.html", { 'nextViz': nextViz, 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})    
+    return render(request, "viz/viz.html", { 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})
     
     # if currentViz.vizType=="streaming":
     #     binary=Binary.objects.get(pk=settings.LISTENER_PK)
