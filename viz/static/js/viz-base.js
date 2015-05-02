@@ -8,7 +8,6 @@
  */
 
 var library;
-
 /**
  * App
  */
@@ -38,12 +37,25 @@ $(function(){
     $('.view-code').click(function() {
 
         var state = $( '.viz-wrapper' ).hasClass('code-active');
-        $( '.viz-wrapper' ).toggleClass('code-active', !state);
 
         if( state == true ) {
             $('.view-code').text('View Code')
+            $( '.viz-wrapper' ).toggleClass('code-active', !state);
+            parent.postMessage( "close", "*" );
+            $body.removeClass('no-scroll');
         } else {
-            $('.view-code').text('Hide Code')
+            
+            $('body').animate( 
+                {scrollTop:'0px'},
+                300,
+                'swing',
+                function(){ 
+                    parent.postMessage( "open", "*" );
+                    $( '.viz-wrapper' ).toggleClass('code-active', !state);
+                    $('.view-code').text('Hide Code');
+                    $body.addClass('no-scroll');
+                } 
+            )
         }
     });
 
@@ -51,11 +63,7 @@ $(function(){
     $('.sent-to-cube').click(function() {
 
     });
-
-    // Select Cube.
 });
-
-
 
 /**
  * Functions

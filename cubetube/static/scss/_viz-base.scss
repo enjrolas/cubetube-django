@@ -5,7 +5,7 @@
 
 .viz-wrapper {
     width: 800px;
-    border-top: 58px solid #f9f9f9;
+    border-top: 118px solid #f9f9f9;
     height: 100%;
 
     .round-button {
@@ -45,6 +45,10 @@
         height: 60px;
         padding-left: 10px;
         padding-right: 10px;
+        position: fixed;
+        width: 800px;
+        background: #fff;
+        top: 58px;
     }
 
     // Canvas sits inside here.
@@ -240,4 +244,8 @@
     height: 100%;
     border: 0;
     z-index: 2;
+
+    &.more-open {
+        width: 1020px;
+    }
 }

@@ -202,7 +202,7 @@ h2 {
  */
 .viz-wrapper {
   width: 800px;
-  border-top: 58px solid #f9f9f9;
+  border-top: 118px solid #f9f9f9;
   height: 100%; }
   .viz-wrapper .round-button {
     font-family: roboto;
@@ -230,7 +230,11 @@ h2 {
   .viz-wrapper .viz-nav {
     height: 60px;
     padding-left: 10px;
-    padding-right: 10px; }
+    padding-right: 10px;
+    position: fixed;
+    width: 800px;
+    background: #fff;
+    top: 58px; }
   .viz-wrapper .viz-demo {
     width: 800px;
     height: 460px;
@@ -369,6 +373,8 @@ h2 {
   height: 100%;
   border: 0;
   z-index: 2; }
+  .viz-template.more-open {
+    width: 1020px; }
 
 /**
  * Cubetube SVG's
