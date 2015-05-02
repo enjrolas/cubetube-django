@@ -68,6 +68,14 @@ $(function(){
         translateCode(document.getElementById("code").value);
         runSparkSketch();
     });
+
+    $('.twitter').click(function() {
+        openTwitterPopup();
+    })
+
+    $('.facebook').click(function() {
+        openFBPopup();
+    })
 });
 
 function setHeight() {
@@ -89,19 +97,6 @@ function getVizUrl() {
     return $wrapper.attr('data-viz-url');
 }
 
-function initializeSparkSketch() {
-}
-
-function fork() {
-}
-
-function edit() {
-}
-
-// Load JAVASCRIPT code
-function loadCode() {
-}
-
 // Applies codeMirror formatting code.
 var editor;
 function formatCode() {
@@ -114,4 +109,35 @@ function formatCode() {
     editor.on("change", function(cm, change) {
         document.getElementById("code").value = cm.getValue();
     })
+}
+
+function openTwitterPopup() {
+   var width  = 575,
+       height = 250,
+       left   = (screen.width / 2)  - (width  / 2),
+       top    = (screen.height / 2) - (height / 2),
+       url    = 'http://twitter.com/share',
+       opts   = 'status=1' +
+                ',width='  + width  +
+                ',height=' + height +
+                ',top='    + top    +
+                ',left='   + left;
+   
+   window.open(url, 'twitter', opts);
+
+   return false;
+}
+
+function openFBPopup() {
+
+    var url = "http://url.com";
+    var title = "title";
+    var descr = "desc";
+
+    var winWidth = $(window).width();
+    var winHeight = $(window).height();
+    var winTop = (screen.height / 2) - (winHeight / 2);
+    var winLeft = (screen.width / 2) - (winWidth / 2);
+
+    window.open('http://www.facebook.com/sharer.php?s=100&p[title]=' + title + '&p[summary]=' + descr + '&p[url]=' + url, 'sharer', 'top=' + winTop + ',left=' + winLeft + ',toolbar=0,status=0,width=' + winWidth + ',height=' + winHeight);
 }
