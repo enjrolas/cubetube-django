@@ -18,21 +18,41 @@ $(function(){
         library=data;
     }, 'text');
     
-    formatCode();
-
-    // Handle different viz types.
+    // Init!
     var vizType = getVizType();
     if( vizType === 'L3D') {
 
         parseSparkCode( getVizUrl(), function() {
             setTimeout( function() {
-                runSparkSketch();
+                formatCode();
+                // runSparkSketch();
+                $( '.CodeMirror' ).height(window.innerHeight - 120)
             }, 1);
         } );
 
     } else if ( vizType === 'javascript' ) {
         runSketch();
     }
+
+    // View code
+    $('.view-code').click(function() {
+
+        var state = $( '.viz-wrapper' ).hasClass('code-active');
+        $( '.viz-wrapper' ).toggleClass('code-active', !state);
+
+        if( state == true ) {
+            $('.view-code').text('View Code')
+        } else {
+            $('.view-code').text('Hide Code')
+        }
+    });
+
+    // Send to cube.
+    $('.sent-to-cube').click(function() {
+
+    });
+
+    // Select Cube.
 });
 
 
@@ -51,7 +71,6 @@ function getVizUrl() {
 }
 
 function initializeSparkSketch() {
-
 }
 
 function fork() {

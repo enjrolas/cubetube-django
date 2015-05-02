@@ -83,8 +83,14 @@
   {% endif %}
 
   <div class="viz-code">
+    <div class="viz-code-header">
+      <a class="round-button button-red run-sketch">Run Sketch</a>
+    <a class="round-button button-grey save-sketch">Save Sketch</a>
+    </div>
+    <div class="code-area">
+      <textarea rows="80" cols="120" id="code" class="code inout">{{ source.code }}</textarea>
+    </div>
     <textarea cols="222" rows="10" class="console output"></textarea>
-    <textarea rows="80" cols="120" id="code" class="code inout">{{ source.code }}</textarea>
   </div>
 </div>
 
@@ -93,27 +99,7 @@
   <div id="fork" onclick="fork({{ viz.pk }})"><button>fork</button></div>
         <div id="code-wrapper" class="edit code">
             <textarea rows="80" cols="120" id="code"    {% if viz.creator.nickname != request.COOKIES.nickname %} readonly="yes" {% endif %}>{{ source.code }}</textarea>
-=[        <img onclick="runSketch();" src="{% static 'i/run.png'%}" width="32px">  Run Sketch
-          <div id="output-wrapper">
-            <h2>Output</h2>
-            <textarea cols="222" rows="10" id="output" readonly="readonly">None.</textarea>
           </div>
-    <div class="comment">
-      <h3>Comments</h3>
-      <div class="existingComments">
-      {% for comment in comments %}
-      <div class="commentEntry">
-    <a href="#" class="author">{{ comment.commenter.nickname }}</a> says:
-    <p>{{ comment.comment }}</p>
-    </div>
-      {% endfor %}
-      </div>
-      <div class="commentEntry requireLogin">
-    <a href="#" class="author author-self">You</a>
-    <div class="commentButton">OK</div>  
-    <textarea id="userComment" name="" rows="5" placeholder="What's on yer mind?"></textarea>
-    </div>
-      </div>
-    </div>
-</main> -->
+
+-->
 {% endblock %}

@@ -340,7 +340,26 @@ h2 {
       font-weight: 800;
       font-size: 30px; }
   .viz-wrapper .viz-code {
-    display: none; }
+    padding-top: 58px;
+    position: fixed;
+    top: 0px;
+    left: 800px;
+    border: 0px;
+    height: 100%;
+    width: 600px;
+    overflow: hidden; }
+    .viz-wrapper .viz-code .CodeMirror {
+      height: 100%; }
+    .viz-wrapper .viz-code .viz-code-header {
+      height: 60px;
+      padding-right: 10px; }
+  .viz-wrapper.code-active .viz-nav {
+    padding-right: 398px; }
+  .viz-wrapper.code-active .viz-code {
+    -webkit-transform: translateX(-380px);
+    -moz-transform: translateX(-380px);
+    -ms-transform: translateX(-380px);
+    transform: translateX(-380px); }
 
 .viz-template {
   position: fixed;

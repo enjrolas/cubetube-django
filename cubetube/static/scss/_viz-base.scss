@@ -201,7 +201,34 @@
 
     // Code section
     .viz-code {
-        display: none;
+        padding-top: 58px;
+        position: fixed;
+        top: 0px;
+        left: 800px;
+        border: 0px;
+        height: 100%;
+        width: 600px;
+        overflow: hidden;
+
+        .CodeMirror {
+            height: 100%;
+        }
+
+        .viz-code-header {
+            height: 60px;
+            padding-right: 10px;
+        }
+    }
+
+    &.code-active {
+
+        .viz-nav {
+            padding-right: 398px;
+        }
+
+        .viz-code {
+            @include transform( translateX(-380px) );
+        }
     }
 }
 
