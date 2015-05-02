@@ -18,8 +18,6 @@ function bindListener() {
 }
 
 function receiveMessage(event) {
-        
-    console.log(event);
 
     // Open code area even more!
     if( event.data === "open" ) {

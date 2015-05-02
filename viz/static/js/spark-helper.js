@@ -45,83 +45,88 @@ function parseSparkCode( url, after ) {
 
     $.get(url, function(data) {
 
-        sparkCode=data.split('\n');  //sparkCode is an array of lines in the data file
-        jsCode=[];
-        var cubeObject;
-        var cubeObjectName;
-        
-        for( var i=0; i<sparkCode.length; i++ ) {
-            $("#sparkCode").append(sparkCode[i]+"<br/>");
-            var ignoreFlag=false;
-            
-            for(var j=0;j<ignoreList.length;j++) {
-                if(sparkCode[i].indexOf(ignoreList[j])>=0) {
-                    ignoreFlag=true;
-                }
-            }
-
-            //if the line is valid, we now loop through all the translations and apply them to the line
-            if(ignoreFlag==false) {
-                
-                line=sparkCode[i];
-                for(var key in translation){
-                    line=line.replace(key, translation[key]);
-                }
-
-                //now add the translated line to the JS code
-                jsCode.push(line)
-            }
-        }
-
-        for(var i=0;i<jsCode.length;i++) {
-            var line=jsCode[i];
-            for(var key in flagList) {
-                if(line.indexOf(key)>=0) {
-                    flagList[key]++;
-                }
-            }
-
-            //we've initialized the cube object, let's find out its name
-            if(flagList["Cube "]==1) {
-                parts=line.split(' ');
-                cubeObjectName=parts[1];
-                // console.log("cube object name: "+cubeObjectName);
-                flagList[cubeObjectName]="0";
-                line="Cube "+cubeObjectName+";";
-                jsCode[i]=line;
-                flagList["Cube "]=0;
-            }
-
-
-            if(flagList["setup()"]==1) {
-                if(line.indexOf("{")>=0) {
-                    parts=line.split("{");
-                    line=parts[0]+"{"+cubeObjectName+"=new Cube(this);"+"size(500,500, P3D);"+parts[1];
-                    jsCode[i]=line;
-                    flagList["setup()"]=0;
-                }    
-            }
-
-            if(flagList["PVector"]==1) {
-                line=line.replace("{", "new PVector(");
-                line=line.replace("}", ")");
-                jsCode[i]=line;     //replace the line in the code
-                flagList["PVector"]=0;
-            }
-
-            if(flagList["draw()"]==1) {
-                if(line.indexOf("{")>=0) {
-                    parts=line.split("{");
-                    line=parts[0]+"{"+canvasControl+parts[1];
-                    jsCode[i]=line;
-                    flagList["draw()"]=0;
-                }
-            }
-
-            $("#jsCode").append(line+"<br/>");
-            translatedCode+=line+"\n";
-        }
-
+        translateCode(data);
         after();
     });
 }
+
+function translateCode( data ) {
+    translatedCode = "";
+    sparkCode=data.split('\n');  //sparkCode is an array of lines in the data file
+    jsCode=[];
+    var cubeObject;
+    var cubeObjectName;
+    
+    for( var i=0; i<sparkCode.length; i++ ) {
+        $("#sparkCode").append(sparkCode[i]+"<br/>");
+        var ignoreFlag=false;
+        
+        for(var j=0;j<ignoreList.length;j++) {
+            if(sparkCode[i].indexOf(ignoreList[j])>=0) {
+                ignoreFlag=true;
+            }
+        }
+
+        //if the line is valid, we now loop through all the translations and apply them to the line
+        if(ignoreFlag==false) {
+            
+            line=sparkCode[i];
+            for(var key in translation){
+                line=line.replace(key, translation[key]);
+            }
+
+            //now add the translated line to the JS code
+            jsCode.push(line)
+        }
+    }
+
+    for(var i=0;i<jsCode.length;i++) {
+        var line=jsCode[i];
+        for(var key in flagList) {
+            if(line.indexOf(key)>=0) {
+                flagList[key]++;
+            }
+        }
+
+        //we've initialized the cube object, let's find out its name
+        if(flagList["Cube "]==1) {
+            parts=line.split(' ');
+            cubeObjectName=parts[1];
+            // console.log("cube object name: "+cubeObjectName);
+            flagList[cubeObjectName]="0";
+            line="Cube "+cubeObjectName+";";
+            jsCode[i]=line;
+            flagList["Cube "]=0;
+        }
+
+
+        if(flagList["setup()"]==1) {
+            if(line.indexOf("{")>=0) {
+                parts=line.split("{");
+                line=parts[0]+"{"+cubeObjectName+"=new Cube(this);"+"size(500,500, P3D);"+parts[1];
+                jsCode[i]=line;
+                flagList["setup()"]=0;
+            }    
+        }
+
+        if(flagList["PVector"]==1) {
+            line=line.replace("{", "new PVector(");
+            line=line.replace("}", ")");
+            jsCode[i]=line;     //replace the line in the code
+            flagList["PVector"]=0;
+        }
+
+        if(flagList["draw()"]==1) {
+            if(line.indexOf("{")>=0) {
+                parts=line.split("{");
+                line=parts[0]+"{"+canvasControl+parts[1];
+                jsCode[i]=line;
+                flagList["draw()"]=0;
+            }
+        }
+
+        $("#jsCode").append(line+"<br/>");
+        translatedCode+=line+"\n";
+    }
+}
+

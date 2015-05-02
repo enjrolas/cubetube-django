@@ -61,7 +61,12 @@ $(function(){
 
     // Send to cube.
     $('.sent-to-cube').click(function() {
+    });
 
+    $('.run-sketch').click(function() {
+        //editor.save();
+        translateCode(document.getElementById("code").value);
+        runSparkSketch();
     });
 });
 
@@ -98,11 +103,15 @@ function loadCode() {
 }
 
 // Applies codeMirror formatting code.
+var editor;
 function formatCode() {
-    var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+    editor = CodeMirror.fromTextArea(document.getElementById("code"), {
         lineNumbers: true,
         styleActiveLine: true,
         matchBrackets: true
     });
     editor.setOption("theme", "tomorrow-night-eighties");
+    editor.on("change", function(cm, change) {
+        document.getElementById("code").value = cm.getValue();
+    })
 }
