@@ -31,6 +31,10 @@
         }
     }
 
+    .button-transparent {
+        box-shadow: inset 0px 0px 0px 1px rgba(255, 255, 255, 0.4);
+    }
+
     .button-red {
         background: $red;
     }
@@ -221,6 +225,7 @@
         .viz-code-header {
             height: 60px;
             padding-right: 10px;
+            background: #000;
         }
 
         // Output area

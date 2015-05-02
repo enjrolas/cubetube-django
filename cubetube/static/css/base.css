@@ -222,6 +222,8 @@ h2 {
       margin-right: -9px; }
     .viz-wrapper .round-button:active {
       opacity: 0.8; }
+  .viz-wrapper .button-transparent {
+    box-shadow: inset 0px 0px 0px 1px rgba(255, 255, 255, 0.4); }
   .viz-wrapper .button-red {
     background: #ee0026; }
   .viz-wrapper .button-grey {
@@ -357,7 +359,8 @@ h2 {
       height: 100%; }
     .viz-wrapper .viz-code .viz-code-header {
       height: 60px;
-      padding-right: 10px; }
+      padding-right: 10px;
+      background: #000; }
     .viz-wrapper .viz-code .console {
       padding: 10px;
       height: 63px;

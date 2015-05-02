@@ -25,7 +25,7 @@ $(function(){
             setTimeout( function() {
                 formatCode();
                 runSparkSketch();
-                $( '.CodeMirror' ).height(window.innerHeight - 180)
+                setHeight();
             }, 1);
         } );
 
@@ -64,6 +64,12 @@ $(function(){
 
     });
 });
+
+function setHeight() {
+    $( '.CodeMirror' ).height(window.innerHeight - 180)
+}
+
+window.onresize = setHeight;
 
 /**
  * Functions
