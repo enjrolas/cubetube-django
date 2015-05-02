@@ -38,6 +38,9 @@ h2 {
   color: #9199aa;
   margin-bottom: 30px; }
 
+button {
+  outline: 0px; }
+
 .blue {
   color: #2bc6fb; }
 
@@ -196,6 +199,15 @@ h2 {
     left: 0px;
     padding: 20px;
     padding-top: 65px; }
+
+.error-area {
+  text-align: center;
+  font-size: 12px;
+  line-height: 29px;
+  height: 10px;
+  color: red;
+  font-weight: bold;
+  letter-spacing: 0.2px; }
 
 /**
  * Used on /viz directories

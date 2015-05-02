@@ -23,6 +23,7 @@ $(function(){
             } else {
                 $popover.removeClass('join').addClass('login');
             }
+            clearError();
         });
 
         // Close the glass layer.
@@ -39,6 +40,7 @@ $(function(){
             var email = $('.signup-component .email').val();
             var nickname = $('.signup-component .nickname').val();
             var password = $('.signup-component .password').val();
+            clearError();
             createNewUser(email, nickname, password);
         });
 
@@ -48,6 +50,7 @@ $(function(){
         $('.login-component .login').click(function() {
             var email = $('.login-component .email').val();
             var password = $('.login-component .password').val();
+            clearError();
             sparkLogin(email, password);
         });
     }
@@ -77,7 +80,7 @@ function createNewUser(email, nickname, password) {
             if(err.message.indexOf("already exists")>-1) {
                 sparkSignup(email, nickname, password);
             } else {
-                displayCreateUserError(err.message);
+                displayError(err);
             }
         }
     });
@@ -146,7 +149,7 @@ function sparkLogin(email, password) {
         });
 
     }, function(error){
-        displayError(error);
+        displayError(error, "Sorry, already used username or email!");
     });
 }
 
@@ -170,6 +173,21 @@ function cubetubeSignup(email, accessToken, nickname) {
     })
 }
 
-function displayError(error) {
-    console.log( "Login error: ", error );
+function displayError(error, message) {
+
+    if( message ) {
+        $('.error-area').html(message);
+        return;
+    }
+    
+    // Invalid username or password
+    if( error.message === 'invalid_grant' ) {
+        $('.error-area').html('Sorry, invalid name or password');
+    } else if (error.message === 'Username must be an email address.') {
+        $('.error-area').html('Urp, username must be an email address!');
+    }
+}
+
+function clearError() {
+    $('.error-area').html('')
 }
