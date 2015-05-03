@@ -9,6 +9,7 @@ $(function(){
     $cubeOptions = $( '.cube-options' );
     if( $cubeOptions.length ) {
         // listCubes();
+        console.log("hi");
     }
 })
 

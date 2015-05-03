@@ -26,13 +26,16 @@
     {% endif %}
 
     {% if logged_in %}
-      <div class="cube-options">
+      <div class="cube-options hidden">
         <a class="round-button button-grey sent-to-cube">Send to Cube</a>
         <div class="round-button button-grey select-cube">
           Select Cube
           <img src="/static/images/down-arrow.png" />
         </div>
       </div>
+      <div class="nav-info"></div>
+    {% else %}
+      <div class="nav-info">Sign in to send to cube!</div>
     {% endif %}
   </div>
   <div class="viz-demo">
@@ -105,7 +108,9 @@
   <div class="viz-code">
     <div class="viz-code-header">
       <a class="round-button button-red run-sketch">Run Sketch</a>
-    <a class="round-button button-transparent save-sketch">Save Sketch</a>
+      {% if logged_in %}
+        <a class="round-button button-transparent save-sketch">Save Sketch</a>
+      {% endif %}
     </div>
     <div class="code-area">
       <textarea rows="80" cols="120" id="code" class="code inout">{{ source.code }}</textarea>

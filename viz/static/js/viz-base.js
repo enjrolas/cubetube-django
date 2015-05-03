@@ -8,6 +8,8 @@
  */
 
 var library;
+var editor;
+
 /**
  * App
  */
@@ -97,9 +99,9 @@ function getVizUrl() {
     return $wrapper.attr('data-viz-url');
 }
 
-// Applies codeMirror formatting code.
-var editor;
 function formatCode() {
+    
+    // Applies codeMirror formatting code.
     editor = CodeMirror.fromTextArea(document.getElementById("code"), {
         lineNumbers: true,
         styleActiveLine: true,
