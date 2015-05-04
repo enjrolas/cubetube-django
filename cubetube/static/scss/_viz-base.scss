@@ -293,4 +293,9 @@
     line-height: 64px;
     font-size: 13px;
     padding-right: 10px;
+    height: 60px;
+
+    &.white {
+        color: #fff;
+    }
 }

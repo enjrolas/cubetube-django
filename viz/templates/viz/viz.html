@@ -107,15 +107,24 @@
   {% if source %}
   <div class="viz-code">
     <div class="viz-code-header">
+
       <a class="round-button button-red run-sketch">Run Sketch</a>
       {% if logged_in %}
-        <a class="round-button button-transparent save-sketch">Save Sketch</a>
+
+        {% if viz.creator.nickname == request.COOKIES.nickname %}
+          <a class="round-button button-transparent save-sketch">Save Sketch</a>
+        {% else %}
+          <a class="round-button button-transparent fork-sketch">Fork Sketch</a>
+        {% endif %}
+
+      {% else %}
+        <div class="nav-info white">Sign up, make your own!</div>
       {% endif %}
     </div>
     <div class="code-area">
       <textarea rows="80" cols="120" id="code" class="code inout">{{ source.code }}</textarea>
     </div>
-    <textarea cols="120" rows="10" class="console output" readonly placeholder="Console output here..."></textarea>
+    <textarea cols="120" rows="10" class="console output" readonly placeholder="Console output..."></textarea>
   </div>
   {% endif %}
 </div>
