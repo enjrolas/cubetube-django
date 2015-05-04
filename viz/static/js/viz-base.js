@@ -71,6 +71,14 @@ $(function(){
         runSparkSketch();
     });
 
+    $('.save-sketch').click(function() {
+
+    });
+
+    $('.fork-sketch').click(function() {
+
+    });
+
     $('.twitter').click(function() {
         openTwitterPopup();
     })
@@ -100,7 +108,7 @@ function getVizUrl() {
 }
 
 function formatCode() {
-    
+
     // Applies codeMirror formatting code.
     editor = CodeMirror.fromTextArea(document.getElementById("code"), {
         lineNumbers: true,
