@@ -7,7 +7,7 @@ import logging
 log = logging.getLogger(__name__)
 
 @register.inclusion_tag('viz/thumbnail.html')
-def thumbnail(viz, nextPage=None, vizType=None):
+def thumbnail(viz, nextPage=None, vizType=None, filter=None):
     try:
         photo=Photo.objects.filter(viz=viz)[:1]  #get the main image associated with this viz, and use it as the photo                                                              
         photo=photo[0]
@@ -19,7 +19,7 @@ def thumbnail(viz, nextPage=None, vizType=None):
         thumbnailPhotoURL=None
         log.debug(e)
     if nextPage is not None:
-            return { 'viz' : viz, 'thumbnailPhoto' : photo, 'nextPage' : nextPage, 'vizType' : vizType, 'thumbnailPhotoURL' :thumbnailPhotoURL}
+            return { 'viz' : viz, 'thumbnailPhoto' : photo, 'nextPage' : nextPage, 'vizType' : vizType, 'thumbnailPhotoURL' :thumbnailPhotoURL, 'filter': filter}
     else:
         return { 'viz' : viz, 'thumbnailPhoto' : photo , 'thumbnailPhotoURL' :thumbnailPhotoURL}
 

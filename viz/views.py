@@ -9,19 +9,21 @@ from django.views.decorators.csrf import csrf_exempt
 import logging
 log = logging.getLogger(__name__)
 
-def gallery(request):
-    vizType=request.GET.get('vizType')
-    if(vizType != None):
-        vizs=Viz.objects.filter(vizType=vizType)
-    else:
+def parameter(request, param):
+    return HttpResponse("param is: {}".format(param))
+
+def gallery(request, filter="newestFirst"):
+    if(filter=='newestFirst'):
         vizs=Viz.objects.all().order_by("-created")    
-  
+    else:
+        vizs=Viz.objects.all().order_by("created")      
+
     totalObjects=vizs.count()
     if totalObjects<6:
         visualizations=vizs[:totalObjects]
     else:
         visualizations=vizs[:6]
-    return render(request, "viz/gallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'vizType' : vizType, 'totalObjects' : totalObjects})
+    return render(request, "viz/gallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'totalObjects' : totalObjects, 'filter': filter})
 
 @csrf_exempt
 def fork(request):
@@ -78,7 +80,14 @@ def code(request, id):
 def create(request):
     return render(request, "viz/create.html")
 
-def scroll(request, page):
+def scroll(request, page, filter="newestFirst"):
+    page=int(page)
+    if filter=="newestFirst":
+        vizs=Viz.objects.all().order_by("-created")[page*6:(page+1)*6]
+    else:
+        vizs=Viz.objects.all().order_by("created")[page*6:(page+1)*6]
+    return render(request, "viz/gallery-page.html", { 'visualizations' : vizs , 'nextPage' : page+1, 'filter':filter})    
+    '''
     page=int(page)
     vizType=request.GET.get('vizType')
     if(vizType != None):
@@ -86,6 +95,7 @@ def scroll(request, page):
     else:
         vizs=Viz.objects.all().order_by("-created")[page*6:(page+1)*6]
     return render(request, "viz/gallery-page.html", { 'visualizations' : vizs , 'nextPage' : page+1})    
+    '''
 
 def edit(request, id):
     try:

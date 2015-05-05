@@ -11,6 +11,7 @@ class Viz(models.Model):
     tags=models.TextField(default="")
     views=models.IntegerField(default=0)
     vizType=models.TextField(default="spark")
+    interactive=models.BooleanField(default=False)
     pageViews=models.IntegerField(default=0)
     parent=models.ForeignKey('self', null=True, blank=True, default = None)
     def __str__(self):
@@ -21,6 +22,8 @@ class SourceCode(models.Model):
     code=models.TextField(default="")
     created=models.DateTimeField(auto_now_add=True)
     updated=models.DateTimeField(auto_now=True)
+    def __str__(self):
+        return "%s code:  %s, created by %s on %s" %(self.viz.vizType, self.viz.name, self.viz.creator, self.created)
 
 class Photo(models.Model):
     viz=models.ForeignKey(Viz)

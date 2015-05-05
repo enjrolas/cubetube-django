@@ -8,7 +8,7 @@
 <main>
 <div class="gallery">
 {% for viz in visualizations %}
-{% thumbnail viz nextPage vizType filter %}
+{% thumbnail viz nextPage vizType %}
 {% endfor %}
 </div>
 </main>
