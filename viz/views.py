@@ -23,7 +23,7 @@ def gallery(request, filter="newestFirst"):
         visualizations=vizs[:totalObjects]
     else:
         visualizations=vizs[:8]
-    return render(request, "viz/gallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'vizType' : vizType, 'totalObjects' : totalObjects, 'filter': filter})
+    return render(request, "viz/gallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'totalObjects' : totalObjects, 'filter': filter})
 
 def index(request):
     vizs=Viz.objects.all().order_by("-created")    
