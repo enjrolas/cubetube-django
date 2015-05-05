@@ -14,15 +14,31 @@
 {% load utils %}
 {% logged_in_status as logged_in %}
 
-<div class="viz-wrapper">
+<div class="viz-wrapper create-wrapper">
 
   <div class="viz-nav">
+    <div class="nav-info"></div>
+    <a class="round-button button-red save-code">Save Viz</a>
   </div>
   <div class="viz-demo">
       <canvas class="demo-canvas"></canvas>
   </div>
   <div class="viz-details">
     <div class="inner-wrapper">
+      <input class="title"></input>
+      <textarea class="description"></textarea>
+      
+      <div class="switch-option published">
+        <div class="label">Published:</div>
+        <div class="switch-left">Public</div>
+        <div class="switch-right">Private</div>
+      </div>
+
+      <div class="switch-option interactive">
+        <div class="label">Interactive:</div>
+        <div class="switch-left">No</div>
+        <div class="switch-right">Yes</div>
+      </div>
     </div>
   </div>
 

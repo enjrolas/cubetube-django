@@ -79,7 +79,7 @@ def viz(request, id):
 
     # 17 is the beginning of the new cube viz's
     # @TODO: Change number for production
-    if int(id) >= 17:
+    if int(id) >= 0:
         source=SourceCode.objects.get(viz=currentViz)
         photo = False
     else:

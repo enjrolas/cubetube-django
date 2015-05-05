@@ -425,6 +425,13 @@ button {
   .nav-info.white {
     color: #fff; }
 
+.create-wrapper {
+  width: 560px; }
+  .create-wrapper .viz-nav,
+  .create-wrapper .viz-demo,
+  .create-wrapper .viz-demo canvas {
+    width: 560px; }
+
 /**
  * Cubetube SVG's
  * - Interactive
