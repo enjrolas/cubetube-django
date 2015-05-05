@@ -1,0 +1,73 @@
+
+ {% extends "cubetube/base.html" %}
+ {% block header %}
+{% include "viz/create-header.html" %}
+ {% endblock %}
+
+<main>
+
+{% if viz == None %}
+<div id="instructions">
+<div id="instructions-tagline">share your viz with the world</div>
+<div id="instructions-description">If you want to create a viz, you'll need to do it with the <a href="https://www.spark.io/build">Spark code editor</a>, or for more interactive or computationally intensive ideas, you can make a streaming viz with the <a href="https://github.com/enjrolas/L3D-library">L3D Processing library</a>.  If you're just getting started and need help, check out some of the code examples in the <a href="https://github.com/enjrolas/L3D-Software">software repo</a>, or ask in <a href="{% url 'forum' %}">the forum</a></div>
+</div>     
+{% endif %}
+<div class="create-standalone column-layout">
+<form id="create-form" action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+        <input type="hidden" id="nickname" name="viz-nickname">
+        <input type="hidden" id="accessToken" name="viz-accessToken">
+        {% if viz %}
+        <input type="hidden" id="viz-id" name="viz-id" value="{{ viz.pk }}">
+        {% endif %}
+        <div class="input"><span>Name</span>
+          <input type="text" class="create-input" name="viz-name" placeholder="a lovely name for your viz" {% if viz %}value="{{ viz.name }}"{% endif %}>
+        </div>
+        <div class="textarea"><span>Tagline</span>
+          <textarea name="viz-tagline" rows="2" placeholder="a 1-2 sentence description of your project">{% if viz %}{{ viz.tagline }}{% endif %}</textarea>
+        </div>
+        <div class="textarea"><span>Description</span>
+          <textarea name="viz-description" rows="5" placeholder="a place to give a detailed description of your project">{% if viz %}{{ viz.description }}{% endif %}</textarea>
+        </div>
+        <div class="dropdown"><span>Viz Type</span>
+          <select class="typeSelector" name="viz-type">
+        <option value="spark" {% if viz.vizType == "spark" %}selected="selected"{% endif %}>Native Spark</option>
+        <option value="streaming" {% if viz.vizType == "streaming" %}selected="selected"{% endif %}>Streaming</option>
+        <option value="arduino" {% if viz.vizType == "arduino" %}selected="selected"{% endif %}>Arduino</option>
+        <option value="javascript" {% if viz.vizType == "javascript" %}selected="selected"{% endif %}>Javascript</option>
+        <option value="other" {% if viz.vizType == "other" %}selected="selected"{% endif %}>Other</option>
+        </select>
+        </div>
+       <div class="input"><span>Source Link</span>
+         <input type="text" class="create-input" name="viz-source-link" placeholder="a link to your source code on github, pastebin, or anywhere else online"{% if viz %}value="{{ viz.sourceURL }}"{% endif %}>
+       </div>
+
+       <div class="input"><span>tags</span>
+         <input type="text" class="create-input" name="viz-tags" placeholder="arduino, spark, streaming, etc."{% if viz %}value="{{ viz.tags }}"{% endif %}>
+       </div>
+<div class="buttonContainer">
+<div class="buttonGroup">
+  <div class="button file">UPLOAD BINARY</div>
+  <input class="button hidden" type="file" value="" name="viz-binary" accept=".bin">
+  <div class="button file" id="image-button">UPLOAD IMAGES</div>
+  <input class="button hidden" id="images" type="file" value="" name="photo" multiple accept="image/*">
+</div>
+</div>
+
+
+<div id="submit-button">
+  <div class="button file">
+    {% if viz %}
+    Update Viz
+    {% else %}
+    Share with the world!
+    {% endif %}
+  </div>
+  <input class="button hidden" type="submit">
+</div>
+
+</form>
+
+</div>
+</main>
+ -->
