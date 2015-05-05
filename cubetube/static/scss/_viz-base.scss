@@ -309,6 +309,54 @@
         width: 560px;
     }
 
+    .viz-details {
+        padding-bottom: 30px;
+    }
+
+    .viz-code {
+        left: 560px;
+    }
+
+    .inner-wrapper {
+        width: 480px;
+    }
+
+    .viz-name,
+    .description,
+    .switch-option {
+        width: 100%;
+    }
+
+    .viz-name,
+    .description{
+        font-size: 14px;
+        padding: 13px;
+        border-radius: 3px;
+        border: 1px solid rgba(0,0,0,0.1);
+        box-shadow: inset 1px 1px 5px 0px rgba(0,0,0,0.05);
+        margin-bottom: 15px;
+        outline: 0px;
+    }
+
+    .description {
+        resize: none;
+        height: 80px;
+    }
+
+    .switch-option {
+        height: 40px;
+        line-height: 40px;
+
+        .label {
+            width: 90px;
+            font-weight: bold;
+        }
+
+        div {
+            display: inline-block;
+        }
+    }
+
 
 }
 

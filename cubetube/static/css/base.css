@@ -431,6 +431,36 @@ button {
   .create-wrapper .viz-demo,
   .create-wrapper .viz-demo canvas {
     width: 560px; }
+  .create-wrapper .viz-details {
+    padding-bottom: 30px; }
+  .create-wrapper .viz-code {
+    left: 560px; }
+  .create-wrapper .inner-wrapper {
+    width: 480px; }
+  .create-wrapper .viz-name,
+  .create-wrapper .description,
+  .create-wrapper .switch-option {
+    width: 100%; }
+  .create-wrapper .viz-name,
+  .create-wrapper .description {
+    font-size: 14px;
+    padding: 13px;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: inset 1px 1px 5px 0px rgba(0, 0, 0, 0.05);
+    margin-bottom: 15px;
+    outline: 0px; }
+  .create-wrapper .description {
+    resize: none;
+    height: 80px; }
+  .create-wrapper .switch-option {
+    height: 40px;
+    line-height: 40px; }
+    .create-wrapper .switch-option .label {
+      width: 90px;
+      font-weight: bold; }
+    .create-wrapper .switch-option div {
+      display: inline-block; }
 
 /**
  * Cubetube SVG's

@@ -85,11 +85,9 @@ $(function(){
     });
 
     $('.save-sketch').click(function() {
-
     });
 
     $('.fork-sketch').click(function() {
-
     });
 
     $('.twitter').click(function() {

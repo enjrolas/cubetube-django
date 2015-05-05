@@ -1,0 +1,7 @@
+
+$(function(){
+
+    formatCode();
+    setHeight();
+
+});
