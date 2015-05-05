@@ -8,10 +8,10 @@ $(function(){
 function flash(binary){
     var binaryPath=$("#binaryPath").val());
     window.spark.flashCore([binary], function(err, data) {
-	if (err) {
-	    console.log('An error occurred while flashing the core:', err);
-    } else {
-	console.log('Core flashing started successfully:', data);
-    }
+    	if (err) {
+    	    console.log('An error occurred while flashing the core:', err);
+        } else {
+    	   console.log('Core flashing started successfully:', data);
+        }
     });
 }
