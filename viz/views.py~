@@ -12,27 +12,44 @@ log = logging.getLogger(__name__)
 def parameter(request, param):
     return HttpResponse("param is: {}".format(param))
 
-def gallery(request, filter="newestFirst"):
-    if(filter=='newestFirst'):
+def gallery(request, filter="newest_first"):
+    '''
+    vizType=request.GET.get('vizType')
+    if(vizType != None):
+        vizs=Viz.objects.filter(vizType=vizType)
+    else:
+        vizs=Viz.objects.all().order_by("-created")    
+  
+    totalObjects=vizs.count()
+    if totalObjects<6:
+        visualizations=vizs[:totalObjects]
+    else:
+        visualizations=vizs[:6]
+    return render(request, "viz/gallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'vizType' : vizType, 'totalObjects' : totalObjects})'''
+    if(filter=='newest_first'):
         vizs=Viz.objects.all().order_by("-created")    
     else:
         vizs=Viz.objects.all().order_by("created")      
 
     totalObjects=vizs.count()
-    if totalObjects<8:
+    if totalObjects<6:
         visualizations=vizs[:totalObjects]
     else:
-        visualizations=vizs[:8]
-    return render(request, "viz/gallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'vizType' : vizType, 'totalObjects' : totalObjects, 'filter': filter})
+        visualizations=vizs[:6]
+    return render(request, "viz/gallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'totalObjects' : totalObjects, 'filter': filter})
 
-def index(request):
-    vizs=Viz.objects.all().order_by("-created")    
+def filteredGallery(request, filter="newest_first"):    
+    if(filter=='newest_first'):
+        vizs=Viz.objects.all().order_by("-created")    
+    else:
+        vizs=Viz.objects.all().order_by("created")      
+
     totalObjects=vizs.count()
-    if totalObjects<8:
+    if totalObjects<6:
         visualizations=vizs[:totalObjects]
     else:
-        visualizations=vizs[:8]
-    return render(request, "viz/index.html", { 'visualizations' : visualizations, 'totalObjects' : totalObjects})
+        visualizations=vizs[:6]
+    return render(request, "viz/gallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'totalObjects' : totalObjects, 'filter': filter})
 
 @csrf_exempt
 def fork(request):
@@ -67,39 +84,20 @@ def viz(request, id):
         binary=Binary.objects.get(viz=currentViz)
     except Binary.DoesNotExist:
         binary=None
-    
-    try:
-        photo = Photo.objects.filter(viz=currentViz)[:1].get()  #get the main image associated with this viz, and use it as the photo
-    except Photo.DoesNotExist:
-        photo = False
-
+    photos=Photo.objects.filter(viz=currentViz)  #get the main image associated with this viz, and use it as the photo
     comments=Comment.objects.filter(viz=currentViz)
     currentViz.pageViews=currentViz.pageViews+1
-    currentViz.save()
-
-    # 17 is the beginning of the new cube viz's
-    # @TODO: Change number for production
-    if int(id) >= 17:
+    currentViz.save()  
+    if currentViz.vizType=="streaming":
+        binary=Binary.objects.get(pk=settings.LISTENER_PK)
+    if currentViz.vizType=='javascript':
         source=SourceCode.objects.get(viz=currentViz)
-        photo = False
+        return render(request, "viz/javascript.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments, 'source':source})
+    elif currentViz.vizType=='L3D':
+        source=SourceCode.objects.get(viz=currentViz)
+        return render(request, "viz/sparkPreview.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments, 'source':source})
     else:
-        source = False;
-
-    nextViz = currentViz.get_previous_by_created()
-    if nextViz:
-        return render(request, "viz/viz.html", { 'nextViz': nextViz, 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})    
-    return render(request, "viz/viz.html", { 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})
-    
-    # if currentViz.vizType=="streaming":
-    #     binary=Binary.objects.get(pk=settings.LISTENER_PK)
-    # if currentViz.vizType=='javascript':
-    #     source=SourceCode.objects.get(viz=currentViz)
-    #     return render(request, "viz/javascript.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments, 'source':source})
-    # elif currentViz.vizType=='L3D':
-    #     source=SourceCode.objects.get(viz=currentViz)
-    #     return render(request, "viz/sparkPreview.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments, 'source':source})
-    # else:
-    #     return render(request, "viz/detail.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments})
+        return render(request, "viz/detail.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments})
 
 def code(request, id):
     code=SourceCode.objects.get(pk=id)
@@ -108,14 +106,7 @@ def code(request, id):
 def create(request):
     return render(request, "viz/create.html")
 
-def scroll(request, page, filter="newestFirst"):
-    page=int(page)
-    if filter=="newestFirst":
-        vizs=Viz.objects.all().order_by("-created")[page*6:(page+1)*6]
-    else:
-        vizs=Viz.objects.all().order_by("created")[page*6:(page+1)*6]
-    return render(request, "viz/gallery-page.html", { 'visualizations' : vizs , 'nextPage' : page+1, 'filter':filter})    
-    '''
+def scroll(request, page):
     page=int(page)
     vizType=request.GET.get('vizType')
     if(vizType != None):
@@ -123,7 +114,14 @@ def scroll(request, page, filter="newestFirst"):
     else:
         vizs=Viz.objects.all().order_by("-created")[page*6:(page+1)*6]
     return render(request, "viz/gallery-page.html", { 'visualizations' : vizs , 'nextPage' : page+1})    
-    '''
+
+def filteredScroll(request, page, filter):
+    page=int(page)
+    if filter=="newest_first":
+        vizs=Viz.objects.all().order_by("-created")[page*6:(page+1)*6]
+    else:
+        vizs=Viz.objects.all().order_by("ccreated")[page*6:(page+1)*6]
+    return render(request, "viz/gallery-page.html", { 'visualizations' : vizs , 'nextPage' : page+1, 'filter':filter})    
 
 def edit(request, id):
     try:
@@ -151,6 +149,9 @@ def save(request):
     code.code=sourceCode
     code.save()
     return HttpResponse("ok")
+
+
+
 
 def authenticate(nickname, accessToken):
     authenticated=False
