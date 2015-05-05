@@ -382,6 +382,4 @@ class Cube {
 	    return (lerpColor(colors[5], colors[0], 
 			      (val / (range / 6)) - 5));
     }
-
-    
 }

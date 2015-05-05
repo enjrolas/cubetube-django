@@ -32,6 +32,9 @@ global.runSketch = function(callback) {
       // try {
           canvas = createCanvas();
           var sketchCode=$(".code").val().concat(library);
+
+          console.log( "here: ", $(".code").val(), library );
+
       var sketch = Processing.compile(sketchCode);
       if (callback) {
 	  if (!/exit\(\);/.test(sketchCode)) {

@@ -14,26 +14,33 @@ var editor;
  * App
  */
 
+ $.get('/static/js/l3d-library.js', function(data) {
+      library=data;
+
+      var vizType = getVizType();
+      if( vizType === 'L3D') {
+
+          parseSparkCode( getVizUrl(), function() {
+              setTimeout( function() {
+                  formatCode();
+                  runSparkSketch();
+                  setHeight();
+              }, 1);
+          } );
+
+      } else if ( vizType === 'javascript' ) {
+
+          setTimeout( function() {
+              formatCode();  //applies codeMirror formatting to the code
+              runSketch();
+              setHeight();
+          }, 1)
+      }
+      
+ }, 'text');
+
 $(function(){
-    $.get('/static/js/l3d-library.js', function(data) {
-        library=data;
-    }, 'text');
-    
     // Init!
-    var vizType = getVizType();
-    if( vizType === 'L3D') {
-
-        parseSparkCode( getVizUrl(), function() {
-            setTimeout( function() {
-                formatCode();
-                runSparkSketch();
-                setHeight();
-            }, 1);
-        } );
-
-    } else if ( vizType === 'javascript' ) {
-        runSketch();
-    }
 
     // View code
     $('.view-code').click(function() {
@@ -66,9 +73,15 @@ $(function(){
     });
 
     $('.run-sketch').click(function() {
-        //editor.save();
-        translateCode(document.getElementById("code").value);
-        runSparkSketch();
+
+        var vizType = getVizType();
+
+        if( vizType === 'L3D') {
+            translateCode(document.getElementById("code").value);
+            runSparkSketch();
+        } else if ( vizType === 'javascript' ) {
+            runSketch();
+        }
     });
 
     $('.save-sketch').click(function() {
