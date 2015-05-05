@@ -4,15 +4,74 @@ class Cube {
     int scale;
     PVector center;
     PApplet parent;
+    boolean clearToSend;
+    int rate;
+    int frameSize;
+    var frameBuffer;
+;
     Cube(PApplet _parent)
     {	
 	parent=_parent;
 	size=8;
+	rate=1000;
+	clearToSend=true;
+	frameSize=512;
+	this. frameBuffer= new ArrayBuffer(frameSize);
 	scale=height/size/2;
 	voxels=new color[size][size][size];
 	center=new PVector(scale*(size-1)/2, scale*(size-1)/2, scale*(size-1)/2);
 	//ortho();   //use orthographic projection (no perspective)
     }
+    void connect()
+    {
+	// open connection                                                                                                                                                               
+	this.ws = new WebSocket(address);
+	console.log("Connecting!");
+
+	var cube = this;
+
+	this.ws.onclose = function() {
+	    if(cube.onclose !== undefined) {
+		cube.onclose(cube);
+	    }
+	};
+
+	this.ws.onopen = function() {
+	    if(cube.onopen !== undefined) {
+		cube.onopen(cube);
+	    }
+
+	    cube.refresh();
+	};
+
+	this.ws.onmessage = function(evt) {
+	    var msg = evt.data;
+	    console.log("got msg: " + msg);
+
+	    if(parseInt(msg) == cube.frameSize) {
+		cube.clearToSend = true;
+	    }
+	};
+    }
+
+    void refresh() {
+        var cube = this;
+
+        if(this.clearToSend && this.ws.bufferedAmount == 0) {
+            if(this.onrefresh !== undefined) {
+                this.onrefresh(this);
+            }
+
+            this.ws.send(this.frameBuffer);
+            this.clearToSend = false; // must get reply before sending again                                                                                                         
+
+            setTimeout(function() { cube.refresh(); }, cube.rate);
+        } else {
+            // check for readiness every 5 millis                                                                                                                                    
+            setTimeout(function() { cube.refresh(); }, 5);
+        }
+    }
+
     void draw()
     {
 	//set the background color and mouse-controlled rotations
@@ -323,4 +382,6 @@ class Cube {
 	    return (lerpColor(colors[5], colors[0], 
 			      (val / (range / 6)) - 5));
     }
+
+    
 }

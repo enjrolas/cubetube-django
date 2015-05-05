@@ -12,7 +12,7 @@ def thumbnail(viz, nextPage=None, vizType=None):
         photo=Photo.objects.filter(viz=viz)[:1]  #get the main image associated with this viz, and use it as the photo                                                              
         photo=photo[0]
         log.debug("photo is %s, url is %s" %(photo, photo.file.url))
-        thumbnailPhotoURL=photo.file.url.replace(settings.MEDIA_URL, "http://cubetube.imgix.net/")
+        thumbnailPhotoURL=photo.file.url
         log.debug("fixed photo url is %s" % thumbnailPhotoURL)
     except Exception,e:
         photo=None

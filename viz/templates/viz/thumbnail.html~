@@ -14,6 +14,5 @@
   </div>
 </a>
 {% if nextPage %}
-<!-- <a class="scroll" href="{% url 'scroll' nextPage %}{% if vizType %}?vizType={{ vizType }}{% endif %}"></a> -->
-<a class="scroll" href="{% url 'scroll' nextPage filter %}"></a>
+<a class="scroll" href="{% url 'scroll' nextPage %}{% if vizType %}?vizType={{ vizType }}{% endif %}"></a>
 {% endif %}
