@@ -7,6 +7,8 @@ from django.utils.html import escape
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 import logging
+import datetime
+from django.core.files import File
 log = logging.getLogger(__name__)
 
 def parameter(request, param):
@@ -19,14 +21,19 @@ def gallery(request, filter="newestFirst"):
         vizs=Viz.objects.all().order_by("created")      
 
     totalObjects=vizs.count()
-    if totalObjects<12:
+    if totalObjects<8:
         visualizations=vizs[:totalObjects]
     else:
-        visualizations=vizs[:12]
+        visualizations=vizs[:8]
     return render(request, "viz/gallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'totalObjects' : totalObjects, 'filter': filter})
 
 def compile(request):
     code=request.POST['code']
+    filename=datetime.datetime.now().strftime('%Y-%m-%d--%H.%M.%S.cpp')
+    f = open(settings.MEDIA_ROOT + filename, 'wb+')
+    codeFile=File(f)
+    codeFile.write(code)
+    codeFile.close()
 
 def jsgallery(request, filter="newestFirst"):
     if(filter=='newestFirst'):
@@ -35,10 +42,10 @@ def jsgallery(request, filter="newestFirst"):
         vizs=Viz.objects.all().order_by("created")      
 
     totalObjects=vizs.count()
-    if totalObjects<12:
+    if totalObjects<8:
         visualizations=vizs[:totalObjects]
     else:
-        visualizations=vizs[:12]
+        visualizations=vizs[:8]
     return render(request, "viz/jsgallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'totalObjects' : totalObjects, 'filter': filter})
 
 def index(request):
@@ -162,10 +169,9 @@ def save(request):
 
     user=CubeUser.objects.get(accessToken=accessToken)
     viz=Viz.objects.get(pk=vizID)
-    viz.name        = name
-    viz.description = description
-    viz.interactive = interactive
-    viz.videoUrl    = videoUrl
+    viz.name=name
+    viz.tagline=tagline
+    viz.description=description
     viz.save()
 
     code=SourceCode.get(viz=viz)
