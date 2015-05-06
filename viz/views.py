@@ -59,18 +59,19 @@ def compile(request):
     retval = p.wait()
 
     binaryPath= "media/sparkware/%s/bin/%s.bin" % (settings.CUBE_LIBRARY, timestamp)
+    flash_output=[]
+    flash_error=[]
+
     if os.path.isfile(binaryPath):
         accessToken=request.POST['accessToken']
         coreID=request.POST['coreID']        
         p = subprocess.Popen(['node', '%s/viz/utils/flash.js' % settings.PROJECT_ROOT ,accessToken, coreID, binaryPath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        flash_output=[]
         for line in p.stdout.readlines():
             print line,
             line.replace('"','\\"')
             line.replace("'","\\'")
             flash_output.append(line)
             
-        flash_error=[]
         for line in p.stderr.readlines():
             print line,
             line.replace('"','\\"')

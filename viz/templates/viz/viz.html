@@ -9,6 +9,11 @@
 {% load staticfiles %}
 
 {% block content %}
+<script type="text/javascript">
+function flashCube(){
+    $.post("{% url 'compile'%}", {"code": $(".code").val(), "accessToken":accessToken, "coreID":$("#cubeName").val()});
+}
+</script>
 
 {% load utils %}
 {% logged_in_status as logged_in %}
@@ -27,10 +32,11 @@
 
     {% if logged_in %}
       <div class="cube-options">
-        <a class="round-button button-grey sent-to-cube">Send to Cube</a>
+        <a class="round-button button-grey sent-to-cube" onclick="flashCube()">Send to Cube</a>
         <div class="round-button button-grey select-cube">
-          Select Cube
-          <img src="/static/images/down-arrow.png" />
+	  <select id="cubeName"></select>
+<!--          Select Cube
+          <img src="/static/images/down-arrow.png" /> -->
         </div>
       </div>
       <div class="nav-info"></div>
@@ -123,7 +129,7 @@
     </div>
     <div class="code-area">
       <textarea rows="80" cols="120" id="code" class="code inout">{{ source.code }}</textarea>
-    </div>
+   </div>
     <textarea cols="120" rows="10" class="console output" readonly placeholder="Console output..."></textarea>
   </div>
   {% endif %}
