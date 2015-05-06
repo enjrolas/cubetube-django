@@ -8,7 +8,6 @@ class Cube {
     int rate;
     int frameSize;
     var frameBuffer;
-;
     Cube(PApplet _parent)
     {	
 	parent=_parent;
@@ -16,8 +15,8 @@ class Cube {
 	rate=1000;
 	clearToSend=true;
 	frameSize=512;
-	this. frameBuffer= new ArrayBuffer(frameSize);
-    scale=height/(size/2);
+	this.frameBuffer= new ArrayBuffer(frameSize);
+	scale=height/(size/2);
 	voxels=new color[size][size][size];
 	center=new PVector(scale*(size-1)/2, scale*(size-1)/2, scale*(size-1)/2);
 	//ortho();   //use orthographic projection (no perspective)
