@@ -19,5 +19,6 @@ urlpatterns = [
     url(r'^save/', views.save, name='save'),
     url(r'^code/(?P<id>\d+)/$', views.code, name='code'),
     url(r'^create/', views.create, name='create'),
+    url(r'^upload/', views.upload, name='upload'),
     url(r'^edit/(?P<id>\d+)/$', views.edit, name='edit'),
 ]
