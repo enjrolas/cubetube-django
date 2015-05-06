@@ -12,6 +12,7 @@ class Viz(models.Model):
     vizType=models.TextField(default="L3D")
     videoURL=models.TextField(blank=True)
     interactive=models.BooleanField(default=False)
+    published=models.BooleanField(default=False)
     pageViews=models.IntegerField(default=0)
     parent=models.ForeignKey('self', null=True, blank=True, default = None)
 

@@ -25,6 +25,9 @@ def gallery(request, filter="newestFirst"):
         visualizations=vizs[:8]
     return render(request, "viz/gallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'totalObjects' : totalObjects, 'filter': filter})
 
+def compile(request):
+    code=request.POST['code']
+
 def jsgallery(request, filter="newestFirst"):
     if(filter=='newestFirst'):
         vizs=Viz.objects.all().order_by("-created")    

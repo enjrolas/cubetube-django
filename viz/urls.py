@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^scroll/(?P<page>\d+)/(?P<filter>\w+)/$', views.scroll, name='scroll'),
     url(r'^scroll/(?P<page>\d+)/$', views.scroll, name='scroll'), 
     url(r'^fork/', views.fork, name='fork'),
+    url(r'^compile/', views.compile, name='compile'),
     url(r'^save/', views.save, name='save'),
     url(r'^code/(?P<id>\d+)/$', views.code, name='code'),
     url(r'^create/', views.create, name='create'),
