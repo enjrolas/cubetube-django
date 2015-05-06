@@ -686,7 +686,10 @@ header {
   text-align: left; }
   .viz-card .viz-demo {
     background: #282E30;
-    height: 160px; }
+    height: 150px; }
+    .viz-card .viz-demo canvas {
+      width: 100%;
+      border-radius: 3px 3px 0px 0px; }
   .viz-card .viz-info {
     height: 70px;
     padding-top: 16px;
