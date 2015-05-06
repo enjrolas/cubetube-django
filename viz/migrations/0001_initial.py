@@ -18,9 +18,6 @@ class Migration(migrations.Migration):
                 ('file', models.FileField(upload_to=b'binaries/%Y/%m/%d')),
                 ('created', models.DateTimeField(auto_now=True)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Photo',
@@ -28,9 +25,6 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('file', models.ImageField(null=True, upload_to=b'photos/%Y/%m/%d', blank=True)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='SourceCode',
@@ -40,47 +34,36 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Viz',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.TextField()),
-                ('tagline', models.TextField()),
                 ('description', models.TextField()),
                 ('created', models.DateTimeField(auto_now_add=True)),
-                ('sourceURL', models.TextField(default=b'')),
-                ('tags', models.TextField(default=b'')),
+                ('sourceURL', models.TextField(blank=True)),
+                ('tags', models.TextField(blank=True)),
                 ('views', models.IntegerField(default=0)),
-                ('vizType', models.TextField(default=b'spark')),
-                ('interactive', models.BooleanField(default=False)),
+                ('vizType', models.TextField(default=b'L3D')),
                 ('pageViews', models.IntegerField(default=0)),
                 ('creator', models.ForeignKey(to='cube.CubeUser')),
                 ('parent', models.ForeignKey(default=None, blank=True, to='viz.Viz', null=True)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.AddField(
             model_name='sourcecode',
             name='viz',
             field=models.ForeignKey(to='viz.Viz'),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='photo',
             name='viz',
             field=models.ForeignKey(to='viz.Viz'),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='binary',
             name='viz',
             field=models.ForeignKey(to='viz.Viz'),
-            preserve_default=True,
         ),
     ]

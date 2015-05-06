@@ -3,7 +3,6 @@ from cube.models import CubeUser
 
 class Viz(models.Model):
     name=models.TextField()
-    tagline=models.TextField(blank=True)
     description=models.TextField()
     creator=models.ForeignKey(CubeUser)
     created=models.DateTimeField(auto_now_add=True)
@@ -11,7 +10,8 @@ class Viz(models.Model):
     tags=models.TextField(blank=True)
     views=models.IntegerField(default=0)
     vizType=models.TextField(default="L3D")
-#    interactive=models.BooleanField(default=False)
+    videoURL=models.TextField(blank=True)
+    interactive=models.BooleanField(default=False)
     pageViews=models.IntegerField(default=0)
     parent=models.ForeignKey('self', null=True, blank=True, default = None)
 
