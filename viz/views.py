@@ -221,25 +221,43 @@ def edit(request, id):
         viz = None
     return render(request, "viz/create.html", { "viz": viz} )
 
+@csrf_exempt
 def save(request):
-    accessToken=request.POST['accessToken']
-    vizID=request.POST['vizID']
-    name=request.POST['name']
-    tagline=request.POST['tagline']
-    description=request.POST['description']
-    sourceCode=request.POST['sourceCode']
 
-    user=CubeUser.objects.get(accessToken=accessToken)
-    viz=Viz.objects.get(pk=vizID)
-    viz.name=name
-    viz.tagline=tagline
-    viz.description=description
-    viz.save()
+    nickname    = request.COOKIES['nickname']
+    accessToken = request.COOKIES['accessToken']
+    # log.debug("%s is trying to edit or update a viz" % nickname)
+    if authenticate(nickname, accessToken):
 
-    code=SourceCode.get(viz=viz)
-    code.code=sourceCode
-    code.save()
-    return HttpResponse("ok")
+        accessToken   = request.POST['accessToken']
+        vizID         = request.POST['vizID']
+        name          = request.POST['name']
+        description   = request.POST['description']
+        sourceCode    = request.POST['sourceCode']
+        interactive   = request.POST['interactive']
+        published     = request.POST['published']
+        
+        # videoUrl      = request.POST['interactive']
+
+        user=CubeUser.objects.get(accessToken=accessToken)
+        viz=Viz.objects.get(pk=vizID)
+
+
+        viz.name=name
+        viz.tagline=tagline
+        viz.description=description
+        viz.save()
+
+        code=SourceCode.get(viz=viz)
+        code.code=sourceCode
+        code.save()
+
+        return HttpResponse('{ "success": True , "id": "%s"}' % viz.pk, content_type="application/json")
+    else:
+        return render(request, "viz/authentication-error.html", 
+                      { "nickname": nickname,
+                        "accessToken": accessToken,
+                        "authenticated":authenticate(nickname, accessToken)})
 
 def authenticate(nickname, accessToken):
     authenticated=False
@@ -255,4 +273,3 @@ def authenticate(nickname, accessToken):
         authenticated=False
     return authenticated
 
-    

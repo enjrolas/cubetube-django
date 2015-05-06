@@ -9,7 +9,7 @@
       <span class="author">by {{ viz.creator }}</span>
     </div>
     <div class="right">
-      {% if viz.interactive == 1 %}
+      {% if viz.interactive %}
         {% include "cubetube/partials/_interactive_svg.html" %}
       {% else %}
         {% include "cubetube/partials/_cube_svg.html" %}

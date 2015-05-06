@@ -1,4 +1,7 @@
 
+
+var editing = false;
+
 $(function(){
 
     formatCode();
@@ -36,11 +39,68 @@ $(function(){
         
         if( goodToGo ) {
 
-            // Ajax request to save!
+            if( editing === false) {
+
+                // // Ajax request to create!
+                $.ajax({
+                    type: 'post',
+                    dataType: 'json',
+                    url: '/upload/',
+                    data: saveData,
+                    success: function( data ) {
+                        checkData(data);
+                    },
+                    error: function( data ) {
+                        checkData(data);
+                    }
+                });
+
+            } else {
+
+                var vizId = $( '.create-wrapper' ).attr('viz-id');
+
+                saveData.vizId = vizId;
+
+                // Ajax request to edit
+                $.ajax({
+                    type: 'post',
+                    dataType: 'json',
+                    url: '/save/',
+                    data: saveData,
+                    success: function( data ) {
+                        checkDataAfterSave(data);
+                    },
+                    error: function( data ) {
+                        checkDataAfterSave(data);
+                    }
+                })
+            }
         }
     });
 
 });
+
+function checkDataAfterSave( data ) {
+    console.log( data );
+}
+
+function checkData( data ) {
+
+    // console.log( data );
+    // var data = JSON.parse(data.responseText);
+    if ( data.success ) {
+        onCreateSuccess( data.id );
+    } else {
+        console.log( "Error!", data );
+    }
+}
+
+// Switch to "fork" mode
+function onCreateSuccess( id ) {
+    
+    editing = true;
+    $( '.create-wrapper' ).attr('viz-id', id);
+}
 
 function validate(data) {
 
@@ -62,8 +122,8 @@ function validate(data) {
     return true;
 }
 
-function showConsoleError() {
-
+function showConsoleError( error ) {
+    $('.console').val( error );
 }
 
 function getEditVizType() {
@@ -95,6 +155,6 @@ function getData() {
         published: published,
         interactive: interactive,
         "viz-type": vizType,
-        code: code
+        sourceCode: code
     }
 }

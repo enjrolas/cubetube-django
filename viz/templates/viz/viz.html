@@ -26,7 +26,7 @@
     {% endif %}
 
     {% if logged_in %}
-      <div class="cube-options hidden">
+      <div class="cube-options">
         <a class="round-button button-grey sent-to-cube">Send to Cube</a>
         <div class="round-button button-grey select-cube">
           Select Cube
@@ -108,7 +108,7 @@
   <div class="viz-code">
     <div class="viz-code-header">
 
-      <a class="round-button button-red run-sketch">Run Sketch</a>
+      <a class="round-button button-red run-sketch">Update Demo</a>
       {% if logged_in %}
 
         {% if viz.creator.nickname == request.COOKIES.nickname %}
