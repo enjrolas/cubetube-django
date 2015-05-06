@@ -44,10 +44,10 @@ def jsgallery(request, filter="newestFirst"):
 def index(request):
     vizs=Viz.objects.all().order_by("-created")    
     totalObjects=vizs.count()
-    if totalObjects<12:
+    if totalObjects<8:
         visualizations=vizs[:totalObjects]
     else:
-        visualizations=vizs[:12]
+        visualizations=vizs[:8]
     return render(request, "viz/index.html", { 'visualizations' : visualizations, 'totalObjects' : totalObjects})
 
 @csrf_exempt
@@ -155,9 +155,10 @@ def save(request):
     name          = request.POST['name']
     description   = request.POST['description']
     sourceCode    = request.POST['sourceCode']
-    interactive   = request.POST['interactive']
-    videoUrl      = request.POST['interactive']
-    published     = request.POST['published']
+    interactive   = simplejson.loads(request.POST['interactive'])
+    published     = simplejson.loads(request.POST['published'])
+    
+    # videoUrl      = request.POST['interactive']
 
     user=CubeUser.objects.get(accessToken=accessToken)
     viz=Viz.objects.get(pk=vizID)
@@ -186,6 +187,7 @@ def authenticate(nickname, accessToken):
         authenticated=False
     return authenticated
 
+@csrf_exempt
 def upload(request):
     nickname    = request.COOKIES['nickname']
     accessToken = request.COOKIES['accessToken']
@@ -205,51 +207,36 @@ def upload(request):
         
         name            = request.POST['name']
         description     = request.POST['description']
-        sourceCode      = request.POST['sourceCode']
+        code            = request.POST['sourceCode']
+        # videoUrl        = request.POST['videoUrl']
+
         interactive     = request.POST['interactive']
-        videoUrl        = request.POST['videoUrl']
+        if interactive == 'false':
+            interactive = False
+        else:
+            interactive = True
+
         published       = request.POST['published']
+        if published == 'false':
+            published = False
+        else:
+            published = True
 
         viz.name        = name
         viz.description = description
         viz.interactive = interactive
-        viz.videoUrl    = videoUrl
+        # viz.videoUrl    = videoUrl
         viz.published   = published
 
         viz.creator     = user
         viz.save()
 
-        code=SourceCode.get(viz=viz)
-        code.code=sourceCode
-        code.save()
-        
-        # log.debug("viz type is :%s" % viz.vizType)
-        # log.debug("description: %s" % viz.description)
-        # viz.sourceURL=request.POST['viz-source-link']
-        # viz.tags=request.POST['viz-tags']
-        
-        # for fileName in request.FILES.getlist('photo'):
-        #     photo=Photo()
-        #     photo.viz=viz
-        #     photo.file=fileName
-        #     photo.save()
-            
-        # for fileName in request.FILES.getlist('viz-binary'):
-        #     try:
-        #         binary=Binary.objects.get(viz=viz)
-        #         log.debug("binary file already exists - %s" % binary)
-        #     except Binary.DoesNotExist:              
-        #         log.debug("no binary file yet -- just created one")
-        #         binary=Binary()
-        #     binary.file=fileName
-        #     binary.viz=viz
-        #     binary.save()
-            
-        #    photos=Photo.objects.filter(viz=viz)
-        #    return HttpResponse(escape(repr(request)))
-        #    return render(request, "viz/debug.html", {'files': request.FILES})
+        newCode = SourceCode()
+        newCode.viz = viz
+        newCode.code = code
+        newCode.save()
 
-        HttpResponse('{"id":%d}' % viz.pk, content_type="application/json")
+        return HttpResponse('{ "success": True , "id": "%s"}' % viz.pk, content_type="application/json")
     else:
         return render(request, "viz/authentication-error.html", 
                       { "nickname": nickname,

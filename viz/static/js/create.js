@@ -39,11 +39,11 @@ $(function(){
             // Ajax request to save!
             $.ajax({
                 type: 'post',
-                dataType: 'jsonp',
+                dataType: 'json',
                 url: '/upload/',
                 data: saveData,
                 success: function( data ) {
-                    console.log("Success", data);
+                    onCreateSuccess(data);
                 },
                 error: function( data ) {
                     console.log( "Error!", data );
@@ -53,6 +53,11 @@ $(function(){
     });
 
 });
+
+// Switch to "fork" mode
+function onCreateSuccess( data ) {
+    console.log("Success", data);
+}
 
 function validate(data) {
 
@@ -107,6 +112,6 @@ function getData() {
         published: published,
         interactive: interactive,
         "viz-type": vizType,
-        code: code
+        sourceCode: code
     }
 }
