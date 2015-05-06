@@ -37,6 +37,18 @@ $(function(){
         if( goodToGo ) {
 
             // Ajax request to save!
+            $.ajax({
+                type: 'post',
+                dataType: 'jsonp',
+                url: '/upload/',
+                data: saveData,
+                success: function( data ) {
+                    console.log("Success", data);
+                },
+                error: function( data ) {
+                    console.log( "Error!", data );
+                }
+            })
         }
     });
 
@@ -62,8 +74,8 @@ function validate(data) {
     return true;
 }
 
-function showConsoleError() {
-
+function showConsoleError( error ) {
+    $('.console').val( error );
 }
 
 function getEditVizType() {

@@ -149,13 +149,15 @@ def edit(request, id):
     return render(request, "viz/create.html", { "viz": viz} )
 
 def save(request):
-    accessToken=request.POST['accessToken']
-    vizID=request.POST['vizID']
-    name=request.POST['name']
-    description=request.POST['description']
-    sourceCode=request.POST['sourceCode']
-    interactive = request.POST['interactive']
-    videoUrl = request.POST['interactive']
+
+    accessToken   = request.POST['accessToken']
+    vizID         = request.POST['vizID']
+    name          = request.POST['name']
+    description   = request.POST['description']
+    sourceCode    = request.POST['sourceCode']
+    interactive   = request.POST['interactive']
+    videoUrl      = request.POST['interactive']
+    published     = request.POST['published']
 
     user=CubeUser.objects.get(accessToken=accessToken)
     viz=Viz.objects.get(pk=vizID)
@@ -185,11 +187,11 @@ def authenticate(nickname, accessToken):
     return authenticated
 
 def upload(request):
-    nickname=request.COOKIES['nickname']
-    accessToken=request.COOKIES['accessToken']
-    log.debug("%s is trying to edit or update a viz" % nickname)
+    nickname    = request.COOKIES['nickname']
+    accessToken = request.COOKIES['accessToken']
+    # log.debug("%s is trying to edit or update a viz" % nickname)
     if authenticate(nickname, accessToken):
-        log.debug("authenticated!");
+        # log.debug("authenticated!");
         try:
             id=request.POST['viz-id']
             log.debug("id=%s" % id)
@@ -199,38 +201,55 @@ def upload(request):
             viz=Viz()
             log.debug("%s is creating a new viz" % nickname)
             
-        user=CubeUser.objects.get(nickname=nickname)
-        viz.name=request.POST['viz-name']
-        viz.tagline=request.POST['viz-tagline']
-        viz.description=request.POST['viz-description']
-        log.debug("description: %s" % viz.description)
-        viz.vizType=request.POST['viz-type']
-        viz.sourceURL=request.POST['viz-source-link']
-        viz.tags=request.POST['viz-tags']
-        viz.creator=user
-        log.debug("viz type is :%s" % viz.vizType)
+        user            = CubeUser.objects.get(nickname=nickname)
+        
+        name            = request.POST['name']
+        description     = request.POST['description']
+        sourceCode      = request.POST['sourceCode']
+        interactive     = request.POST['interactive']
+        videoUrl        = request.POST['videoUrl']
+        published       = request.POST['published']
+
+        viz.name        = name
+        viz.description = description
+        viz.interactive = interactive
+        viz.videoUrl    = videoUrl
+        viz.published   = published
+
+        viz.creator     = user
         viz.save()
-        for fileName in request.FILES.getlist('photo'):
-            photo=Photo()
-            photo.viz=viz
-            photo.file=fileName
-            photo.save()
+
+        code=SourceCode.get(viz=viz)
+        code.code=sourceCode
+        code.save()
+        
+        # log.debug("viz type is :%s" % viz.vizType)
+        # log.debug("description: %s" % viz.description)
+        # viz.sourceURL=request.POST['viz-source-link']
+        # viz.tags=request.POST['viz-tags']
+        
+        # for fileName in request.FILES.getlist('photo'):
+        #     photo=Photo()
+        #     photo.viz=viz
+        #     photo.file=fileName
+        #     photo.save()
             
-        for fileName in request.FILES.getlist('viz-binary'):
-            try:
-                binary=Binary.objects.get(viz=viz)
-                log.debug("binary file already exists - %s" % binary)
-            except Binary.DoesNotExist:              
-                log.debug("no binary file yet -- just created one")
-                binary=Binary()
-            binary.file=fileName
-            binary.viz=viz
-            binary.save()
+        # for fileName in request.FILES.getlist('viz-binary'):
+        #     try:
+        #         binary=Binary.objects.get(viz=viz)
+        #         log.debug("binary file already exists - %s" % binary)
+        #     except Binary.DoesNotExist:              
+        #         log.debug("no binary file yet -- just created one")
+        #         binary=Binary()
+        #     binary.file=fileName
+        #     binary.viz=viz
+        #     binary.save()
             
-        photos=Photo.objects.filter(viz=viz)
+        #    photos=Photo.objects.filter(viz=viz)
         #    return HttpResponse(escape(repr(request)))
         #    return render(request, "viz/debug.html", {'files': request.FILES})
-        return redirect('viz', id=viz.pk)
+
+        HttpResponse('{"id":%d}' % viz.pk, content_type="application/json")
     else:
         return render(request, "viz/authentication-error.html", 
                       { "nickname": nickname,
