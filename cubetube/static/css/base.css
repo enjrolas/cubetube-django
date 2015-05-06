@@ -258,9 +258,9 @@ button {
     width: 800px;
     height: 460px;
     background: #1c1521;
-    position: relative; }
+    position: relative;
+    text-align: center; }
     .viz-wrapper .viz-demo canvas {
-      width: 800px;
       height: 460px; }
     .viz-wrapper .viz-demo .background-image {
       position: absolute;
@@ -401,6 +401,7 @@ button {
     -ms-transform: translateX(-380px);
     transform: translateX(-380px);
     box-shadow: 0px 0px 35px 0px rgba(0, 0, 0, 0.3); }
+  .viz-wrapper.code-active .viz-demo,
   .viz-wrapper.code-active canvas {
     width: 420px;
     outline: 0; }
@@ -686,7 +687,10 @@ header {
   text-align: left; }
   .viz-card .viz-demo {
     background: #282E30;
-    height: 160px; }
+    height: 150px; }
+    .viz-card .viz-demo canvas {
+      width: 100%;
+      border-radius: 3px 3px 0px 0px; }
   .viz-card .viz-info {
     height: 70px;
     padding-top: 16px;
