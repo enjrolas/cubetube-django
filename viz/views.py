@@ -8,6 +8,8 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 import logging
 import datetime
+import subprocess
+import os
 from django.core.files import File
 log = logging.getLogger(__name__)
 
@@ -27,13 +29,58 @@ def gallery(request, filter="newestFirst"):
         visualizations=vizs[:8]
     return render(request, "viz/gallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'totalObjects' : totalObjects, 'filter': filter})
 
+@csrf_exempt
 def compile(request):
     code=request.POST['code']
-    filename=datetime.datetime.now().strftime('%Y-%m-%d--%H.%M.%S.cpp')
-    f = open(settings.MEDIA_ROOT + filename, 'wb+')
+    timestamp=datetime.datetime.now().strftime('%Y-%m-%d--%H.%M.%S')
+    filename=timestamp+".cpp"
+    directory=settings.MEDIA_ROOT + "sparkware/" + settings.CUBE_LIBRARY + "/firmware/examples/"
+    f = open(directory + filename, 'w')
     codeFile=File(f)
     codeFile.write(code)
     codeFile.close()
+#    path='%ssparkware/%s/make' % (settings.MEDIA_ROOT, settings.CUBE_LIBRARY)
+    p = subprocess.Popen(['make', '-C', '%ssparkware/%s' % (settings.MEDIA_ROOT, settings.CUBE_LIBRARY), 'bin/%s.bin' % timestamp], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    output=[]
+    for line in p.stdout.readlines():
+        print line,
+        line.replace('"','\\"')
+        line.replace("'","\\'")
+        output.append(line)
+
+    error=[]
+    for line in p.stderr.readlines():
+        print line,
+        line.replace('"','\\"')
+        line.replace("'","\\'")
+        error.append(line)
+
+    retval = p.wait()
+
+    binaryPath= "media/sparkware/%s/bin/%s.bin" % (settings.CUBE_LIBRARY, timestamp)
+    if os.path.isfile(binaryPath):
+        accessToken=request.POST['accessToken']
+        coreID=request.POST['coreID']        
+        p = subprocess.Popen(['node', '%s/viz/utils/flash.js' % settings.PROJECT_ROOT ,accessToken, coreID, binaryPath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        flash_output=[]
+        for line in p.stdout.readlines():
+            print line,
+            line.replace('"','\\"')
+            line.replace("'","\\'")
+            flash_output.append(line)
+            
+        flash_error=[]
+        for line in p.stderr.readlines():
+            print line,
+            line.replace('"','\\"')
+            line.replace("'","\\'")
+            flash_error.append(line)
+            
+        retval = p.wait()
+
+    response='{ "status":"ok" , "output": "%s" , "error" : "%s" , "flash-output" : "%s", "flash-error", "%s"}' % (output, error, flash_output, flash_error)
+    return HttpResponse(response, content_type="application/json")
 
 def jsgallery(request, filter="newestFirst"):
     if(filter=='newestFirst'):
@@ -112,18 +159,37 @@ def viz(request, id):
     if nextViz:
         return render(request, "viz/viz.html", { 'nextViz': nextViz, 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})    
     return render(request, "viz/viz.html", { 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})
-    
-    # if currentViz.vizType=="streaming":
-    #     binary=Binary.objects.get(pk=settings.LISTENER_PK)
-    # if currentViz.vizType=='javascript':
-    #     source=SourceCode.objects.get(viz=currentViz)
-    #     return render(request, "viz/javascript.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments, 'source':source})
-    # elif currentViz.vizType=='L3D':
-    #     source=SourceCode.objects.get(viz=currentViz)
-    #     return render(request, "viz/sparkPreview.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments, 'source':source})
-    # else:
-    #     return render(request, "viz/detail.html", { 'viz' : currentViz , 'photos':photos, 'binary':binary, 'comments': comments})
 
+
+def vizTest(request, id):
+    currentViz=Viz.objects.get(pk=id)
+    try:
+        binary=Binary.objects.get(viz=currentViz)
+    except Binary.DoesNotExist:
+        binary=None
+    
+    try:
+        photo = Photo.objects.filter(viz=currentViz)[:1].get()  #get the main image associated with this viz, and use it as the photo
+    except Photo.DoesNotExist:
+        photo = False
+
+    comments=Comment.objects.filter(viz=currentViz)
+    currentViz.pageViews=currentViz.pageViews+1
+    currentViz.save()
+
+    # 17 is the beginning of the new cube viz's
+    # @TODO: Change number for production
+    if int(id) >= 2:
+        source=SourceCode.objects.get(viz=currentViz)
+        photo = False
+    else:
+        source = False;
+
+    nextViz = currentViz.get_previous_by_created()
+    if nextViz:
+        return render(request, "viz/vizTest.html", { 'nextViz': nextViz, 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})    
+    return render(request, "viz/vizTest.html", { 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})
+    
 def code(request, id):
     code=SourceCode.objects.get(pk=id)
     return HttpResponse(code.code, content_type="text/plain")
@@ -189,59 +255,4 @@ def authenticate(nickname, accessToken):
         authenticated=False
     return authenticated
 
-def upload(request):
-    nickname=request.COOKIES['nickname']
-    accessToken=request.COOKIES['accessToken']
-    log.debug("%s is trying to edit or update a viz" % nickname)
-    if authenticate(nickname, accessToken):
-        log.debug("authenticated!");
-        try:
-            id=request.POST['viz-id']
-            log.debug("id=%s" % id)
-            viz=Viz.objects.get(pk=id)
-            log.debug("%s is updating %s" % (nickname, viz))
-        except:
-            viz=Viz()
-            log.debug("%s is creating a new viz" % nickname)
-            
-        user=CubeUser.objects.get(nickname=nickname)
-        viz.name=request.POST['viz-name']
-        viz.tagline=request.POST['viz-tagline']
-        viz.description=request.POST['viz-description']
-        log.debug("description: %s" % viz.description)
-        viz.vizType=request.POST['viz-type']
-        viz.sourceURL=request.POST['viz-source-link']
-        viz.tags=request.POST['viz-tags']
-        viz.creator=user
-        log.debug("viz type is :%s" % viz.vizType)
-        viz.save()
-        for fileName in request.FILES.getlist('photo'):
-            photo=Photo()
-            photo.viz=viz
-            photo.file=fileName
-            photo.save()
-            
-        for fileName in request.FILES.getlist('viz-binary'):
-            try:
-                binary=Binary.objects.get(viz=viz)
-                log.debug("binary file already exists - %s" % binary)
-            except Binary.DoesNotExist:              
-                log.debug("no binary file yet -- just created one")
-                binary=Binary()
-            binary.file=fileName
-            binary.viz=viz
-            binary.save()
-            
-        photos=Photo.objects.filter(viz=viz)
-        #    return HttpResponse(escape(repr(request)))
-        #    return render(request, "viz/debug.html", {'files': request.FILES})
-        return redirect('viz', id=viz.pk)
-    else:
-        return render(request, "viz/authentication-error.html", 
-                      { "nickname": nickname,
-                        "accessToken": accessToken,
-                        "authenticated":authenticate(nickname, accessToken)})
-
-def photoUpload(request):
-    return render(request, "viz/create.html")
     

@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^gallery/', views.jsgallery, name='gallery'),
     url(r'^jsgallery/', views.jsgallery, name='jsgallery'),    
     url(r'^viz/(?P<id>\d+)/$', views.viz, name='viz'),
+    url(r'^vizTest/(?P<id>\d+)/$', views.vizTest, name='vizTest'),
     url(r'^scroll/(?P<page>\d+)/(?P<filter>\w+)/$', views.scroll, name='scroll'),
     url(r'^scroll/(?P<page>\d+)/$', views.scroll, name='scroll'), 
     url(r'^fork/', views.fork, name='fork'),
@@ -19,6 +20,4 @@ urlpatterns = [
     url(r'^code/(?P<id>\d+)/$', views.code, name='code'),
     url(r'^create/', views.create, name='create'),
     url(r'^edit/(?P<id>\d+)/$', views.edit, name='edit'),
-    url(r'^upload/', views.upload, name='upload'),
-    url(r'^photoUpload/', views.photoUpload, name='photo-upload'),
 ]
