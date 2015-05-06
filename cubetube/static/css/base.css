@@ -456,17 +456,25 @@ button {
     height: 80px; }
   .create-wrapper .switch-box {
     width: 300px;
-    height: 40px;
+    height: 34px;
     display: inline-block;
     text-align: center;
     border-radius: 3px;
-    border: 1px solid rgba(0, 0, 0, 0.1); }
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    margin-top: 3px; }
     .create-wrapper .switch-box .switch-left,
     .create-wrapper .switch-box .switch-right {
       width: 50%;
       float: left;
-      height: 38px;
-      font-size: 14px; }
+      height: 32px;
+      line-height: 32px;
+      font-size: 14px;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none; }
       .create-wrapper .switch-box .switch-left.off,
       .create-wrapper .switch-box .switch-right.off {
         background: rgba(0, 0, 0, 0.1);
@@ -481,6 +489,16 @@ button {
       width: 90px;
       font-weight: bold;
       float: left; }
+  .create-wrapper .viz-code-header .switch-box {
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    margin-top: 13px;
+    color: #fff;
+    line-height: 32px;
+    float: right;
+    cursor: pointer; }
+    .create-wrapper .viz-code-header .switch-box .off {
+      color: #aaa;
+      background: rgba(255, 255, 255, 0.2); }
 
 /**
  * Cubetube SVG's

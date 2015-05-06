@@ -19,6 +19,15 @@
   <div class="viz-nav">
     <div class="nav-info"></div>
     <a class="round-button button-red save-code">Save Viz</a>
+
+    <div class="cube-options">
+      <a class="round-button button-grey sent-to-cube">Send to Cube</a>
+      <div class="round-button button-grey select-cube">
+        Select Cube
+        <img src="/static/images/down-arrow.png" />
+      </div>
+    </div>
+
   </div>
   <div class="viz-demo">
       <canvas class="demo-canvas"></canvas>
@@ -48,11 +57,11 @@
 
   <div class="viz-code">
     <div class="viz-code-header">
+      <a class="round-button button-red run-sketch">Run Sketch</a>
       <div class="switch-box viz-type">
         <div class="switch-part switch-left on">JS</div>
-        <div class="switch-part switch-right">L3D</div>
+        <div class="switch-part switch-right off">L3D</div>
       </div>
-      <a class="round-button button-red run-sketch">Run Sketch</a>
     </div>
     <div class="code-area">
       <textarea rows="80" cols="120" id="code" class="code inout"></textarea>

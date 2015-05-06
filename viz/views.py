@@ -19,10 +19,10 @@ def gallery(request, filter="newestFirst"):
         vizs=Viz.objects.all().order_by("created")      
 
     totalObjects=vizs.count()
-    if totalObjects<8:
+    if totalObjects<12:
         visualizations=vizs[:totalObjects]
     else:
-        visualizations=vizs[:8]
+        visualizations=vizs[:12]
     return render(request, "viz/gallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'totalObjects' : totalObjects, 'filter': filter})
 
 def compile(request):
@@ -35,19 +35,19 @@ def jsgallery(request, filter="newestFirst"):
         vizs=Viz.objects.all().order_by("created")      
 
     totalObjects=vizs.count()
-    if totalObjects<8:
+    if totalObjects<12:
         visualizations=vizs[:totalObjects]
     else:
-        visualizations=vizs[:8]
+        visualizations=vizs[:12]
     return render(request, "viz/jsgallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'totalObjects' : totalObjects, 'filter': filter})
 
 def index(request):
     vizs=Viz.objects.all().order_by("-created")    
     totalObjects=vizs.count()
-    if totalObjects<8:
+    if totalObjects<12:
         visualizations=vizs[:totalObjects]
     else:
-        visualizations=vizs[:8]
+        visualizations=vizs[:12]
     return render(request, "viz/index.html", { 'visualizations' : visualizations, 'totalObjects' : totalObjects})
 
 @csrf_exempt

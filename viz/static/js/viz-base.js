@@ -42,6 +42,11 @@ var editor;
 $(function(){
     // Init!
 
+    var checkContext = $('.create-wrapper');
+    if( checkContext.length ) {
+      return;
+    }
+
     // View code
     $('.view-code').click(function() {
 

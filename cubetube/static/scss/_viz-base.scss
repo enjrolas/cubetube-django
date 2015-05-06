@@ -347,22 +347,31 @@
 
     .switch-box {
         width: 300px;
-        height: 40px;
+        height: 34px;
         display: inline-block;
         text-align: center;
         border-radius: 3px;
         border: 1px solid rgba(0,0,0,0.1);
+        margin-top: 3px;
 
         .switch-left,
         .switch-right {
             width: 50%;
             float: left;
-            height: 38px;
+            height: 32px;
+            line-height: 32px;
             font-size: 14px;
+            -webkit-touch-callout: none;
+             -webkit-user-select: none;
+             -khtml-user-select: none;
+             -moz-user-select: none;
+             -ms-user-select: none;
+             user-select: none;
 
             &.off {
                 background: rgba(0,0,0,0.1);
                 color: rgba(0,0,0,0.5); 
+
             }
         }
 
@@ -382,6 +391,23 @@
             float: left;
         }
 
+    }
+
+    .viz-code-header {
+
+        .switch-box {
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            margin-top: 13px;
+            color: #fff;
+            line-height: 32px;
+            float: right;
+            cursor: pointer;
+
+            .off {
+                color: #aaa;
+                background: rgba(255, 255, 255, 0.2);
+            }
+        }
     }
 
 
