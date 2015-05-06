@@ -4,12 +4,14 @@
 
 var $cards = $('.viz-card');
 var frameTemplate = '<iframe class="viz-template"></iframe>';
+var createTemplate = '<iframe class="create-template"></iframe>';
 var $body = $(document.body);
 var $glass = $('.glass');
 
 function bindGlass() {
     $glass.click(function() {
         closeViz();
+        closeCreate();
     })
 }
 
@@ -34,6 +36,11 @@ function bindCards() {
         var $this = $(e.currentTarget);
         openViz( $this.attr('href') );
     });
+
+    $('.create').click(function(e) {
+        e.preventDefault();
+        openCreate();
+    })
 }
 
 function openViz( url ) {
@@ -51,6 +58,24 @@ function closeViz() {
     var $viz = $( '.viz-template' );
     if( $viz.length ) {
         $viz.removeClass('more-open');
+        $glass.hide();
+        $viz.remove();
+        $body.removeClass('no-scroll');
+    }
+}
+
+function openCreate() {
+    var frame = $( createTemplate );
+    frame.attr('src', '/create/' );
+
+    $body.append( frame );
+    $glass.show();
+    $body.addClass('no-scroll');
+}
+
+function closeCreate() {
+    var $viz = $( '.create-template' );
+    if( $viz.length ) {
         $glass.hide();
         $viz.remove();
         $body.removeClass('no-scroll');

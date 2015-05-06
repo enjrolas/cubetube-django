@@ -81,7 +81,12 @@ $(function(){
 });
 
 function checkDataAfterSave( data ) {
-    console.log( data );
+    
+    if ( data.success ) {
+        alert("Viz Updated!");
+    } else {
+        console.log( "Error!", data );
+    }
 }
 
 function checkData( data ) {
@@ -100,6 +105,8 @@ function onCreateSuccess( id ) {
     
     editing = true;
     $( '.create-wrapper' ).attr('viz-id', id);
+    $('.save-code').html('Update Viz');
+    alert("Viz Created!");
 }
 
 function validate(data) {

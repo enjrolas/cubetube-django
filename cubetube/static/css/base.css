@@ -417,6 +417,15 @@ button {
   .viz-template.more-open {
     width: 1020px; }
 
+.create-template {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  width: 1160px;
+  height: 100%;
+  border: 0;
+  z-index: 2; }
+
 .nav-info {
   float: right;
   line-height: 64px;
