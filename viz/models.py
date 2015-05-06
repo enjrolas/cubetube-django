@@ -10,7 +10,7 @@ class Viz(models.Model):
     sourceURL=models.TextField(blank=True)
     tags=models.TextField(blank=True)
     views=models.IntegerField(default=0)
-    vizType=models.TextField(default="spark")
+    vizType=models.TextField(default="L3D")
 #    interactive=models.BooleanField(default=False)
     pageViews=models.IntegerField(default=0)
     parent=models.ForeignKey('self', null=True, blank=True, default = None)

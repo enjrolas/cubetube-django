@@ -1,6 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django import template
-from viz.models import Viz, Photo
+from viz.models import *
 from django.conf import settings
 import logging
 
@@ -18,3 +18,12 @@ def card(viz, nextPage=None):
         thumbnailPhotoURL = None
         log.debug(e)
     return { 'viz': viz, 'thumbnailPhoto': photo , 'thumbnailPhotoURL': thumbnailPhotoURL }
+
+@register.inclusion_tag('viz/jscard.html')
+def jscard(viz, nextPage=None):
+    try:
+        source = SourceCode.objects.filter(viz=viz)[:1]
+        source = source[0]
+    except Exception,e:
+        source=None
+    return { 'viz': viz, 'source': source}

@@ -25,6 +25,19 @@ def gallery(request, filter="newestFirst"):
         visualizations=vizs[:8]
     return render(request, "viz/gallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'totalObjects' : totalObjects, 'filter': filter})
 
+def jsgallery(request, filter="newestFirst"):
+    if(filter=='newestFirst'):
+        vizs=Viz.objects.all().order_by("-created")    
+    else:
+        vizs=Viz.objects.all().order_by("created")      
+
+    totalObjects=vizs.count()
+    if totalObjects<8:
+        visualizations=vizs[:totalObjects]
+    else:
+        visualizations=vizs[:8]
+    return render(request, "viz/jsgallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'totalObjects' : totalObjects, 'filter': filter})
+
 def index(request):
     vizs=Viz.objects.all().order_by("-created")    
     totalObjects=vizs.count()
