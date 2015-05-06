@@ -149,15 +149,17 @@ def save(request):
     accessToken=request.POST['accessToken']
     vizID=request.POST['vizID']
     name=request.POST['name']
-    tagline=request.POST['tagline']
     description=request.POST['description']
     sourceCode=request.POST['sourceCode']
+    interactive = request.POST['interactive']
+    videoUrl = request.POST['interactive']
 
     user=CubeUser.objects.get(accessToken=accessToken)
     viz=Viz.objects.get(pk=vizID)
-    viz.name=name
-    viz.tagline=tagline
-    viz.description=description
+    viz.name        = name
+    viz.description = description
+    viz.interactive = interactive
+    viz.videoUrl    = videoUrl
     viz.save()
 
     code=SourceCode.get(viz=viz)
