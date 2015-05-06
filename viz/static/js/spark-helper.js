@@ -103,7 +103,7 @@ function translateCode( data ) {
         if(flagList["setup()"]==1) {
             if(line.indexOf("{")>=0) {
                 parts=line.split("{");
-                line=parts[0]+"{"+cubeObjectName+"=new Cube(this);"+"size(500,500, P3D);"+parts[1];
+                line=parts[0]+"{"+cubeObjectName+"=new Cube(this);"+"size(500,500, P3D);"+"smooth()"+parts[1];
                 jsCode[i]=line;
                 flagList["setup()"]=0;
             }    
@@ -128,5 +128,6 @@ function translateCode( data ) {
         $("#jsCode").append(line+"<br/>");
         translatedCode+=line+"\n";
     }
+    return translatedCode;
 }
 

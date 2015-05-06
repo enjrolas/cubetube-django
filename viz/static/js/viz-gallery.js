@@ -19,7 +19,6 @@ var editor;
 
       var vizType = getVizType();
       if( vizType === 'L3D') {
-
           parseSparkCode( getVizUrl(), function() {
               setTimeout( function() {
                   formatCode();
@@ -29,7 +28,6 @@ var editor;
           } );
 
       } else if ( vizType === 'javascript' ) {
-
           setTimeout( function() {
               formatCode();  //applies codeMirror formatting to the code
               runSketch();
@@ -68,9 +66,6 @@ $(function(){
         }
     });
 
-    // Send to cube.
-    $('.sent-to-cube').click(function() {
-    });
 
     $('.run-sketch').click(function() {
 
@@ -84,19 +79,6 @@ $(function(){
         }
     });
 
-    $('.save-sketch').click(function() {
-    });
-
-    $('.fork-sketch').click(function() {
-    });
-
-    $('.twitter').click(function() {
-        openTwitterPopup();
-    })
-
-    $('.facebook').click(function() {
-        openFBPopup();
-    })
 });
 
 function setHeight() {
@@ -108,57 +90,13 @@ window.onresize = setHeight;
 /**
  * Functions
  */
-function getVizType() {
-    var $wrapper = $('.viz-wrapper');
+function getVizType(id) {
+    var $wrapper = $('.viz-wrapper'+id);
     return $wrapper.attr('data-viz-type');
 }
 
-function getVizUrl() {
-    var $wrapper = $('.viz-wrapper');
+function getVizUrl(id) {
+    var $wrapper = $('.viz-wrapper'+id);
     return $wrapper.attr('data-viz-url');
 }
 
-function formatCode() {
-
-    // Applies codeMirror formatting code.
-    editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-        lineNumbers: true,
-        styleActiveLine: true,
-        matchBrackets: true
-    });
-    editor.setOption("theme", "tomorrow-night-eighties");
-    editor.on("change", function(cm, change) {
-        document.getElementById("code").value = cm.getValue();
-    })
-}
-
-function openTwitterPopup() {
-   var width  = 575,
-       height = 250,
-       left   = (screen.width / 2)  - (width  / 2),
-       top    = (screen.height / 2) - (height / 2),
-       url    = 'http://twitter.com/share',
-       opts   = 'status=1' +
-                ',width='  + width  +
-                ',height=' + height +
-                ',top='    + top    +
-                ',left='   + left;
-   
-   window.open(url, 'twitter', opts);
-
-   return false;
-}
-
-function openFBPopup() {
-
-    var url = "http://url.com";
-    var title = "title";
-    var descr = "desc";
-
-    var winWidth = $(window).width();
-    var winHeight = $(window).height();
-    var winTop = (screen.height / 2) - (winHeight / 2);
-    var winLeft = (screen.width / 2) - (winWidth / 2);
-
-    window.open('http://www.facebook.com/sharer.php?s=100&p[title]=' + title + '&p[summary]=' + descr + '&p[url]=' + url, 'sharer', 'top=' + winTop + ',left=' + winLeft + ',toolbar=0,status=0,width=' + winWidth + ',height=' + winHeight);
-}

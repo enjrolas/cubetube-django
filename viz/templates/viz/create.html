@@ -25,25 +25,43 @@
   </div>
   <div class="viz-details">
     <div class="inner-wrapper">
-      <input class="title"></input>
-      <textarea class="description"></textarea>
+      <input class="viz-name" placeholder="Type an awesome name for your viz."></input>
+      <textarea class="description" placeholder="Describe whats going on here! Including instructions if the viz requires an interactive component."></textarea>
       
       <div class="switch-option published">
-        <div class="label">Published:</div>
-        <div class="switch-left">Public</div>
-        <div class="switch-right">Private</div>
+        <div class="label">Published</div>
+        <div class="switch-box">
+          <div class="switch-part switch-left on">Public</div>
+          <div class="switch-part switch-right off">Private</div>
+        </div>
       </div>
 
       <div class="switch-option interactive">
-        <div class="label">Interactive:</div>
-        <div class="switch-left">No</div>
-        <div class="switch-right">Yes</div>
+        <div class="label">Interactive</div>
+        <div class="switch-box">
+          <div class="switch-part switch-left on">No</div>
+          <div class="switch-part switch-right off">Yes</div>
+        </div>
       </div>
     </div>
   </div>
 
   <div class="viz-code">
+    <div class="viz-code-header">
+      <div class="switch-box viz-type">
+        <div class="switch-part switch-left on">JS</div>
+        <div class="switch-part switch-right">L3D</div>
+      </div>
+      <a class="round-button button-red run-sketch">Run Sketch</a>
+    </div>
+    <div class="code-area">
+      <textarea rows="80" cols="120" id="code" class="code inout"></textarea>
+    </div>
+    <textarea cols="120" rows="10" class="console output" readonly placeholder="Console output..."></textarea>
   </div>
 </div>
+
+<!-- App -->
+<script type="text/javascript" src="{% static 'js/create.js' %}"></script>
 
 {% endblock %}

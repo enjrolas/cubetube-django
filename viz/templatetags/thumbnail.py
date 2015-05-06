@@ -23,3 +23,16 @@ def thumbnail(viz, nextPage=None, vizType=None, filter=None):
     else:
         return { 'viz' : viz, 'thumbnailPhoto' : photo , 'thumbnailPhotoURL' :thumbnailPhotoURL}
 
+
+@register.inclusion_tag('viz/jsthumbnail.html')
+def jsthumbnail(viz, nextPage=None, vizType=None, filter=None):
+    try:
+        source=SourceCode.objects.filter(viz=viz)[:1]  #get the main image associated with this viz, and use it as the photo                                                              
+        source=source[0]
+    except Exception,e:
+        source=None
+    if nextPage is not None:
+            return { 'viz' : viz, 'nextPage' : nextPage, 'source':source, 'filter': filter}
+    else:
+        return { 'viz' : viz, 'source', source}
+

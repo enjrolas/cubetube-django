@@ -1,0 +1,21 @@
+{% load staticfiles %}
+
+<a class="viz-card" href="{% url 'viz' viz.pk %}">
+  <div class="viz-demo">
+      <canvas class="js-preview" id="{{ viz.pk }}" type="{{ viz.vizType }}"></canvas>   
+      <div class="code" style="display: none;" id="viz{{ viz.pk }}">{{ source.code }}</div>
+  </div>
+  <div class="viz-info">
+    <div class="left">
+      <span class="name">{{ viz.name }}</span>
+      <span class="author">by {{ viz.creator }}</span>
+    </div>
+    <div class="right">
+      {% if viz.interactive == 1 %}
+        {% include "cubetube/partials/_interactive_svg.html" %}
+      {% else %}
+        {% include "cubetube/partials/_cube_svg.html" %}
+      {% endif %}
+    </div>
+  </div>
+</a>

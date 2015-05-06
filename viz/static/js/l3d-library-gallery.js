@@ -8,7 +8,7 @@ class Cube {
     int rate;
     int frameSize;
     var frameBuffer;
-    float mouseXDiff=0, mouseYDiff=0;
+;
     Cube(PApplet _parent)
     {	
 	parent=_parent;
@@ -17,8 +17,7 @@ class Cube {
 	clearToSend=true;
 	frameSize=512;
 	this. frameBuffer= new ArrayBuffer(frameSize);
-	scale=height/size/2;
-	//	println("height: "+height+"  width: "+width+"  size: "+size+"  scale: "+scale);
+    scale=height/(size/2);
 	voxels=new color[size][size][size];
 	center=new PVector(scale*(size-1)/2, scale*(size-1)/2, scale*(size-1)/2);
 	//ortho();   //use orthographic projection (no perspective)
@@ -78,8 +77,6 @@ class Cube {
 	//set the background color and mouse-controlled rotations
 	parent.background( color(28, 21, 33) );
 	translate(width/2, height/2);
-	//	rotateY(mouseXDiff/60);
-	//	rotateX(mouseYDiff/60);
 	rotateY(mouseX/60);
 	rotateX(mouseY/60);
 
@@ -90,8 +87,7 @@ class Cube {
 			pushMatrix();
 			translate(scale*x-center.x, scale*(size-1-y)-center.y, scale* z-center.z);
 			color voxelColor=voxels[x][y][z];
-			noStroke();
-			//			stroke(255, 30);
+			stroke(255, 100);
 			if (brightness(voxelColor)>0)
 			    fill(voxelColor);
 			else
@@ -99,14 +95,6 @@ class Cube {
 			box(scale);
 			popMatrix();
 		    }
-	stroke(255);
-	strokeWeight(0.25);
-	box(size*scale);
-    }
-    void mouseDragged()
-    {
-	mouseXDiff+=(mouseX-pMouseX);
-	mouseYDiff+=(mouseY-pMouseY);
     }
     void setVoxel(float x, float y, float z, color col)
     {

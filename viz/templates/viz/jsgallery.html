@@ -1,0 +1,23 @@
+{% extends "cubetube/base.html" %}
+{% load staticfiles %}
+{% load card %}
+
+{% block header %}
+{% include "cubetube/partials/_header.html" with page="gallery" large=0 %}
+<script src="{% static 'js/processing.min.js' %}"></script>
+<script src="{% static 'js/processing-gallery-helper.js' %}"></script>
+<script src="{% static 'js/spark-helper.js' %}"></script>
+<script src="{% static 'js/gallery-coordinator.js' %}"></script>	
+{% endblock %}
+
+{% block content %}
+<div class="viz-cards in-gallery">
+    {% for viz in visualizations %}
+        {% jscard viz %}
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block footer %}
+    {% include "cubetube/partials/_footer.html" %}
+{% endblock %}
