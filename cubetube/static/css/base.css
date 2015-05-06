@@ -453,14 +453,33 @@ button {
   .create-wrapper .description {
     resize: none;
     height: 80px; }
-  .create-wrapper .switch-option {
+  .create-wrapper .switch-box {
+    width: 300px;
     height: 40px;
-    line-height: 40px; }
+    display: inline-block;
+    text-align: center;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.1); }
+    .create-wrapper .switch-box .switch-left,
+    .create-wrapper .switch-box .switch-right {
+      width: 50%;
+      float: left;
+      height: 38px;
+      font-size: 14px; }
+      .create-wrapper .switch-box .switch-left.off,
+      .create-wrapper .switch-box .switch-right.off {
+        background: rgba(0, 0, 0, 0.1);
+        color: rgba(0, 0, 0, 0.5); }
+    .create-wrapper .switch-box .switch-left {
+      border-right: 1px solid rgba(0, 0, 0, 0.1); }
+  .create-wrapper .switch-option {
+    height: 60px;
+    line-height: 40px;
+    cursor: pointer; }
     .create-wrapper .switch-option .label {
       width: 90px;
-      font-weight: bold; }
-    .create-wrapper .switch-option div {
-      display: inline-block; }
+      font-weight: bold;
+      float: left; }
 
 /**
  * Cubetube SVG's
