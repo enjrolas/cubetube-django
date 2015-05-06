@@ -75,7 +75,7 @@ button {
 }
 
 .section {
-    width: 1280px;
+    max-width: 1280px;
     margin: auto;
 }
 
@@ -150,3 +150,11 @@ button {
 @import 'footer';
 @import 'docs';
 @import 'forum';
+
+@media screen and (max-width: 1200px) {
+
+    .section {
+        padding-right: 30px;
+        padding-left: 30px;
+    }
+}

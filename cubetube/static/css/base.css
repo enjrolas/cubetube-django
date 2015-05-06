@@ -45,7 +45,7 @@ button {
   color: #2bc6fb; }
 
 .section {
-  width: 1280px;
+  max-width: 1280px;
   margin: auto; }
 
 .no-scroll {
@@ -416,6 +416,15 @@ button {
   z-index: 2; }
   .viz-template.more-open {
     width: 1020px; }
+
+.create-template {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  width: 1160px;
+  height: 100%;
+  border: 0;
+  z-index: 2; }
 
 .nav-info {
   float: right;
@@ -918,3 +927,8 @@ footer {
   width: 100% !important;
   height: 100% !important;
   padding-top: 47px !important; }
+
+@media screen and (max-width: 1200px) {
+  .section {
+    padding-right: 30px;
+    padding-left: 30px; } }

@@ -230,30 +230,41 @@ def save(request):
     # log.debug("%s is trying to edit or update a viz" % nickname)
     if authenticate(nickname, accessToken):
 
-        accessToken   = request.POST['accessToken']
-        vizID         = request.POST['vizID']
+        vizID         = request.POST['vizId']
         name          = request.POST['name']
         description   = request.POST['description']
-        sourceCode    = request.POST['sourceCode']
-        interactive   = request.POST['interactive']
-        published     = request.POST['published']
+        code    = request.POST['sourceCode']
+
+        interactive     = request.POST['interactive']
+        if interactive == 'false':
+            interactive = False
+        else:
+            interactive = True
+
+        published       = request.POST['published']
+        if published == 'false':
+            published = False
+        else:
+            published = True
         
         # videoUrl      = request.POST['interactive']
 
         user=CubeUser.objects.get(accessToken=accessToken)
         viz=Viz.objects.get(pk=vizID)
 
-
         viz.name=name
-        viz.tagline=tagline
         viz.description=description
+        viz.interactive = interactive
+        viz.published   = published
+        # viz.videoUrl    = videoUrl
+
         viz.save()
 
-        code=SourceCode.get(viz=viz)
-        code.code=sourceCode
-        code.save()
+        newCode=SourceCode.objects.get(viz=viz)
+        newCode.code=code
+        newCode.save()
 
-        return HttpResponse('{ "success": True , "id": "%s"}' % viz.pk, content_type="application/json")
+        return HttpResponse('{ "success": true , "id": "%s"}' % viz.pk, content_type="application/json")
     else:
         return render(request, "viz/authentication-error.html", 
                       { "nickname": nickname,
@@ -273,4 +284,60 @@ def authenticate(nickname, accessToken):
     except CubeUser.DoesNotExist:
         authenticated=False
     return authenticated
+
+@csrf_exempt
+def upload(request):
+    nickname    = request.COOKIES['nickname']
+    accessToken = request.COOKIES['accessToken']
+    # log.debug("%s is trying to edit or update a viz" % nickname)
+    if authenticate(nickname, accessToken):
+        # log.debug("authenticated!");
+        try:
+            id=request.POST['viz-id']
+            log.debug("id=%s" % id)
+            viz=Viz.objects.get(pk=id)
+            log.debug("%s is updating %s" % (nickname, viz))
+        except:
+            viz=Viz()
+            log.debug("%s is creating a new viz" % nickname)
+            
+        user            = CubeUser.objects.get(nickname=nickname)
+        
+        name            = request.POST['name']
+        description     = request.POST['description']
+        code            = request.POST['sourceCode']
+        # videoUrl        = request.POST['videoUrl']
+
+        interactive     = request.POST['interactive']
+        if interactive == 'false':
+            interactive = False
+        else:
+            interactive = True
+
+        published       = request.POST['published']
+        if published == 'false':
+            published = False
+        else:
+            published = True
+
+        viz.name        = name
+        viz.description = description
+        viz.interactive = interactive
+        # viz.videoUrl    = videoUrl
+        viz.published   = published
+
+        viz.creator     = user
+        viz.save()
+
+        newCode = SourceCode()
+        newCode.viz = viz
+        newCode.code = code
+        newCode.save()
+
+        return HttpResponse('{ "success": true , "id": "%s"}' % viz.pk, content_type="application/json")
+    else:
+        return render(request, "viz/authentication-error.html", 
+                      { "nickname": nickname,
+                        "accessToken": accessToken,
+                        "authenticated":authenticate(nickname, accessToken)})
 
