@@ -8,9 +8,9 @@ register = template.Library()
 log = logging.getLogger(__name__)
 
 @register.inclusion_tag('viz/card.html')
-def card(viz, nextPage=None):
+def card(viz, nextPage=None, filter=None):
     if nextPage is not None:
-        return { 'viz' : viz, 'nextPage' : nextPage, 'vizType' : vizType, 'filter': filter}
+        return { 'viz' : viz, 'nextPage' : nextPage, 'filter': filter}
     else:
         return { 'viz' : viz }
 
