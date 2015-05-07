@@ -129,9 +129,15 @@ function validate(data) {
         return false;
     }
 
-    if( data.code === '') {
+
+    if( data.sourceCode === '') {
         showConsoleError("Hey, we need some code to save this!");
         return false;
+    }
+
+    if( data.interactive === true && ( data.videoURL.indexOf("youtube") == -1) ) {
+        showConsoleError("Oh no, this interactive viz needs a youtube url to save!");
+        return;
     }
 
     return true;
@@ -155,6 +161,8 @@ function getData() {
     var description = $('.description').val();
     var published = ($('.published .on').html() === 'Public');
     var interactive = ($('.interactive .on').html() === 'Yes');
+    var videoURL = $( '.video-url' ).val();
+
     var vizType = getEditVizType();
     if( vizType === 'JS') {
         vizType = 'Javascript';
@@ -170,6 +178,7 @@ function getData() {
         published: published,
         interactive: interactive,
         "viz-type": vizType,
+        videoURL: videoURL,
         sourceCode: code
     }
 }
