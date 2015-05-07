@@ -4,15 +4,18 @@
  */
 
 $(function(){
-
-    // If user is logged in, check for cube's via spark.
-    $cubeOptions = $( '.cube-options' );
-    if( $cubeOptions.length ) {
-        // listCubes();
-    }
-})
+	checkCookie();
+	// If user is logged in, check for cubes via spark.
+		$cubeOptions = $( '.cube-options' );
+	if( $cubeOptions.length ) {
+	    listCubes();
+	    }
+	else
+	    console.log("no cube options");
+    })
 
 function listCubes() {
+
     var devicesPr = spark.listDevices();
     var deviceInList = false;
     var deviceID;
@@ -22,7 +25,7 @@ function listCubes() {
 
         function(devices){
             
-            //console.log('Devices: ', devices);
+            console.log('Devices: ', devices);
             for( var i = 0; i < devices.length; i++ ) {
         
                 var device = devices[i];
@@ -31,11 +34,11 @@ function listCubes() {
                 
                     if( deviceID != 'undefined' ) {
                         deviceID=device.id;
-                        // console.log(deviceID);
+                         console.log(deviceID);
                     }
 
-                    // console.log(device.name+" is connected");
-                    // $("#cubeName").append($("<option></option>").val(device.id).html(device.name));  //append the cube name and ID to thr dropdown list
+                     console.log(device.name+" is connected");
+                     $("#cubeName").append($("<option></option>").val(device.id).html(device.name));  //append the cube name and ID to thr dropdown list
 
                     if(device.name == coreID) {
                         deviceInList = true;
@@ -44,29 +47,23 @@ function listCubes() {
             }
 
             if( deviceInList == true ) {
-                // $('#cubeName').val(coreID);     
+                 $('#cubeName').val(coreID);     
             } else {
-                // $('#cubeName').val(deviceID);       
+                 $('#cubeName').val(deviceID);       
                 coreID = deviceID;
                 var date = new Date();
                  $.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});   
             }
     
             if(devices.length==0) {
-                // $("#cubeName").append($("<option></option>").html('Add a core to your spark account to get started'));  //append the cube name and ID to thr dropdown list
+                $("#cubeName").append($("<option></option>").html('Add a core to your spark account to get started'));  //append the cube name and ID to thr dropdown list
             } else if(connectedCores==0) {
-                // $("#cubeName").append($("<option></option>").html('None of your cores are online right now'));  //append the cube name and ID to thr dropdown list
+                 $("#cubeName").append($("<option></option>").html('None of your cores are online right now'));  //append the cube name and ID to thr dropdown list
             }
         },
         function(err) {
-            // console.log('List devices call failed: ', err);
+             console.log('List devices call failed: ', err);
         }
     );
 }
 
-function checkCookie() {
-    accessToken = $.cookie("accessToken");
-    username = $.cookie("username");
-    nickname = $.cookie("nickname");
-    coreID = $.cookie("coreID");
-}

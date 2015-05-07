@@ -119,6 +119,30 @@ function sparkSignup(email, nickname, password) {
     });
 }
 
+//looks to see                
+function checkCookie()
+{
+    accessToken=$.cookie("accessToken");
+    username=$.cookie("username");
+    nickname=$.cookie("nickname");
+    coreID=$.cookie("coreID");
+    if(!(accessToken === undefined || accessToken === null))
+	{
+	    loginWithAccessToken();
+	}
+    //    else
+    //    setLoggedOut();
+}
+
+function loginWithAccessToken()
+{
+    var loginPromise = window.spark.login({ accessToken: accessToken });
+    loginPromise.then(
+		      function(data) {
+			  console.log("logged in");
+		      });
+}
+
 // Logs into spark, or errors.
 function sparkLogin(email, password) {
     var loginPromise = window.spark.login({ username: email, password: password });
