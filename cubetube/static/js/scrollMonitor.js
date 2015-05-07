@@ -22,3 +22,18 @@ function checkScroll() {
 }
 
 checkScroll();
+
+$('body').on('click', '.scroll', function(e) {
+    e.preventDefault();
+    var $this = $(this);
+    $this.hide();
+    var url = $this.attr('url');
+
+    $.ajax({
+      type: 'get',
+      url: url,
+      success: function(data) {
+        $this.replaceWith( data );
+      }
+    })
+});

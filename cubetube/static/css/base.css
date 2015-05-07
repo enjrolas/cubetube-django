@@ -774,6 +774,9 @@ header {
 .in-gallery {
   padding-top: 100px; }
 
+.scroll {
+  margin-bottom: 60px; }
+
 footer {
   background: url(../images/cube-pattern.png);
   color: #fff; }

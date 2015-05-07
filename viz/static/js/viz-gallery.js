@@ -78,7 +78,21 @@ $(function(){
             runSketch();
         }
     });
+});
 
+console.log( "whsajkdhkjashdjksahdjkash" );
+$('.scroll').click(function(e) {
+    e.preventDefault();
+    var $this = $(this);
+    var url = $this.attr('url');
+
+    $.ajax({
+      type: 'get',
+      url: url,
+      success: function(data) {
+        $this.replaceWith( data );
+      }
+    })
 });
 
 function setHeight() {

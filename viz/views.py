@@ -201,10 +201,15 @@ def create(request):
 def scroll(request, page, filter="newestFirst"):
     page=int(page)
     if filter=="newestFirst":
-        vizs=Viz.objects.all().order_by("-created")[page*6:(page+1)*6]
+        vizs=Viz.objects.all().order_by("-created")[page*8:(page+1)*8]
     else:
-        vizs=Viz.objects.all().order_by("created")[page*6:(page+1)*6]
-    return render(request, "viz/gallery-page.html", { 'visualizations' : vizs , 'nextPage' : page+1, 'filter':filter})    
+        vizs=Viz.objects.all().order_by("created")[page*8:(page+1)*8]
+
+    if vizs.count() >= 8:
+        return render(request, "viz/gallery-page.html", { 'visualizations' : vizs , 'nextPage' : page+1, 'filter':filter})    
+    else:
+        return render(request, "viz/gallery-page.html", { 'visualizations' : vizs , 'nextPage' : False, 'filter':filter})    
+   
     '''
     page=int(page)
     vizType=request.GET.get('vizType')
