@@ -18,6 +18,14 @@ $(function(){
 
         $on.removeClass('on').addClass('off');
         $off.removeClass('off').addClass('on');
+
+        if( $box.hasClass('interactive') ) {
+            if( $on.html() === 'Yes') {
+                $('.video-url').hide();
+            } else {
+                $('.video-url').show();
+            }
+        }
     })
 
     $('.run-sketch').click(function() {
@@ -41,7 +49,7 @@ $(function(){
 
             if( editing === false) {
 
-                // // Ajax request to create!
+                // Ajax request to create!
                 $.ajax({
                     type: 'post',
                     dataType: 'json',

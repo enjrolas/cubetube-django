@@ -335,12 +335,14 @@
 
     .viz-name,
     .description,
-    .switch-option {
+    .switch-option,
+    .video-url {
         width: 100%;
     }
 
     .viz-name,
-    .description{
+    .description,
+    .video-url{
         font-size: 14px;
         padding: 13px;
         border-radius: 3px;

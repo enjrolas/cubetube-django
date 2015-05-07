@@ -449,10 +449,12 @@ button {
     width: 480px; }
   .create-wrapper .viz-name,
   .create-wrapper .description,
-  .create-wrapper .switch-option {
+  .create-wrapper .switch-option,
+  .create-wrapper .video-url {
     width: 100%; }
   .create-wrapper .viz-name,
-  .create-wrapper .description {
+  .create-wrapper .description,
+  .create-wrapper .video-url {
     font-size: 14px;
     padding: 13px;
     border-radius: 3px;
@@ -540,7 +542,11 @@ nav {
   -webkit-transition: all 300ms ease 0ms;
   -moz-transition: all 300ms ease 0ms;
   -ms-transition: all 300ms ease 0ms;
-  transition: all 300ms ease 0ms; }
+  transition: all 300ms ease 0ms;
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0); }
   nav * {
     -webkit-transition: all 300ms ease 0ms;
     -moz-transition: all 300ms ease 0ms;
