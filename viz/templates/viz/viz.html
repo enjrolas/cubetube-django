@@ -123,9 +123,9 @@ function flashCube(){
       {% if logged_in %}
 
         {% if viz.creator.nickname == request.COOKIES.nickname %}
-          <a class="round-button button-transparent save-sketch">Save Sketch</a>
+          <a class="round-button button-transparent save-sketch">Edit Sketch</a>
         {% else %}
-          <a class="round-button button-transparent fork-sketch">Fork Sketch</a>
+          <!-- <a class="round-button button-transparent fork-sketch">Fork Sketch</a> -->
         {% endif %}
 
       {% else %}

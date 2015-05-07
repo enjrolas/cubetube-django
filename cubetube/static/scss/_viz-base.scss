@@ -259,11 +259,11 @@
     &.code-active {
 
         .viz-nav {
-            padding-right: 398px;
+            padding-right: 310px;
         }
 
         .viz-code {
-            @include transform( translateX(-380px) );
+            @include transform( translateX(-300px) );
             box-shadow: 0px 0px 35px 0px rgba(0,0,0,0.3);
         }
 
@@ -287,7 +287,7 @@
     z-index: 2;
 
     &.more-open {
-        width: 1020px;
+        width: 1100px;
     }
 }
 
@@ -422,7 +422,9 @@
             }
         }
     }
+}
 
-
+#cubeName {
+    max-width: 165px;
 }
 
