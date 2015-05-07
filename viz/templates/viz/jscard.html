@@ -2,8 +2,12 @@
 
 <a class="viz-card" href="{% url 'viz' viz.pk %}">
   <div class="viz-demo">
-      <canvas class="js-preview" id="{{ viz.pk }}" type="{{ viz.vizType }}"></canvas>   
-      <div class="code" style="display: none;" id="viz{{ viz.pk }}">{{ source.code }}</div>
+      {% if viz.interactive %}
+        <div class="play-icon"></div>
+      {% else %}
+        <canvas class="js-preview" id="{{ viz.pk }}" type="{{ viz.vizType }}"></canvas>   
+        <div class="code" style="display: none;" id="viz{{ viz.pk }}">{{ source.code }}</div>
+      {% endif %}
   </div>
   <div class="viz-info">
     <div class="left">

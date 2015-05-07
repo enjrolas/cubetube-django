@@ -56,9 +56,9 @@ function listCubes() {
             }
     
             if(devices.length==0) {
-                $("#cubeName").append($("<option></option>").html('Add a core to your spark account to get started'));  //append the cube name and ID to thr dropdown list
+                $("#cubeName").append($("<option></option>").html('Add a core to get started'));  //append the cube name and ID to thr dropdown list
             } else if(connectedCores==0) {
-                 $("#cubeName").append($("<option></option>").html('None of your cores are online right now'));  //append the cube name and ID to thr dropdown list
+                 $("#cubeName").append($("<option></option>").html('No cores online :('));  //append the cube name and ID to thr dropdown list
             }
         },
         function(err) {

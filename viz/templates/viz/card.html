@@ -2,6 +2,9 @@
 
 <a class="viz-card" href="{% url 'viz' viz.pk %}">
   <div class="viz-demo">
+    {% if viz.interactive %}
+      <div class="play-icon"></div>
+    {% endif %}
   </div>
   <div class="viz-info">
     <div class="left">
