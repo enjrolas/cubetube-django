@@ -9,15 +9,10 @@ log = logging.getLogger(__name__)
 
 @register.inclusion_tag('viz/card.html')
 def card(viz, nextPage=None):
-    try:
-        photo = Photo.objects.filter(viz=viz)[:1]
-        photo = photo[0]
-        thumbnailPhotoURL = photo.file.url
-    except Exception,e:
-        photo = None
-        thumbnailPhotoURL = None
-        log.debug(e)
-    return { 'viz': viz, 'thumbnailPhoto': photo , 'thumbnailPhotoURL': thumbnailPhotoURL }
+    if nextPage is not None:
+        return { 'viz' : viz, 'nextPage' : nextPage, 'vizType' : vizType, 'filter': filter}
+    else:
+        return { 'viz' : viz }
 
 @register.inclusion_tag('viz/jscard.html')
 def jscard(viz, nextPage=None):
