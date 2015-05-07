@@ -18,24 +18,43 @@ var editor;
       library=data;
 
       var vizType = getVizType();
-      if( vizType === 'L3D') {
 
-          parseSparkCode( getVizUrl(), function() {
-              setTimeout( function() {
-                  formatCode();
-                  runSparkSketch();
-                  setHeight();
-              }, 1);
-          } );
 
-      } else if ( vizType === 'javascript' ) {
+      // I've got a canvas, lets render!
+      if( $('canvas').length ) {
 
-          setTimeout( function() {
-              formatCode();  //applies codeMirror formatting to the code
-              runSketch();
-              setHeight();
-          }, 1)
+        if( vizType === 'L3D') {
+
+            parseSparkCode( getVizUrl(), function() {
+                setTimeout( function() {
+                    formatCode();
+                    runSparkSketch();
+                    setHeight();
+                }, 1);
+            } );
+
+        } else if ( vizType === 'javascript' ) {
+
+            setTimeout( function() {
+                formatCode();  //applies codeMirror formatting to the code
+                runSketch();
+                setHeight();
+            }, 1)
+        }
+      } else {
+
+        var $videoContainer = $('.youtube-video');
+        if( $videoContainer.length ) {
+
+          formatCode();
+          setHeight();
+
+          var url = $videoContainer.attr('data-url');
+          var id = youtube_parser(url);
+          createVideo( id, $videoContainer);
+        }
       }
+
       
  }, 'text');
 
@@ -166,4 +185,19 @@ function openFBPopup() {
     var winLeft = (screen.width / 2) - (winWidth / 2);
 
     window.open('http://www.facebook.com/sharer.php?s=100&p[title]=' + title + '&p[summary]=' + descr + '&p[url]=' + url, 'sharer', 'top=' + winTop + ',left=' + winLeft + ',toolbar=0,status=0,width=' + winWidth + ',height=' + winHeight);
+}
+
+function youtube_parser(url){
+    var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+    var match = url.match(regExp);
+    if (match&&match[7].length==11){
+        return match[7];
+    }else{
+        return 'fail';
+    }
+}
+
+function createVideo( id, container ) {
+  var frame = $( '<iframe id="video-iframe" width="100%" height="100%" src="//www.youtube.com/embed/' + id + '?rel=0" frameborder="0" allowfullscreen></iframe>' );
+  container.append(frame);
 }

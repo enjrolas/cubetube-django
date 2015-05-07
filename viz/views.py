@@ -247,7 +247,7 @@ def save(request):
         else:
             published = True
         
-        # videoUrl      = request.POST['interactive']
+        videoUrl      = request.POST['videoURL']
 
         user=CubeUser.objects.get(accessToken=accessToken)
         viz=Viz.objects.get(pk=vizID)
@@ -256,7 +256,7 @@ def save(request):
         viz.description=description
         viz.interactive = interactive
         viz.published   = published
-        # viz.videoUrl    = videoUrl
+        viz.videoUrl    = videoUrl
 
         viz.save()
 
@@ -306,7 +306,7 @@ def upload(request):
         name            = request.POST['name']
         description     = request.POST['description']
         code            = request.POST['sourceCode']
-        # videoUrl        = request.POST['videoUrl']
+        videoURL        = request.POST['videoURL']
 
         interactive     = request.POST['interactive']
         if interactive == 'false':
@@ -323,7 +323,7 @@ def upload(request):
         viz.name        = name
         viz.description = description
         viz.interactive = interactive
-        # viz.videoUrl    = videoUrl
+        viz.videoURL    = videoURL
         viz.published   = published
 
         viz.creator     = user

@@ -46,7 +46,12 @@ function flashCube(){
   </div>
   <div class="viz-demo">
     {% if source %}
-      <canvas class="demo-canvas"></canvas>
+
+      {% if viz.interactive %}
+        <div class="youtube-video" data-url={{ viz.videoURL }}></div>
+      {% else %}
+        <canvas class="demo-canvas"></canvas>
+      {% endif %}
     {% else %}
 
       {% if photo %}
