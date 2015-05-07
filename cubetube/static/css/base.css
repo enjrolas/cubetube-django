@@ -404,7 +404,7 @@ button {
   .viz-wrapper.code-active .viz-demo,
   .viz-wrapper.code-active canvas {
     position: relative;
-    width: 420px;
+    width: 500px;
     outline: 0; }
 
 .viz-template {
