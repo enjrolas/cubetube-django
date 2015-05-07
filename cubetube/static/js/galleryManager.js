@@ -65,6 +65,9 @@ function closeViz() {
 }
 
 function openCreate() {
+    var $header = $('nav:not(.always-small)');
+    $header.addClass('small');
+    
     var frame = $( createTemplate );
     frame.attr('src', '/create/' );
 
