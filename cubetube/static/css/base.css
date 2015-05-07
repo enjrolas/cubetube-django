@@ -403,6 +403,7 @@ button {
     box-shadow: 0px 0px 35px 0px rgba(0, 0, 0, 0.3); }
   .viz-wrapper.code-active .viz-demo,
   .viz-wrapper.code-active canvas {
+    position: relative;
     width: 420px;
     outline: 0; }
 
@@ -720,10 +721,22 @@ header {
   text-align: left; }
   .viz-card .viz-demo {
     background: #282E30;
+    position: relative;
     height: 150px; }
     .viz-card .viz-demo canvas {
       width: 100%;
       border-radius: 3px 3px 0px 0px; }
+  .viz-card .play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-top: 16px solid transparent;
+    border-bottom: 16px solid transparent;
+    border-left: 25px solid #fff;
+    margin-left: -15px;
+    margin-top: -20px; }
   .viz-card .viz-info {
     height: 70px;
     padding-top: 16px;
