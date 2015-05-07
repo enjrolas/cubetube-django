@@ -26,8 +26,9 @@ checkScroll();
 $('body').on('click', '.scroll', function(e) {
     e.preventDefault();
     var $this = $(this);
-    $this.hide();
-    var url = $this.attr('url');
+    $this.html("Loading...");
+    $this.removeClass('blue').addClass('red');
+    var url = $this.attr('href');
 
     $.ajax({
       type: 'get',
