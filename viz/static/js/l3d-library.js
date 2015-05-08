@@ -1,5 +1,8 @@
 class Cube {
     color[][][] voxels;
+    int[][][] r;
+    int[][][] g;
+    int[][][] b;
     int size;
     int scale;
     PVector center;
@@ -20,57 +23,11 @@ class Cube {
 	scale=height/size/2;
 	//	println("height: "+height+"  width: "+width+"  size: "+size+"  scale: "+scale);
 	voxels=new color[size][size][size];
+	r=new int[size][size][size];
+        g=new int[size][size][size];
+	b=new int[size][size][size];
 	center=new PVector(scale*(size-1)/2, scale*(size-1)/2, scale*(size-1)/2);
 	//ortho();   //use orthographic projection (no perspective)
-    }
-    void connect()
-    {
-	// open connection                                                                                                                                                               
-	this.ws = new WebSocket(address);
-	console.log("Connecting!");
-
-	var cube = this;
-
-	this.ws.onclose = function() {
-	    if(cube.onclose !== undefined) {
-		cube.onclose(cube);
-	    }
-	};
-
-	this.ws.onopen = function() {
-	    if(cube.onopen !== undefined) {
-		cube.onopen(cube);
-	    }
-
-	    cube.refresh();
-	};
-
-	this.ws.onmessage = function(evt) {
-	    var msg = evt.data;
-	    console.log("got msg: " + msg);
-
-	    if(parseInt(msg) == cube.frameSize) {
-		cube.clearToSend = true;
-	    }
-	};
-    }
-
-    void refresh() {
-        var cube = this;
-
-        if(this.clearToSend && this.ws.bufferedAmount == 0) {
-            if(this.onrefresh !== undefined) {
-                this.onrefresh(this);
-            }
-
-            this.ws.send(this.frameBuffer);
-            this.clearToSend = false; // must get reply before sending again                                                                                                         
-
-            setTimeout(function() { cube.refresh(); }, cube.rate);
-        } else {
-            // check for readiness every 5 millis                                                                                                                                    
-            setTimeout(function() { cube.refresh(); }, 5);
-        }
     }
 
     void draw()
@@ -87,6 +44,9 @@ class Cube {
       	    for (int y=0; y<size; y++)
 		for (int z=0; z<size; z++)
 		    {
+			r[x][y][z]=red(voxels[x][y][z]);
+			g[x][y][z]=green(voxels[x][y][z]);
+			b[x][y][z]=blue(voxels[x][y][z]);
 			pushMatrix();
 			translate(scale*x-center.x, scale*(size-1-y)-center.y, scale* z-center.z);
 			color voxelColor=voxels[x][y][z];
@@ -102,6 +62,7 @@ class Cube {
 	stroke(255);
 	strokeWeight(0.25);
 	box(size*scale);
+	bufferVoxels(r, g, b);
     }
     void mouseDragged()
     {

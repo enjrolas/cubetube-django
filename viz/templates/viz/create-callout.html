@@ -1,3 +1,6 @@
+{% load utils %}
+{% logged_in_status as logged_in %}
+
 <div class="create-callout">
     <div class="section shadowed-line"></div>
     <img src="/static/images/github-spark.png" />
@@ -9,8 +12,15 @@
         Text explaining how easy is to share your visualizations online</br>
         and get featured on the site etc.
     </h2>
-    <a class="button blue create" href="/create">
-        Create a visualization
-    </a>
+    {% if logged_in %}
+        <a class="button blue create" href="/create">
+            Create a visualization
+        </a>
+    {% else %}
+        <a class="button blue login">
+            Sign up to get creating!
+        </a>
+    {% endif %}
 
 </div>
+

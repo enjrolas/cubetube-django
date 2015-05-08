@@ -14,6 +14,7 @@ function flashCube(){
     $.post("{% url 'compile'%}", {"code": $(".code").val(), "accessToken":accessToken, "coreID":$("#cubeName").val()});
 }
 </script>
+<script type="text/javascript" src="{% static 'js/streaming.js' %}"></script>
 
 {% load utils %}
 {% logged_in_status as logged_in %}
@@ -46,7 +47,12 @@ function flashCube(){
   </div>
   <div class="viz-demo">
     {% if source %}
-      <canvas class="demo-canvas"></canvas>
+
+      {% if viz.interactive %}
+        <div class="youtube-video" data-url={{ viz.videoURL }}></div>
+      {% else %}
+        <canvas class="demo-canvas"></canvas>
+      {% endif %}
     {% else %}
 
       {% if photo %}
@@ -118,9 +124,9 @@ function flashCube(){
       {% if logged_in %}
 
         {% if viz.creator.nickname == request.COOKIES.nickname %}
-          <a class="round-button button-transparent save-sketch">Save Sketch</a>
+          <a class="round-button button-transparent save-sketch">Edit Sketch</a>
         {% else %}
-          <a class="round-button button-transparent fork-sketch">Fork Sketch</a>
+          <!-- <a class="round-button button-transparent fork-sketch">Fork Sketch</a> -->
         {% endif %}
 
       {% else %}

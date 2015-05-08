@@ -22,3 +22,19 @@ function checkScroll() {
 }
 
 checkScroll();
+
+$('body').on('click', '.scroll', function(e) {
+    e.preventDefault();
+    var $this = $(this);
+    $this.html("Loading...");
+    $this.removeClass('blue').addClass('red');
+    var url = $this.attr('href');
+
+    $.ajax({
+      type: 'get',
+      url: url,
+      success: function(data) {
+        $this.replaceWith( data );
+      }
+    })
+});
