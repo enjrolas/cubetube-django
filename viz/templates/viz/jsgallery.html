@@ -4,10 +4,21 @@
 
 {% block header %}
 {% include "cubetube/partials/_header.html" with page="gallery" large=0 %}
-<script src="{% static 'js/processing.min.js' %}"></script>
+<script src="{% static 'js/processing.js' %}"></script>
 <script src="{% static 'js/processing-gallery-helper.js' %}"></script>
 <script src="{% static 'js/spark-helper.js' %}"></script>
 <script src="{% static 'js/gallery-coordinator.js' %}"></script>	
+<script type="text/javascript">
+var page=0;
+function loadThumbnails()
+{
+$.get("{% url 'scroll' page=0 %}", function(data){
+alert(data);
+page++;
+});
+}
+
+</script>	
 {% endblock %}
 
 {% block content %}
@@ -16,7 +27,7 @@
         {% jscard viz %}
     {% endfor %}
     {% if nextPage %}
-      <a class="scroll button blue" href="{% url 'scroll' nextPage filter %}">Load More!</a>
+      <div class="scroll button blue" onclick="loadThumbnails()">Load More!</div>
     {% endif %}
 </div>
 {% endblock %}
