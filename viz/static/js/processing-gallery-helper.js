@@ -1,10 +1,19 @@
 var library;
 var mouseListener="void mouseOut() {noLoop();}void mouseOver() {loop();}";
 
-$.get('/static/js/l3d-library.js', function(data) {
-library=data;
+$.ajax({
+    url: '/static/js/l3d-library.js',
+    dataType: 'text',
+    success: function(data){
+	library=data;
 	activatePreviews();
-    }, 'text');
+    },
+    done: function(data){
+	library=data;
+	activatePreviews();
+    },
+    cache: false
+});
 
 (function(global) {
    
