@@ -16,10 +16,9 @@ class Cube {
     {	
 	parent=_parent;
 	size=8;
-	rate=1000;
 	clearToSend=true;
 	frameSize=512;
-	this. frameBuffer= new ArrayBuffer(frameSize);
+	this.frameBuffer= new ArrayBuffer(frameSize);
 	scale=height/size/2;
 	//	println("height: "+height+"  width: "+width+"  size: "+size+"  scale: "+scale);
 	voxels=new color[size][size][size];
@@ -27,7 +26,6 @@ class Cube {
         g=new int[size][size][size];
 	b=new int[size][size][size];
 	center=new PVector(scale*(size-1)/2, scale*(size-1)/2, scale*(size-1)/2);
-	//ortho();   //use orthographic projection (no perspective)
     }
 
     void draw()
@@ -51,7 +49,6 @@ class Cube {
 			translate(scale*x-center.x, scale*(size-1-y)-center.y, scale* z-center.z);
 			color voxelColor=voxels[x][y][z];
 			noStroke();
-			//			stroke(255, 30);
 			if (brightness(voxelColor)>0)
 			    fill(voxelColor);
 			else
@@ -62,7 +59,11 @@ class Cube {
 	stroke(255);
 	strokeWeight(0.25);
 	box(size*scale);
-	bufferVoxels(r, g, b);
+	if (!((streaming === undefined ) || ( streaming === null)))
+	    {
+		streaming.bufferVoxels(r, g, b);
+	    }
+	
     }
     void mouseDragged()
     {
