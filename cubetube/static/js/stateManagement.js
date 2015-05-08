@@ -9,6 +9,7 @@ $(function(){
 		$cubeOptions = $( '.cube-options' );
 	if( $cubeOptions.length ) {
 	    listCubes();
+	    setInterval('listCubes()', 15000);  //update the list of cubes every 15 seconds
 	    }
 	else
 	    console.log("no cube options");
