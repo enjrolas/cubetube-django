@@ -11,8 +11,7 @@
 {% block content %}
 <script type="text/javascript">
 function flashCube(){
-    $.post("{% url 'compile'%}", {"code": $(".code").val(), "accessToken":accessToken, "coreID":$("#cubeName").val()});
-}
+    $.post("{% url 'compile'%}", {"code": $(".code").val(), "accessToken":accessToken, "coreID":$("#cubeName").val()});}
 </script>
 <script type="text/javascript" src="{% static 'js/streaming.js' %}"></script>
 
@@ -33,7 +32,12 @@ function flashCube(){
 
     {% if logged_in %}
       <div class="cube-options">
+	{% if viz.vizType == "L3D" %}
         <a class="round-button button-grey sent-to-cube" onclick="flashCube()">Send to Cube</a>
+	{% elif viz.vizType == "javascript" %}
+        <a class="round-button button-grey sent-to-cube" onclick="stream()">Stream to Cube</a>
+	{% else %}
+	{% endif %}
         <div class="round-button button-grey select-cube">
 	  <select id="cubeName"></select>
 <!--          Select Cube

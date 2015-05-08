@@ -34,13 +34,18 @@ def compile(request):
     code=request.POST['code']
     timestamp=datetime.datetime.now().strftime('%Y-%m-%d--%H.%M.%S')
     filename=timestamp+".cpp"
-    directory=settings.MEDIA_ROOT + "sparkware/" + settings.CUBE_LIBRARY + "/firmware/examples/"
+    media_root="/home/tim/cubetube/media/"
+    project_root="/home/tim/cubetube/"
+    directory= media_root+"sparkware/" + settings.CUBE_LIBRARY + "/firmware/examples/"
+    log.debug("%s%s" % (directory, filename))
+    log.debug("%s" % settings.PROJECT_ROOT)
+    log.debug("%s" % settings.MEDIA_ROOT)
+    log.debug("%s" % settings.STATIC_ROOT)
     f = open(directory + filename, 'w')
     codeFile=File(f)
     codeFile.write(code)
     codeFile.close()
-#    path='%ssparkware/%s/make' % (settings.MEDIA_ROOT, settings.CUBE_LIBRARY)
-    p = subprocess.Popen(['make', '-C', '%ssparkware/%s' % (settings.MEDIA_ROOT, settings.CUBE_LIBRARY), 'bin/%s.bin' % timestamp], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p = subprocess.Popen(['make', '-C', '%ssparkware/%s' % (media_root, settings.CUBE_LIBRARY), 'bin/%s.bin' % timestamp], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     output=[]
     for line in p.stdout.readlines():
@@ -58,14 +63,14 @@ def compile(request):
 
     retval = p.wait()
 
-    binaryPath= "media/sparkware/%s/bin/%s.bin" % (settings.CUBE_LIBRARY, timestamp)
+    binaryPath= media_root+"sparkware/%s/bin/%s.bin" % (settings.CUBE_LIBRARY, timestamp)
     flash_output=[]
     flash_error=[]
 
     if os.path.isfile(binaryPath):
         accessToken=request.POST['accessToken']
         coreID=request.POST['coreID']        
-        p = subprocess.Popen(['node', '%s/viz/utils/flash.js' % settings.PROJECT_ROOT ,accessToken, coreID, binaryPath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.Popen(['node', '%s/viz/utils/flash.js' % project_root ,accessToken, coreID, binaryPath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         for line in p.stdout.readlines():
             print line,
             line.replace('"','\\"')
@@ -201,9 +206,9 @@ def create(request):
 def scroll(request, page, filter="newestFirst", cardsPerPage=8):
     page=int(page)
     if filter=="newestFirst":
-        vizs=Viz.objects.all().order_by("-created").exclude(published=False)[page*cardsPerPage:(page+1)*cardsPerPage]
+        vizs=Viz.objects.all().order_by("-created")[page*cardsPerPage:(page+1)*cardsPerPage]
     else:
-        vizs=Viz.objects.all().order_by("created").exclude(published=False)[page*cardsPerPage:(page+1)*cardsPerPage]
+        vizs=Viz.objects.all().order_by("created")[page*cardsPerPage:(page+1)*cardsPerPage]
 
     if vizs.count() >= cardsPerPage:
         return render(request, "viz/gallery-page.html", { 'visualizations' : vizs , 'nextPage' : page+1, 'filter':filter})    
@@ -232,7 +237,6 @@ def save(request):
 
     nickname    = request.COOKIES['nickname']
     accessToken = request.COOKIES['accessToken']
-    # log.debug("%s is trying to edit or update a viz" % nickname)
     if authenticate(nickname, accessToken):
 
         vizID         = request.POST['vizId']

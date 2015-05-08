@@ -8,7 +8,8 @@ $(function(){
 	// If user is logged in, check for cubes via spark.
 		$cubeOptions = $( '.cube-options' );
 	if( $cubeOptions.length ) {
-	    listCubes();
+	    //	    listCubes();
+	    setInterval('listCubes()',15000);  //update the cube list every 15 seconds
 	    }
 	else
 	    console.log("no cube options");

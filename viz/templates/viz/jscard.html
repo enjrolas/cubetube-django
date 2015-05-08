@@ -5,7 +5,7 @@
       {% if viz.interactive %}
         <div class="play-icon"></div>
       {% else %}
-        <canvas class="js-preview" id="{{ viz.pk }}" type="{{ viz.vizType }}"></canvas>   
+        <canvas class="js-preview" id="{{ viz.pk }}" type="{{ viz.vizType }}" interactive="{{ viz.interactive }}"></canvas>   
         <div class="code" style="display: none;" id="viz{{ viz.pk }}">{{ source.code }}</div>
       {% endif %}
   </div>

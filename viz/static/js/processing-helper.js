@@ -32,19 +32,25 @@ global.runSketch = function(callback) {
       try {
           canvas = createCanvas();
           var sketchCode=$(".code").val().concat(library);
-
       var sketch = Processing.compile(sketchCode);
-      if (callback) {
-	  if (!/exit\(\);/.test(sketchCode)) {
-          throw "exit() not found in sketch. Add the exit() command, and re-run the sketch.";
-        }
-        sketch.onExit = callback;
         instance = new Processing(canvas, sketch);
-      } else {
-        instance = new Processing(canvas, sketch);
-      }
-    } catch (e) {
-	output.val("Error! Error was:\n" + e.toString());
+    } catch (err) {
+	// for firefox / opera 
+	var linenumber = err.lineNumber; 
+
+	// for webkit 
+	if (!linenumber) linenumber = err.line; 
+
+	if (linenumber) { 
+	    linenumber = "Processing.js error on line "+linenumber+".<br />"; 
+	} else { 
+	    // for chrome 
+	    linenumber = ""; 
+	} 
+	console.log(err);
+	output.val(linenumber + err); 
+	// so firebug can still catch it 
+	throw(err); 
     }
   };
 
@@ -53,18 +59,33 @@ global.runSparkSketch = function(callback) {
   try {
     canvas = createCanvas();
     var sketchCode=translatedCode.concat(library);
+    var lines = sketchCode.split("\n"); 
+    for(var i=0;i<lines.length;i++)
+	console.log(i+":  "+lines[i]);
+    //$(".code").val(sketchCode);
     var sketch = Processing.compile(sketchCode);
-    if (callback) {
-       if (!/exit\(\);/.test(sketchCode)) {
-         throw "exit() not found in sketch. Add the exit() command, and re-run the sketch.";
-       }
-      sketch.onExit = callback;
       instance = new Processing(canvas, sketch);
-    } else {
-      instance = new Processing(canvas, sketch);
-    }
-  } catch (e) {
-    output.val("Error! Error was:\n" + e.toString());
+  } catch (err) {
+      /*
+      //      alert(err);
+	// for firefox / opera 
+	var linenumber = err.lineNumber; 
+
+	// for webkit 
+	if (!linenumber) linenumber = err.line; 
+
+	if (linenumber) { 
+	    linenumber = "Processing.js error on line "+linenumber+".<br />"; 
+	} else { 
+	    // for chrome 
+	    linenumber = ""; 
+	} 
+      */
+	console.log(err);
+	//output.val(linenumber + err); 
+	// so firebug can still catch it 
+	//	throw(err); 
+	//    output.val("Error! Error was:\n" + e.toString());
   }
 };
 
