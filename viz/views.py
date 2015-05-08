@@ -201,9 +201,9 @@ def create(request):
 def scroll(request, page, filter="newestFirst", cardsPerPage=8):
     page=int(page)
     if filter=="newestFirst":
-        vizs=Viz.objects.all().order_by("-created").exclude(published=False)[page*cardsPerPage:(page+1)*cardsPerPage]
+        vizs=Viz.objects.all().order_by("-created")[page*cardsPerPage:(page+1)*cardsPerPage]
     else:
-        vizs=Viz.objects.all().order_by("created").exclude(published=False)[page*cardsPerPage:(page+1)*cardsPerPage]
+        vizs=Viz.objects.all().order_by("created")[page*cardsPerPage:(page+1)*cardsPerPage]
 
     if vizs.count() >= cardsPerPage:
         return render(request, "viz/gallery-page.html", { 'visualizations' : vizs , 'nextPage' : page+1, 'filter':filter})    
