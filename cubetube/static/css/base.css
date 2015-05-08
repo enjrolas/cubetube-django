@@ -259,12 +259,12 @@ button {
     z-index: 2; }
   .viz-wrapper .viz-demo {
     width: 800px;
-    height: 460px;
+    height: 410px;
     background: #1c1521;
     position: relative;
     text-align: center; }
     .viz-wrapper .viz-demo canvas {
-      height: 460px; }
+      height: 410px; }
     .viz-wrapper .viz-demo .background-image {
       position: absolute;
       left: 0px;
