@@ -59,13 +59,13 @@
     // Canvas sits inside here.
     .viz-demo {
         width: 800px;
-        height: 460px;
+        height: 410px;
         background: $purple;
         position: relative;
         text-align: center;
 
         canvas {
-            height: 460px;
+            height: 410px;
         }
 
         .background-image {
