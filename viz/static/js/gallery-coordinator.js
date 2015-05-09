@@ -1,7 +1,7 @@
 //this file is in charge of going through the vizs in the gallery and starting each sketch
 
 function activatePreviews(){
-  $("canvas.js-preview:not(canvas-active)").each(function(){
+  $("canvas.js-preview:not(.canvas-active)").each(function(){
         console.log( "hi" );
 	  var id=$(this).attr('id');
 	  var canvas=$(this)[0];
