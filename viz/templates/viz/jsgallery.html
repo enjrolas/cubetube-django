@@ -12,9 +12,7 @@
 var page=0;
 function loadThumbnails()
 {
-$.get("{% url 'scroll' page=0 %}", function(data){
-alert(data);
-page++;
+$.get("{% url 'scroll' nextPage filter %}", function(data){
 });
 }
 

@@ -715,7 +715,7 @@ module.exports = function finalizeProcessing(Processing, options) {
       if(typeof this.attachFunction === "function") {
         this.attachFunction(processing);
       } else if(this.sourceCode) {
-	  console.log(this.sourceCode);
+	  //console.log(this.sourceCode);
         var func = ((new Function("return (" + this.sourceCode + ");"))());
         func(processing);
         this.attachFunction = func;

@@ -3,6 +3,7 @@ from viz.models import *
 from cube.models import CubeUser
 from comments.models import Comment
 from django.http import HttpResponse
+from django.http import JsonResponse
 from django.utils.html import escape
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
@@ -32,15 +33,22 @@ def gallery(request, filter="newestFirst"):
 @csrf_exempt
 def compile(request):
     code=request.POST['code']
+    code=settings.SPARK_LIBRARY+code
+
+    '''
+    lines=code.split('\n')
+    i=0
+    for line in lines:
+        log.debug("%d:  %s" % ( i, line))
+        i+=1
+
+        '''
     timestamp=datetime.datetime.now().strftime('%Y-%m-%d--%H.%M.%S')
     filename=timestamp+".cpp"
     media_root="/home/tim/cubetube/media/"
     project_root="/home/tim/cubetube/"
     directory= media_root+"sparkware/" + settings.CUBE_LIBRARY + "/firmware/examples/"
-    log.debug("%s%s" % (directory, filename))
-    log.debug("%s" % settings.PROJECT_ROOT)
-    log.debug("%s" % settings.MEDIA_ROOT)
-    log.debug("%s" % settings.STATIC_ROOT)
+    log.debug("compiling %s%s" % (directory, filename))
     f = open(directory + filename, 'w')
     codeFile=File(f)
     codeFile.write(code)
@@ -83,10 +91,16 @@ def compile(request):
             line.replace("'","\\'")
             flash_error.append(line)
             
+        compilation_status="ok"
         retval = p.wait()
-
-    response='{ "status":"ok" , "output": "%s" , "error" : "%s" , "flash-output" : "%s", "flash-error", "%s"}' % (output, error, flash_output, flash_error)
-    return HttpResponse(response, content_type="application/json")
+    else:
+        compilation_status="failed"
+    response={ "compilation_status": compilation_status , 
+               "output" : output , 
+               "error" : error , 
+               "flash_output" : flash_output , 
+               "flash_error" : flash_error}
+    return JsonResponse(response)
 
 def jsgallery(request, filter="newestFirst"):
     if(filter=='newestFirst'):

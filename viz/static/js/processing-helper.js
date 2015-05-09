@@ -59,9 +59,9 @@ global.runSparkSketch = function(callback) {
   try {
     canvas = createCanvas();
     var sketchCode=translatedCode.concat(library);
-    var lines = sketchCode.split("\n"); 
-    for(var i=0;i<lines.length;i++)
-	console.log(i+":  "+lines[i]);
+    //var lines = sketchCode.split("\n"); 
+    //for(var i=0;i<lines.length;i++)
+      //console.log(i+":  "+lines[i]);
     //$(".code").val(sketchCode);
     var sketch = Processing.compile(sketchCode);
       instance = new Processing(canvas, sketch);
