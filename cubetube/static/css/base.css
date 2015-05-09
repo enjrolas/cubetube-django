@@ -224,6 +224,7 @@ button {
   border-top: 118px solid #f9f9f9;
   height: 100%; }
   .viz-wrapper .round-button {
+    text-decoration: none;
     font-family: roboto;
     color: #fff;
     float: right;
@@ -441,17 +442,17 @@ button {
     color: #fff; }
 
 .create-wrapper {
-  width: 560px; }
+  width: 500px; }
   .create-wrapper .viz-nav,
   .create-wrapper .viz-demo,
   .create-wrapper .viz-demo canvas {
-    width: 560px; }
+    width: 500px; }
   .create-wrapper .viz-details {
     padding-bottom: 30px; }
   .create-wrapper .viz-code {
-    left: 560px; }
+    left: 500px; }
   .create-wrapper .inner-wrapper {
-    width: 480px; }
+    width: 450px; }
   .create-wrapper .viz-name,
   .create-wrapper .description,
   .create-wrapper .switch-option,

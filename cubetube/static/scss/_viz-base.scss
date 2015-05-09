@@ -9,6 +9,7 @@
     height: 100%;
 
     .round-button {
+        text-decoration: none;
         font-family: roboto;
         color: #fff;
         float: right;
@@ -315,12 +316,12 @@
 }
 
 .create-wrapper {
-    width: 560px;
+    width: 500px;
 
     .viz-nav,
     .viz-demo,
     .viz-demo canvas {
-        width: 560px;
+        width: 500px;
     }
 
     .viz-details {
@@ -328,11 +329,11 @@
     }
 
     .viz-code {
-        left: 560px;
+        left: 500px;
     }
 
     .inner-wrapper {
-        width: 480px;
+        width: 450px;
     }
 
     .viz-name,

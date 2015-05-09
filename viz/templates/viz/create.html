@@ -16,11 +16,13 @@
 
 {% if viz %}
 {% endif %}
-<div class="viz-wrapper create-wrapper">
+<div class="viz-wrapper create-wrapper" {% if viz %}viz-id="{{ viz.pk }}"{% endif %} >
 
   <div class="viz-nav">
     <div class="nav-info"></div>
-    <a class="round-button button-red save-code">Save Viz</a>
+    <a class="round-button button-red save-code">{% if viz %}Update Viz {% else %}Save Viz{% endif %}</a>
+
+
 
     <div class="cube-options">
       <a class="round-button button-grey sent-to-cube">Send to Cube</a>
@@ -65,8 +67,8 @@
               <div class="switch-part switch-left off">No</div>
               <div class="switch-part switch-right on">Yes</div>
             {% else %}
-              <div class="switch-part switch-left off">Public</div>
-              <div class="switch-part switch-right on">Private</div>
+              <div class="switch-part switch-left on">No</div>
+              <div class="switch-part switch-right off">Yes</div>
             {% endif %}  
           {% else %}
             <div class="switch-part switch-left on">No</div>
@@ -96,7 +98,7 @@
             <div class="switch-part switch-right off">L3D</div>
           {% else %}
             <div class="switch-part switch-left off">JS</div>
-            <div class="switch-part switch-right on"?";">L3D</div>
+            <div class="switch-part switch-right on"?"">L3D</div>
           {% endif %}  
         {% else %}
         <div class="switch-part switch-left on">JS</div>
