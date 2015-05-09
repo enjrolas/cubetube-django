@@ -35,7 +35,8 @@ $.ajax({
 	var setup=false, setupStarted=false;
 	for(var i=0;i<sketchLines.length;i++)
 	{
-	    sketchCode+=sketchLines[i]+'\n';
+	    if(sketchLines[i].indexOf("size(500,500, P3D);")==-1)  //stray size() arguments break the viz
+		sketchCode+=sketchLines[i]+'\n';
 	    if(!setup)
 		if(sketchLines[i].indexOf("setup()")!=-1)
 		    setup=true;
@@ -59,8 +60,9 @@ $.ajax({
       var translatedCode=translateCode(sketchCode);
       var sketchCode=translatedCode.concat(mouseListener).concat(library);
       sketchCode=sketchCode.replace("size(500,500, P3D);", "size("+canvas.width+","+canvas.height+", P3D);noLoop();");
-      //      if(canvas.id==="3")
-      //  console.log(sketchCode);
+      if(canvas.id==="26")
+      console.log(sketchCode);
+
     var sketch = Processing.compile(sketchCode);
     instance = new Processing(canvas, sketch);
   } catch (e) {
