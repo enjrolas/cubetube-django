@@ -35,6 +35,10 @@ $('body').on('click', '.scroll', function(e) {
       url: url,
       success: function(data) {
         $this.replaceWith( data );
+        setTimeout(function() {
+            console.log( "stuff2" );
+            activatePreviews();
+        }, 1);
       }
     })
 });
