@@ -4,11 +4,11 @@ from viz import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-
     url(r'^parameter/(?P<param>\w+)/$', views.parameter, name='parameter'),
     url(r'^parameter/$', views.parameter, name='parameter'),
     url(r'^gallery/(?P<filter>\w+)/$', views.jsgallery, name='gallery'),
     url(r'^gallery/', views.jsgallery, name='gallery'),
+    url(r'^gallery/(?P<filter>\w+)/(?P<featuredViz>\d+)/$', views.jsgallery, name='gallery'),
     url(r'^jsgallery/', views.jsgallery, name='jsgallery'),    
     url(r'^viz/(?P<id>\d+)/$', views.viz, name='viz'),
     url(r'^scroll/(?P<page>\d+)/(?P<filter>\w+)/(?P<cardsPerPage>\d+)/$', views.scroll, name='scroll'),

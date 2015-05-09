@@ -102,18 +102,22 @@ def compile(request):
                "flash_error" : flash_error}
     return JsonResponse(response)
 
-def jsgallery(request, filter="newestFirst"):
+def jsgallery(request, filter="newestFirst", featuredViz=None):
     if(filter=='newestFirst'):
         vizs=Viz.objects.all().order_by("-created").exclude(published=False)    
     else:
         vizs=Viz.objects.all().order_by("created").exclude(published=False)      
+    if featuredViz is None:
+        featured=None
+    else:
+        featured=Viz.objects.get(featuredViz)
 
     totalObjects=vizs.count()
     if totalObjects<8:
         visualizations=vizs[:totalObjects]
     else:
         visualizations=vizs[:8]
-    return render(request, "viz/jsgallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'totalObjects' : totalObjects, 'filter': filter})
+    return render(request, "viz/jsgallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'totalObjects' : totalObjects, 'filter': filter, 'featuredViz' : featured})
 
 def index(request):
     vizs=Viz.objects.all().order_by("-created").exclude(published=False)
