@@ -2,25 +2,33 @@
 {% load staticfiles %}
 {% load card %}
 
+{% block headx %}
+    {% if featuredViz %}
+        <!-- for Google -->
+        <meta name="description" content="{{ featuredViz.description }}" />
+        <meta name="keywords" content="cubetube L3D 3D cube LED" />
+        <meta name="author" content="{{ featuredViz.creator.nickname }}" />
+        <meta name="copyright" content="" />
+        <meta name="application-name" content="cubetube" />
+
+        <!-- for Facebook -->          
+        <meta property="og:title" content="{{ featuredViz.name }} by {{ featuredViz.creator.nickname }} on cubetube" />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content="{{ 'http://'|add:request.get_host|add:request.get_full_path }}" />
+        <meta property="og:description" content="{{ featuredViz.description }}" />
+    {% endif %}
+{% endblock %}
+
 {% block header %}
 {% include "cubetube/partials/_header.html" with page="gallery" large=0 %}
 <script src="{% static 'js/processing.js' %}"></script>
 <script src="{% static 'js/processing-gallery-helper.js' %}"></script>
 <script src="{% static 'js/spark-helper.js' %}"></script>
 <script src="{% static 'js/gallery-coordinator.js' %}"></script>	
-<script type="text/javascript">
-// var page=0;
-// function loadThumbnails()
-// {
-// $.get("{% url 'scroll' nextPage filter %}", function(data){
-// });
-// }
-
-</script>	
 {% endblock %}
 
 {% block content %}
-<div class="viz-cards in-gallery">
+<div class="viz-cards in-gallery" data-viz="{% if featuredViz %}{{ featuredViz.pk }}{% endif %}">
     {% for viz in visualizations %}
         {% jscard viz %}
     {% endfor %}

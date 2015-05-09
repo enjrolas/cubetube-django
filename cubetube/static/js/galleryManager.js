@@ -88,5 +88,15 @@ function closeCreate() {
 if( $cards.length ) {
     bindCards();
     bindListener();
-    bindGlass();    
+    bindGlass();   
+
+    var cards = $('.viz-cards');
+    if( cards.length )  {
+
+        id = cards.attr('data-viz');
+        if( id ) {
+            openViz( '/viz/' + id);
+        }
+
+    }
 }

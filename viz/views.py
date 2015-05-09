@@ -107,10 +107,11 @@ def jsgallery(request, filter="newestFirst", featuredViz=None):
         vizs=Viz.objects.all().order_by("-created").exclude(published=False)    
     else:
         vizs=Viz.objects.all().order_by("created").exclude(published=False)      
+    
     if featuredViz is None:
         featured=None
     else:
-        featured=Viz.objects.get(featuredViz)
+        featured=Viz.objects.get(pk=featuredViz)
 
     totalObjects=vizs.count()
     if totalObjects<8:
