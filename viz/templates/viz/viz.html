@@ -11,7 +11,31 @@
 {% block content %}
 <script type="text/javascript">
 function flashCube(){
-    $.post("{% url 'compile'%}", {"code": $(".code").val(), "accessToken":accessToken, "coreID":$("#cubeName").val()});}
+var request=$.ajax({
+type:"POST",
+url:"{% url 'compile'%}", 
+data: {"code": $(".code").val(), "accessToken":accessToken, "coreID":$("#cubeName").val()},
+dataType:"text",
+success: function(data){ 
+data = $.parseJSON(data);
+console.log(data);
+output="";
+if(data.compilation_status==="ok")
+{
+output+="compilation status:  ok\n";
+output+="flashing status: "+data.flash_output;
+}
+else
+{
+output+="compilation status: "+data.compilation_status+"\nerrors:\n"+data.error+"\n";
+}
+$("textarea.output").val(output);
+},
+error: function(data){
+console.log("fail");
+console.log(data);}
+});
+}
 </script>
 <script type="text/javascript" src="{% static 'js/streaming.js' %}"></script>
 
