@@ -9,12 +9,12 @@
 <script src="{% static 'js/spark-helper.js' %}"></script>
 <script src="{% static 'js/gallery-coordinator.js' %}"></script>	
 <script type="text/javascript">
-var page=0;
-function loadThumbnails()
-{
-$.get("{% url 'scroll' nextPage filter %}", function(data){
-});
-}
+// var page=0;
+// function loadThumbnails()
+// {
+// $.get("{% url 'scroll' nextPage filter %}", function(data){
+// });
+// }
 
 </script>	
 {% endblock %}
@@ -25,7 +25,7 @@ $.get("{% url 'scroll' nextPage filter %}", function(data){
         {% jscard viz %}
     {% endfor %}
     {% if nextPage %}
-      <div class="scroll button blue" onclick="loadThumbnails()">Load More!</div>
+      <div class="scroll button blue" href="{% url 'scroll' nextPage filter %}">Load More!</div>
     {% endif %}
 </div>
 {% endblock %}
