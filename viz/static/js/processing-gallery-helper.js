@@ -30,7 +30,25 @@ $.ajax({
       //      if(canvas.id==="6")
       //	  console.log(sketchCode);
       sketchCode=sketchCode.concat(mouseListener).concat(library);
-      sketchCode=sketchCode.replace("size(500,500, P3D);", "size("+canvas.width+","+canvas.height+", P3D);noLoop();");
+	var sketchLines=sketchCode.split('\n');
+	sketchCode="";
+	var setup=false, setupStarted=false;
+	for(var i=0;i<sketchLines.length;i++)
+	{
+	    sketchCode+=sketchLines[i]+'\n';
+	    if(!setup)
+		if(sketchLines[i].indexOf("setup()")!=-1)
+		    setup=true;
+	    if((setup)&&(!setupStarted))
+	       {
+		if(sketchLines[i].indexOf("{")!=-1)
+		   {
+		       setupStarted=true;
+		       sketchCode+="size("+canvas.width+","+canvas.height+",P3D);\nsmooth();noLoop();\n";  //insert the boilerplate
+		   }
+	       }
+	}
+//      sketchCode=sketchCode.replace("size(500,500, P3D);", "size("+canvas.width+","+canvas.height+", P3D);noLoop();");
       var sketch = Processing.compile(sketchCode);
       instance = new Processing(canvas, sketch);
   };

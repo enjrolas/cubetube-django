@@ -28,27 +28,46 @@
   }
 
 global.runSketch = function(callback) {
-	  var output=$(".output");
-      try {
+	  var output=$("textarea.output");
+    try {
           canvas = createCanvas();
           var sketchCode=$(".code").val().concat(library);
+	var sketchLines=sketchCode.split('\n');
+	sketchCode="";
+	var setup=false, setupStarted=false;
+	for(var i=0;i<sketchLines.length;i++)
+	{
+	    sketchCode+=sketchLines[i]+'\n';
+	    if(!setup)
+		if(sketchLines[i].indexOf("setup()")!=-1)
+		    setup=true;
+	    if((setup)&&(!setupStarted))
+	       {
+		if(sketchLines[i].indexOf("{")!=-1)
+		   {
+		       setupStarted=true;
+		       sketchCode+="size(500,500,P3D);\nsmooth();\n";  //insert the boilerplate
+		   }
+	       }
+	}
       var sketch = Processing.compile(sketchCode);
         instance = new Processing(canvas, sketch);
     } catch (err) {
 	// for firefox / opera 
-	var linenumber = err.lineNumber; 
+	var linenumber = parseInt(err.lineNumber); 
 
 	// for webkit 
-	if (!linenumber) linenumber = err.line; 
+	if (!linenumber) linenumber = parseInt(err.line); 
 
 	if (linenumber) { 
-	    linenumber = "Processing.js error on line "+linenumber+".<br />"; 
+	    linenumber = "Processing.js error on line "+(linenumber-2); 
 	} else { 
 	    // for chrome 
 	    linenumber = ""; 
 	} 
+	$("textarea.output").val(err+"\n"+linenumber);
 	console.log(err);
-	output.val(linenumber + err); 
+	//output.val(linenumber + err); 
 	// so firebug can still catch it 
 	throw(err); 
     }
