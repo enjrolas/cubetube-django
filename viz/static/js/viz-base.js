@@ -168,7 +168,7 @@ function openTwitterPopup() {
                 ',top='    + top    +
                 ',left='   + left;
 
-        url = url + window.location.origin + '/gallery?viz=' + $('.viz-wrapper').attr('data-viz-id');
+        url = url + window.location.origin + '/gallery/newestFirst/' + $('.viz-wrapper').attr('data-viz-id');
         url = url + '&text=' + $('.title').text().trim() + ' on cubetube!'
    
    window.open(url, 'twitter', opts);
@@ -178,16 +178,21 @@ function openTwitterPopup() {
 
 function openFBPopup() {
 
-    var url = window.location.origin + '/gallery?viz=' + $('.viz-wrapper').attr('data-viz-id');
-    var title = $('.title').text().trim();
-    var descr = "Check out " + $('.title').text().trim() + " on cubetube!";
+    // var fbpopup = window.open("https://www.facebook.com/sharer/sharer.php?u=http://stackoverflow.com", "pop", "width=600, height=400, scrollbars=no");
+    // FB.ui({
+    //   method: 'share',
+    //   href: '/gallery/newestFirst/' + $('.viz-wrapper').attr('data-viz-id'),
+    // }, function(response){});
+    var url = window.location.origin + '/gallery/newestFirst/' + $('.viz-wrapper').attr('data-viz-id')
+    // var title = $('.title').text().trim();
+    // var descr = "Check out " + $('.title').text().trim() + " on cubetube!";
 
     var winWidth = $(window).width();
     var winHeight = $(window).height();
     var winTop = (screen.height / 2) - (winHeight / 2);
     var winLeft = (screen.width / 2) - (winWidth / 2);
 
-    window.open('http://www.facebook.com/sharer.php?s=100&p[title]=' + title + '&p[summary]=' + descr + '&p[url]=' + url, 'sharer', 'top=' + winTop + ',left=' + winLeft + ',toolbar=0,status=0,width=' + winWidth + ',height=' + winHeight);
+    window.open('http://www.facebook.com/sharer.php?u=' + url, 'pop', 'top=' + winTop + ',left=' + winLeft + ',toolbar=0,status=0,width=' + winWidth + ',height=' + winHeight);
 }
 
 function youtube_parser(url){
