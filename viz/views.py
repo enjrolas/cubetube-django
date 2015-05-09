@@ -242,9 +242,10 @@ def scroll(request, page, filter="newestFirst", cardsPerPage=8):
 def edit(request, id):
     try:
         viz=Viz.objects.get(pk=id)
+        source=SourceCode.objects.filter(viz=viz)
     except Viz.DoesNotExist:
         viz = None
-    return render(request, "viz/create.html", { "viz": viz} )
+    return render(request, "viz/create.html", { "viz": viz, "source": source} )
 
 @csrf_exempt
 def save(request):

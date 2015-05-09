@@ -114,6 +114,7 @@
         margin-bottom: 20px;
         height: 50px;
         font-size: 14px;
+        position: relative;
 
         div {
             font-family: 'Roboto';
@@ -426,5 +427,14 @@
 
 #cubeName {
     max-width: 165px;
+}
+
+.fb-share-button {
+    position: absolute !important;
+    top: 0px !important;
+    left: 0px !important;
+    width: 100% !important;
+    height: 100% !important;
+    opacity: 0 !important;
 }
 

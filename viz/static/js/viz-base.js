@@ -161,12 +161,15 @@ function openTwitterPopup() {
        height = 250,
        left   = (screen.width / 2)  - (width  / 2),
        top    = (screen.height / 2) - (height / 2),
-       url    = 'http://twitter.com/share',
+       url    = 'http://twitter.com/share?url=',
        opts   = 'status=1' +
                 ',width='  + width  +
                 ',height=' + height +
                 ',top='    + top    +
                 ',left='   + left;
+
+        url = url + window.location.origin + '/gallery?viz=' + $('.viz-wrapper').attr('data-viz-id');
+        url = url + '&text=' + $('.title').text().trim() + ' on cubetube!'
    
    window.open(url, 'twitter', opts);
 
@@ -175,9 +178,9 @@ function openTwitterPopup() {
 
 function openFBPopup() {
 
-    var url = "http://url.com";
-    var title = "title";
-    var descr = "desc";
+    var url = window.location.origin + '/gallery?viz=' + $('.viz-wrapper').attr('data-viz-id');
+    var title = $('.title').text().trim();
+    var descr = "Check out " + $('.title').text().trim() + " on cubetube!";
 
     var winWidth = $(window).width();
     var winHeight = $(window).height();

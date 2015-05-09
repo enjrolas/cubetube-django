@@ -294,7 +294,8 @@ button {
     margin-top: 20px;
     margin-bottom: 20px;
     height: 50px;
-    font-size: 14px; }
+    font-size: 14px;
+    position: relative; }
     .viz-wrapper .viz-share div {
       font-family: 'Roboto';
       letter-spacing: 1.1px;
@@ -518,6 +519,14 @@ button {
 #cubeName {
   max-width: 165px; }
 
+.fb-share-button {
+  position: absolute !important;
+  top: 0px !important;
+  left: 0px !important;
+  width: 100% !important;
+  height: 100% !important;
+  opacity: 0 !important; }
+
 /**
  * Cubetube SVG's
  * - Interactive
@@ -731,6 +740,7 @@ header {
     height: 150px; }
     .viz-card .viz-demo canvas {
       width: 100%;
+      height: 150px;
       border-radius: 3px 3px 0px 0px; }
   .viz-card .play-icon {
     position: absolute;

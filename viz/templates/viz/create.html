@@ -14,6 +14,8 @@
 {% load utils %}
 {% logged_in_status as logged_in %}
 
+{% if viz %}
+{% endif %}
 <div class="viz-wrapper create-wrapper">
 
   <div class="viz-nav">
@@ -34,25 +36,53 @@
   </div>
   <div class="viz-details">
     <div class="inner-wrapper">
-      <input class="viz-name" placeholder="Type an awesome name for your viz."></input>
-      <textarea class="description" placeholder="Describe whats going on here! Including instructions if the viz requires an interactive component."></textarea>
+      <input class="viz-name" placeholder="Type an awesome name for your viz." value="{% if viz %} {{ viz.name }}{% endif %}"></input>
+      <textarea class="description" placeholder="Describe whats going on here! Including instructions if the viz requires an interactive component.">{% if viz %} {{ viz.description }}{% endif %}</textarea>
       
       <div class="switch-option published">
         <div class="label">Published</div>
         <div class="switch-box">
-          <div class="switch-part switch-left on">Public</div>
-          <div class="switch-part switch-right off">Private</div>
+          {% if viz %} 
+            {% if viz.published %} 
+              <div class="switch-part switch-left on">Public</div>
+              <div class="switch-part switch-right off">Private</div>
+            {% else %}
+              <div class="switch-part switch-left off">Public</div>
+              <div class="switch-part switch-right on">Private</div>
+            {% endif %}  
+          {% else %}
+            <div class="switch-part switch-left on">Public</div>
+            <div class="switch-part switch-right off">Private</div>
+          {% endif %}
         </div>
       </div>
 
       <div class="switch-option interactive">
         <div class="label">Interactive</div>
         <div class="switch-box interactive">
-          <div class="switch-part switch-left on">No</div>
-          <div class="switch-part switch-right off">Yes</div>
+          {% if viz %} 
+            {% if viz.interactive %} 
+              <div class="switch-part switch-left off">No</div>
+              <div class="switch-part switch-right on">Yes</div>
+            {% else %}
+              <div class="switch-part switch-left off">Public</div>
+              <div class="switch-part switch-right on">Private</div>
+            {% endif %}  
+          {% else %}
+            <div class="switch-part switch-left on">No</div>
+            <div class="switch-part switch-right off">Yes</div>
+          {% endif %}
         </div>
       </div>
-      <input class="video-url hidden" placeholder="Interactive! Please add a youtube link here"/>
+      {% if viz %} 
+        {% if viz.interactive %} 
+          <input class="video-url" placeholder="Interactive! Please add a youtube link here" value="{{ viz.videoURL }}"/>
+        {% else %}
+          <input class="video-url hidden" placeholder="Interactive! Please add a youtube link here"/>
+        {% endif %}
+      {% else %}
+        <input class="video-url hidden" placeholder="Interactive! Please add a youtube link here"/>
+      {% endif %}
     </div>
   </div>
 
@@ -60,12 +90,22 @@
     <div class="viz-code-header">
       <a class="round-button button-red run-sketch">Update Demo</a>
       <div class="switch-box viz-type">
+        {% if viz %}
+          {% if viz.vizType == "javascript" %}
+            <div class="switch-part switch-left on">JS</div>
+            <div class="switch-part switch-right off">L3D</div>
+          {% else %}
+            <div class="switch-part switch-left off">JS</div>
+            <div class="switch-part switch-right on"?";">L3D</div>
+          {% endif %}  
+        {% else %}
         <div class="switch-part switch-left on">JS</div>
         <div class="switch-part switch-right off">L3D</div>
+        {% endif %}
       </div>
     </div>
     <div class="code-area">
-      <textarea rows="80" cols="120" id="code" class="code inout"></textarea>
+      <textarea rows="80" cols="120" id="code" class="code inout">{% if viz %}{{ source.code }}{% endif %}</textarea>
     </div>
     <textarea cols="120" rows="10" class="console output" readonly placeholder="Console output..."></textarea>
   </div>
