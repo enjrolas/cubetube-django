@@ -59,9 +59,11 @@ class Cube {
 	stroke(255);
 	strokeWeight(0.25);
 	box(size*scale);
-	if (!((streaming === undefined ) || ( streaming === null)))
+//	if (!((streaming === undefined ) || ( streaming === null)))
+	if(!(typeof streaming === 'undefined' ))
 	    {
-		streaming.bufferVoxels(r, g, b);
+		if(streaming!=null)
+		    streaming.bufferVoxels(r, g, b);
 	    }
 	
     }
