@@ -168,7 +168,7 @@ function openTwitterPopup() {
                 ',top='    + top    +
                 ',left='   + left;
 
-        url = url + window.location.origin + '/gallery/newestFirst/' + $('.viz-wrapper').attr('data-viz-id');
+        url = url + window.location.origin + '/gallery/newestFirst/' + $('.viz-wrapper').attr('data-viz-id') + '/';
         url = url + '&text=' + $('.title').text().trim() + ' on cubetube!'
    
    window.open(url, 'twitter', opts);
@@ -183,7 +183,7 @@ function openFBPopup() {
     //   method: 'share',
     //   href: '/gallery/newestFirst/' + $('.viz-wrapper').attr('data-viz-id'),
     // }, function(response){});
-    var url = window.location.origin + '/gallery/newestFirst/' + $('.viz-wrapper').attr('data-viz-id')
+    var url = window.location.origin + '/gallery/newestFirst/' + $('.viz-wrapper').attr('data-viz-id') + '/'
     // var title = $('.title').text().trim();
     // var descr = "Check out " + $('.title').text().trim() + " on cubetube!";
 
