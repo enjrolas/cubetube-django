@@ -11,6 +11,7 @@ class Viz(models.Model):
     views=models.IntegerField(default=0)
     vizType=models.TextField(default="L3D")
     videoURL=models.TextField(blank=True)
+    binaryPath=models.TextField(blank=True)
     interactive=models.BooleanField(default=False)
     published=models.BooleanField(default=False)
     pageViews=models.IntegerField(default=0)

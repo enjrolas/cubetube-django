@@ -1,4 +1,8 @@
 
+var library;
+$.get('/static/js/l3d-library.js', function(data) {
+    library=data;
+}, 'text');
 
 var editing = false;
 
@@ -6,6 +10,10 @@ $(function(){
 
     formatCode();
     setHeight();
+
+    if( $('.viz-wrapper').attr('viz-id') ) {
+        editing = true;
+    }
 
     // Switch states
     $('.switch-part').click(function() {

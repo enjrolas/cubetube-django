@@ -224,6 +224,7 @@ button {
   border-top: 118px solid #f9f9f9;
   height: 100%; }
   .viz-wrapper .round-button {
+    text-decoration: none;
     font-family: roboto;
     color: #fff;
     float: right;
@@ -294,7 +295,8 @@ button {
     margin-top: 20px;
     margin-bottom: 20px;
     height: 50px;
-    font-size: 14px; }
+    font-size: 14px;
+    position: relative; }
     .viz-wrapper .viz-share div {
       font-family: 'Roboto';
       letter-spacing: 1.1px;
@@ -440,17 +442,17 @@ button {
     color: #fff; }
 
 .create-wrapper {
-  width: 560px; }
+  width: 500px; }
   .create-wrapper .viz-nav,
   .create-wrapper .viz-demo,
   .create-wrapper .viz-demo canvas {
-    width: 560px; }
+    width: 500px; }
   .create-wrapper .viz-details {
     padding-bottom: 30px; }
   .create-wrapper .viz-code {
-    left: 560px; }
+    left: 500px; }
   .create-wrapper .inner-wrapper {
-    width: 480px; }
+    width: 450px; }
   .create-wrapper .viz-name,
   .create-wrapper .description,
   .create-wrapper .switch-option,
@@ -517,6 +519,14 @@ button {
 
 #cubeName {
   max-width: 165px; }
+
+.fb-share-button {
+  position: absolute !important;
+  top: 0px !important;
+  left: 0px !important;
+  width: 100% !important;
+  height: 100% !important;
+  opacity: 0 !important; }
 
 /**
  * Cubetube SVG's
@@ -731,6 +741,7 @@ header {
     height: 150px; }
     .viz-card .viz-demo canvas {
       width: 100%;
+      height: 150px;
       border-radius: 3px 3px 0px 0px; }
   .viz-card .play-icon {
     position: absolute;

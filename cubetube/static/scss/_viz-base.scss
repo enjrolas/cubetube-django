@@ -9,6 +9,7 @@
     height: 100%;
 
     .round-button {
+        text-decoration: none;
         font-family: roboto;
         color: #fff;
         float: right;
@@ -114,6 +115,7 @@
         margin-bottom: 20px;
         height: 50px;
         font-size: 14px;
+        position: relative;
 
         div {
             font-family: 'Roboto';
@@ -314,12 +316,12 @@
 }
 
 .create-wrapper {
-    width: 560px;
+    width: 500px;
 
     .viz-nav,
     .viz-demo,
     .viz-demo canvas {
-        width: 560px;
+        width: 500px;
     }
 
     .viz-details {
@@ -327,11 +329,11 @@
     }
 
     .viz-code {
-        left: 560px;
+        left: 500px;
     }
 
     .inner-wrapper {
-        width: 480px;
+        width: 450px;
     }
 
     .viz-name,
@@ -426,5 +428,14 @@
 
 #cubeName {
     max-width: 165px;
+}
+
+.fb-share-button {
+    position: absolute !important;
+    top: 0px !important;
+    left: 0px !important;
+    width: 100% !important;
+    height: 100% !important;
+    opacity: 0 !important;
 }
 
