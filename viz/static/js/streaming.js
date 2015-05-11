@@ -27,7 +27,8 @@ function Streaming(address) {
     this.rate = 1000;
     this.size = 8; // TODO support 16^3
     this.frameSize = 512;
-    var frameBuffer = new ArrayBuffer(512);
+    this.address=address;
+    this.frameBuffer = new ArrayBuffer(512);
 
     // open connection
     this.ws = new WebSocket(address);
@@ -40,12 +41,15 @@ function Streaming(address) {
         }
     };
 
+
     this.ws.onopen = function() {
+/*	
         if(streaming.onopen !== undefined) {
             this.onopen(this);
         }
-
-        this.refresh();
+*/
+	console.log("refreshing");
+        refresh();
     };
 
     this.ws.onmessage = function(evt) {
@@ -62,28 +66,30 @@ function Streaming(address) {
 Streaming.prototype.onopen= function() {}
 Streaming.prototype.onclose= function() {}
 Streaming.prototype.onrefresh= function() {}	
-Streaming.prototype.refresh= function() {
+Streaming.prototype.refresh=function() {
     //    var cube = this;
     
     if(this.clearToSend && this.ws.bufferedAmount == 0) {
 	if(this.onrefresh !== undefined) {
 	    this.onrefresh(this);
 	}
-	//	console.log("sent frame "+frame);
-	console.log(this.frameBuffer);
+	console.log("sent frame "+frame);
 	this.ws.send(this.frameBuffer);
 	this.clearToSend = false; // must get reply before sending again
 	
-	setTimeout(function() { cube.refresh(); }, cube.rate);
+	setTimeout(function() { refresh(); }, cube.rate);
     } else {
 	// check for readiness every 5 millis
-	setTimeout(function() { cube.refresh(); }, 5);
+	setTimeout(function() { refresh(); }, 5);
     }
 }
 
+
 Streaming.prototype.bufferVoxels = function(red, green, blue)
 {
-    var frameView = new Uint8Array(this.frameBuffer);
+//    console.log("buffering voxels");
+//    console.log("frameBuffer: ");
+//    console.log(this.frameBuffer);
     for(var x=0;x<8;x++)
 	for(var y=0;y<8;y++)
 	    for(var z=0;z<8;z++)

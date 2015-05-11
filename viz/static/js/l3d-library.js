@@ -63,7 +63,10 @@ class Cube {
 	if(!(typeof streaming === 'undefined' ))
 	    {
 		if(streaming!=null)
+		{
+		 //   console.log(streaming);
 		    streaming.bufferVoxels(r, g, b);
+		}
 	    }
 	
     }

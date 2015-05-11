@@ -103,6 +103,19 @@ def compile(request):
     return JsonResponse(response)
 
 def jsgallery(request, filter="newestFirst", featuredViz=None):
+    accessToken=request.COOKIES.get('accessToken') 
+    try:
+        user=CubeUser.objects.filter(accessToken=accessToken).get()
+    except CubeUser.DoesNotExist:
+        user = None
+    if user:
+        userVizs=Viz.objects.filter(creator=user)
+        privateVizs=userVizs.filter(published=False)
+        publicVizs=userVizs.filter(published=True)
+    else:
+        privateVizs=None
+        publicVizs=None
+
     if(filter=='newestFirst'):
         vizs=Viz.objects.all().order_by("-created").exclude(published=False)    
     else:
@@ -118,7 +131,7 @@ def jsgallery(request, filter="newestFirst", featuredViz=None):
         visualizations=vizs[:totalObjects]
     else:
         visualizations=vizs[:8]
-    return render(request, "viz/jsgallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'totalObjects' : totalObjects, 'filter': filter, 'featuredViz' : featured})
+    return render(request, "viz/jsgallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'totalObjects' : totalObjects, 'filter': filter, 'featuredViz' : featured, 'privateVizs': privateVizs, 'publicVizs':publicVizs})
 
 def index(request):
     vizs=Viz.objects.all().order_by("-created").exclude(published=False)

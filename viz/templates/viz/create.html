@@ -20,15 +20,13 @@
 
   <div class="viz-nav">
     <div class="nav-info"></div>
-    <a class="round-button button-red save-code">{% if viz %}Update Viz {% else %}Save Viz{% endif %}</a>
-
-
-
+    <a class="round-button button-red save-code">Save</a>
     <div class="cube-options">
       <a class="round-button button-grey sent-to-cube">Send to Cube</a>
       <div class="round-button button-grey select-cube">
-        Select Cube
-        <img src="/static/images/down-arrow.png" />
+	  <select id="cubeName"></select>
+<!--        Select Cube
+        <img src="/static/images/down-arrow.png" /> -->
       </div>
     </div>
 
