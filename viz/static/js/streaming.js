@@ -33,69 +33,69 @@ function Streaming(address) {
     // open connection
     this.ws = new WebSocket(address);
     console.log("Connecting!");
-    //    var cube = this;
+    var cube = this;
 
     this.ws.onclose = function() {
-        if(this.onclose !== undefined) {
-            this.onclose(this);
+        if(cube.onclose !== undefined) {
+            cube.onclose(streaming);
         }
     };
 
 
     this.ws.onopen = function() {
-/*	
-        if(streaming.onopen !== undefined) {
-            this.onopen(this);
+	console.log("opened websocket");
+        if(cube.onopen !== undefined) {
+            cube.onopen(cube);
         }
-*/
 	console.log("refreshing");
-        refresh();
+        cube.refresh();
     };
 
     this.ws.onmessage = function(evt) {
         var msg = evt.data;
         console.log("got msg: " + msg);
 
-        if(parseInt(msg) == this.frameSize) {
-            this.clearToSend = true;
+        if(parseInt(msg) == cube.frameSize) {
+            cube.clearToSend = true;
 	    console.log("clear to send");
         }
     };
 }
 
-Streaming.prototype.onopen= function() {}
-Streaming.prototype.onclose= function() {}
-Streaming.prototype.onrefresh= function() {}	
-Streaming.prototype.refresh=function() {
-    //    var cube = this;
+Streaming.prototype={
+    onopen: function() {},
+    onclose: function() {},
+    onrefresh: function() {},
+    refresh: function() {
+	var cube = this;
     
     if(this.clearToSend && this.ws.bufferedAmount == 0) {
 	if(this.onrefresh !== undefined) {
 	    this.onrefresh(this);
 	}
 	console.log("sent frame "+frame);
+	console.log(this.frameBuffer);
 	this.ws.send(this.frameBuffer);
 	this.clearToSend = false; // must get reply before sending again
 	
-	setTimeout(function() { refresh(); }, cube.rate);
+	setTimeout(function() { cube.refresh(); }, cube.rate);
     } else {
 	// check for readiness every 5 millis
-	setTimeout(function() { refresh(); }, 5);
+	setTimeout(function() { cube.refresh(); }, 5);
     }
-}
-
-
-Streaming.prototype.bufferVoxels = function(red, green, blue)
-{
-//    console.log("buffering voxels");
-//    console.log("frameBuffer: ");
-//    console.log(this.frameBuffer);
+    },
+    bufferVoxels: function(red, green, blue){
     for(var x=0;x<8;x++)
 	for(var y=0;y<8;y++)
 	    for(var z=0;z<8;z++)
-		this.frameBuffer[z*64+y*8+x]=(((red[x][y][z] >> 5) << 5) | ((green[x][y][z] >> 5) << 2) | (blue[x][y][z] >> 6)); 
+	{
+//	    console.log(red[x][y][z]);
+	    this.frameBuffer[z*64+y*8+x]=((red[x][y][z] >> 5) << 5) | ((green[x][y][z] >> 5) << 2) | (blue[x][y][z] >> 6); 
+	}
+	
     frame++;
 
+}
 }
 
 

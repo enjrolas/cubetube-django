@@ -59,7 +59,6 @@ class Cube {
 	stroke(255);
 	strokeWeight(0.25);
 	box(size*scale);
-//	if (!((streaming === undefined ) || ( streaming === null)))
 	if(!(typeof streaming === 'undefined' ))
 	    {
 		if(streaming!=null)
