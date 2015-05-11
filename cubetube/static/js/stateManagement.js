@@ -25,7 +25,7 @@ function listCubes() {
     devicesPr.then(
 
         function(devices){
-            
+	    $("#cubeName").empty();//clear the list
             console.log('Devices: ', devices);
             for( var i = 0; i < devices.length; i++ ) {
         

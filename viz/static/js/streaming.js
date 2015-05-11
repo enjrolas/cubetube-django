@@ -28,7 +28,7 @@ function Streaming(address) {
     this.size = 8; // TODO support 16^3
     this.frameSize = 512;
     this.address=address;
-    this.frameBuffer = new ArrayBuffer(512);
+    this.frameBuffer = new ArrayBuffer(this.frameSize);
 
     // open connection
     this.ws = new WebSocket(address);
@@ -74,8 +74,12 @@ Streaming.prototype={
 	    this.onrefresh(this);
 	}
 	console.log("sent frame "+frame);
-	console.log(this.frameBuffer);
-	this.ws.send(this.frameBuffer);
+//	console.log(this.frameBuffer);
+	var dummy = new ArrayBuffer(this.frameSize);
+	for(var a=0;a<this.frameSize;a++)
+	    dummy[a]=224;
+	this.frameBuffer = new ArrayBuffer(dummy);
+//	this.ws.send(this.frameBuffer);
 	this.clearToSend = false; // must get reply before sending again
 	
 	setTimeout(function() { cube.refresh(); }, cube.rate);
