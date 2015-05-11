@@ -4,7 +4,7 @@ var streaming = null;
 var frame=0;
 var r, g, b;
 var port = 2525;
-
+var publicMessage=null;
 function getLocalIP(accessToken, coreID)
 {
     url="https://api.spark.io/v1/devices/"+coreID+"/ip?access_token="+accessToken;
@@ -51,12 +51,26 @@ function Streaming(address) {
         cube.refresh();
     };
 
+
+/*
     this.ws.onmessage = function(evt) {
         var msg = evt.data;
         console.log("got msg: " + msg);
 
         if(parseInt(msg) == cube.frameSize) {
             cube.clearToSend = true;
+            }
+	    };
+*/
+
+    this.ws.onmessage = function(evt) {
+        var msg = evt.data;
+	publicMessage=msg;
+        console.log("got msg: " + msg);
+	console.log(streaming.frameSize);
+	console.log(parseInt(msg));
+        if(parseInt(msg) == streaming.frameSize) {
+            streaming.clearToSend = true;
 	    console.log("clear to send");
         }
     };
@@ -73,14 +87,17 @@ Streaming.prototype={
 	if(this.onrefresh !== undefined) {
 	    this.onrefresh(this);
 	}
+	frame++;
 	console.log("sent frame "+frame);
 //	console.log(this.frameBuffer);
+/*
 	var dummy = new ArrayBuffer(this.frameSize);
 	for(var a=0;a<this.frameSize;a++)
 	    dummy[a]=224;
-	this.frameBuffer = new ArrayBuffer(dummy);
-//	this.ws.send(this.frameBuffer);
-	this.clearToSend = false; // must get reply before sending again
+	this.frameBuffer = new ArrayBuffer(this.frameSize);
+*/
+	streaming.ws.send(streaming.frameBuffer);
+	streaming.clearToSend = false; // must get reply before sending again
 	
 	setTimeout(function() { cube.refresh(); }, cube.rate);
     } else {
@@ -89,15 +106,14 @@ Streaming.prototype={
     }
     },
     bufferVoxels: function(red, green, blue){
+	var frameView = new Uint8Array(streaming.frameBuffer);
     for(var x=0;x<8;x++)
 	for(var y=0;y<8;y++)
 	    for(var z=0;z<8;z++)
 	{
-//	    console.log(red[x][y][z]);
-	    this.frameBuffer[z*64+y*8+x]=((red[x][y][z] >> 5) << 5) | ((green[x][y][z] >> 5) << 2) | (blue[x][y][z] >> 6); 
+	    frameView[z*64+y*8+x]=((red[x][y][z] >> 5) << 5) | ((green[x][y][z] >> 5) << 2) | (blue[x][y][z] >> 6); 
 	}
 	
-    frame++;
 
 }
 }

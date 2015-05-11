@@ -36,8 +36,9 @@ global.runSketch = function(callback) {
 	sketchCode="";
 	var setup=false, setupStarted=false;
 	for(var i=0;i<sketchLines.length;i++)
-	{
-	    sketchCode+=sketchLines[i]+'\n';
+	{	
+	    if(sketchLines[i].indexOf("size(500,500, P3D);")==-1)  //stray size() arguments break the viz
+		sketchCode+=sketchLines[i]+'\n';
 	    if(!setup)
 		if(sketchLines[i].indexOf("setup()")!=-1)
 		    setup=true;
