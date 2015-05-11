@@ -29,6 +29,18 @@
 
 {% block content %}
 <div class="viz-cards in-gallery" data-viz="{% if featuredViz %}{{ featuredViz.pk }}{% endif %}">
+
+    {% if privateVizs %}
+        <h3 class="viz-title privated">Private</h3>
+        {% for viz in privateVizs %}
+            {% jscard viz %}
+        {% endfor %}
+    {% endif %}
+
+    {% if privateVizs %}
+        <h3 class="viz-title publiced">Public</h3>
+    {% endif %}
+
     {% for viz in visualizations %}
         {% jscard viz %}
     {% endfor %}

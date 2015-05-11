@@ -3,6 +3,16 @@
  * -- Used to represent cards in the grid view
  */
 
+.viz-title{
+    &.privated {
+        margin-top: -15px;
+    }
+
+    &.publiced {
+        margin-bottom: 30px;
+    }
+}
+
 .viz-cards {
     padding-top: 40px;
     text-align: center;
