@@ -54,5 +54,15 @@
         </div>
     </div>
 </header>
+<script>
+window.onresize = function() {
+    setHeaderHeight();
+}
+
+function setHeaderHeight() {
+    $('header').height( Math.max(window.innerHeight, 500) );
+}
+setHeaderHeight();
+</script>
 {% endif %}
 

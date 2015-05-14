@@ -13,14 +13,6 @@ $('.create').click(function(e) {
     openCreate();
 })
 
-window.onresize = function() {
-    setHeaderHeight();
-}
-
-function setHeaderHeight() {
-    $('header').height( Math.max(window.innerHeight, 500) );
-}
-
 function bindGlass() {
     $glass.click(function() {
         closeViz();

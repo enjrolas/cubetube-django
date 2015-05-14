@@ -12,9 +12,11 @@
     z-index: 2;
     background: rgba(0,0,0,0.8);
     cursor: pointer;
+    @include animation(0, 200ms, fadein);
 }
 
 .login-signup-popover {
+    @include animation(0, 200ms, fadeAndMove);
     display: none;
     z-index: 15;
     position: fixed;

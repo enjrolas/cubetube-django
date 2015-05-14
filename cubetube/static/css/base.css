@@ -99,6 +99,70 @@ button {
   .button:active {
     background: #05b3ee; }
 
+@-webkit-keyframes fadein {
+  0% {
+    opacity: 0; }
+
+  100% {
+    opacity: 1; } }
+
+@-moz-keyframes fadein {
+  0% {
+    opacity: 0; }
+
+  100% {
+    opacity: 1; } }
+
+@-ms-keyframes fadein {
+  0% {
+    opacity: 0; }
+
+  100% {
+    opacity: 1; } }
+
+@keyframes fadein {
+  0% {
+    opacity: 0; }
+
+  100% {
+    opacity: 1; } }
+
+@-webkit-keyframes fadeAndMove {
+  0% {
+    opacity: 0;
+    margin-top: -40px; }
+
+  100% {
+    opacity: 1;
+    margin-top: 0px; } }
+
+@-moz-keyframes fadeAndMove {
+  0% {
+    opacity: 0;
+    margin-top: -40px; }
+
+  100% {
+    opacity: 1;
+    margin-top: 0px; } }
+
+@-ms-keyframes fadeAndMove {
+  0% {
+    opacity: 0;
+    margin-top: -40px; }
+
+  100% {
+    opacity: 1;
+    margin-top: 0px; } }
+
+@keyframes fadeAndMove {
+  0% {
+    opacity: 0;
+    margin-top: -40px; }
+
+  100% {
+    opacity: 1;
+    margin-top: 0px; } }
+
 /**
  * - Popover appeared. Stop all scrolling. 
  */
@@ -111,9 +175,33 @@ button {
   height: 100%;
   z-index: 2;
   background: rgba(0, 0, 0, 0.8);
-  cursor: pointer; }
+  cursor: pointer;
+  -webkit-animation-delay: 0;
+  -webkit-animation-duration: 200ms;
+  -webkit-animation-name: fadein;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-delay: 0;
+  -moz-animation-duration: 200ms;
+  -moz-animation-name: fadein;
+  -moz-animation-fill-mode: forwards;
+  animation-delay: 0;
+  animation-duration: 200ms;
+  animation-name: fadein;
+  animation-fill-mode: forwards; }
 
 .login-signup-popover {
+  -webkit-animation-delay: 0;
+  -webkit-animation-duration: 200ms;
+  -webkit-animation-name: fadeAndMove;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-delay: 0;
+  -moz-animation-duration: 200ms;
+  -moz-animation-name: fadeAndMove;
+  -moz-animation-fill-mode: forwards;
+  animation-delay: 0;
+  animation-duration: 200ms;
+  animation-name: fadeAndMove;
+  animation-fill-mode: forwards;
   display: none;
   z-index: 15;
   position: fixed;

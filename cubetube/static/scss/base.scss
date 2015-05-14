@@ -25,6 +25,38 @@ $red: #EE0026;
     transition: $values;
 }
 
+@mixin keyframes($name) {
+    @-webkit-keyframes #{$name} {
+        @content; 
+    }
+    @-moz-keyframes #{$name} {
+        @content;
+    }
+    @-ms-keyframes #{$name} {
+        @content;
+    }
+    @keyframes #{$name} {
+        @content;
+    } 
+}
+
+@mixin animation($delay, $duration, $animation) {
+    -webkit-animation-delay: $delay;
+    -webkit-animation-duration: $duration;
+    -webkit-animation-name: $animation;
+    -webkit-animation-fill-mode: forwards;
+ 
+    -moz-animation-delay: $delay;
+    -moz-animation-duration: $duration;
+    -moz-animation-name: $animation;
+    -moz-animation-fill-mode: forwards;
+ 
+    animation-delay: $delay;
+    animation-duration: $duration;
+    animation-name: $animation;
+    animation-fill-mode: forwards;
+}
+
 /**
  * Resets
  */
@@ -141,6 +173,28 @@ button {
 
     &:active {
         background: darken($blue, 10%);
+    }
+}
+
+@include keyframes(fadein) {
+    0% {
+        opacity: 0;
+    }
+ 
+    100% {
+        opacity: 1;
+    }
+}
+
+@include keyframes(fadeAndMove) {
+    0% {
+        opacity: 0;
+        margin-top: -40px;
+    }
+ 
+    100% {
+        opacity: 1;
+        margin-top: 0px;
     }
 }
 
