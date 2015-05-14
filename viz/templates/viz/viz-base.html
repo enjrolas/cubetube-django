@@ -26,7 +26,13 @@
         <script src="{% static 'codeMirror/addon/selection/active-line.js'%}"></script>
         <script src="{% static 'codeMirror/addon/edit/matchbrackets.js'%}"></script>
 
+
 	<!-- Streaming -->
+	<script type="text/javascript">
+	  //define some URLS and other global variables for JS functions
+	  var flashWebsocketsUrl="{{ FLASH_WEBSOCKETS_LISTENER }}";
+	</script>
+
 	<script type="text/javascript" src="{% static 'js/streaming.js' %}"></script>
 
 	

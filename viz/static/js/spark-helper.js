@@ -2,9 +2,6 @@ var sparkCode;
 var translatedCode="";
 var canvasControl="";
 
-//background(0);\ntranslate(width/2, height/2);\nrotateY(mouseX/50);\nrotateX(mouseY/50);
-//we don't need this, now that I moved it to the library draw() function
-
 var translation={};
 translation["loop()"]="draw()";
 translation["cube.show()"]="cube.draw()";
@@ -103,7 +100,7 @@ function translateCode( data ) {
         if(flagList["setup()"]==1) {
             if(line.indexOf("{")>=0) {
                 parts=line.split("{");
-                line=parts[0]+"{"+cubeObjectName+"=new Cube(this);"+"size(500,500, P3D);"+"smooth()"+parts[1];
+                line=parts[0]+"{"+cubeObjectName+"=new Cube(this);"+"\nsize(500,500, P3D);\n"+"smooth();\n"+parts[1];
                 jsCode[i]=line;
                 flagList["setup()"]=0;
             }    

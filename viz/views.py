@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.utils.html import escape
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
+from django.http import Http404  
 import logging
 import datetime
 import subprocess
@@ -33,16 +34,42 @@ def gallery(request, filter="newestFirst"):
 @csrf_exempt
 def compile(request):
     code=request.POST['code']
-    code=settings.SPARK_LIBRARY+code
+    vizName=request.POST['vizName']
+    vizId=request.POST['vizId']
+    if vizId==None:
+        vizId=-1
+    else:
+        vizId=int(vizId)
+    log.debug(vizName);
+    if vizName==None:
+        vizName="undefined"
 
-    '''
+    code="%s\nchar* vizName=\"%s\";\nint vizId=%d;\n%s" % (settings.SPARK_LIBRARY, vizName, vizId, code)
+
+
+    lines=code.split('\n')
+    i=0
+    code=""
+    setupStarted=False
+    codeInserted=False
+    for line in lines:
+        if not codeInserted:
+            if not setupStarted:
+                if line.find("setup()")!=-1:
+                    setupStarted=True
+            if line.find("}")!=-1:
+                log.debug("inserting code")
+                code="%s\n%s" % (code,  "Spark.variable(\"vizName\", vizName, STRING);\nSpark.variable(\"vizId\", &vizId, INT);")                
+                codeInserted=True
+        code="%s\n%s" % (code, line)
+        i+=1
+
     lines=code.split('\n')
     i=0
     for line in lines:
         log.debug("%d:  %s" % ( i, line))
         i+=1
 
-        '''
     timestamp=datetime.datetime.now().strftime('%Y-%m-%d--%H.%M.%S')
     filename=timestamp+".cpp"
     media_root="/home/tim/cubetube/media/"
@@ -143,9 +170,11 @@ def index(request):
     return render(request, "viz/index.html", { 'visualizations' : visualizations, 'totalObjects' : totalObjects})
 
 @csrf_exempt
-def fork(request):
-    accessToken=request.POST['accessToken']
-    vizId=request.POST['vizId']
+def fork(request, vizId=None):
+    accessToken = request.COOKIES['accessToken']
+    log.debug("access token: %s" % accessToken)
+    vizId=int(vizId)
+    log.debug("viz ID: %d" % vizId)
     try:
         user=CubeUser.objects.filter(accessToken=accessToken).get()
     except CubeUser.DoesNotExist:
@@ -154,7 +183,6 @@ def fork(request):
         viz=Viz.objects.get(pk=vizId)
         forked=Viz()
         forked.name=viz.name
-        forked.tagline=viz.tagline
         forked.description=viz.description
         forked.vizType=viz.vizType;
         forked.creator=user
@@ -167,7 +195,9 @@ def fork(request):
             newCode.code=code.code
             newCode.save()
 
-        return HttpResponse('{"id":%d}'%forked.pk, content_type="application/json")
+        return redirect('edit', id=forked.pk)
+    else:
+        raise Http404 
 
 def viz(request, id):
     currentViz=Viz.objects.get(pk=id)
@@ -383,3 +413,32 @@ def upload(request):
                         "accessToken": accessToken,
                         "authenticated":authenticate(nickname, accessToken)})
 
+@csrf_exempt
+def flashWebsocketsListener(request):
+    binaryPath= settings.WEBSOCKETS_LISTENER
+    flash_output=[]
+    flash_error=[]
+
+    accessToken=request.COOKIES.get('accessToken')
+    coreID=request.POST['coreID']        
+    p = subprocess.Popen(['node', '%s/viz/utils/flash.js' % settings.PROJECT_ROOT ,accessToken, coreID, binaryPath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    for line in p.stdout.readlines():
+        print line,
+        line.replace('"','\\"')
+        line.replace("'","\\'")
+        flash_output.append(line)
+        
+    for line in p.stderr.readlines():
+        print line,
+        line.replace('"','\\"')
+        line.replace("'","\\'")
+        flash_error.append(line)
+        
+    compilation_status="ok"
+    retval = p.wait()
+    response={ "compilation_status": compilation_status , 
+               "output" : output , 
+               "error" : error , 
+               "flash_output" : flash_output , 
+               "flash_error" : flash_error}
+    return JsonResponse(response)

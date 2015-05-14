@@ -13,13 +13,37 @@ function getLocalIP(accessToken, coreID)
 	    console.log(localIP);
 	    streaming=new Streaming("ws://" + localIP + ":" + port);
 	    streaming.rate=5;
-	});
+	});    
+}
+
+function checkForListener(coreID)
+{
+    url="https://api.spark.io/v1/devices/"+coreID+"/vizName?access_token="+accessToken;
+    $.ajax({
+	url: url,
+	success: function(data){
+	    vizName=data['result'];
+	    if(vizName=="websocketsListener")		
+		getLocalIP(accessToken, coreID);   //great!  commence the streaming!
+	    else
+		alert("your cube needs to run the listener.  Hang on for about 20 seconds while we load it onto your cube, and try again when the light on the bottom of your core
+turns cyan");
+		flashWebsocketsListener();  //load the websockets listener
+	},
+	error: function(){
+	}
+	timeout: 1000
+    });
     
+}
+
+function flashWebsocketsListener()
+{
 }
 
 function stream()
 {
-    getLocalIP(accessToken, coreID);
+    checkForListener(coreID);  
 }
 
 function Streaming(address) {

@@ -3,13 +3,22 @@
  * - Viz page cube management
  */
 
+var isActive = true;
+
+window.onfocus = function () {
+    isActive = true;
+};
+window.onblur = function () {
+    isActive = false;
+};
+
 $(function(){
 	checkCookie();
 	// If user is logged in, check for cubes via spark.
 		$cubeOptions = $( '.cube-options' );
 	if( $cubeOptions.length ) {
 	    listCubes();
-	    setInterval('listCubes()', 15000);  //update the list of cubes every 15 seconds
+		setInterval('listCubes()', 15000);  //update the list of cubes every 15 seconds
 	    }
 	else
 	    console.log("no cube options");
@@ -26,7 +35,7 @@ function listCubes() {
 
         function(devices){
 	    $("#cubeName").empty();//clear the list
-            console.log('Devices: ', devices);
+//            console.log('Devices: ', devices);
             for( var i = 0; i < devices.length; i++ ) {
         
                 var device = devices[i];
@@ -38,7 +47,7 @@ function listCubes() {
                          console.log(deviceID);
                     }
 
-                     console.log(device.name+" is connected");
+//                     console.log(device.name+" is connected");
                      $("#cubeName").append($("<option></option>").val(device.id).html(device.name));  //append the cube name and ID to thr dropdown list
 
                     if(device.name == coreID) {
@@ -63,7 +72,7 @@ function listCubes() {
             }
         },
         function(err) {
-             console.log('List devices call failed: ', err);
+//             console.log('List devices call failed: ', err);
         }
     );
 }

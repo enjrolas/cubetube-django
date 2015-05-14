@@ -43,7 +43,7 @@ $.ajax({
 		if(sketchLines[i].indexOf("{")!=-1)
 		   {
 		       setupStarted=true;
-		       sketchCode+="size("+canvas.width+","+canvas.height+",P3D);\nsmooth();noLoop();\n";  //insert the boilerplate
+		       sketchCode+="\nsize("+canvas.width+","+canvas.height+",P3D);\nsmooth();\nnoLoop();\n";  //insert the boilerplate
 		   }
 	       }
 	}
@@ -56,9 +56,9 @@ $.ajax({
       console.log("running L3D sketch id#"+canvas.id);
       var translatedCode=translateCode(sketchCode);
       var sketchCode=translatedCode.concat(mouseListener).concat(library);
-      sketchCode=sketchCode.replace("size(500,500, P3D);", "size("+canvas.width+","+canvas.height+", P3D);noLoop();");
-      if(canvas.id==="26")
-      console.log(sketchCode);
+      sketchCode=sketchCode.replace("size(500,500, P3D);", "\nsize("+canvas.width+","+canvas.height+", P3D);\nnoLoop();");
+      console.log(canvas.width+":  "+canvas.height);
+      
 
     var sketch = Processing.compile(sketchCode);
     instance = new Processing(canvas, sketch);

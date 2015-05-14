@@ -14,7 +14,7 @@ function flashCube(){
 var request=$.ajax({
 type:"POST",
 url:"{% url 'compile'%}", 
-data: {"code": $(".code").val(), "accessToken":accessToken, "coreID":$("#cubeName").val()},
+data: {"code": $(".code").val(), "accessToken":accessToken, "coreID":$("#cubeName").val(), "vizName": "{{ viz.name }}", "vizId":"{{ viz.pk }}" },
 dataType:"text",
 success: function(data){ 
 data = $.parseJSON(data);
@@ -151,7 +151,7 @@ console.log(data);}
         {% if viz.creator.nickname == request.COOKIES.nickname %}
           <a class="round-button button-transparent edit-sketch" href="/edit/{{viz.pk}}">Edit Sketch</a>
         {% else %}
-          <!-- <a class="round-button button-transparent fork-sketch">Fork Sketch</a> -->
+          <a class="round-button button-transparent fork-sketch" href="/fork/{{ viz.pk }}/">Fork Sketch</a>
         {% endif %}
 
       {% else %}

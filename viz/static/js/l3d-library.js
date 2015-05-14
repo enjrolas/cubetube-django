@@ -20,7 +20,7 @@ class Cube {
 	frameSize=512;
 	this.frameBuffer= new ArrayBuffer(frameSize);
 	scale=height/size/2;
-	//	println("height: "+height+"  width: "+width+"  size: "+size+"  scale: "+scale);
+	//println("height: "+height+"  width: "+width+"  size: "+size+"  scale: "+scale);
 	voxels=new color[size][size][size];
 	r=new int[size][size][size];
         g=new int[size][size][size];
