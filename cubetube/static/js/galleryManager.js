@@ -8,6 +8,19 @@ var createTemplate = '<iframe class="create-template"></iframe>';
 var $body = $(document.body);
 var $glass = $('.glass');
 
+$('.create').click(function(e) {
+    e.preventDefault();
+    openCreate();
+})
+
+window.onresize = function() {
+    setHeaderHeight();
+}
+
+function setHeaderHeight() {
+    $('header').height( Math.max(window.innerHeight, 500) );
+}
+
 function bindGlass() {
     $glass.click(function() {
         closeViz();
@@ -36,11 +49,6 @@ function bindCards() {
         var $this = $(e.currentTarget);
         openViz( $this.attr('href') );
     });
-
-    $('.create').click(function(e) {
-        e.preventDefault();
-        openCreate();
-    })
 }
 
 function openViz( url ) {
