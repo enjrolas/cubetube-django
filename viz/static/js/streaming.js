@@ -26,19 +26,24 @@ function checkForListener(coreID)
 	    if(vizName=="websocketsListener")		
 		getLocalIP(accessToken, coreID);   //great!  commence the streaming!
 	    else
-		alert("your cube needs to run the listener.  Hang on for about 20 seconds while we load it onto your cube, and try again when the light on the bottom of your core
-turns cyan");
+	    {
 		flashWebsocketsListener();  //load the websockets listener
+	    }
 	},
 	error: function(){
-	}
-	timeout: 1000
+	    flashWebsocketsListener();
+	},
+	timeout: 1000,
     });
     
 }
 
 function flashWebsocketsListener()
 {
+    alert("your cube needs to run the listener.  Take a dance break for 20 seconds while we load it onto your cube, and try again when the light on the bottom of your core turns cyan");
+    coreUrl=flashWebsocketsUrl.replace("coreId", coreID);
+    console.log(coreUrl);
+    $.get(coreUrl);
 }
 
 function stream()

@@ -5,6 +5,7 @@ var canvasControl="";
 var translation={};
 translation["loop()"]="draw()";
 translation["cube.show()"]="cube.draw()";
+translation["=Point("]="=new PVector(";
 translation["Point"]="PVector";
 translation["black)"]= "color(0x00, 0x00, 0x00))";
 translation["grey)"]= "color(0x92, 0x95, 0x91))";

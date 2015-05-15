@@ -173,7 +173,7 @@ function getData() {
 
     var vizType = getEditVizType();
     if( vizType === 'JS') {
-        vizType = 'Javascript';
+        vizType = 'javascript';
     } else {
         vizType = 'L3D'
     }
