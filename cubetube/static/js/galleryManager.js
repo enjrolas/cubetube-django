@@ -86,7 +86,6 @@ function closeCreate() {
 if( $cards.length ) {
     bindCards();
     bindListener();
-    bindGlass();   
 
     var cards = $('.viz-cards');
     if( cards.length )  {
