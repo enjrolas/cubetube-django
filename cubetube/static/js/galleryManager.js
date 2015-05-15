@@ -8,12 +8,15 @@ var createTemplate = '<iframe class="create-template"></iframe>';
 var $body = $(document.body);
 var $glass = $('.glass');
 
-function bindGlass() {
-    $glass.click(function() {
-        closeViz();
-        closeCreate();
-    })
-}
+$('.create').click(function(e) {
+    e.preventDefault();
+    openCreate();
+})
+
+$('.glass').click(function() {
+    closeViz();
+    closeCreate();
+});
 
 function bindListener() {
     window.addEventListener("message", receiveMessage, false);
@@ -36,11 +39,6 @@ function bindCards() {
         var $this = $(e.currentTarget);
         openViz( $this.attr('href') );
     });
-
-    $('.create').click(function(e) {
-        e.preventDefault();
-        openCreate();
-    })
 }
 
 function openViz( url ) {

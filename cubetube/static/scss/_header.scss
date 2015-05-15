@@ -127,16 +127,19 @@ header {
     position: relative;
     width: 100%;
     height: 800px;
-    background: #f9f9f9;
-    background: url(../images/header.jpg);
-    background-size: cover;
+    background: url(../images/cube.jpg);
     background-repeat: no-repeat;
-    background-position: 50% 50%;
+    background-position: 75% 50%;
+    background-size: auto 90%;
+    background-color: #150A18;
 
     .main-text {
         float: left;
         text-align: left;
-        height: 100%;
+        height: 330px;
+        position: absolute;
+        margin-top: -170px;
+        top: 50%;
         
         h1 {
             font-family: "soleil";
@@ -145,7 +148,6 @@ header {
             font-weight: 800;
             font-size: 83px;
             line-height: 83px;
-            margin-top: 220px;
             margin-bottom: 0px;
         }
 
