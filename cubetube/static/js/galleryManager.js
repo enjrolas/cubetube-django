@@ -13,12 +13,10 @@ $('.create').click(function(e) {
     openCreate();
 })
 
-function bindGlass() {
-    $glass.click(function() {
-        closeViz();
-        closeCreate();
-    })
-}
+$('.glass').click(function() {
+    closeViz();
+    closeCreate();
+});
 
 function bindListener() {
     window.addEventListener("message", receiveMessage, false);
