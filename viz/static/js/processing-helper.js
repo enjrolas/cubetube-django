@@ -54,6 +54,7 @@ global.runSketch = function(callback) {
       var sketch = Processing.compile(sketchCode);
         instance = new Processing(canvas, sketch);
     } catch (err) {
+/*
 	// for firefox / opera 
 	var linenumber = parseInt(err.lineNumber); 
 
@@ -66,7 +67,8 @@ global.runSketch = function(callback) {
 	    // for chrome 
 	    linenumber = ""; 
 	} 
-	$("textarea.output").val(err+"\n"+linenumber);
+*/
+	$("textarea.output").val(err);//+"\n"+linenumber);
 	console.log(err);
 	//output.val(linenumber + err); 
 	// so firebug can still catch it 
@@ -79,7 +81,7 @@ global.runSparkSketch = function(callback) {
   try {
     canvas = createCanvas();
     var sketchCode=translatedCode.concat(library);
-//      console.log(translatedCode);
+      console.log(translatedCode);
     //var lines = sketchCode.split("\n"); 
     //for(var i=0;i<lines.length;i++)
       //console.log(i+":  "+lines[i]);
@@ -87,7 +89,7 @@ global.runSparkSketch = function(callback) {
     var sketch = Processing.compile(sketchCode);
       instance = new Processing(canvas, sketch);
   } catch (err) {
-      
+  /*    
 	// for firefox / opera 
 	var linenumber = err.lineNumber; 
 
@@ -100,7 +102,8 @@ global.runSparkSketch = function(callback) {
 	    // for chrome 
 	    linenumber = ""; 
 	}
-      console.log(linenumber);
+*/
+//      console.log(linenumber);
 	console.log(err);
 //	output.val(linenumber + err); 
 	// so firebug can still catch it 

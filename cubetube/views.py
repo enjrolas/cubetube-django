@@ -87,6 +87,8 @@ def flash(request, id):
 
 def docs(request):
     return render(request, "cubetube/docs.html")    
+#    return render(request, "cubetube/hackpad-docs.html")    
+
 
 def forum(request):
     return render(request, "cubetube/forum.html")    

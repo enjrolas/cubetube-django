@@ -64,23 +64,29 @@ def compile(request):
         code="%s\n%s" % (code, line)
         i+=1
 
+    '''
     lines=code.split('\n')
     i=0
     for line in lines:
-        log.debug("%d:  %s" % ( i, line))
-        i+=1
-
+    log.debug("%d:  %s" % ( i, line))
+    i+=1
+    '''
     timestamp=datetime.datetime.now().strftime('%Y-%m-%d--%H.%M.%S')
     filename=timestamp+".cpp"
-    media_root="/home/tim/cubetube/media/"
-    project_root="/home/tim/cubetube/"
+    media_root="/home/glass/cubetube-production/media/"
+    project_root="/home/glass/cubetube-production/"
     directory= media_root+"sparkware/" + settings.CUBE_LIBRARY + "/firmware/examples/"
     log.debug("compiling %s%s" % (directory, filename))
     f = open(directory + filename, 'w')
+    log.debug(directory)
+    log.debug(filename)
     codeFile=File(f)
     codeFile.write(code)
     codeFile.close()
+    command = ['make', '-C', '%ssparkware/%s' % (media_root, settings.CUBE_LIBRARY), 'bin/%s.bin' % timestamp]
+    log.debug(command)
     p = subprocess.Popen(['make', '-C', '%ssparkware/%s' % (media_root, settings.CUBE_LIBRARY), 'bin/%s.bin' % timestamp], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
 
     output=[]
     for line in p.stdout.readlines():
@@ -222,11 +228,16 @@ def viz(request, id):
         photo = False
     else:
         source = False;
+        
+    try:
+        nextViz = currentViz.get_previous_by_created()
+    except:
+        nextViz=None
 
-    nextViz = currentViz.get_previous_by_created()
     if nextViz:
         return render(request, "viz/viz.html", { 'nextViz': nextViz, 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})    
-    return render(request, "viz/viz.html", { 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})
+    else:
+        return render(request, "viz/viz.html", { 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})
 
 
 def vizTest(request, id):
@@ -306,7 +317,7 @@ def save(request):
         name          = request.POST['name']
         description   = request.POST['description']
         code    = request.POST['sourceCode']
-
+        vizType=request.POST['viz-type']
         interactive     = request.POST['interactive']
         if interactive == 'false':
             interactive = False
@@ -329,7 +340,7 @@ def save(request):
         viz.interactive = interactive
         viz.published   = published
         viz.videoUrl    = videoUrl
-
+        viz.vizType=vizType
         viz.save()
 
         newCode=SourceCode.objects.get(viz=viz)
@@ -414,14 +425,16 @@ def upload(request):
                         "authenticated":authenticate(nickname, accessToken)})
 
 @csrf_exempt
-def flashWebsocketsListener(request):
+def flashWebsocketsListener(request, coreId):
     binaryPath= settings.WEBSOCKETS_LISTENER
     flash_output=[]
     flash_error=[]
 
+    media_root="/home/glass/cubetube-production/media/"
+    project_root="/home/glass/cubetube-production"    
+    log.debug('%s/viz/utils/flash.js' % project_root)
     accessToken=request.COOKIES.get('accessToken')
-    coreID=request.POST['coreID']        
-    p = subprocess.Popen(['node', '%s/viz/utils/flash.js' % settings.PROJECT_ROOT ,accessToken, coreID, binaryPath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p = subprocess.Popen(['node', '%s/viz/utils/flash.js' % project_root,accessToken, coreId, binaryPath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     for line in p.stdout.readlines():
         print line,
         line.replace('"','\\"')
@@ -437,8 +450,6 @@ def flashWebsocketsListener(request):
     compilation_status="ok"
     retval = p.wait()
     response={ "compilation_status": compilation_status , 
-               "output" : output , 
-               "error" : error , 
                "flash_output" : flash_output , 
                "flash_error" : flash_error}
     return JsonResponse(response)

@@ -2,8 +2,17 @@
  * Login Management. 
  * - Built off Alex's spark login system.
  */
-
+//var checkbox;
 $(function(){
+/*
+    checkbox = $("#ToS");   // keep reference of checkbox
+
+    $("#ToS").click(function() {
+        var checked = checkbox.prop("checked");      // check checkbox status
+	console.log(checked);
+        checkbox.prop("checked", checked);
+    });
+*/
 
     var $popover = $( '.login-signup-popover' );
     var $glass   = $( '.glass' );
@@ -40,6 +49,8 @@ $(function(){
             var email = $('.signup-component .email').val();
             var nickname = $('.signup-component .nickname').val();
             var password = $('.signup-component .password').val();
+//	    var ToS=checkbox.prop("checked");
+//	    console.log(ToS);
             clearError();
             createNewUser(email, nickname, password);
         });
