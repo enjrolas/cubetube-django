@@ -16,9 +16,8 @@
 
 <div class="docs-wrapper clearfix">
   <ul class="docs-nav"> 
-    <li class="bolder specs"><a>GETTING STARTED WITH YOUR CUBE</a></li>
-    <li class="introduction"><a>Introduction</a></li>
-    <li class="cubetube-intro"><a>Creating and Sharing on CubeTube</a></li>
+    <li class="bolder specs"><a>L3D Cube Specifications</a></li>
+    <li class="kit"><a>The Kit</a></li>
     <li class="specs-two"><a>8x8x8 Cube Specifications</a></li>
     <li class="assembly"><a>Assembling your 8x8x8 Cube</a></li>
     <li class="bolder powering-up"><a>Powering Up</a></li>
@@ -30,9 +29,7 @@
     <li class="using-spark"><a>Using the Spark App for Connecting to WiFi</a></li>
     <li class="claiming-core"><a>Claiming Your Core</a></li>
     <li class="wifi-locations"><a>Switching to New WiFi Locations</a></li>
-    <li class="bolder cubetube"><a>CUBETUBE: THE VOLUMETRIC WONDERLAND</a></li>
-    <li class="loading-apps"><a>Loading CubeTube Apps onto Your Cube</a></li>
-    <li class="programming"><a>Programming Cubes on CubeTube</a></li>
+    <li class="bolder loading-apps"><a>Loading Cubetube Apps</a></li>
     <li class="bolder code-for-cubes"><a>Code for cubes</a></li>
     <li class="mode1"><a>Mode 1: Native Code</a></li>
     <li class="mode2"><a>Mode 2: Streaming Code</a></li>
@@ -47,13 +44,10 @@
   <div class="docs-text-area">
 
     <!-- The cube -->
-    <h1 id="specs">GETTING STARTED WITH YOUR CUBE</h1>
-    <h2 id="introduction">Introduction</h2>
+    <h1 id="specs">L3D Cube Specifications</h1>
+    <h2 id="kit">The Kit</h2>
     <p>
-If you're here you're likely one of the first owners of a L3D Cube  (8x8x8 edition).  Hi there you lover of the future, you!   This section of the site is intended to help you create and share apps on your Cubes.  Let's get started!
-</p>
-<p>
-  Each L3D Cube 8x8x8 edition comes with 512 RGB LEDs mounted in an array, powered over USB (or via the L3D Cube Battery Shield), and connected to WiFi.  The brain and WiFi connection center of the Cubes is a Spark Core  (upgrading to the Photon in late June 2015), which can be  programmed like an Arduino.  There's also a built in microphone and accelerometer in each Cube for music visualization and interactive apps.
+      If you’re here in the Documentation section, you’re likely one of the first owners of a <a href="https://www.kickstarter.com/projects/lookingglass/l3d-cube-the-3d-led-cube-from-the-future">L3D Cube</a> (8x8x8 edition) -- and this section of the site is intended to help you create and share applications on your Cubes.
     </p>
     <div class="question-section">
       <img src="/static/images/docs/question.png" />
@@ -61,19 +55,15 @@ If you're here you're likely one of the first owners of a L3D Cube  (8x8x8 editi
         If you’ve any questions that aren’t addressed here, head on over to the <a href="/forum/">Forum</a> or email Shawn & Alex at <a href="mailto:info@lookingglassfactory.com">info@lookingglassfactory.com</a>.  
       </p>
     </div>
-<h2 id="cubetube-intro">Creating and Sharing on CubeTube</h2>
-<p>
-The magic of owning a Cube comes with being a part of the world's first volumetric app sharing community, CubeTube!  Each Cube can download new apps from CubeTube.org with a click of a mouse or finger -- no programming needed.
-</p>
-<p>
-But for any programmers out there - HELLO!  CubeTube is designed to help you create and share like a boss.  You can now write code directly in  CubeTube's browser window, preview your programs in a simulated 3D Cube,  share the apps you create on CubeTube more easily than ever before, and fork other people's code so you can build new Cube apps with startling speed.  More details in the CubeTube sections below!
-</p>
     <h2 id="specs-two">8x8x8 Cube Specifications</h2>
     <p>
       There are two types of L3D Cubes so far:  the 8x8x8 edition with 512 RGB LEDs and the 16x16x16 edition with 4096 RGB LEDs.  This documentation section currently only addresses the 8x8x8 edition and will be expanded to include the larger 16x16x16 edition in Spring 2015.
     </p>
     <p>
       Each L3D Cube 8x8x8 edition comes with 512 RGB LEDs mounted in an array, powered over USB, and connected to WiFi.  The brain and WiFi connection center of the Cubes is a <a href="https://www.spark.io/">Spark Core</a> (soon to be a Spark Photon), which can be programmed like an Arduino.  There’s also a built in microphone and accelerometer in each Cube.  
+    </p>
+    <p>
+      Each Cube can download new apps from CubeTube with a click of a mouse or finger -- no programming needed.  But of course for coders out there, what you create for your Cube can now be shared on CubeTube with other Cube owners....including those that own L3D Cubes and other types of 3D LED cubes.
     </p>
     <p>
       <b>LEDs:</b> 512 RGB surface-mounted LEDs. <br>
@@ -246,24 +236,63 @@ But for any programmers out there - HELLO!  CubeTube is designed to help you cre
     <hr>
 
     <!-- Loading Cubetube Apps -->
-    <h1 id="cubetube">CUBETUBE: THE VOLUMETRIC WONDERLAND</h1>
-    <h2 id="loading-apps">Loading CubeTube Apps onto Your Cube</h2>
-<p>When you first go to CubeTube.org, click the "Join or Log in" button.  Log in using the spark.io username and password that you created when you were connecting your Cube to WiFi in the previous step.
-</p>
-<p>You can browse the Gallery and see simulations of most apps in your browser when you mouse-over the app thumbnail.</p>
-<center><img src="/static/images/docs/cubetube-mouseover.gif" /></center>
-<p>There are two main types of apps on Cubetube</p>
-<center><img src="/static/images/docs/cubetube-types.png" /></center>
-<p>If you like a particular app and want to load it onto your Cube, choose one of your online Cube from the dropdown menu and click "Send to Cube".  If you chose a "Cube Required" app, immediately after you click the Send to Cube button, the LED on the Spark Core under your Cube should start to blink purple (indicating it is downloading the app).  This download process will take 10-45 seconds.
-</p>
-<p>
-If you chose a "Cube + Computer Required" app for the first time, the L3D library will be sent to your Cube and the LED on the Spark Core under your Cube should start to blink purple (indicating it is downloading the L3D library).  After the download is complete, the app you see in the browser window should start in your Cube.</p>
-    <h2 id="programming">Programming Cubes on CubeTube</h2>
-    <p>BIG NEWS!  You can now write code directly in the browser window on CubeTube, fork other people's programs (e.g., "Sketches"), and easily simulate and share your programs with the rest of the CubeTube community.</p>
-<img src="/static/images/docs/cubetube-code.png" width="85%"/>
-    <p>You can get started by forking another user's sketch, or you can start from scratch by clicking the blue "Create" button.  To write code in <a href="http://docs.particle.io/core/firmware/">Spark's arduino-esque language</a> that will live entirely on Cubes (and won't require a computer to run), choose the L3D tab.  To write Cube + Computer code that will require a WiFi-connected computer to run, choose the JS tab.</p>
-<img src="/static/images/docs/cubetube-viz-type.png" width="75%"/>
-<p>We have libraries for drawing in the cube in both Spark and javascript code.  Javascript apps are written in processing.js syntax and executed in a processing.js environment, and they automatically include our <a href="http://docs.l3dcube.com/Processing/L3D/L3D.html">Processing library</a> in the code.  Spark apps are written in Spark's arduino-compatible syntax and include our <a href="http://docs.l3dcube.com/Spark/classCube.html">Spark L3D library</a> in the code.
+    <h1 id="loading-apps">Loading Cubetube Apps</h1>
+    <p>
+      CubeTube is in beta and available to the earliest Cube owners.  Go to <a href="https://cubetube.org">CubeTube.org</a>  and log in your Cube using the same user name and password you used to create an account on Spark.io or via the Spark App when you first connected your Cube to WiFi.
+    </p>
+    <p>
+      Then, when you click "Load App" on one of the CubeTube Apps, that App should automatically load onto your Cube, as long as your Cube is connected to WiFi.
+    </p>
+
+    <hr>
+
+    <!-- Code for cubes -->
+    <h1 id="code-for-cubes">Code for Cubes</h1>
+    <h2>Overview</h2>
+    <p>
+      There are two types of programs that can control Cubes.  One is Native code, which lives entirely in the internal memory of the Cubes. The second is Streaming code, which requires a computer to stream content to your cube.
+    </p>
+    <p>
+      Native code does not require WiFi.  Streaming code requires WiFi, but is more powerful in the sense that you can connect peripherals to your computer to interact with your Cube (such as the Leap Motion, MakeyMakeys, Kinects...).  
+    </p>
+    <p>
+      Streaming is required when controlling multiple cubes.
+    </p>
+
+    <h2 id="mode1">Mode 1: Native Code</h2>
+    <p>
+      To get Native code Apps onto your Cube, it’s a one step process.   Just log into CubeTube as described above and then click on any of the Native code apps and that app will download to your Cube.
+    </p>
+    <p>
+      Native code is written in Wiring, which is the fancy name for the Arduino programming language.  You can write code on the <a href="https://www.spark.io/build">Spark Web IDE</a>.
+    </p>
+
+    <h2 id="mode2">Mode 2: Streaming Code</h2>
+    <p>
+      To get Streaming code working on your Cube, it’s a two step process.
+    </p>
+    <p>
+      <b>Step 1:</b>
+      Log into CubeTube as described above and then load the Listener App onto your Cube.
+    </p>
+    <p>
+      <b>Step 2</b>
+      Download the Streaming code from any of the Streaming Apps to your computer.  We’ve been running Streaming Apps in Processing, but folks are starting to write and stream python and Java Apps to their Cubes.
+    </p>
+    <p>
+      Make sure your computer is connected to WiFi, and then any Streaming Apps running on your computer should play in your Cube (loaded with Listener as described in 1.
+    </p>
+    <p>
+      If using Processing for your Streaming Apps, you’ll need to download the L3D Library.  More details here:  https://github.com/enjrolas/L3D-library
+    </p>
+    <p>
+      Alex has also put together a guide on designing graphics for your Cube in 
+      Streaming Mode here:  http://www.instructables.com/id/How-to-Draw-Sweet-3D-Graphics-for-LED-cubes/
+    </p>
+    <p>
+      If you’d like faster streaming, try using a dedicated nano-router, like <a href="http://www.amazon.com/TP-LINK-TL-WR702N-Wireless-Repeater-150Mpbs/dp/B007PTCFFW/ref=sr_1_1?ie=UTF8&amp;qid=1419504623&amp;sr=8-1&amp;keywords=travel+router">this one</a> for about $20.  
+    </p>
+
     <hr>
 
     <!-- Connecting multiple cubes (advanced) -->
@@ -285,9 +314,6 @@ If you chose a "Cube + Computer Required" app for the first time, the L3D librar
     </div>
     <div class="question-section no-padding">
       Processing library: <a href="https://github.com/enjrolas/L3D-library">https://github.com/enjrolas/L3D-library</a>
-    </div>
-    <div class="question-section no-padding">
-      Spark library: <a href="https://github.com/enjrolas/beta-cube-library">https://github.com/enjrolas/beta-cube-library</a>
     </div>
     <p>
       Here’s an Instructable on <a href="http://www.instructables.com/id/How-to-Draw-Sweet-3D-Graphics-for-LED-cubes/">How to Draw Sweet 3D Graphics for LED cubes</a> - there’s even a cube simulator so you don’t even have to wait for your cubes to get started.
