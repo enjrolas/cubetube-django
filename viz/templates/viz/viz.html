@@ -149,9 +149,9 @@ console.log(data);}
       {% if logged_in %}
 
         {% if viz.creator.nickname == request.COOKIES.nickname %}
-          <a class="round-button button-transparent edit-sketch" href="/edit/{{viz.pk}}">Edit Sketch</a>
+          <a class="round-button button-transparent edit-sketch" href="{% url 'edit' viz.pk %}">Edit Sketch</a>
         {% else %}
-          <a class="round-button button-transparent fork-sketch" href="/fork/{{ viz.pk }}/">Fork Sketch</a>
+          <a class="round-button button-transparent fork-sketch" href="{% url 'fork' viz.pk %}">Fork Sketch</a>
         {% endif %}
 
       {% else %}

@@ -33,11 +33,10 @@ function receiveMessage(event) {
 }
 
 function bindCards() {
-    $('.viz-card').click(function(e) {
-        e.preventDefault();
-
-        var $this = $(e.currentTarget);
-        openViz( $this.attr('href') );
+    $( "body" ).on( "click", ".viz-card", function(e) {
+      e.preventDefault();
+      var $this = $(e.currentTarget);
+      openViz( $this.attr('href') );
     });
 }
 
