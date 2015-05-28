@@ -79,13 +79,12 @@ global.runSketch = function(callback) {
 global.runSparkSketch = function(callback) {
   var output=$(".output");
   try {
-    canvas = createCanvas();
-    var sketchCode=translatedCode.concat(library);
-      console.log(translatedCode);
-    //var lines = sketchCode.split("\n"); 
-    //for(var i=0;i<lines.length;i++)
-      //console.log(i+":  "+lines[i]);
-    //$(".code").val(sketchCode);
+      canvas = createCanvas();
+      var sketchCode=$(".code").val();
+      var translatedCode=translateCode(sketchCode);
+      sketchCode=translatedCode.concat(library);
+//      console.log(translatedCode);
+      console.log(sketchCode);
     var sketch = Processing.compile(sketchCode);
       instance = new Processing(canvas, sketch);
   } catch (err) {

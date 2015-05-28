@@ -4,8 +4,6 @@ from viz import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-    url(r'^parameter/(?P<param>\w+)/$', views.parameter, name='parameter'),
-    url(r'^parameter/$', views.parameter, name='parameter'),
     url(r'^gallery/(?P<filter>\w+)/(?P<featuredViz>\d+)/$', views.jsgallery, name='gallery'),
     url(r'^gallery/(?P<filter>\w+)/$', views.jsgallery, name='gallery'),
     url(r'^gallery/', views.jsgallery, name='gallery'),
@@ -16,6 +14,9 @@ urlpatterns = [
     url(r'^scroll/(?P<page>\d+)/$', views.scroll, name='scroll'), 
     url(r'^fork/(?P<vizId>\d+)/$', views.fork, name='fork'),
     url(r'^compile/', views.compile, name='compile'),
+    url(r'^filter/', views.filter, name='filter'),
+    url(r'^appInfo/', views.appInfo, name='appInfo'),
+    url(r'^justCompile/', views.justCompile, name='justCompile'),
     url(r'^listener/(?P<coreId>\w+)/$', views.flashWebsocketsListener, name='flashWebsocketsListener'),
     url(r'^save/', views.save, name='save'),
     url(r'^code/(?P<id>\d+)/$', views.code, name='code'),

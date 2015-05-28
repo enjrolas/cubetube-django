@@ -473,7 +473,7 @@ button {
     border: 0px;
     height: 100%;
     width: 600px;
-    overflow: hidden;
+    //overflow: hidden;
     z-index: 2; }
     .viz-wrapper .viz-code .CodeMirror {
       height: 100%; }

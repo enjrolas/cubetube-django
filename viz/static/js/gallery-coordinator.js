@@ -11,10 +11,16 @@ function activatePreviews(){
 //      console.log(type);
 //      console.log(interactive);
       if(interactive==="False"){
+	  try{
 	  if(type==="javascript")
 	      runSketch(canvas, source);
 	  if(type==="L3D")
 	      runL3DSketch(canvas, source);
+	  }
+	  catch(err)
+	  {
+	      console.log(err);
+	  }
       }
       });
 }
@@ -30,10 +36,16 @@ function activateAdditionalPreviews(data){
 	  var source=thumbnails.find("div.code#viz"+id).text();
 
       if(interactive==="False"){
+	  try{
 	  if(type==="javascript")
 	      runSketch(canvas, source);
 	  if(type==="L3D")
 	      runL3DSketch(canvas, source);
+	  }
+	  catch(err)
+	  {
+	      console.log(err);
+	  }
       }
 
       $(this).addClass('canvas-active');

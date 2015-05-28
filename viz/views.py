@@ -15,8 +15,21 @@ import os
 from django.core.files import File
 log = logging.getLogger(__name__)
 
-def parameter(request, param):
-    return HttpResponse("param is: {}".format(param))
+def filter(request):
+    return render(request, "viz/filter.html")
+
+def appInfo(request):
+    publicApps=Viz.objects.all().exclude(published=False)
+    code=[]
+    appIds=[]
+    for app in publicApps:
+        appCode=SourceCode.objects.get(viz=app)
+        code.append(appCode.code)
+        appIds.append(app.pk)
+    response={ "apps": appIds , 
+               "code" : code }
+    return JsonResponse(response)
+
 
 def gallery(request, filter="newestFirst"):
     if(filter=='newestFirst'):
@@ -73,8 +86,8 @@ def compile(request):
     '''
     timestamp=datetime.datetime.now().strftime('%Y-%m-%d--%H.%M.%S')
     filename=timestamp+".cpp"
-    media_root="/home/glass/cubetube-production/media/"
-    project_root="/home/glass/cubetube-production/"
+    media_root="/home/glass/cubetube-testing/media/"
+    project_root="/home/glass/cubetube-testing/"
     directory= media_root+"sparkware/" + settings.CUBE_LIBRARY + "/firmware/examples/"
     log.debug("compiling %s%s" % (directory, filename))
     f = open(directory + filename, 'w')
@@ -135,6 +148,78 @@ def compile(request):
                "flash_error" : flash_error}
     return JsonResponse(response)
 
+@csrf_exempt
+def justCompile(request):
+    code=request.POST['code']
+    code="%s\n%s" % (settings.SPARK_LIBRARY, code)
+    lines=code.split('\n')
+    i=0
+    code=""
+    setupStarted=False
+    codeInserted=False
+    for line in lines:
+        if not codeInserted:
+            if not setupStarted:
+                if line.find("setup()")!=-1:
+                    setupStarted=True
+            if line.find("}")!=-1:
+                log.debug("inserting code")
+                codeInserted=True
+        code="%s\n%s" % (code, line)
+        i+=1
+
+    '''
+    lines=code.split('\n')
+    i=0
+    for line in lines:
+    log.debug("%d:  %s" % ( i, line))
+    i+=1
+    '''
+    timestamp=datetime.datetime.now().strftime('%Y-%m-%d--%H.%M.%S')
+    filename=timestamp+".cpp"
+    media_root="/home/glass/cubetube-testing/media/"
+    project_root="/home/glass/cubetube-testing/"
+    directory= media_root+"sparkware/" + settings.CUBE_LIBRARY + "/firmware/examples/"
+    log.debug("compiling %s%s" % (directory, filename))
+    f = open(directory + filename, 'w')
+    log.debug(directory)
+    log.debug(filename)
+    codeFile=File(f)
+    codeFile.write(code)
+    codeFile.close()
+    command = ['make', '-C', '%ssparkware/%s' % (media_root, settings.CUBE_LIBRARY), 'bin/%s.bin' % timestamp]
+    log.debug(command)
+    p = subprocess.Popen(['make', '-C', '%ssparkware/%s' % (media_root, settings.CUBE_LIBRARY), 'bin/%s.bin' % timestamp], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+
+    output=[]
+    for line in p.stdout.readlines():
+        print line,
+        line.replace('"','\\"')
+        line.replace("'","\\'")
+        output.append(line)
+
+    error=[]
+    for line in p.stderr.readlines():
+        print line,
+        line.replace('"','\\"')
+        line.replace("'","\\'")
+        error.append(line)
+
+    retval = p.wait()
+
+    binaryPath= media_root+"sparkware/%s/bin/%s.bin" % (settings.CUBE_LIBRARY, timestamp)
+
+    if os.path.isfile(binaryPath):
+        compilation_status="ok"
+    else:
+        compilation_status="failed"
+    response={ "compilation_status": compilation_status , 
+               "output" : output , 
+               "error" : error , 
+               }
+    return JsonResponse(response)
+
 def jsgallery(request, filter="newestFirst", featuredViz=None):
     accessToken=request.COOKIES.get('accessToken') 
     try:
@@ -167,7 +252,8 @@ def jsgallery(request, filter="newestFirst", featuredViz=None):
     return render(request, "viz/jsgallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'totalObjects' : totalObjects, 'filter': filter, 'featuredViz' : featured, 'privateVizs': privateVizs, 'publicVizs':publicVizs})
 
 def index(request):
-    vizs=Viz.objects.all().order_by("-created").exclude(published=False)
+#    vizs=Viz.objects.all().order_by("-created").exclude(published=False)
+    vizs=Viz.objects.all().order_by("-created").filter(featured=True).exclude(published=False)
     totalObjects=vizs.count()
     if totalObjects<8:
         visualizations=vizs[:totalObjects]
@@ -279,9 +365,9 @@ def create(request):
 def scroll(request, page, filter="newestFirst", cardsPerPage=8):
     page=int(page)
     if filter=="newestFirst":
-        vizs=Viz.objects.all().order_by("-created")[page*cardsPerPage:(page+1)*cardsPerPage]
+        vizs=Viz.objects.all().exclude(published=False).order_by("-created")[page*cardsPerPage:(page+1)*cardsPerPage]
     else:
-        vizs=Viz.objects.all().order_by("created")[page*cardsPerPage:(page+1)*cardsPerPage]
+        vizs=Viz.objects.all().exclude(published=False).order_by("created")[page*cardsPerPage:(page+1)*cardsPerPage]
 
     if vizs.count() >= cardsPerPage:
         return render(request, "viz/gallery-page.html", { 'visualizations' : vizs , 'nextPage' : page+1, 'filter':filter})    
@@ -430,8 +516,8 @@ def flashWebsocketsListener(request, coreId):
     flash_output=[]
     flash_error=[]
 
-    media_root="/home/glass/cubetube-production/media/"
-    project_root="/home/glass/cubetube-production"    
+    media_root="/home/glass/cubetube-testing/media/"
+    project_root="/home/glass/cubetube-testing"    
     log.debug('%s/viz/utils/flash.js' % project_root)
     accessToken=request.COOKIES.get('accessToken')
     p = subprocess.Popen(['node', '%s/viz/utils/flash.js' % project_root,accessToken, coreId, binaryPath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
