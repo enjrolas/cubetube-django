@@ -46,6 +46,7 @@ def gallery(request, filter="newestFirst"):
 
 @csrf_exempt
 def compile(request):
+    log.debug("compiling")
     code=request.POST['code']
     vizName=request.POST['vizName']
     vizId=request.POST['vizId']
@@ -86,8 +87,8 @@ def compile(request):
     '''
     timestamp=datetime.datetime.now().strftime('%Y-%m-%d--%H.%M.%S')
     filename=timestamp+".cpp"
-    media_root="/home/glass/cubetube-testing/media/"
-    project_root="/home/glass/cubetube-testing/"
+    media_root="/home/glass/cubetube-production/media/"
+    project_root="/home/glass/cubetube-production/"
     directory= media_root+"sparkware/" + settings.CUBE_LIBRARY + "/firmware/examples/"
     log.debug("compiling %s%s" % (directory, filename))
     f = open(directory + filename, 'w')
@@ -98,7 +99,8 @@ def compile(request):
     codeFile.close()
     command = ['make', '-C', '%ssparkware/%s' % (media_root, settings.CUBE_LIBRARY), 'bin/%s.bin' % timestamp]
     log.debug(command)
-    p = subprocess.Popen(['make', '-C', '%ssparkware/%s' % (media_root, settings.CUBE_LIBRARY), 'bin/%s.bin' % timestamp], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#    p = subprocess.Popen(['make', '-C', '%ssparkware/%s' % (media_root, settings.CUBE_LIBRARY), 'bin/%s.bin' % timestamp], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 
     output=[]
@@ -183,8 +185,8 @@ def justCompile(request):
     '''
     timestamp=datetime.datetime.now().strftime('%Y-%m-%d--%H.%M.%S')
     filename=timestamp+".cpp"
-    media_root="/home/glass/cubetube-testing/media/"
-    project_root="/home/glass/cubetube-testing/"
+    media_root="/home/glass/cubetube-production/media/"
+    project_root="/home/glass/cubetube-production/"
     directory= media_root+"sparkware/" + settings.CUBE_LIBRARY + "/firmware/examples/"
     log.debug("compiling %s%s" % (directory, filename))
     f = open(directory + filename, 'w')
@@ -522,8 +524,8 @@ def flashWebsocketsListener(request, coreId):
     flash_output=[]
     flash_error=[]
 
-    media_root="/home/glass/cubetube-testing/media/"
-    project_root="/home/glass/cubetube-testing"    
+    media_root="/home/glass/cubetube-production/media/"
+    project_root="/home/glass/cubetube-production"    
     log.debug('%s/viz/utils/flash.js' % project_root)
     accessToken=request.COOKIES.get('accessToken')
     p = subprocess.Popen(['node', '%s/viz/utils/flash.js' % project_root,accessToken, coreId, binaryPath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
