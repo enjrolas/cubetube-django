@@ -102,20 +102,26 @@ def compile(request):
 
 
     output=[]
+    log.debug("compiling code")
+    i=0
     for line in p.stdout.readlines():
-        print line,
+        log.debug(i)
+        log.debug(line)
         line.replace('"','\\"')
         line.replace("'","\\'")
         output.append(line)
+        i+=1
 
     error=[]
     for line in p.stderr.readlines():
-        print line,
+        log.debug(line)
         line.replace('"','\\"')
         line.replace("'","\\'")
         error.append(line)
 
+    log.debug("waiting for compile to finish")
     retval = p.wait()
+    log.debug("compiler's done, moving on")
 
     binaryPath= media_root+"sparkware/%s/bin/%s.bin" % (settings.CUBE_LIBRARY, timestamp)
     flash_output=[]
