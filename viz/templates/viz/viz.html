@@ -13,8 +13,8 @@
 function flashCube(){
 var request=$.ajax({
 type:"POST",
-url:"{% url 'compile'%}", 
-data: {"code": $(".code").val(), "accessToken":accessToken, "coreID":$("#cubeName").val(), "vizName": "{{ viz.name }}", "vizId":"{{ viz.pk }}" },
+url:"{% url 'cloudFlash' %}", 
+data: {"code": $(".code").val(), "accessToken":accessToken, "deviceID":$("#cubeName").val(), "vizName": "{{ viz.name }}", "vizId":"{{ viz.pk }}" },
 dataType:"text",
 success: function(data){ 
 data = $.parseJSON(data);

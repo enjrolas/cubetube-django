@@ -39,17 +39,23 @@ function listCubes() {
             for( var i = 0; i < devices.length; i++ ) {
         
                 var device = devices[i];
+//		    console.log(device.name+" "+device.connected+" "+device.productId);
                 if( device.connected ){
                     connectedCores++;
                 
                     if( deviceID != 'undefined' ) {
                         deviceID=device.id;
-                         console.log(deviceID);
+//                         console.log(deviceID);
                     }
 
 //                     console.log(device.name+" is connected");
-                     $("#cubeName").append($("<option></option>").val(device.id).html(device.name));  //append the cube name and ID to thr dropdown list
-
+		    deviceType=device.productId;
+		    if(deviceType=='0')
+			deviceType="Core";
+		    else
+			deviceType="Photon";
+                    $("#cubeName").append($("<option></option>").val(device.id).attr("processor", deviceType).html("("+deviceType+") "+device.name));  //append the cube name and ID to thr dropdown list
+		    
                     if(device.name == coreID) {
                         deviceInList = true;
                     }

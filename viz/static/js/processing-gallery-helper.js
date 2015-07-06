@@ -57,9 +57,6 @@ $.ajax({
       var translatedCode=translateCode(sketchCode);
       var sketchCode=translatedCode.concat(mouseListener).concat(library);
       sketchCode=sketchCode.replace("size(500,500, P3D);", "\nsize("+canvas.width+","+canvas.height+", P3D);\nnoLoop();");
-      console.log(canvas.width+":  "+canvas.height);
-      
-
     var sketch = Processing.compile(sketchCode);
     instance = new Processing(canvas, sketch);
   } catch (e) {
