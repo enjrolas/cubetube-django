@@ -6,6 +6,7 @@ class Cube {
     int size;
     int scale;
     PVector center;
+    PVector voxelCenter;
     PApplet parent;
     boolean clearToSend;
     int rate;
@@ -26,6 +27,7 @@ class Cube {
         g=new int[size][size][size];
 	b=new int[size][size][size];
 	center=new PVector(scale*(size-1)/2, scale*(size-1)/2, scale*(size-1)/2);
+	voxelCenter=new PVector((size-1)/2,(size-1)/2,(size-1)/2);
     }
 
     void draw()
@@ -360,4 +362,10 @@ class Cube {
 	    return (lerpColor(colors[5], colors[0], 
 			      (val / (range / 6)) - 5));
     }
+
+/*    color lerpcolor(color startCol, color endCol, float val, float min, float max)
+    {
+	return parent.lerpColor(startCol, endCol, (val-min)/(max-min));
+    }
+*/
 }

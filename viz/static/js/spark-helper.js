@@ -5,7 +5,7 @@ var canvasControl="";
 var translation={};
 translation["loop()"]="draw()";
 translation["cube.show()"]="cube.draw()";
-translation["=Point("]="=new PVector(";
+translation["=Point("]="=new PVector(";  //order is important, here
 translation["Point"]="PVector";
 translation["black)"]= "color(0x00, 0x00, 0x00))";
 translation["grey)"]= "color(0x92, 0x95, 0x91))";
@@ -29,9 +29,12 @@ translation["float "]="var ";
 translation["Color "]="color ";
 translation["Color("]="color(";
 translation["rand()"]="random(1000000)";
+translation["Serial.print("]="console.log(";
+translation["Serial.println("]="console.log(";
+//translation["lerpcolor"]="lerpColor";
 
 var parts;
-var ignoreList=["include", "cube.begin"];
+var ignoreList=["include", "cube.begin", "Serial.begin"];
 
 var flagList={};
 flagList["Cube "]=0;
@@ -48,6 +51,12 @@ function parseSparkCode( url, after ) {
     });
 }
 
+//not all replaceAll functions can handle code safely.  This one is a beaut!  Thanks, http://stackoverflow.com/questions/2116558/fastest-method-to-replace-all-instances-of-a-character-in-a-string
+String.prototype.replaceAll = function(str1, str2, ignore) 
+{
+    return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(str2)=="string")?str2.replace(/\$/g,"$$$$"):str2);
+} 
+
 function translateCode( data ) {
     translatedCode = "";
     sparkCode=data.split('\n');  //sparkCode is an array of lines in the data file
@@ -61,6 +70,7 @@ function translateCode( data ) {
         
         for(var j=0;j<ignoreList.length;j++) {
             if(sparkCode[i].indexOf(ignoreList[j])>=0) {
+//		console.log("ignoring "+ignoreList[j]+" in "+sparkCode[i]);
                 ignoreFlag=true;
             }
         }
@@ -70,7 +80,7 @@ function translateCode( data ) {
             
             line=sparkCode[i];
             for(var key in translation){
-                line=line.replace(key, translation[key]);
+                line=line.replaceAll(key, translation[key]);
             }
 
             //now add the translated line to the JS code
@@ -89,8 +99,10 @@ function translateCode( data ) {
         //we've initialized the cube object, let's find out its name
         if(flagList["Cube "]==1) {
             parts=line.split(' ');
-            cubeObjectName=parts[1];
-            // console.log("cube object name: "+cubeObjectName);
+	    tempName=parts[1];
+	    parts=tempName.split('=');
+            cubeObjectName=parts[0];
+            console.log("cube object name: "+cubeObjectName);
             flagList[cubeObjectName]="0";
             line="Cube "+cubeObjectName+";";
             jsCode[i]=line;
