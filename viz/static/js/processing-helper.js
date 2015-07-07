@@ -83,8 +83,8 @@ global.runSparkSketch = function(callback) {
       var sketchCode=$(".code").val();
       var translatedCode=translateCode(sketchCode);
       sketchCode=translatedCode.concat(library);
-      console.log(translatedCode);
-//      console.log(sketchCode);
+//      console.log(translatedCode);
+ //     console.log(sketchCode);
     var sketch = Processing.compile(sketchCode);
       instance = new Processing(canvas, sketch);
   } catch (err) {
