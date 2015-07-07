@@ -208,7 +208,6 @@ def cloudFlash(request):
     p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=directory)
     jsonResult=""
     for line in p.stdout.readlines():
-        line=line.replace('Device flashing started successfully: ', '')
         jsonResult="%s%s" % (jsonResult, line)
         i+=1
     retval = p.wait() 
@@ -657,10 +656,12 @@ def flashWebsocketsListener(request, coreId, processor):
         command=['node', 'directoryflash.js', '%s' % accessToken, '%s' % coreId, "photonListener"]
         log.debug(command)
         p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=directory)
-        
+        log.debug("waiting for process to complete")
+        retval = p.wait()
+        log.debug("process completed")
         jsonResult=""
         for line in p.stdout.readlines():
-            log.debug(p)
+            log.debug(line)
             line=line.replace('Device flashing started successfully: ', '')
             jsonResult="%s%s" % (jsonResult, line)
             i+=1            
@@ -676,6 +677,8 @@ def flashWebsocketsListener(request, coreId, processor):
         log.debug('%s/viz/utils/flash.js' % project_root)
         accessToken=request.COOKIES.get('accessToken')
         p = subprocess.Popen(['node', '%s/viz/utils/flash.js' % project_root,accessToken, coreId, binaryPath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        retval = p.wait()
+
         for line in p.stdout.readlines():
             print line,
             line.replace('"','\\"')
@@ -689,7 +692,7 @@ def flashWebsocketsListener(request, coreId, processor):
             flash_error.append(line)
             
         compilation_status="ok"
-        retval = p.wait()
+#        retval = p.wait()
         response={ "compilation_status": compilation_status , 
                    "flash_output" : flash_output , 
                    "flash_error" : flash_error}

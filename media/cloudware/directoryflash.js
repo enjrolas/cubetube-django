@@ -22,11 +22,11 @@ walker.on('file', function(root, stat, next) {
 //once we've logged in, program the core with the given core ID with a given binary located in the uploads directory of the server                                                   
 spark.on('login', function() {
     spark.getDevice(deviceID, function(err, device) {
-	device.flash(files\, function(err, data) {
+	device.flash(files, function(err, data) {
 	    if (err) {
-		console.log('An error occurred while flashing the device:', err);
+		console.log(err);
 	    } else {
-		console.log('Device flashing started successfully:', data);
+		console.log(data);
 	    }
 	});
     });

@@ -11,9 +11,9 @@ spark.on('login', function() {
     spark.getDevice(deviceID, function(err, device) {
 	device.flash(['./library/beta-cube-library.cpp', './library/beta-cube-library.h', './library/neopixel.cpp', './library/neopixel.h', filename], function(err, data) {
 	    if (err) {
-		console.log('An error occurred while flashing the device:', err);
+		console.log(JSON.stringify(err));
 	    } else {
-		console.log('Device flashing started successfully:', data);
+		console.log(JSON.stringify(data));
 	    }
 	});
     });
