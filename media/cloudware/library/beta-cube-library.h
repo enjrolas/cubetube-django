@@ -25,6 +25,11 @@
 
 #define STREAMING_PORT 2222
 
+#define MICROPHONE 12
+#define X 13
+#define Y 14
+#define Z 15
+
 /**   An RGB color. */
 struct Color
 {
@@ -56,12 +61,14 @@ class Cube
     UDP udp;
     int lastUpdated;
     char localIP[24];
-    char macAddress[20];
     int port;
 
   public:
     int size;
     int maxBrightness;
+    Point center;
+    float theta, phi;
+    int accelerometerX, accelerometerY, accelerometerZ;
     Cube(unsigned int s, unsigned int mb);
     Cube(void);
 
@@ -77,7 +84,8 @@ class Cube
     void shell(float x, float y, float z, float r, float thickness, Color col);
     void shell(Point p, float r, Color col);
     void shell(Point p, float r, float thickness, Color col);
-    void background(Color col);
+    void updateAccelerometer();
+   void background(Color col);
 
     Color colorMap(float val, float min, float max);
     Color lerpColor(Color a, Color b, int val, int min, int max);
@@ -86,10 +94,9 @@ class Cube
     void show(void);
     void listen(void);
     void initButtons(void);
-    void onlineOfflineSwitch(void);
+    void checkCloudButton(void);
     void joinWifi(void);
     void updateNetworkInfo(void);
-    int setPort(String port);
 };
 
 // common colors

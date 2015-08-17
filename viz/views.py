@@ -71,10 +71,11 @@ def compile(request):
             if not setupStarted:
                 if line.find("setup()")!=-1:
                     setupStarted=True
-            if line.find("}")!=-1:
-                log.debug("inserting code")
-                code="%s\n%s" % (code,  "Spark.variable(\"vizName\", vizName, STRING);\nSpark.variable(\"vizId\", &vizId, INT);")                
-                codeInserted=True
+            else:
+                if line.find("}")!=-1:
+                    log.debug("inserting code")
+                    code="%s\n%s" % (code,  "Spark.variable(\"vizName\", vizName, STRING);\nSpark.variable(\"vizId\", &vizId, INT);")                
+                    codeInserted=True
         code="%s\n%s" % (code, line)
         i+=1
 
@@ -87,8 +88,8 @@ def compile(request):
     '''
     timestamp=datetime.datetime.now().strftime('%Y-%m-%d--%H.%M.%S')
     filename=timestamp+".cpp"
-    media_root="/home/glass/cubetube-testing/media/"
-    project_root="/home/glass/cubetube-testing/"
+    media_root="/home/glass/cubetube-production/media/"
+    project_root="/home/glass/cubetube-production/"
     directory= media_root+"sparkware/" + settings.CUBE_LIBRARY + "/firmware/examples/"
     log.debug("compiling %s%s" % (directory, filename))
     f = open(directory + filename, 'w')
@@ -162,6 +163,8 @@ def cloudFlash(request):
     log.debug("compiling")
     code=request.POST['code']
     accessToken=request.POST['accessToken']
+
+
     vizName=request.POST['vizName']
     vizId=request.POST['vizId']
     if vizId==None:
@@ -172,9 +175,20 @@ def cloudFlash(request):
     if vizName==None:
         vizName="undefined"
 
-    code="%s\nchar* vizName=\"%s\";\nint vizId=%d;\n%s" % (settings.SPARK_LIBRARY, vizName, vizId, code)
 
+    #not sure if this is causing a problem with connectivity, pulling it out for now
+    #code="%s\nchar* vizName=\"%s\";\nint vizId=%d;\n%s" % (settings.SPARK_LIBRARY, vizName, vizId, code)
+    code="%s\n%s" % (settings.SPARK_LIBRARY, code)
 
+    lines=code.split('\n')
+    i=0
+    code=""
+    for line in lines:
+        code="%s\n%s" % (code, line)
+        i+=1
+
+    #original version, inserts viz ID and name as spark variables -- I suspect it's monkeying with stuff
+    '''
     lines=code.split('\n')
     i=0
     code=""
@@ -185,16 +199,19 @@ def cloudFlash(request):
             if not setupStarted:
                 if line.find("setup()")!=-1:
                     setupStarted=True
-            if line.find("}")!=-1:
-                log.debug("inserting code")
-                code="%s\n%s" % (code,  "Spark.variable(\"vizName\", vizName, STRING);\nSpark.variable(\"vizId\", &vizId, INT);")                
-                codeInserted=True
+            else:
+                if line.find("}")!=-1:
+                    log.debug("inserting code")
+                    code="%s\n%s" % (code,  "Spark.variable(\"vizName\", vizName, STRING);\nSpark.variable(\"vizId\", &vizId, INT);")                
+                    codeInserted=True
         code="%s\n%s" % (code, line)
         i+=1
 
+    '''
+
     timestamp=datetime.datetime.now().strftime('%Y-%m-%d--%H.%M.%S')
     filename=timestamp+".ino"
-    directory= "/home/glass/cubetube-testing/media/cloudware/"
+    directory= "/home/glass/cubetube-production/media/cloudware/"
     log.debug("saving code to file %s%s" % (directory, filename))
     f = open(directory + filename, 'w')
     log.debug(directory)
@@ -244,8 +261,8 @@ def justCompile(request):
     '''
     timestamp=datetime.datetime.now().strftime('%Y-%m-%d--%H.%M.%S')
     filename=timestamp+".cpp"
-    media_root="/home/glass/cubetube-testing/media/"
-    project_root="/home/glass/cubetube-testing/"
+    media_root="/home/glass/cubetube-production/media/"
+    project_root="/home/glass/cubetube-production/"
     directory= media_root+"sparkware/" + settings.CUBE_LIBRARY + "/firmware/examples/"
     log.debug("compiling %s%s" % (directory, filename))
     f = open(directory + filename, 'w')
@@ -651,7 +668,7 @@ def flashWebsocketsListener(request, coreId, processor):
     accessToken=request.COOKIES.get('accessToken')
     log.debug("processor type is %s" % processor)
     if processor=="Photon":
-        directory= "/home/glass/cubetube-testing/media/cloudware/"
+        directory= "/home/glass/cubetube-production/media/cloudware/"
         command=['node', 'directoryflash.js', '%s' % accessToken, '%s' % coreId, "photonListener"]
         log.debug(command)
         p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=directory)
@@ -671,8 +688,8 @@ def flashWebsocketsListener(request, coreId, processor):
         flash_output=[]
         flash_error=[]
 
-        media_root="/home/glass/cubetube-testing/media/"
-        project_root="/home/glass/cubetube-testing"    
+        media_root="/home/glass/cubetube-production/media/"
+        project_root="/home/glass/cubetube-production"    
         log.debug('%s/viz/utils/flash.js' % project_root)
         accessToken=request.COOKIES.get('accessToken')
         p = subprocess.Popen(['node', '%s/viz/utils/flash.js' % project_root,accessToken, coreId, binaryPath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)

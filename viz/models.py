@@ -7,6 +7,8 @@ class Viz(models.Model):
     creator=models.ForeignKey(CubeUser)
     created=models.DateTimeField(auto_now_add=True)
     sourceURL=models.TextField(blank=True)
+    averageRating=models.FloatField()
+    numberOfRatings=models.IntegerField()
     tags=models.TextField(blank=True)
     views=models.IntegerField(default=0)
     vizType=models.TextField(default="L3D")
@@ -21,6 +23,11 @@ class Viz(models.Model):
     def __str__(self):
         return "%s, created by %s on %s" %(self.name, self.creator, self.created)
 
+class Rating(models.Model):
+    viz=models.ForeignKey(Viz)
+    reviewer=models.ForeignKey(CubeUser)
+    date=models.DateTimeField(auto_now_add=True)    
+    
 class SourceCode(models.Model):
     viz=models.ForeignKey(Viz)
     code=models.TextField(default="")

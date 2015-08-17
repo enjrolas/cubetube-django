@@ -36,16 +36,13 @@ Cube::Cube() : \
 
 /** Initialization of cube resources and environment. */
 void Cube::begin(void) {
+  Serial.begin(115200);
   strip.begin();
   //initialize Spark variables
-    int (Cube::*setPort)(String) = &Cube::setPort;
-  
+  center=Point((size-1)/2,(size-1)/2,(size-1)/2);  
   Spark.variable("IPAddress", this->localIP, STRING);
-  Spark.variable("MACAddress", this->macAddress, STRING);
-  Spark.variable("port", &this->port, INT);
-  Spark.function("setPort", (int (*)(String)) setPort);
   
-    this->initButtons();
+  this->initButtons();
   this->udp.begin(STREAMING_PORT);
   this->updateNetworkInfo();
   Spark.connect();
@@ -305,15 +302,15 @@ void Cube::background(Color col)
   The set of colors fades from blue to green to red and back again.
 
   @param val Value to map into a color.
-  @param min Minimum value that val will take.
-  @param max Maximum value that val will take.
+  @param minVal Minimum value that val will take.
+  @param maxVal Maximum value that val will take.
 
   @return Color from value.
 */
-Color Cube::colorMap(float val, float min, float max)
+Color Cube::colorMap(float val, float minVal, float maxVal)
 {
   const float range = 1024;
-  val = range * (val-min) / (max-min);
+  val = range * (val-minVal) / (maxVal-minVal);
 
   Color colors[6];
 
@@ -360,16 +357,16 @@ Color Cube::colorMap(float val, float min, float max)
   @param a, b The colors to interpolate between.
   @param val Position on the line between color a and color b.
   When equal to min the output is color a, and when equal to max the output is color b.
-  @param min Minimum value that val will take.
-  @param max Maximum value that val will take.
+  @param minVal Minimum value that val will take.
+  @param maxVal Maximum value that val will take.
 
   @return Color between colors a and b.
 */
-Color Cube::lerpColor(Color a, Color b, int val, int min, int max)
+Color Cube::lerpColor(Color a, Color b, int val, int minVal, int maxVal)
 {
-  int red = a.red + (b.red-a.red) * (val-min) / (max-min);
-  int green = a.green + (b.green-a.green) * (val-min) / (max-min);
-  int blue = a.blue + (b.blue-a.blue) * (val-min) / (max-min);
+  int red = a.red + (b.red-a.red) * (val-minVal) / (maxVal-minVal);
+  int green = a.green + (b.green-a.green) * (val-minVal) / (maxVal-minVal);
+  int blue = a.blue + (b.blue-a.blue) * (val-minVal) / (maxVal-minVal);
 
   return Color(red, green, blue);
 }
@@ -380,6 +377,7 @@ Color Cube::lerpColor(Color a, Color b, int val, int min, int max)
 void Cube::show()
 {
   strip.show();
+  checkCloudButton();
 }
 
 /** Initialize online/offline switch and the join wifi button */
@@ -395,40 +393,39 @@ void Cube::initButtons() {
   //a.k.a. onlinePressed is HIGH when the switch is set to 'online' and LOW when the switch is set to 'offline'
   this->onlinePressed = !digitalRead(INTERNET_BUTTON);
 
-  if(onlinePressed)
+  if(this->onlinePressed)
     Spark.connect();
-
-  void (Cube::*check)(void) = &Cube::onlineOfflineSwitch;
-  attachInterrupt(INTERNET_BUTTON, (void (*)())check, CHANGE);
-
-  void (Cube::*wifi)(void) = &Cube::joinWifi;
-  attachInterrupt(MODE, (void (*)())wifi, FALLING);
-
-  
 
 }
 
-/** react to a change of the online/offline switch */
-void Cube::onlineOfflineSwitch() {
-  // if the 'connect to cloud' button is pressed, try to connect to wifi.  
-  // otherwise, run the program
 
-  // onlinePressed is HIGH when the switch is _not_ connected and LOW when the switch is connected
-  // a.k.a. onlinePressed is HIGH when the switch is set to 'online' and LOW when the switch is set to 'offline'
-  this->onlinePressed = !digitalRead(INTERNET_BUTTON);
+//checks to see if the 'online/offline' switch is switched
+void Cube::checkCloudButton()
+{
+  //if the 'connect to cloud' button is pressed, try to connect to wifi.  
+  //otherwise, run the program
+  //note -- how does this behave when there are no wifi credentials loaded on the spark?
 
-  if((!this->onlinePressed) && (this->lastOnline)) {
-    //marked as 'online'
-    this->lastOnline = this->onlinePressed;
-    Spark.connect();
-  } else if((this->onlinePressed) && (!this->lastOnline)) {
-    // marked as 'offline'
-    this->lastOnline = this->onlinePressed;
-    Spark.disconnect();
-  }
+  //onlinePressed is HIGH when the switch is _not_ connected and LOW when the switch is connected
+  //a.k.a. onlinePressed is HIGH when the switch is set to 'online' and LOW when the switch is set to 'offline'
+  onlinePressed=!digitalRead(INTERNET_BUTTON);
 
-  this->lastOnline = this->onlinePressed;
+  if((onlinePressed)&&(!lastOnline))  //marked as 'online'
+    {
+      lastOnline=onlinePressed;
+      Spark.connect();
+    }    
 
+  else if((!onlinePressed)&&(lastOnline))  //marked as 'offline'
+    {
+      lastOnline=onlinePressed;
+      Spark.disconnect();
+    }
+
+  lastOnline=onlinePressed;
+    
+  if(!digitalRead(MODE))
+    WiFi.listen();
 }
 
 void Cube::joinWifi()
@@ -467,22 +464,23 @@ void Cube::listen() {
   this->show();
 }
 
+/** Updates the variables related to the accelerometer
+updates accelerometerX, accelerometerY and accelerometerZ, which are directly read from the analog pins, minus 2048 to remove the DC bias
+
+calculates theta and phi, which are the 3D rotation angles
+ */
+void Cube::updateAccelerometer()
+{
+  accelerometerX=analogRead(X)-2048;
+  accelerometerY=analogRead(Y)-2048;
+  accelerometerZ=analogRead(Z)-2048;
+  theta=atan(accelerometerX/sqrt(pow(accelerometerY,2)+pow(accelerometerZ,2)))*180/3.14;
+  phi=atan(accelerometerY/sqrt(pow(accelerometerX,2)+pow(accelerometerZ,2)))*180/3.14;
+}
+
 /** Update the cube's knowledge of its own network address. */
 void Cube::updateNetworkInfo() {
   IPAddress myIp = WiFi.localIP();
   sprintf(this->localIP, "%d.%d.%d.%d", myIp[0], myIp[1], myIp[2], myIp[3]);
-  byte macAddr[6];
-  WiFi.macAddress(macAddr);
-  sprintf(this->macAddress, "%02x:%02x:%02x:%02x:%02x:%02x",macAddr[5],macAddr[4],macAddr[3],macAddr[2],macAddr[1],macAddr[0]);
 }
 
-/** Function to be called via Spark API for updating the streaming port number.
-    Resets the UDP connection with the new port.
-
-    @param _port A decimal number in a String, corresponding to the desired port number.
-*/
-int Cube::setPort(String _port) {
-  this->port = _port.toInt();
-  this->udp.begin(port);
-  return port;
-}

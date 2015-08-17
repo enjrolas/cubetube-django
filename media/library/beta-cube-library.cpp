@@ -395,7 +395,7 @@ void Cube::initButtons() {
   //a.k.a. onlinePressed is HIGH when the switch is set to 'online' and LOW when the switch is set to 'offline'
   this->onlinePressed = !digitalRead(INTERNET_BUTTON);
 
-  if(onlinePressed)
+    if(onlinePressed)
     Spark.connect();
 
   void (Cube::*check)(void) = &Cube::onlineOfflineSwitch;
