@@ -50,6 +50,7 @@ class Cube
   public:
     int size;
     int maxBrightness;
+    Point center;
     Cube(unsigned int s, unsigned int mb);
     Cube(void);
 

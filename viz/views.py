@@ -548,11 +548,9 @@ def edit(request, id):
 
 @csrf_exempt
 def save(request):
-
     nickname    = request.COOKIES['nickname']
     accessToken = request.COOKIES['accessToken']
     if authenticate(nickname, accessToken):
-
         vizID         = request.POST['vizId']
         name          = request.POST['name']
         description   = request.POST['description']

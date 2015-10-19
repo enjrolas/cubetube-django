@@ -27,7 +27,7 @@ Cube::Cube(unsigned int s, unsigned int mb) : \
 
 Cube::Cube() : \
     maxBrightness(50),
-    onlinePressed(true),
+    onlinePressed(false),
     lastOnline(true), 
     strip(Adafruit_NeoPixel(PIXEL_COUNT, PIXEL_PIN, PIXEL_TYPE)),
     size(8)
@@ -36,6 +36,7 @@ Cube::Cube() : \
 
 /** Initialization of cube resources and environment. */
 void Cube::begin(void) {
+  center=Point((cube.size-1)/2,(cube.size-1)/2,(cube.size-1)/2);
   strip.begin();
   //initialize Spark variables
     int (Cube::*setPort)(String) = &Cube::setPort;
