@@ -10,24 +10,31 @@
 
 {% block content %}
 <script type="text/javascript">
+var compilerData;
+var JSONstring;
 function flashCube(){
 var request=$.ajax({
 type:"POST",
-url:"{% url 'compile'%}", 
-data: {"code": $(".code").val(), "accessToken":accessToken, "coreID":$("#cubeName").val(), "vizName": "{{ viz.name }}", "vizId":"{{ viz.pk }}" },
+url:"{% url 'cloudFlash' %}", 
+data: {"code": $(".code").val(), "accessToken":accessToken, "deviceID":$("#cubeName").val(), "vizName": "{{ viz.name }}", "vizId":"{{ viz.pk }}" },
 dataType:"text",
 success: function(data){ 
-data = $.parseJSON(data);
+console.log("success flashing");
 console.log(data);
+JSONstring=data;
+var result = $.parseJSON(data);
+var result = $.parseJSON(result);
+compilerData=result;
+console.log(result);
 output="";
-if(data.compilation_status==="ok")
+if(result.ok)
 {
 output+="compilation status:  ok\n";
-output+="flashing status: "+data.flash_output;
+output+=result.message;
 }
 else
 {
-output+="compilation status: "+data.compilation_status+"\nerrors:\n"+data.error+"\n";
+output+="compilation status: "+result.ok+"\nerrors:\n"+result.errors+"\n";
 }
 $("textarea.output").val(output);
 },
@@ -149,9 +156,9 @@ console.log(data);}
       {% if logged_in %}
 
         {% if viz.creator.nickname == request.COOKIES.nickname %}
-          <a class="round-button button-transparent edit-sketch" href="/edit/{{viz.pk}}">Edit Sketch</a>
+          <a class="round-button button-transparent edit-sketch" href="{% url 'edit' viz.pk %}">Edit Sketch</a>
         {% else %}
-          <a class="round-button button-transparent fork-sketch" href="/fork/{{ viz.pk }}/">Fork Sketch</a>
+          <a class="round-button button-transparent fork-sketch" href="{% url 'fork' viz.pk %}">Fork Sketch</a>
         {% endif %}
 
       {% else %}

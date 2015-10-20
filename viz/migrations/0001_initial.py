@@ -50,6 +50,7 @@ class Migration(migrations.Migration):
                 ('binaryPath', models.TextField(blank=True)),
                 ('interactive', models.BooleanField(default=False)),
                 ('published', models.BooleanField(default=False)),
+                ('featured', models.BooleanField(default=False)),
                 ('pageViews', models.IntegerField(default=0)),
                 ('creator', models.ForeignKey(to='cube.CubeUser')),
                 ('parent', models.ForeignKey(default=None, blank=True, to='viz.Viz', null=True)),
