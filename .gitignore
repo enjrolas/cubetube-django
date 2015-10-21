@@ -3,7 +3,7 @@
 *.pyc
 *~*
 /logs
-/Apache
+django.wsgi
 /env
 */settings.py
 *~
