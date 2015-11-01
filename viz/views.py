@@ -209,6 +209,36 @@ def cloudFlash(request):
 
     '''
 
+    '''
+
+    lines=code.split('\n')
+    i=0
+    code=""
+    setupStarted=False
+    codeInserted=False
+    for line in lines:
+        if not setupCodeInserted:
+            if not setupStarted:
+                if line.find("setup()")!=-1:
+                    setupStarted=True
+            else:
+                if line.find("}")!=-1:
+                    log.debug("inserting code")
+                    code="%s\n%s" % (code,  "Spark.variable(\"vizName\", vizName, STRING);\nSpark.variable(\"vizId\", &vizId, INT);")                
+                    setupCodeInserted=True
+            if not setupCodeInserted:
+            if not setupStarted:
+                if line.find("setup()")!=-1:
+                    setupStarted=True
+            else:
+                if line.find("}")!=-1:
+                    log.debug("inserting code")
+                    code="%s\n%s" % (code,  "Spark.variable(\"vizName\", vizName, STRING);\nSpark.variable(\"vizId\", &vizId, INT);")                
+                    setupCodeInserted=True
+        code="%s\n%s" % (code, line)
+        i+=1
+    '''
+
     timestamp=datetime.datetime.now().strftime('%Y-%m-%d--%H.%M.%S')
     filename=timestamp+".ino"
     directory= "/home/glass/cubetube-production/media/cloudware/"
