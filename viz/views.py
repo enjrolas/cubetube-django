@@ -241,7 +241,7 @@ def cloudFlash(request):
 
     timestamp=datetime.datetime.now().strftime('%Y-%m-%d--%H.%M.%S')
     filename=timestamp+".ino"
-    directory= "/home/glass/cubetube-production/media/cloudware/"
+    directory=settings.CODE_DIRECTORY
     log.debug("saving code to file %s%s" % (directory, filename))
     f = open(directory + filename, 'w')
     log.debug(directory)
