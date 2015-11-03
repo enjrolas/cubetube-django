@@ -58,7 +58,7 @@
 						if (result.success) {
 							alert("Viz Deleted!");
 							//Remove the viz card from view in the gallery
-							window.parent.$("#"+"{{ viz.pk }}").hide();
+							parent.$("#"+"{{ viz.pk }}").remove();
 							//Call the parent js method to close the iframe
 							parent.closeViz();
 						}
