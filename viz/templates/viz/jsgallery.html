@@ -3,6 +3,9 @@
 {% load card %}
 
 {% block headx %}
+	<!-- to keep this view from reloading from the cache (especially nasty after deletions) -->
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Expires" content="-1">
     {% if featuredViz %}
         <!-- for Google -->
         <meta name="description" content="{{ featuredViz.description }}" />

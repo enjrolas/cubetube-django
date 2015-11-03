@@ -576,6 +576,27 @@ def edit(request, id):
         viz = None
     return render(request, "viz/create.html", { "viz": viz, "source": source} )
 
+
+@csrf_exempt
+def delete(request):
+    nickname    = request.COOKIES['nickname']
+    accessToken = request.COOKIES['accessToken']
+    if authenticate(nickname, accessToken):
+        try:
+            vizId=request.POST['vizId']
+            viz=Viz.objects.get(pk=vizId)
+            viz.delete()
+            return HttpResponse('{ "success": true }', content_type="application/json")
+        except Viz.DoesNotExist:
+            viz = None
+            return HttpResponse('{ "success": false , "error" : "Viz %s does not exist" }' % vizId, content_type="application/json")
+    else:
+        return render(request, "viz/authentication-error.html", 
+                      { "nickname": nickname,
+                        "accessToken": accessToken,
+                        "authenticated":authenticate(nickname, accessToken)})
+
+
 @csrf_exempt
 def save(request):
     nickname    = request.COOKIES['nickname']
