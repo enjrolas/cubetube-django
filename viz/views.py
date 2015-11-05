@@ -439,7 +439,7 @@ def viz(request, id):
     else:
         return render(request, "viz/viz.html", { 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})
 
-
+''' Redeclaring above method; keeping it here for a while, until it's safe to remove
 def viz(request, id):
     currentViz=Viz.objects.get(pk=id)
     try:
@@ -473,7 +473,7 @@ def viz(request, id):
         return render(request, "viz/viz.html", { 'nextViz': nextViz, 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})    
     else:
         return render(request, "viz/viz.html", { 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})
-
+'''
 def vizText(request, id):
     currentViz=Viz.objects.get(pk=id)
     try:
