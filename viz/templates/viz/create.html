@@ -88,8 +88,8 @@
 {% if viz %}
 {% endif %}
 <div class="viz-wrapper create-wrapper" {% if viz %}viz-id="{{ viz.pk }}"{% endif %} >
-
   <div class="viz-nav">
+  	<a class="close-button" onclick="parent.closeViz(); parent.closeCreate();">Close</a>
     <div class="nav-info"></div>
     <a class="round-button button-red save-code">Save</a>
     <div class="cube-options">

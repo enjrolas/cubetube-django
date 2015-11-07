@@ -54,7 +54,7 @@
 {% endif %}
 
   <div class="viz-nav">
-    
+    <a class="close-button" onclick="parent.closeViz(); parent.closeCreate();">Close</a>
     {% if source %}
       <a class="round-button button-red view-code">View Code</a>
     {% endif %}
@@ -167,7 +167,7 @@
     <div class="code-area">
       <textarea rows="80" cols="120" id="code" class="code inout">{{ source.code }}</textarea>
    </div>
-    <textarea cols="120" rows="10" class="console output" readonly placeholder="Console output..." style="overflow: auto;"></textarea>
+    <textarea cols="120" rows="10" class="console output" readonly placeholder="Console output..."></textarea>
   </div>
   {% endif %}
 </div>

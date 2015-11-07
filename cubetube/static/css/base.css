@@ -337,6 +337,18 @@ button {
     border: 1px solid #ccc;
     background: #F9F9F9;
     color: #000; }
+  .viz-wrapper .close-button {
+  	opacity: 0.8;
+    text-decoration: none;
+    font-family: roboto;
+    background: #ee0026;
+    color: #F9F9F9;
+    float: left;
+    padding: 8px 20px;
+    border-radius: 3px;
+    font-size: 14px;
+    font-weight: normal;
+    cursor: pointer; }
   .viz-wrapper .viz-nav {
     height: 60px;
     padding-left: 10px;
@@ -486,6 +498,8 @@ button {
       background: #000; }
     .viz-wrapper .viz-code .console {
       padding: 10px;
+	  overflow: auto; 
+	  width: 690px;
       height: 148px;
       border: 0px;
       outline: 0px; }
