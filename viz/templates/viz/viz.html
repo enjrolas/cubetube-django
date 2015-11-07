@@ -42,43 +42,6 @@
 			}
 		});
 	}
-	
-	function deleteViz(){
-	    var vizAuthor = $('.viz-wrapper').attr('data-viz-author');
-		if (vizAuthor == $.cookie("nickname")){
-			var confirmMessage="Sure to get rid of this viz? (this action CANNOT be undone)\n\nClick either \"OK\" to proceed or \"Cancel\" to go back";
-			if (confirm(confirmMessage) == true){
-				var request=$.ajax({
-					type:"POST",
-					url:"{% url 'delete' %}", 
-					data: {"vizId":"{{ viz.pk }}" },
-					dataType:"text",
-					success: function(data){
-						var result = $.parseJSON(data);
-						if (result.success) {
-							alert("Viz Deleted!");
-							//Remove the viz card from view in the gallery
-							parent.$("#"+"{{ viz.pk }}").remove();
-							//Call the parent js method to close the iframe
-							parent.closeViz();
-						}
-						else alert("Whoops! Something unexpected happened.");
-					},
-					error: function(data){
-						var result = $.parseJSON(data);
-						if(result.error) alert(result.error);
-						else alert('Something went terribly wrong - Call 911');
-					}
-				});
-			}
-		}
-	}
-	
-	$( document ).ready(function() {
-		var vizAuthor = $('.viz-wrapper').attr('data-viz-author');
-		if (vizAuthor == $.cookie("nickname")) $("#btnDeleteViz").show();
-		else $("#btnDeleteViz").hide();
-	});
 </script>
 
 {% load utils %}
@@ -98,7 +61,6 @@
 
     {% if logged_in %}
       <div class="cube-options">
-	  <a id="btnDeleteViz" class="round-button button-grey" style="display:none;" onclick="deleteViz()">Delete this Viz</a>
 	{% if viz.vizType == "L3D" %}
         <a class="round-button button-grey sent-to-cube" onclick="flashCube()">Send to Cube</a>
 	{% elif viz.vizType == "javascript" %}

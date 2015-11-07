@@ -348,12 +348,12 @@ button {
     z-index: 2; }
   .viz-wrapper .viz-demo {
     width: 815px; /*800px;*/
-    height: 410px;
+    height: 310px;
     background: #1c1521;
     position: relative;
     text-align: center; }
     .viz-wrapper .viz-demo canvas {
-      height: 410px; }
+      height: 310px; }
     .viz-wrapper .viz-demo .background-image {
       position: absolute;
       left: 0px;
@@ -365,9 +365,12 @@ button {
       background-position: 50% 50%; }
   .viz-wrapper .inner-wrapper {
     margin: auto;
-    width: 580; }
+    height: 130px;
+    width: 560px; }
   .viz-wrapper .viz-details {
-    padding-top: 30px; }
+	width: 610px;
+	/*overflow-y: auto;*/
+    padding-top: 10px; }
     .viz-wrapper .viz-details .title {
       font-color: #000;
       font-weight: 800;
@@ -380,8 +383,8 @@ button {
     width: 100%;
     border: 1px solid #ccc;
     border-radius: 4px;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     height: 50px;
     font-size: 14px;
     position: relative; }
@@ -409,9 +412,9 @@ button {
       border-radius: 0px 3px 3px 0px; }
   .viz-wrapper .viz-comments {
     background: #f9f9f9;
-    padding-top: 30px;
+    padding-top: 5px;
     padding-bottom: 35px;
-    margin-top: 30px;
+    margin-top: 25px;
     border-top: 1px solid #ededed; }
     .viz-wrapper .viz-comments .comments-title {
       font-weight: 700;
@@ -430,7 +433,7 @@ button {
       float: left;
       margin-left: 0px;
       display: block;
-      margin-right: 440px;
+      margin-right: 424px;
       margin-bottom: 20px; }
     .viz-wrapper .viz-comments textarea {
       resize: none; }
@@ -483,11 +486,11 @@ button {
       background: #000; }
     .viz-wrapper .viz-code .console {
       padding: 10px;
-      height: 63px;
+      height: 148px;
       border: 0px;
       outline: 0px; }
   .viz-wrapper.code-active .viz-nav {
-    padding-right: 223px; }
+    padding-right: 220px; }
   .viz-wrapper.code-active .viz-code {
     -webkit-transform: translateX(-300px);
     -moz-transform: translateX(-300px);
@@ -515,7 +518,7 @@ button {
   position: fixed;
   top: 0px;
   right: 0px;
-  width: 1100px;
+  width: 1300px;
   height: 100%;
   border: 0;
   z-index: 2; }
@@ -530,15 +533,17 @@ button {
     color: #fff; }
 
 .create-wrapper {
-  width: 500px; }
+  width: 815px; }
   .create-wrapper .viz-nav,
   .create-wrapper .viz-demo,
   .create-wrapper .viz-demo canvas {
-    width: 500px; }
+    width: 610px; }
   .create-wrapper .viz-details {
-    padding-bottom: 30px; }
+	width: 610px;
+	/*overflow-y: scroll;*/
+	padding-bottom: 30px; }
   .create-wrapper .viz-code {
-    left: 500px; }
+    left: 610px; }
   .create-wrapper .inner-wrapper {
     width: 450px; }
   .create-wrapper .viz-name,
