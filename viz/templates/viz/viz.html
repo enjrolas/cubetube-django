@@ -42,6 +42,49 @@
 			}
 		});
 	}
+	
+	//Functions for dynamically expanding and collapsing the viz's description 
+	function expandDesc(){
+		if($('.viz-description').css('height') != '130px'){
+			//Python has a weird way of breaking long strings with newline chars rendering
+			//them 'un-parseable' to the js engine, so we need to make sure these chars
+			//are properly detected and replaced beforehand, at the python interpreter;
+			//After this, we replace these chars by an empty space with the js engine. 
+			var newDescr = '{{ viz.description|linebreaksbr }}'.replace('<br />', ' ');
+			var wrapDescr = '';
+			//We've removed the html line breaks inserted by python because now we're going
+			//to manually place them after every 80th character of the description string.
+	        for (var i = 0; i < newDescr.length - 79; i += 79)
+	            wrapDescr += newDescr.substr(i, i + 79) + '<br />';
+			$('.inner-wrapper').delay('slow').stop().animate({ height: '260px' }, 'fast', 'linear', function() {
+			    // Animation complete.
+				$('#viz-description').hide('fast');
+				$('.viz-description').animate({ height: '130px' }, 'fast', 'linear', function() {
+				    // Animation complete.
+					$('#viz-description').html(wrapDescr.substring(0, wrapDescr.lastIndexOf('<br />')));
+					$('#viz-description').show('slow');
+				});
+			});
+		}
+	}
+	function collapseDesc(){
+		if($('.inner-wrapper').css('height') != '130px'){
+			//Python has a weird way of breaking long strings with newline chars rendering
+			//them 'un-parseable' to the js engine, so we need to make sure these chars
+			//are properly detected and replaced beforehand, at the python interpreter;
+			//After this, we replace these chars by an empty space with the js engine. 
+			var newDescr = "{{ viz.description|linebreaksbr }}".replace("<br />", " ").substring(0, 75) + " ...";
+			$('.viz-description').delay('slow').stop().animate({ height: '20px' }, 'fast', 'linear', function() {
+			    // Animation complete.
+		    	$('#viz-description').hide('fast');
+				$('.inner-wrapper').animate({ height: '130px' }, 'fast', 'linear', function() {
+				    // Animation complete.
+					$('#viz-description').html(newDescr);
+					$('#viz-description').show('slow');
+				});
+			});
+		}
+	}
 </script>
 
 {% load utils %}
@@ -111,12 +154,18 @@
         <div class="facebook">Facebook</div>
       </div>
 
-      <div class="viz-description">
-        {{ viz.description }}
-      </div>
+	{% if viz.description|length <= 80 %} 
+		<div class="viz-description" style="width: 585px;">
+			<span id="viz-description">{{ viz.description }}</span>
+		</div>
+	{% else %}
+      	<div class="viz-description" onmouseenter="expandDesc();" onmouseleave="collapseDesc();" style="width: 585px; overflow: auto;">
+			<span id="viz-description">{{ viz.description|truncatechars:79 }}</span>
+		</div>
+	{% endif %}
     </div>
 
-    <div class="viz-comments clearfix">
+    <div class="viz-comments clearfix" style="height: 160px; overflow: auto;">
       <div class="inner-wrapper">
         <div class="comments-title">
           Comments:

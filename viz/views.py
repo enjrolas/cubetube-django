@@ -403,7 +403,14 @@ def fork(request, vizId=None):
 
         return redirect('edit', id=forked.pk)
     else:
-        raise Http404 
+        nickname    = request.COOKIES['nickname']
+        accessToken = request.COOKIES['accessToken']
+        if authenticate(nickname, accessToken):
+            return render(request, "viz/authentication-error.html", 
+                          { "nickname": nickname,
+                            "accessToken": accessToken,
+                            "authenticated":authenticate(nickname, accessToken)})
+        else: raise Http404 
 
 def viz(request, id):
     currentViz=Viz.objects.get(pk=id)
