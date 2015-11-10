@@ -403,7 +403,14 @@ def fork(request, vizId=None):
 
         return redirect('edit', id=forked.pk)
     else:
-        raise Http404 
+        nickname    = request.COOKIES['nickname']
+        accessToken = request.COOKIES['accessToken']
+        if authenticate(nickname, accessToken):
+            return render(request, "viz/authentication-error.html", 
+                          { "nickname": nickname,
+                            "accessToken": accessToken,
+                            "authenticated":authenticate(nickname, accessToken)})
+        else: raise Http404 
 
 def viz(request, id):
     currentViz=Viz.objects.get(pk=id)
@@ -439,7 +446,7 @@ def viz(request, id):
     else:
         return render(request, "viz/viz.html", { 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})
 
-
+''' Redeclaring above method; keeping it here for a while, until it's safe to remove
 def viz(request, id):
     currentViz=Viz.objects.get(pk=id)
     try:
@@ -473,7 +480,7 @@ def viz(request, id):
         return render(request, "viz/viz.html", { 'nextViz': nextViz, 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})    
     else:
         return render(request, "viz/viz.html", { 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})
-
+'''
 def vizText(request, id):
     currentViz=Viz.objects.get(pk=id)
     try:

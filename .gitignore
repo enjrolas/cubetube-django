@@ -8,3 +8,4 @@ django.wsgi
 */settings.py
 *~
 *.ino
+/cubetube-dev

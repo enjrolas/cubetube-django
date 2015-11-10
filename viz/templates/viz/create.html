@@ -43,6 +43,43 @@
 			}
 		});
 	}
+	
+	function deleteViz(){
+	    //var vizAuthor = $('.viz-wrapper').attr('data-viz-author');
+		//if (vizAuthor == $.cookie("nickname")){
+			var confirmMessage="Sure to get rid of this viz? (this action CANNOT be undone)\n\nClick either \"OK\" to proceed or \"Cancel\" to go back";
+			if (confirm(confirmMessage) == true){
+				var request=$.ajax({
+					type:"POST",
+					url:"{% url 'delete' %}", 
+					data: {"vizId":"{{ viz.pk }}" },
+					dataType:"text",
+					success: function(data){
+						var result = $.parseJSON(data);
+						if (result.success) {
+							alert("Viz Deleted!");
+							//Remove the viz card from view in the gallery
+							parent.$("#"+"{{ viz.pk }}").remove();
+							//Call the parent js method to close the iframe
+							parent.closeViz();
+						}
+						else alert("Whoops! Something unexpected happened.");
+					},
+					error: function(data){
+						var result = $.parseJSON(data);
+						if(result.error) alert(result.error);
+						else alert('Something went terribly wrong - Call 911');
+					}
+				});
+			}
+		//}
+	}
+	
+	/*$( document ).ready(function() {
+		var vizAuthor = parent.$('.viz-wrapper').attr('data-viz-author');
+		if (vizAuthor == $.cookie("nickname")) $("#btnDeleteViz").show();
+		else $("#btnDeleteViz").hide();
+	});*/
 </script>
 
 {% load utils %}
@@ -51,8 +88,8 @@
 {% if viz %}
 {% endif %}
 <div class="viz-wrapper create-wrapper" {% if viz %}viz-id="{{ viz.pk }}"{% endif %} >
-
   <div class="viz-nav">
+  	<a class="close-button" onclick="parent.closeViz(); parent.closeCreate();">Close</a>
     <div class="nav-info"></div>
     <a class="round-button button-red save-code">Save</a>
     <div class="cube-options">
@@ -125,6 +162,9 @@
 
   <div class="viz-code">
     <div class="viz-code-header">
+ 	{% if viz %}
+   		<a id="btnDeleteViz" class="round-button button-transparent" onclick="deleteViz();">Delete this Viz</a>
+   	{% endif %}
       <a class="round-button button-red run-sketch">Update Demo</a>
       <div class="switch-box viz-type">
         {% if viz %}

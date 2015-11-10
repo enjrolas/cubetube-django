@@ -124,7 +124,7 @@ $(function(){
 });
 
 function setHeight() {
-    $( '.CodeMirror' ).height(window.innerHeight - 180)
+    $( '.CodeMirror' ).height(window.innerHeight - 268)
 }
 
 window.onresize = setHeight;

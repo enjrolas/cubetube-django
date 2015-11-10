@@ -29,9 +29,13 @@ $(function(){
 
         if( $box.hasClass('interactive') ) {
             if( $on.html() === 'Yes') {
-                $('.video-url').hide();
+            	$('.video-url').animate({ left: '-100px' }, 100, function() {
+                    $('.video-url').hide("fast");
+            	});
             } else {
-                $('.video-url').show();
+	        	$('.video-url').animate({ left: '+0px' }, 100, 'linear', function() {
+	                $('.video-url').show("slow");
+	        	});
             }
         }
     })
