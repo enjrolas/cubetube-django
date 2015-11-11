@@ -11,75 +11,32 @@
 
 {% block content %}
 <script type="text/javascript">
-	var compilerData;
-	var JSONstring;
-	function flashCube(){
-		var request=$.ajax({
-			type:"POST",
-			url:"{% url 'cloudFlash' %}", 
-			data: {"code": $(".code").val(), "accessToken":accessToken, "deviceID":$("#cubeName").val(), "vizName": "{{ viz.name }}", "vizId":"{{ viz.pk }}" },
-			dataType:"text",
-			success: function(data){
-				console.log("success flashing");
-				console.log(data);
-				JSONstring=data;
-				var result = $.parseJSON(data);
-				var result = $.parseJSON(result);
-				compilerData=result;
-				console.log(result);
-				output="";
-				if(result.ok){
-					output+="compilation status:  ok\n";
-					output+=result.message;
-				}
-				else{
-					output+="compilation status: "+result.ok+"\nerrors:\n"+result.errors+"\n";
-				}
-				$("textarea.output").val(output);
-			},
-			error: function(data){
-				console.log("fail");
-				console.log(data);
-			}
-		});
-	}
-	
-	function deleteViz(){
-	    //var vizAuthor = $('.viz-wrapper').attr('data-viz-author');
-		//if (vizAuthor == $.cookie("nickname")){
-			var confirmMessage="Sure to get rid of this viz? (this action CANNOT be undone)\n\nClick either \"OK\" to proceed or \"Cancel\" to go back";
-			if (confirm(confirmMessage) == true){
-				var request=$.ajax({
-					type:"POST",
-					url:"{% url 'delete' %}", 
-					data: {"vizId":"{{ viz.pk }}" },
-					dataType:"text",
-					success: function(data){
-						var result = $.parseJSON(data);
-						if (result.success) {
-							alert("Viz Deleted!");
-							//Remove the viz card from view in the gallery
-							parent.$("#"+"{{ viz.pk }}").remove();
-							//Call the parent js method to close the iframe
-							parent.closeViz();
-						}
-						else alert("Whoops! Something unexpected happened.");
-					},
-					error: function(data){
-						var result = $.parseJSON(data);
-						if(result.error) alert(result.error);
-						else alert('Something went terribly wrong - Call 911');
-					}
-				});
-			}
-		//}
-	}
-	
-	/*$( document ).ready(function() {
-		var vizAuthor = parent.$('.viz-wrapper').attr('data-viz-author');
-		if (vizAuthor == $.cookie("nickname")) $("#btnDeleteViz").show();
-		else $("#btnDeleteViz").hide();
-	});*/
+function flashCube(){
+var request=$.ajax({
+type:"POST",
+url:"{% url 'cloudFlash' %}", 
+data: {"code": $(".code").val(), "accessToken":accessToken, "deviceID":$("#cubeName").val(), "vizName": "{{ viz.name }}", "vizId":"{{ viz.pk }}" },
+dataType:"text",
+success: function(data){ 
+data = $.parseJSON(data);
+console.log(data);
+output="";
+if(data.compilation_status==="ok")
+{
+output+="compilation status:  ok\n";
+output+="flashing status: "+data.flash_output;
+}
+else
+{
+output+="compilation status: "+data.compilation_status+"\nerrors:\n"+data.error+"\n";
+}
+$("textarea.output").val(output);
+},
+error: function(data){
+console.log("fail");
+console.log(data);}
+});
+}
 </script>
 
 {% load utils %}
@@ -88,8 +45,8 @@
 {% if viz %}
 {% endif %}
 <div class="viz-wrapper create-wrapper" {% if viz %}viz-id="{{ viz.pk }}"{% endif %} >
+
   <div class="viz-nav">
-  	<a class="close-button" onclick="parent.closeViz(); parent.closeCreate();">Close</a>
     <div class="nav-info"></div>
     <a class="round-button button-red save-code">Save</a>
     <div class="cube-options">
@@ -162,9 +119,6 @@
 
   <div class="viz-code">
     <div class="viz-code-header">
- 	{% if viz %}
-   		<a id="btnDeleteViz" class="round-button button-transparent" onclick="deleteViz();">Delete this Viz</a>
-   	{% endif %}
       <a class="round-button button-red run-sketch">Update Demo</a>
       <div class="switch-box viz-type">
         {% if viz %}

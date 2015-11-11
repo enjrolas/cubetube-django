@@ -10,52 +10,94 @@
 
 {% block content %}
 <script type="text/javascript">
-var compilerData;
-var JSONstring;
-function flashCube(){
-var request=$.ajax({
-type:"POST",
-url:"{% url 'cloudFlash' %}", 
-data: {"code": $(".code").val(), "accessToken":accessToken, "deviceID":$("#cubeName").val(), "vizName": "{{ viz.name }}", "vizId":"{{ viz.pk }}" },
-dataType:"text",
-success: function(data){ 
-console.log("success flashing");
-console.log(data);
-JSONstring=data;
-var result = $.parseJSON(data);
-var result = $.parseJSON(result);
-compilerData=result;
-console.log(result);
-output="";
-if(result.ok)
-{
-output+="compilation status:  ok\n";
-output+=result.message;
-}
-else
-{
-output+="compilation status: "+result.ok+"\nerrors:\n"+result.errors+"\n";
-}
-$("textarea.output").val(output);
-},
-error: function(data){
-console.log("fail");
-console.log(data);}
-});
-}
+	var compilerData;
+	var JSONstring;
+	function flashCube(){
+		var request=$.ajax({
+			type:"POST",
+			url:"{% url 'cloudFlash' %}", 
+			data: {"code": $(".code").val(), "accessToken":accessToken, "deviceID":$("#cubeName").val(), "vizName": "{{ viz.name }}", "vizId":"{{ viz.pk }}" },
+			dataType:"text",
+			success: function(data){ 
+				console.log("success flashing");
+				console.log(data);
+				JSONstring=data;
+				var result = $.parseJSON(data);
+				var result = $.parseJSON(result);
+				compilerData=result;
+				console.log(result);
+				output="";
+				if(result.ok){
+					output+="compilation status:  ok\n";
+					output+=result.message;
+				}
+				else{
+					output+="compilation status: "+result.ok+"\nerrors:\n"+result.errors+"\n";
+				}
+				$("textarea.output").val(output);
+			},
+			error: function(data){
+					console.log("fail");
+					console.log(data);
+			}
+		});
+	}
+	
+	//Functions for dynamically expanding and collapsing the viz's description 
+	function expandDesc(){
+		if($('.viz-description').css('height') != '130px'){
+			//Python has a weird way of breaking long strings with newline chars rendering
+			//them 'un-parseable' to the js engine, so we need to make sure these chars
+			//are properly detected and replaced beforehand, at the python interpreter;
+			//After this, we replace these chars by an empty space with the js engine. 
+			var newDescr = '{{ viz.description|linebreaksbr }}'.replace('<br />', ' ');
+			var wrapDescr = '';
+			//We've removed the html line breaks inserted by python because now we're going
+			//to manually place them after every 80th character of the description string.
+	        for (var i = 0; i < newDescr.length - 79; i += 79)
+	            wrapDescr += newDescr.substr(i, i + 79) + '<br />';
+			$('.inner-wrapper').delay('slow').stop().animate({ height: '260px' }, 'fast', 'linear', function() {
+			    // Animation complete.
+				$('#viz-description').hide('fast');
+				$('.viz-description').animate({ height: '130px' }, 'fast', 'linear', function() {
+				    // Animation complete.
+					$('#viz-description').html(wrapDescr.substring(0, wrapDescr.lastIndexOf('<br />')));
+					$('#viz-description').show('slow');
+				});
+			});
+		}
+	}
+	function collapseDesc(){
+		if($('.inner-wrapper').css('height') != '130px'){
+			//Python has a weird way of breaking long strings with newline chars rendering
+			//them 'un-parseable' to the js engine, so we need to make sure these chars
+			//are properly detected and replaced beforehand, at the python interpreter;
+			//After this, we replace these chars by an empty space with the js engine. 
+			var newDescr = "{{ viz.description|linebreaksbr }}".replace("<br />", " ").substring(0, 75) + " ...";
+			$('.viz-description').delay('slow').stop().animate({ height: '20px' }, 'fast', 'linear', function() {
+			    // Animation complete.
+		    	$('#viz-description').hide('fast');
+				$('.inner-wrapper').animate({ height: '130px' }, 'fast', 'linear', function() {
+				    // Animation complete.
+					$('#viz-description').html(newDescr);
+					$('#viz-description').show('slow');
+				});
+			});
+		}
+	}
 </script>
 
 {% load utils %}
 {% logged_in_status as logged_in %}
 
 {% if source %}
-  <div class="viz-wrapper" data-viz-type="{{ viz.vizType }}" data-viz-id="{{ viz.pk }}" data-viz-url="{% url 'code' source.pk %}">
+  <div class="viz-wrapper" data-viz-type="{{ viz.vizType }}" data-viz-id="{{ viz.pk }}" data-viz-author="{{ viz.creator.nickname }}" data-viz-url="{% url 'code' source.pk %}">
 {% else %}
-  <div class="viz-wrapper" data-viz-type="{{ viz.vizType }}" data-viz-id="{{ viz.pk }}">
+  <div class="viz-wrapper" data-viz-type="{{ viz.vizType }}" data-viz-id="{{ viz.pk }}" data-viz-author="{{ viz.creator.nickname }}">
 {% endif %}
 
   <div class="viz-nav">
-    
+    <a class="close-button" onclick="parent.closeViz(); parent.closeCreate();">Close</a>
     {% if source %}
       <a class="round-button button-red view-code">View Code</a>
     {% endif %}
@@ -112,12 +154,18 @@ console.log(data);}
         <div class="facebook">Facebook</div>
       </div>
 
-      <div class="viz-description">
-        {{ viz.description }}
-      </div>
+	{% if viz.description|length <= 80 %} 
+		<div class="viz-description" style="width: 585px;">
+			<span id="viz-description">{{ viz.description }}</span>
+		</div>
+	{% else %}
+      	<div class="viz-description" onmouseenter="expandDesc();" onmouseleave="collapseDesc();" style="width: 585px; overflow: auto;">
+			<span id="viz-description">{{ viz.description|truncatechars:79 }}</span>
+		</div>
+	{% endif %}
     </div>
 
-    <div class="viz-comments clearfix">
+    <div class="viz-comments clearfix" style="height: 160px; overflow: auto;">
       <div class="inner-wrapper">
         <div class="comments-title">
           Comments:

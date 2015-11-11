@@ -403,7 +403,14 @@ def fork(request, vizId=None):
 
         return redirect('edit', id=forked.pk)
     else:
-        raise Http404 
+        nickname    = request.COOKIES['nickname']
+        accessToken = request.COOKIES['accessToken']
+        if authenticate(nickname, accessToken):
+            return render(request, "viz/authentication-error.html", 
+                          { "nickname": nickname,
+                            "accessToken": accessToken,
+                            "authenticated":authenticate(nickname, accessToken)})
+        else: raise Http404 
 
 def viz(request, id):
     currentViz=Viz.objects.get(pk=id)
@@ -439,7 +446,7 @@ def viz(request, id):
     else:
         return render(request, "viz/viz.html", { 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})
 
-
+''' Redeclaring above method; keeping it here for a while, until it's safe to remove
 def viz(request, id):
     currentViz=Viz.objects.get(pk=id)
     try:
@@ -473,7 +480,7 @@ def viz(request, id):
         return render(request, "viz/viz.html", { 'nextViz': nextViz, 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})    
     else:
         return render(request, "viz/viz.html", { 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})
-
+'''
 def vizText(request, id):
     currentViz=Viz.objects.get(pk=id)
     try:
@@ -575,6 +582,27 @@ def edit(request, id):
     except Viz.DoesNotExist:
         viz = None
     return render(request, "viz/create.html", { "viz": viz, "source": source} )
+
+
+@csrf_exempt
+def delete(request):
+    nickname    = request.COOKIES['nickname']
+    accessToken = request.COOKIES['accessToken']
+    if authenticate(nickname, accessToken):
+        try:
+            vizId=request.POST['vizId']
+            viz=Viz.objects.get(pk=vizId)
+            viz.delete()
+            return HttpResponse('{ "success": true }', content_type="application/json")
+        except Viz.DoesNotExist:
+            viz = None
+            return HttpResponse('{ "success": false , "error" : "Viz %s does not exist" }' % vizId, content_type="application/json")
+    else:
+        return render(request, "viz/authentication-error.html", 
+                      { "nickname": nickname,
+                        "accessToken": accessToken,
+                        "authenticated":authenticate(nickname, accessToken)})
+
 
 @csrf_exempt
 def save(request):

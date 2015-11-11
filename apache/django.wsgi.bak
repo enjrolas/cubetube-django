@@ -1,0 +1,13 @@
+import os
+import sys
+import site
+
+# Add the app's directory to the PYTHONPATH
+
+sys.path.append('/home/glass/cubetube-django')
+sys.path.append('/home/glass/cubetube-django/cubetube')
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'cubetube.settings'
+
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()

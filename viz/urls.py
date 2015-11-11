@@ -25,4 +25,5 @@ urlpatterns = [
     url(r'^create/', views.create, name='create'),
     url(r'^upload/', views.upload, name='upload'),
     url(r'^edit/(?P<id>\d+)/$', views.edit, name='edit'),
+    url(r'^delete/', views.delete, name='delete'),
 ]

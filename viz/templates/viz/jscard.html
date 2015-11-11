@@ -1,6 +1,6 @@
 {% load staticfiles %}
 
-<a class="viz-card" href="{% url 'viz' viz.pk %}">
+<a class="viz-card" id="{{ viz.pk }}" href="{% url 'viz' viz.pk %}">
   <div class="viz-demo">
       {% if viz.interactive %}
         <div class="interactive-bg"></div>
