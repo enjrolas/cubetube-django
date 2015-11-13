@@ -52,71 +52,25 @@ $(function(){
         }
     })
 
-    $('.save-code').click(function() {
+/*$('.save-code').click********************************************/
 
-        var saveData = getData();
-        var goodToGo = validate(saveData);
-
-	var validProgram=checkProgramValidity(saveData);
-
-        if( goodToGo ) {
-
-            if( editing === false) {
-
-                // Ajax request to create!
-                $.ajax({
-                    type: 'post',
-                    dataType: 'json',
-                    url: '/upload/',
-                    data: saveData,
-                    success: function( data ) {
-                        checkData(data);
-                    },
-                    error: function( data ) {
-                        checkData(data);
-                    }
-                });
-
-            } else {
-
-                var vizId = $( '.create-wrapper' ).attr('viz-id');
-
-                saveData.vizId = vizId;
-
-                // Ajax request to edit
-                $.ajax({
-                    type: 'post',
-                    dataType: 'json',
-                    url: '/save/',
-                    data: saveData,
-                    success: function( data ) {
-                        checkDataAfterSave(data);
-                    },
-                    error: function( data ) {
-                        checkDataAfterSave(data);
-                    }
-                })
-            }
-        }
-    });
-
-});
+});	//$(function()
 
 function checkProgramValidity(data){
     var vizType = data['viz-type'];
     var code=data['sourceCode'];
-        if( vizType === 'L3D') {
-            compileCode();
-        } else if ( vizType === 'JS' ) {
+    if( vizType === 'L3D') {
+        compileCode();
+    } 
+    else if ( vizType === 'JS' ) {
 	    try{
-		runSketch();
+	    	runSketch();
 	    }
 	    catch(err){
-		console.log(err);
-		makePrivate();
+			console.log(err);
+			makePrivate();
 	    }
-        }
-
+    }
 }
 
 function compileCode(){
@@ -152,34 +106,7 @@ function makePrivate(){
     console.log("viz doesn't run -- making it private");
 }
 
-function checkDataAfterSave( data ) {
-    
-    if ( data.success ) {
-        alert("Viz Updated!");
-    } else {
-        console.log( "Error!", data );
-    }
-}
-
-function checkData( data ) {
-
-    // console.log( data );
-    // var data = JSON.parse(data.responseText);
-    if ( data.success ) {
-        onCreateSuccess( data.id );
-    } else {
-        console.log( "Error!", data );
-    }
-}
-
-// Switch to "fork" mode
-function onCreateSuccess( id ) {
-    
-    editing = true;
-    $( '.create-wrapper' ).attr('viz-id', id);
-    $('.save-code').html('Update Viz');
-    alert("Viz Created!");
-}
+/*checkDataAfterSave*checkData*onCreateSuccess*********************/
 
 function validate(data) {
 
@@ -219,30 +146,4 @@ function getEditVizType() {
     return onVal;
 }
 
-function getData() {
-
-    var name = $('.viz-name').val();
-    var description = $('.description').val();
-    var published = ($('.published .on').html() === 'Public');
-    var interactive = ($('.interactive .on').html() === 'Yes');
-    var videoURL = $( '.video-url' ).val();
-
-    var vizType = getEditVizType();
-    if( vizType === 'JS') {
-        vizType = 'javascript';
-    } else {
-        vizType = 'L3D'
-    }
-
-    var code = $('.code').val();
-
-    return {
-        name: name,
-        description: description,
-        published: published,
-        interactive: interactive,
-        "viz-type": vizType,
-        videoURL: videoURL,
-        sourceCode: code
-    }
-}
+/*getData***********************************************************/

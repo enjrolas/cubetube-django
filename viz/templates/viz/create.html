@@ -13,6 +13,8 @@
 <script type="text/javascript">
 	var compilerData;
 	var JSONstring;
+	var codeSnap;
+
 	function flashCube(){
 		var request=$.ajax({
 			type:"POST",
@@ -74,12 +76,125 @@
 			}
 		//}
 	}
+
+	function confirmClose(){
+		var confirmMessage = "Whoops, looks like you left unsaved changes in your code!\nIs it alright for me to discard them?\n\nClick either \"OK\" to exit without saving or \"Cancel\" to go back and save your work";
+		if (confirm(confirmMessage) == true){
+			parent.closeViz(); 
+			parent.closeCreate();
+		}
+	}
+
+	function getData() {
+
+	    var name = $('.viz-name').val();
+	    var description = $('.description').val();
+	    var published = ($('.published .on').html() === 'Public');
+	    var interactive = ($('.interactive .on').html() === 'Yes');
+	    var videoURL = $( '.video-url' ).val();
+
+	    var vizType = getEditVizType();
+	    if( vizType === 'JS') {
+	        vizType = 'javascript';
+	    } else {
+	        vizType = 'L3D'
+	    }
+
+	    var code = $('.code').val();
+
+	    return {
+	        name: name,
+	        description: description,
+	        published: published,
+	        interactive: interactive,
+	        "viz-type": vizType,
+	        videoURL: videoURL,
+	        sourceCode: code
+	    }
+	}
 	
-	/*$( document ).ready(function() {
-		var vizAuthor = parent.$('.viz-wrapper').attr('data-viz-author');
-		if (vizAuthor == $.cookie("nickname")) $("#btnDeleteViz").show();
-		else $("#btnDeleteViz").hide();
-	});*/
+	function checkDataAfterSave( data ) {
+	    if ( data.success ) {
+			//Reset snapshot of the code
+			codeSnap = $('.code').val();
+	        alert("Viz Updated!");
+	    } else {
+	        console.log( "Error!", data );
+	    }
+	}
+
+	function checkData( data ) {
+	    // console.log( data );
+	    // var data = JSON.parse(data.responseText);
+	    if ( data.success ) {
+			//Reset snapshot of the code
+			codeSnap = $('.code').val();
+	        onCreateSuccess( data.id );
+	    } else {
+	        console.log( "Error!", data );
+	    }
+	}
+
+	// Switch to "fork" mode
+	function onCreateSuccess( id ) {
+	    editing = true;
+	    $( '.create-wrapper' ).attr('viz-id', id);
+	    $('.save-code').html('Update Viz');
+	    alert("Viz Created!");
+	}
+
+	$(document).ready(function() {
+		//Take a snapshot of the code
+		codeSnap = $('.code').val();
+		
+		$('.save-code').click(function() {
+	        var saveData = getData();
+	        var goodToGo = validate(saveData);
+	        var validProgram=checkProgramValidity(saveData);
+	    	
+	        if( goodToGo ) {
+	            if( editing === false) {
+	                // Ajax request to create!
+	                $.ajax({
+	                    type: 'post',
+	                    dataType: 'json',
+	                    url: '/upload/',
+	                    data: saveData,
+	                    success: function( data ) {
+		        			checkData(data);
+	                    },
+	                    error: function( data ) {
+	                        checkData(data);
+	                    }
+	                });
+	            } else {
+	                var vizId = $( '.create-wrapper' ).attr('viz-id');
+	                saveData.vizId = vizId;
+	                
+	                // Ajax request to edit
+	                $.ajax({
+	                    type: 'post',
+	                    dataType: 'json',
+	                    url: '/save/',
+	                    data: saveData,
+	                    success: function( data ) {
+	                        checkDataAfterSave(data);
+	                    },
+	                    error: function( data ) {
+	                        checkDataAfterSave(data);
+	                    }
+	                })
+	            }
+	        }
+		});
+		
+		//Enabling Esc key to close the viz
+		$(document).keydown(function(e) {
+			if (e.keyCode == 27) $('.close-button').click();	//Esc
+		});
+		//For the above to work straight out of loading, gotta focus on something
+		$('#cubeName').focus();	//this one works fine
+	});
 </script>
 
 {% load utils %}
@@ -89,7 +204,7 @@
 {% endif %}
 <div class="viz-wrapper create-wrapper" {% if viz %}viz-id="{{ viz.pk }}"{% endif %} >
   <div class="viz-nav">
-  	<a class="close-button" onclick="parent.closeViz(); parent.closeCreate();">Close</a>
+  	<a class="close-button" onclick="if(codeSnap != $('.code').val()){confirmClose();} else{parent.closeViz(); parent.closeCreate();}">Close</a>
     <div class="nav-info"></div>
     <a class="round-button button-red save-code">Save</a>
     <div class="cube-options">

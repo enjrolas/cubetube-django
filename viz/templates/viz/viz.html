@@ -43,25 +43,46 @@
 		});
 	}
 	
+	//Parses the supplied string to a html-renderable string 
+	//Requires: supplied string previously having any newline chars replaced or removed
+	//@str: string to parse
+	//@maxChars: end-of-line index for inserting line breaks
+	function parseLongString(str, maxChars){
+		var splitStr = str.split('<br />');
+		var wrapStr = '';
+		//We've removed the html line breaks inserted by python because now we're going
+		//to manually place them after every nth character of the supplied string.
+		for(var i = 0; i < splitStr.length; i++) {	//array length;
+			for(var j = 0; j < splitStr[i].length; j++) {	//string length at array index [i];
+				if(j % maxChars == 0) {	//try to replace the last space with a line break
+					for(var k = j; k > (j-maxChars); k--) {	//at every nth char
+						if(splitStr[i].charAt(k) == ' ') {
+							splitStr[i] = splitStr[i].substr(0, k) + '<br />' + splitStr[i].substr(k);
+							break;
+						}
+					}
+				}
+			}
+			wrapStr += splitStr[i] + '<br />';
+		}
+		return wrapStr;
+	}
+	
 	//Functions for dynamically expanding and collapsing the viz's description 
 	function expandDesc(){
 		if($('.viz-description').css('height') != '130px'){
 			//Python has a weird way of breaking long strings with newline chars rendering
 			//them 'un-parseable' to the js engine, so we need to make sure these chars
 			//are properly detected and replaced beforehand, at the python interpreter;
-			//After this, we replace these chars by an empty space with the js engine. 
-			var newDescr = '{{ viz.description|linebreaksbr }}'.replace('<br />', ' ');
-			var wrapDescr = '';
-			//We've removed the html line breaks inserted by python because now we're going
-			//to manually place them after every 80th character of the description string.
-	        for (var i = 0; i < newDescr.length - 79; i += 79)
-	            wrapDescr += newDescr.substr(i, i + 79) + '<br />';
+			//Then we call the function to parse the string with the newline chars replaced by line breaks.
+			var parsed = parseLongString('{{ viz.description|linebreaksbr }}', 80);
+			
 			$('.inner-wrapper').delay('slow').stop().animate({ height: '260px' }, 'fast', 'linear', function() {
 			    // Animation complete.
 				$('#viz-description').hide('fast');
 				$('.viz-description').animate({ height: '130px' }, 'fast', 'linear', function() {
 				    // Animation complete.
-					$('#viz-description').html(wrapDescr.substring(0, wrapDescr.lastIndexOf('<br />')));
+					$('#viz-description').html(parsed.substring(0, parsed.lastIndexOf('<br />')));
 					$('#viz-description').show('slow');
 				});
 			});
@@ -74,6 +95,7 @@
 			//are properly detected and replaced beforehand, at the python interpreter;
 			//After this, we replace these chars by an empty space with the js engine. 
 			var newDescr = "{{ viz.description|linebreaksbr }}".replace("<br />", " ").substring(0, 75) + " ...";
+			
 			$('.viz-description').delay('slow').stop().animate({ height: '20px' }, 'fast', 'linear', function() {
 			    // Animation complete.
 		    	$('#viz-description').hide('fast');
@@ -85,6 +107,15 @@
 			});
 		}
 	}
+	
+	//Enabling Esc key to close the viz
+	$(document).ready(function() {
+		$(document).keydown(function(e) {
+			if (e.keyCode == 27) $('.close-button').click();	//Esc
+		});
+		//For the above to work straight out of loading, gotta focus on something
+		$('#cubeName').focus();	//this one works fine
+	});
 </script>
 
 {% load utils %}

@@ -365,6 +365,7 @@ button {
     position: relative;
     text-align: center; }
     .viz-wrapper .viz-demo canvas {
+      width: 310px;
       height: 310px; }
     .viz-wrapper .viz-demo .background-image {
       position: absolute;
