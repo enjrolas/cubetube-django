@@ -515,7 +515,7 @@ button {
   .viz-wrapper.code-active .viz-demo,
   .viz-wrapper.code-active canvas {
     position: relative;
-    width: 610px;
+    /*width: 610px;*/
     outline: 0; }
 
 .viz-template {

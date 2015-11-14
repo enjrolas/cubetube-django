@@ -32,12 +32,11 @@ function checkForListener(coreID)
 	url: url,
 	success: function(data){
 	    vizName=data['result'];
+	    console.log(vizName);
 	    if(vizName=="websocketsListener")		
-		getLocalIP(accessToken, coreID);   //great!  commence the streaming!
+	    	getLocalIP(accessToken, coreID);	//great!  commence the streaming!
 	    else
-	    {
-		flashWebsocketsListener();  //load the websockets listener
-	    }
+	    	flashWebsocketsListener();			//load the websockets listener
 	},
 	error: function(){
 	    flashWebsocketsListener();
@@ -49,7 +48,7 @@ function checkForListener(coreID)
 
 function flashWebsocketsListener()
 {
-    alert("your cube needs to run the listener.  Take a dance break for 20 seconds while we load it onto your cube, and try again when the light on the bottom of your core turns cyan");
+    alert("Your cube needs to run the listener. Take a dance break for 20 seconds\nwhile we load it onto your cube, and try again\nwhen the light on the bottom of your core turns cyan.");
     coreUrl=flashWebsocketsUrl.replace("coreId", coreID).replace("processor", processor);
     console.log(coreUrl);
     $.get(coreUrl);

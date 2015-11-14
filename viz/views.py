@@ -724,31 +724,32 @@ def flashWebsocketsListener(request, coreId, processor):
     accessToken=request.COOKIES.get('accessToken')
     log.debug("processor type is %s" % processor)
     if processor=="Photon":
-        directory= "/home/glass/cubetube-production/media/cloudware/"
+        directory=os.path.join(settings.MEDIA_ROOT,'cloudware/') #"/home/glass/cubetube-production/media/cloudware/"
         command=['node', 'directoryflash.js', '%s' % accessToken, '%s' % coreId, "photonListener"]
         log.debug(command)
         p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=directory)
-        log.debug("waiting for process to complete")
-        retval = p.wait()
-        log.debug("process completed")
+       
         jsonResult=""
         for line in p.stdout.readlines():
-            log.debug(line)
             line=line.replace('Device flashing started successfully: ', '')
+            log.debug(line)
             jsonResult="%s%s" % (jsonResult, line)
-            i+=1            
+        
+        log.debug("waiting for process to complete")
+        retval = p.wait() 
+        log.debug("process completed")
         return JsonResponse(jsonResult, safe=False)
-
     else:
         binaryPath= settings.WEBSOCKETS_LISTENER
         flash_output=[]
         flash_error=[]
 
-        media_root="/home/glass/cubetube-production/media/"
-        project_root="/home/glass/cubetube-production"    
-        log.debug('%s/viz/utils/flash.js' % project_root)
+        #media_root="/home/glass/cubetube-production/media/"
+        #project_root="/home/glass/cubetube-production"    
+        #log.debug('%s/viz/utils/flash.js' % project_root)
         accessToken=request.COOKIES.get('accessToken')
-        p = subprocess.Popen(['node', '%s/viz/utils/flash.js' % project_root,accessToken, coreId, binaryPath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.Popen(['node', '%s/viz/utils/flash.js' % settings.PROJECT_ROOT, accessToken, coreId, binaryPath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        #p = subprocess.Popen(['node', '%s/viz/utils/flash.js' % project_root,accessToken, coreId, binaryPath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         retval = p.wait()
 
         for line in p.stdout.readlines():
