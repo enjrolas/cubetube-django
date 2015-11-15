@@ -724,6 +724,7 @@ def flashWebsocketsListener(request, coreId, processor):
     accessToken=request.COOKIES.get('accessToken')
     log.debug("processor type is %s" % processor)
     if processor=="Photon":
+        '''
         directory=os.path.join(settings.MEDIA_ROOT,'cloudware/') #"/home/glass/cubetube-production/media/cloudware/"
         command=['node', 'directoryflash.js', '%s' % accessToken, '%s' % coreId, "photonListener"]
         log.debug(command)
@@ -734,11 +735,36 @@ def flashWebsocketsListener(request, coreId, processor):
             line=line.replace('Device flashing started successfully: ', '')
             log.debug(line)
             jsonResult="%s%s" % (jsonResult, line)
-        
+        '''
+        binaryPath= settings.WEBSOCKETS_PHOTON_LISTENER #settings.WEBSOCKETS_LISTENER
+        flash_output=[]
+        flash_error=[]
+
+        #media_root="/home/glass/cubetube-production/media/"
+        #project_root="/home/glass/cubetube-production"    
+        #log.debug('%s/viz/utils/flash.js' % project_root)
+        p = subprocess.Popen(['node', '%s/viz/utils/flash.js' % settings.PROJECT_ROOT, accessToken, coreId, binaryPath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         log.debug("waiting for process to complete")
-        retval = p.wait() 
+        retval = p.wait()
         log.debug("process completed")
-        return JsonResponse(jsonResult, safe=False)
+
+        for line in p.stdout.readlines():
+            print line,
+            line.replace('"','\\"')
+            line.replace("'","\\'")
+            flash_output.append(line)
+            
+        for line in p.stderr.readlines():
+            print line,
+            line.replace('"','\\"')
+            line.replace("'","\\'")
+            flash_error.append(line)
+            
+        compilation_status="ok"
+        response={ "compilation_status": compilation_status , 
+                   "flash_output" : flash_output , 
+                   "flash_error" : flash_error}
+        return JsonResponse(response)
     else:
         binaryPath= settings.WEBSOCKETS_LISTENER
         flash_output=[]
