@@ -17,7 +17,6 @@ $(function(){
 
     // Switch states
     $('.switch-part').click(function() {
-
         var $this = $( this );
         var $box = $this.closest('.switch-box');
 

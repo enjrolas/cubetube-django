@@ -1,6 +1,6 @@
 {% load staticfiles %}
-
-<a class="viz-card" id="{{ viz.pk }}" href="{% url 'viz' viz.pk %}">
+<div class="viz-card" id="{{ viz.pk }}">
+  <a class="viz-card-anchor" href="{% url 'viz' viz.pk %}">
   <div class="viz-demo">
       {% if viz.interactive %}
         <div class="interactive-bg"></div>
@@ -10,10 +10,15 @@
         <div class="code" style="display: none;" id="viz{{ viz.pk }}">{{ source.code }}</div>
       {% endif %}
   </div>
+  </a>
   <div class="viz-info">
     <div class="left">
-      <span class="name">{{ viz.name }}</span>
-      <span class="author">by {{ viz.creator }}</span>
+    	<a class="viz-card-anchor" style="text-decoration:none" href="{% url 'viz' viz.pk %}">
+			<span class="name">{{ viz.name }}</span>
+		</a>
+		<a style="text-decoration: none" title="Click to group all visualizations by {{ viz.creator }}!" href="{% url 'gallery' filter='byCreator' vizCreator=viz.creator %}">
+			<span class="author">by {{ viz.creator }}</span>
+		</a>
     </div>
     <div class="right">
       {% if viz.vizType == 'javascript' %}
@@ -23,4 +28,4 @@
       {% endif %}
     </div>
   </div>
-</a>
+</div>  

@@ -77,7 +77,7 @@
 			//Then we call the function to parse the string with the newline chars replaced by line breaks.
 			var parsed = parseLongString('{{ viz.description|linebreaksbr }}', 80);
 			
-			$('.inner-wrapper').delay('slow').stop().animate({ height: '260px' }, 'fast', 'linear', function() {
+			$('.inner-wrapper').delay('fast').animate({ height: '260px' }, 'fast', 'linear', function() {
 			    // Animation complete.
 				$('#viz-description').hide('fast');
 				$('.viz-description').animate({ height: '130px' }, 'fast', 'linear', function() {
@@ -96,7 +96,7 @@
 			//After this, we replace these chars by an empty space with the js engine. 
 			var newDescr = "{{ viz.description|linebreaksbr }}".replace("<br />", " ").substring(0, 75) + " ...";
 			
-			$('.viz-description').delay('slow').stop().animate({ height: '20px' }, 'fast', 'linear', function() {
+			$('.viz-description').stop().delay('slow').animate({ height: '20px' }, 'fast', 'linear', function() {
 			    // Animation complete.
 		    	$('#viz-description').hide('fast');
 				$('.inner-wrapper').animate({ height: '130px' }, 'fast', 'linear', function() {
@@ -114,7 +114,7 @@
 			if (e.keyCode == 27) $('.close-button').click();	//Esc
 		});
 		//For the above to work straight out of loading, gotta focus on something
-		$('#cubeName').focus();	//this one works fine
+		$('.comments-input').focus();	//this one works fine
 	});
 </script>
 

@@ -31,8 +31,51 @@
 {% endblock %}
 
 {% block content %}
-<div class="viz-cards in-gallery" data-viz="{% if featuredViz %}{{ featuredViz.pk }}{% endif %}">
+<script type="text/javascript">
+	function setFilterPosition() {
+		//alert("resized");
+	    $( '#search-box' ).offset({ top: $('#search-box').offset.top, left: window.innerWidth - $('#search-box').offset.left /* 982 */ });
+	}
+	window.onresize = setFilterPosition;
+    
+	function justSearch(searchTerm) {
+		$(".button").html("Wait...");
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// This is attempting to pass the url with parameters. I've tried many things, like:
+		//		"{% url 'search' %}?" + searchTerm + "/?8/"
+		// but the parameters never get written to the URL itself. The below form:
+		var url = window.location.pathname.replace('gallery', 'search') + "/?"searchTerm +"?8/";
+		// at least gets the URL formed correctly. But then django ignores the parameters and the view gets None..
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //alert(url);
+       	//window.location.assign(url);
+	    //$('#gallery-wrapper').load( url + ' #gallery-wrapper' );
+		$.ajax({
+			type: 'get',
+			url: url,
+			success: function(data) {
+				// Here we replace the entire form's code with the code returned by the view:
+				$("body").html( data );
+				//$this.replaceWith( data );
+				setTimeout(function() {
+				    activatePreviews();
+				}, 1);
+			},
+			error: function(data) {
+				console.log('Error retrieving search!')
+				console.log(data)
+			}
+		})
+	}	
+</script>
 
+<div id="gallery-wrapper" class="viz-cards in-gallery" data-viz="{% if featuredViz %}{{ featuredViz.pk }}{% endif %}">
+	<div class="always-small gallery">
+        <div class="round-button button-grey select-cube">
+        	<input id="search-box" class="video-url" style="width: 270px" placeholder="Search Viz Title, Author, Description..."/>
+        </div>
+        <div class="button search-button" onclick="justSearch($('#search-box').val());">Search!</div>
+	</div>
     {% if privateVizs %}
         <h3 class="viz-title privated">Private</h3>
         {% for viz in privateVizs %}
@@ -48,7 +91,10 @@
         {% jscard viz %}
     {% endfor %}
     {% if nextPage %}
-      <div class="scroll button blue" href="{% url 'scroll' nextPage filter %}">Load More!</div>
+    	<div style="height: 150px; width: 570px; margin: 0 auto;">
+			<div class="scroll button blue scroll-button-left" href="{% url 'scroll' nextPage filter %}">Load More!</div>
+			<div class="scroll button blue scroll-button-left" href="{% url 'scroll' filter totalObjects %}">Load All!</div>
+		</div>
     {% endif %}
 </div>
 

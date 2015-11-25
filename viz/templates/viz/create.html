@@ -86,7 +86,6 @@
 	}
 
 	function getData() {
-
 	    var name = $('.viz-name').val();
 	    var description = $('.description').val();
 	    var published = ($('.published .on').html() === 'Public');
@@ -246,32 +245,39 @@
         </div>
       </div>
 
-      <div class="switch-option interactive">
-        <div class="label">Interactive</div>
-        <div class="switch-box interactive">
-          {% if viz %} 
-            {% if viz.interactive %} 
-              <div class="switch-part switch-left off">No</div>
-              <div class="switch-part switch-right on">Yes</div>
-            {% else %}
-              <div class="switch-part switch-left on">No</div>
-              <div class="switch-part switch-right off">Yes</div>
-            {% endif %}  
-          {% else %}
-            <div class="switch-part switch-left on">No</div>
-            <div class="switch-part switch-right off">Yes</div>
-          {% endif %}
-        </div>
-      </div>
-      {% if viz %} 
-        {% if viz.interactive %} 
-          <input class="video-url" placeholder="Interactive! Please add a youtube link here" value="{{ viz.videoURL }}"/>
-        {% else %}
-          <input class="video-url hidden" placeholder="Interactive! Please add a youtube link here"/>
-        {% endif %}
-      {% else %}
-        <input class="video-url hidden" placeholder="Interactive! Please add a youtube link here"/>
-      {% endif %}
+	  {% if viz %} 
+        <div class="switch-option interactive">
+	        <div class="label">Interactive</div>
+	        <div class="switch-box interactive">
+	            {% if viz.interactive %} 
+	              <div class="switch-part switch-left off">No</div>
+	              <div class="switch-part switch-right on">Yes</div>
+	            {% else %}
+	              <div class="switch-part switch-left on">No</div>
+	              <div class="switch-part switch-right off">Yes</div>
+		  		{% endif %}  
+	        </div>
+      	</div>
+	  {% else %}
+	  	<a href="#" title="This option has been temporarily disabled" style="cursor: none !important;">
+	      	<div class="switch-option interactive disabled" tabindex="-1">
+		        <div class="label" tabindex="-1">Interactive</div>
+		        <div class="switch-box interactive" tabindex="-1">
+			        <div class="switch-part switch-left on" tabindex="-1">No</div>
+			        <div class="switch-part switch-right off" tabindex="-1">Yes</div>
+		        </div>
+	      	</div>
+      	</a>
+	  {% endif %}
+   	{% if viz %} 
+       	{% if viz.interactive %} 
+	   		<input class="video-url" placeholder="Interactive! Please add a youtube link here" value="{{ viz.videoURL }}"/>
+       	{% else %}
+       		<input class="video-url hidden" placeholder="Interactive! Please add a youtube link here"/>
+       	{% endif %}
+   	{% else %}
+       	<input class="video-url hidden" placeholder="Interactive! Please add a youtube link here"/>
+   	{% endif %}
     </div>
   </div>
 
@@ -280,21 +286,27 @@
  	{% if viz %}
    		<a id="btnDeleteViz" class="round-button button-transparent" onclick="deleteViz();">Delete this Viz</a>
    	{% endif %}
-      <a class="round-button button-red run-sketch">Update Demo</a>
-      <div class="switch-box viz-type">
-        {% if viz %}
-          {% if viz.vizType == "javascript" %}
-            <div class="switch-part switch-left on">JS</div>
-            <div class="switch-part switch-right off">L3D</div>
-          {% else %}
-            <div class="switch-part switch-left off">JS</div>
-            <div class="switch-part switch-right on"?"">L3D</div>
-          {% endif %}  
-        {% else %}
-        <div class="switch-part switch-left on">JS</div>
-        <div class="switch-part switch-right off">L3D</div>
-        {% endif %}
-      </div>
+    <a class="round-button button-red run-sketch">Update Demo</a>
+	{% if viz %}
+		<div class="switch-box viz-type">
+			{% if viz.vizType == "javascript" %}
+				<div class="switch-part switch-left on">JS</div>
+				<div class="switch-part switch-right off">L3D</div>
+			{% else %}
+				<div class="switch-part switch-left off">JS</div>
+				<div class="switch-part switch-right on">L3D</div>
+			{% endif %}  
+		</div>
+     {% else %}
+     	<a href="#" title="This option has been temporarily disabled" style="cursor: none !important;">
+     		<div class="switch-option disabled" tabindex="-1">
+				<div class="switch-box viz-type" tabindex="-1">
+					<div class="switch-part switch-left on" tabindex="-1">L3D</div>
+		       		<div class="switch-part switch-right off" tabindex="-1">JS</div>
+				</div>
+			</div>
+		</a>
+     {% endif %}
     </div>
     <div class="code-area">
       <textarea rows="80" cols="120" id="code" class="code inout">{% if viz %}{{ source.code }}{% endif %}</textarea>
