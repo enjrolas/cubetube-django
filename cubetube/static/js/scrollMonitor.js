@@ -29,13 +29,15 @@ $('body').on('click', '.scroll', function(e) {
     $this.html("Loading...");
     $this.removeClass('blue').addClass('red');
     var url = $this.attr('href');
-
+    var button = $this.attr('data-which');
     $.ajax({
       type: 'get',
       url: url,
       success: function(data) {
-    	$("#viz-in-gallery").replaceWith( data );
-    	//$(".scroll").replaceWith( data );
+    	if(button == 'all')
+    		$("#viz-in-gallery").replaceWith( data );
+    	else
+    		$("#scroll").replaceWith( data );
         //$this.replaceWith( data );
 //	  activatePreviews();
         setTimeout(function() {

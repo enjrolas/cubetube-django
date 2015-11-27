@@ -20,7 +20,9 @@
 			if (e.keyCode == 27) $('.close-button').click();	//Esc
 		});
 		// For the above to work straight out of loading, gotta focus on something
-		$('.comments-input').focus();	//this one works fine
+		if ($('#cubeName').length) $('.comments-input').focus();
+		else if ($('.comments-input').length) $('.comments-input').focus().click();
+		else $('body').focus().click();
 
 		// Controls the expanding/collapsing the viz description text field
 		$('.viz-description').on('mouseover', function() {

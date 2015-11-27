@@ -20,7 +20,7 @@ $(document).ready(function(){
 		justSearch($('#search-box').val());
 	});
 	$('#search-box').on('keydown', function(e) {
-		if (e.keyCode === 13) justSearch($('#search-box').val());	//Enter
+		if (e.keyCode === 13) justSearch($(this).val());	//Enter
 	});
 	
 	$('.on-forum').hide();
