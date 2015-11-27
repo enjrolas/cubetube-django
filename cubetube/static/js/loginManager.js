@@ -3,7 +3,27 @@
  * - Built off Alex's spark login system.
  */
 //var checkbox;
-$(function(){
+
+$(document).ready(function(){
+	var menuTimer;
+	$('ul.items').on('mouseover', function() {
+		clearTimeout(menuTimer);
+		//$('.login').removeClass('sole-item');
+		showMenuItems();
+	}).on('mouseleave', function() {
+		menuTimer = setTimeout(function() { $('.login').addClass('sole-item'); hideMenuItems(); }, 800);
+	});
+	$('.on-forum').hide();
+	$('.on-gallery').hide();
+	$('.on-docs').hide();
+	$('.on-overview').hide();
+	$('.on-create').hide();
+
+	// Positioning the search box if we are at the Gallery template  
+    var searchBox = $(document).find( '#search-box' );
+	if(searchBox)
+		searchBox.offset({ top: searchBox.offset.top, left: $( "ul.items" ).offset.left - searchBox.attr('width') - 20 /* 982 */ });
+	
 /*
     checkbox = $("#ToS");   // keep reference of checkbox
 
@@ -78,6 +98,61 @@ $(function(){
         location.reload();
     })
 });
+
+function hideMenuItems() {
+	$('.on-overview').slideUp( 150, "swing", function() {
+		$('.on-docs').addClass('on-overview');
+		$('.on-docs').slideUp( 150, "swing", function() {
+			$('.on-gallery').addClass('on-overview');
+			$('.on-gallery').slideUp( 150, "swing", function() {
+				$('.on-forum').addClass('on-overview');   
+				$('.on-forum').slideUp( 150, "swing", function() {
+					if ($('.on-create').length) {
+						$('.on-create').addClass('on-overview');
+						$('.on-create').slideUp( 150, "swing" );
+					}
+				});
+			});
+		});
+	});
+}
+
+function showMenuItems() {
+	if ($('.on-create').length) {
+		$('.on-create').addClass('on-overview');
+		$('.on-create').slideDown( 80, "swing", function() {
+			$('.on-create').removeClass('on-overview');
+			$('.on-forum').addClass('on-overview');
+			$('.on-forum').slideDown( 80, "swing", function() {
+				$('.on-forum').removeClass('on-overview');
+				$('.on-gallery').addClass('on-overview');
+				$('.on-gallery').slideDown( 80, "swing", function() {
+					$('.on-gallery').removeClass('on-overview');
+					$('.on-docs').addClass('on-overview');
+					$('.on-docs').slideDown( 80, "swing", function() {
+						$('.on-docs').removeClass('on-overview');
+						$('.on-overview').slideDown( 80, "swing" );
+					});
+				});
+			});
+		});
+	}
+	else {
+		$('.on-forum').addClass('on-overview');
+		$('.on-forum').slideDown( 80, "swing", function() {
+			$('.on-forum').removeClass('on-overview');
+			$('.on-gallery').addClass('on-overview');
+			$('.on-gallery').slideDown( 80, "swing", function() {
+				$('.on-gallery').removeClass('on-overview');
+				$('.on-docs').addClass('on-overview');
+				$('.on-docs').slideDown( 80, "swing", function() {
+					$('.on-docs').removeClass('on-overview');
+					$('.on-overview').slideDown( 80, "swing" );
+				});
+			});
+		});
+	}
+}
 
 function createNewUser(email, nickname, password) {
     

@@ -46,7 +46,7 @@ button {
 
 .section {
   max-width: 1340px;
-  min-width: 980px;
+  min-width: 320px;	/*980px;*/
   padding-right: 30px;
   padding-left: 30px;
   margin: auto; }
@@ -286,6 +286,7 @@ button {
     .login-signup-popover.join .login-component {
       display: none; }
   .login-signup-popover.login {
+  	width: 320px;
     height: 410px; }
     .login-signup-popover.login p {
       margin-top: 20px; }
@@ -695,7 +696,7 @@ nav {
       height: 50px;
       margin-right: 5px; }
   nav ul {
-    list-style: none;
+	list-style: none;
     float: right;
     padding: 0px;
     margin: 0px;
@@ -708,14 +709,28 @@ nav {
       padding-top: 32px;
       font-weight: bold;
       float: right;
-      color: #fff; }
+      color: #fff; 
+      /*New styles for collapsing the menu items into a dropdown list*/
+      width: 60%;
+	  background: #1c1521;
+	  text-align: center;
+	  opacity: 0.8; }
+  .sole-item {
+	width: 275px;
+  }
+  .on-overview {
+	border-bottom-right-radius: 8px;
+	border-bottom-left-radius: 8px;  
+  }
   nav .create {
     background: #2bc6fb;
     border-radius: 30px;
     padding: 6px 22px 6px 22px; }
   nav .logout-user {
+  	width: 275px;
     margin-left: 10px; }
   nav .user .logout {
+  	width: 275px;
     background: #ee0026;
     border-radius: 30px;
     padding: 6px 22px 6px 22px;
@@ -750,7 +765,7 @@ nav {
   nav a {
     text-decoration: none;
     color: #fff; }
-  nav.small, nav.always-small, div.small, div.always-small {
+  nav.small, nav.always-small {
     box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.2);
     background: #1c1521;
     height: 60px; }
@@ -767,7 +782,8 @@ nav {
 	box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.2);
 	background: #1c1521; }
     nav.small ul, nav.small li, nav.always-small ul, nav.always-small li {
-      height: 60px; }
+	  width: 275px;
+	  height: 60px; }
     nav.small .logo-box, nav.always-small .logo-box {
       height: 60px;
       line-height: 34px;
@@ -995,6 +1011,7 @@ footer {
           padding-bottom: 10px;
           padding-left: 5; }
   footer .bottom {
+  	min-width: 320px;
     height: 410px; }
     footer .bottom .cta {
       font-size: 30px;

@@ -604,14 +604,14 @@ def search(request, page=1, filter=None, cardsPerPage=8):
     page=int(page)
     if filter:
         try:
-            vizUsers=CubeUser.objects.all().filter(nickname__icontains=filter).get()
+            vizUsers=CubeUser.objects.all().filter(nickname__icontains=filter)
         except CubeUser.DoesNotExist:
             vizUsers=None
         
         vizs=Viz.objects.none()
         if vizUsers:
             for user in vizUsers: 
-                chain(vizs, Viz.objects.all().filter(creator=user.id))
+                vizs=vizs | Viz.objects.all().filter(creator=user.id)   #list(chain(vizs, Viz.objects.all().filter(creator=user.id)))
         else:
             try:
                 titleQuery=Viz.objects.all().filter(name__icontains=filter).exclude(published=False).order_by("-pageViews", "-created")
@@ -623,21 +623,16 @@ def search(request, page=1, filter=None, cardsPerPage=8):
                 descrQuery=None
             
             if titleQuery:
-                chain(vizs, titleQuery)
+                vizs=vizs | titleQuery  #list(chain(vizs, titleQuery))
             if descrQuery:
-                chain(vizs, descrQuery)
-            
+                vizs=vizs | descrQuery  #list(chain(vizs, descrQuery))
     else: 
-        # I've set this up to flag whether the URL 'filter' parameter is being passed from the js ajax
-        # call and as it turns out it isn't... so the view always falls to this 'else' statement.
-        vizs=None
-        # This is what's actually going to happen once this bug is identified and squashed: 
-        #Viz.objects.all().exclude(published=False).order_by("-pageViews", "-created")
+        vizs=Viz.objects.all().exclude(published=False).order_by("-pageViews", "-created")
     
-    '''if vizs is None:
+    if vizs is None:
         totalObjects=0
-    else:'''
-    totalObjects=vizs.count()
+    else:
+        totalObjects=vizs.count()
     
     if totalObjects==0:
         return render(request, "viz/jsgallery.html", { 'visualizations' : None , 'nextPage' : False, 'totalObjects' : totalObjects, 'filter': filter })        
