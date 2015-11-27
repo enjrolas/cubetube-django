@@ -611,7 +611,7 @@ def search(request, page=1, filter=None, cardsPerPage=8):
         vizs=Viz.objects.none()
         if vizUsers:
             for user in vizUsers: 
-                vizs=vizs | Viz.objects.all().filter(creator=user.id)   #list(chain(vizs, Viz.objects.all().filter(creator=user.id)))
+                vizs=vizs | Viz.objects.all().filter(creator=user.id).exclude(published=False)   #list(chain(vizs, Viz.objects.all().filter(creator=user.id)))
         else:
             try:
                 titleQuery=Viz.objects.all().filter(name__icontains=filter).exclude(published=False).order_by("-pageViews", "-created")
@@ -635,13 +635,13 @@ def search(request, page=1, filter=None, cardsPerPage=8):
         totalObjects=vizs.count()
     
     if totalObjects==0:
-        return render(request, "viz/jsgallery.html", { 'visualizations' : None , 'nextPage' : False, 'totalObjects' : totalObjects, 'filter': filter })        
+        return render(request, "viz/gallery-page.html", { 'visualizations' : None , 'nextPage' : False, 'filter':filter})
     elif totalObjects<cardsPerPage:
         visualizations=vizs[:totalObjects]
-        return render(request, "viz/jsgallery.html", { 'visualizations' : visualizations , 'nextPage' : False, 'totalObjects' : totalObjects, 'filter': filter })
+        return render(request, "viz/gallery-page.html", { 'visualizations' : visualizations , 'nextPage' : False, 'filter':filter})
     else:
         visualizations=vizs[:cardsPerPage]
-        return render(request, "viz/jsgallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'totalObjects' : totalObjects, 'filter': filter })
+        return render(request, "viz/gallery-page.html", { 'visualizations' : visualizations , 'nextPage' : page+1, 'filter':filter})
 
 def edit(request, id):
     try:

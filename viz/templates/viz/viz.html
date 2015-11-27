@@ -12,6 +12,25 @@
 <script type="text/javascript">
 	var compilerData;
 	var JSONstring;
+	var descTimer;
+	
+	$(document).ready(function() {
+		// Enabling Esc key to close the viz
+		$(document).keydown(function(e) {
+			if (e.keyCode == 27) $('.close-button').click();	//Esc
+		});
+		// For the above to work straight out of loading, gotta focus on something
+		$('.comments-input').focus();	//this one works fine
+
+		// Controls the expanding/collapsing the viz description text field
+		$('.viz-description').on('mouseover', function() {
+			clearTimeout(descTimer);
+			expandDesc();
+		}).on('mouseleave', function() {
+			descTimer = setTimeout(function() { collapseDesc(); }, 800);
+		});
+	});
+
 	function flashCube(){
 		var request=$.ajax({
 			type:"POST",
@@ -76,13 +95,18 @@
 			//are properly detected and replaced beforehand, at the python interpreter;
 			//Then we call the function to parse the string with the newline chars replaced by line breaks.
 			var parsed = parseLongString('{{ viz.description|linebreaksbr }}', 80);
+			var indexBR = parsed.indexOf('<br />');
+			if(indexBR >= 0 && indexBR < 2)
+				var newDesc = parsed.slice(parsed.indexOf('<br />') + '<br />'.length, parsed.lastIndexOf('<br />'));
+			else
+				var newDesc = parsed.substring(0, parsed.lastIndexOf('<br />'));
+			$('#viz-description').replaceWith(newDesc);
 			
-			$('.inner-wrapper').delay('fast').animate({ height: '260px' }, 'fast', 'linear', function() {
+			$('.inner-wrapper').animate({ height: '260px' }, 150, 'swing', function() {
 			    // Animation complete.
 				$('#viz-description').hide('fast');
-				$('.viz-description').animate({ height: '130px' }, 'fast', 'linear', function() {
+				$('.viz-description').animate({ height: '130px' }, 150, 'swing', function() {
 				    // Animation complete.
-					$('#viz-description').html(parsed.substring(0, parsed.lastIndexOf('<br />')));
 					$('#viz-description').show('slow');
 				});
 			});
@@ -94,28 +118,19 @@
 			//them 'un-parseable' to the js engine, so we need to make sure these chars
 			//are properly detected and replaced beforehand, at the python interpreter;
 			//After this, we replace these chars by an empty space with the js engine. 
-			var newDescr = "{{ viz.description|linebreaksbr }}".replace("<br />", " ").substring(0, 75) + " ...";
-			
-			$('.viz-description').stop().delay('slow').animate({ height: '20px' }, 'fast', 'linear', function() {
+			var html = $('.viz-description').text();
+			var newDescr = html.trim().slice(html.indexOf('<br />') + 1, html.length).substring(0, 75) + " ...";	//.replace("<br />", " ").trim().substring(0, 75) + " ...";
+			$('.viz-description').animate({ height: '20px' }, 250, 'swing', function() {
 			    // Animation complete.
 		    	$('#viz-description').hide('fast');
-				$('.inner-wrapper').animate({ height: '130px' }, 'fast', 'linear', function() {
+				$('.inner-wrapper').animate({ height: '130px' }, 250, 'swing', function() {
 				    // Animation complete.
-					$('#viz-description').html(newDescr);
+					$('.viz-description').empty().append('<span id=\"viz-description\">' + newDescr + '<\/span>');	//.replaceWith(newDescr);
 					$('#viz-description').show('slow');
 				});
 			});
 		}
 	}
-	
-	//Enabling Esc key to close the viz
-	$(document).ready(function() {
-		$(document).keydown(function(e) {
-			if (e.keyCode == 27) $('.close-button').click();	//Esc
-		});
-		//For the above to work straight out of loading, gotta focus on something
-		$('.comments-input').focus();	//this one works fine
-	});
 </script>
 
 {% load utils %}
@@ -190,7 +205,7 @@
 			<span id="viz-description">{{ viz.description }}</span>
 		</div>
 	{% else %}
-      	<div class="viz-description" onmouseenter="expandDesc();" onmouseleave="collapseDesc();" style="width: 585px; overflow: auto;">
+      	<div class="viz-description" style="width: 585px; overflow: auto;">
 			<span id="viz-description">{{ viz.description|truncatechars:79 }}</span>
 		</div>
 	{% endif %}

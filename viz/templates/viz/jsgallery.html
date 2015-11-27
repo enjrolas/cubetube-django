@@ -31,40 +31,8 @@
 {% endblock %}
 
 {% block content %}
-<script type="text/javascript">
-	function justSearch(searchTerm) {
-		$(".button").html("Wait...");
-		$(".button").blur();
-		var url="/search/" + searchTerm + "/8/" 
-        //console.log(url);
-		$.ajax({
-			type: 'get',
-			url: url,
-			success: function(data) {
-				// Here we replace the entire form's code with the code returned by the view:
-				$("body").html( data );
-				//var src="{% static 'js/loginManager.js' %}";
-				$(".button").html("Search!");
-				setTimeout(function() {
-				    activatePreviews();
-				}, 1);
-			},
-			error: function(data) {
-				$(".button").html("Search!");
-				console.log('Error retrieving search!')
-				console.log(data)
-			}
-		})
-	}
-</script>
 
 <div id="gallery-wrapper" class="viz-cards in-gallery" data-viz="{% if featuredViz %}{{ featuredViz.pk }}{% endif %}">
-	<div class="always-small gallery">
-        <div class="round-button button-grey select-cube">
-        	<input id="search-box" class="video-url" style="width: 270px" placeholder="Search Viz Title, Author, Description..."/>
-        </div>
-        <div class="button search-button" onclick="justSearch($('#search-box').val());">Search!</div>
-	</div>
     {% if privateVizs %}
         <h3 class="viz-title privated">Private</h3>
         {% for viz in privateVizs %}
@@ -75,16 +43,17 @@
     {% if privateVizs %}
         <h3 class="viz-title publiced">Public</h3>
     {% endif %}
-
-    {% for viz in visualizations %}
-        {% jscard viz %}
-    {% endfor %}
-    {% if nextPage %}
-    	<div style="height: 150px; width: 570px; margin: 0 auto;">
-			<div class="scroll button blue scroll-button-left" href="{% url 'scroll' nextPage filter %}">Load More!</div>
-			<div class="scroll button blue scroll-button-left" href="{% url 'scroll' filter totalObjects %}">Load All!</div>
-		</div>
-    {% endif %}
+	<div id="viz-in-gallery">
+	    {% for viz in visualizations %}
+	        {% jscard viz %}
+	    {% endfor %}
+	    {% if nextPage %}
+	    	<div style="height: 150px; width: 570px; margin: 0 auto;">
+				<div class="scroll button blue scroll-button-left" href="{% url 'scroll' nextPage filter %}">Load More!</div>
+				<div class="scroll button blue scroll-button-left" href="{% url 'scroll' filter totalObjects %}">Load All!</div>
+			</div>
+	    {% endif %}
+    </div>
 </div>
 
 {% endblock %}

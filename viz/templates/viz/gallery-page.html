@@ -1,13 +1,14 @@
 {% load staticfiles %}
 {% load card %}
-
-{% for viz in visualizations %}
-    {% jscard viz %}
-{% endfor %}
-{% if nextPage %}
-	<div style="height: 150px; width: 570px; margin: 0 auto;">
-		<div class="scroll button blue scroll-button-left" href="{% url 'scroll' nextPage filter %}">Load More!</div>
-		<div class="scroll button blue scroll-button-left" href="{% url 'scroll' filter totalObjects %}">Load All!</div>
-	</div>
-<!--     <a class="scroll button blue" href="{% url 'scroll' nextPage filter %}">Load More!</a> -->
-{% endif %}
+<div id="viz-in-gallery">
+	{% for viz in visualizations %}
+	    {% jscard viz %}
+	{% endfor %}
+	{% if nextPage %}
+		<div style="height: 150px; width: 570px; margin: 0 auto;">
+			<div class="scroll button blue scroll-button-left" href="{% url 'scroll' nextPage filter %}">Load More!</div>
+			<div class="scroll button blue scroll-button-left" href="{% url 'scroll' filter totalObjects %}">Load All!</div>
+		</div>
+	<!--     <a class="scroll button blue" href="{% url 'scroll' nextPage filter %}">Load More!</a> -->
+	{% endif %}
+</div>

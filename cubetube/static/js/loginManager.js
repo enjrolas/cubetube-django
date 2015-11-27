@@ -8,21 +8,33 @@ $(document).ready(function(){
 	var menuTimer;
 	$('ul.items').on('mouseover', function() {
 		clearTimeout(menuTimer);
-		//$('.login').removeClass('sole-item');
 		showMenuItems();
 	}).on('mouseleave', function() {
-		menuTimer = setTimeout(function() { $('.login').addClass('sole-item'); hideMenuItems(); }, 800);
+		if ($('.login').length)
+			menuTimer = setTimeout(function() { $('.login').addClass('sole-item'); hideMenuItems(); }, 800);
+		else
+			menuTimer = setTimeout(function() { $('.logout').addClass('sole-item'); hideMenuItems(); }, 800);
 	});
+	
+	$('#search-button').on('click', function() {
+		justSearch($('#search-box').val());
+	});
+	$('#search-box').on('keydown', function(e) {
+		if (e.keyCode === 13) justSearch($('#search-box').val());	//Enter
+	});
+	
 	$('.on-forum').hide();
 	$('.on-gallery').hide();
 	$('.on-docs').hide();
 	$('.on-overview').hide();
 	$('.on-create').hide();
 
-	// Positioning the search box if we are at the Gallery template  
-    var searchBox = $(document).find( '#search-box' );
-	if(searchBox)
-		searchBox.offset({ top: searchBox.offset.top, left: $( "ul.items" ).offset.left - searchBox.attr('width') - 20 /* 982 */ });
+	// Positioning the search box if we are at the Gallery template
+	if(window.location.pathname.indexOf('gallery') >= 0)
+		$("#search-box-container").fadeIn();
+	else
+		$("#search-box-container").fadeOut();
+	//$('#search-button').css('left', ($('#search-box-container').css('left') + $('#search-box-container').css('width')) /*- $('#search-button').css('width')*/);
 	
 /*
     checkbox = $("#ToS");   // keep reference of checkbox
@@ -99,6 +111,8 @@ $(document).ready(function(){
     })
 });
 
+//window.onresize = $('#search-button').css('left', ($('#search-box-container').css('left') + $('#search-box-container').css('width')) /*- $('#search-button').css('width')*/);
+
 function hideMenuItems() {
 	$('.on-overview').slideUp( 150, "swing", function() {
 		$('.on-docs').addClass('on-overview');
@@ -152,6 +166,32 @@ function showMenuItems() {
 			});
 		});
 	}
+}
+
+function justSearch(searchTerm) {
+	$(".button").html("Wait...");
+	$(".button").blur();
+	var url="/search/" + searchTerm + "/8/" 
+    //console.log(url);
+	$.ajax({
+		type: 'get',
+		url: url,
+		success: function(data) {
+			// Here we replace the entire form's code with the code returned by the view:
+			$("#viz-in-gallery").replaceWith( data );
+			//$("body").html( data );
+			//var src="{% static 'js/loginManager.js' %}";
+			$(".button").html("Search!");
+			setTimeout(function() {
+			    activatePreviews();
+			}, 1);
+		},
+		error: function(data) {
+			$(".button").html("Search!");
+			console.log('Error retrieving search!')
+			console.log(data)
+		}
+	})
 }
 
 function createNewUser(email, nickname, password) {

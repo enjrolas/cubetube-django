@@ -11,6 +11,12 @@
             <img src="/static/images/logo.svg" class="logo" />
             Cubetube
         </a>
+		<div id="search-box-container" class="always-small gallery" style="display: none">
+	        <div class="round-button button-grey select-cube">
+	        	<input id="search-box" class="video-url" style="width: 297px; height: 27px" placeholder=" Search Viz Title, Author, Description... "/>
+	        </div>
+	        <div id="search-button" class="button search-button">Search!</div>
+		</div>
         <ul class="items">
 	        {% if not logged_in %}
 	            <li class="login">

@@ -34,7 +34,8 @@ $('body').on('click', '.scroll', function(e) {
       type: 'get',
       url: url,
       success: function(data) {
-    	  $(".scroll").replaceWith( data );
+    	$("#viz-in-gallery").replaceWith( data );
+    	//$(".scroll").replaceWith( data );
         //$this.replaceWith( data );
 //	  activatePreviews();
         setTimeout(function() {
