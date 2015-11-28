@@ -35,12 +35,12 @@ $('body').on('click', '.scroll', function(e) {
       url: url,
       success: function(data) {
     	if(button == 'all')
+			// Here we replace the entire viz gallery code with the code returned by the view:
     		$("#viz-in-gallery").replaceWith( data );
     	else
+			// Here we replace just the section below the viz gallery with the code returned by the view:
     		$("#scroll").replaceWith( data );
-        //$this.replaceWith( data );
-//	  activatePreviews();
-        setTimeout(function() {
+        	setTimeout(function() {
             activatePreviews();
         }, 1);
       }

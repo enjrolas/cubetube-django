@@ -177,10 +177,8 @@ function justSearch(searchTerm) {
 		type: 'get',
 		url: url,
 		success: function(data) {
-			// Here we replace the entire form's code with the code returned by the view:
+			// Here we replace the entire viz gallery code with the code returned by the view:
 			$("#viz-in-gallery").replaceWith( data );
-			//$("body").html( data );
-			//var src="{% static 'js/loginManager.js' %}";
 			$("#search-button").html("Search!");
 			setTimeout(function() {
 			    activatePreviews();
