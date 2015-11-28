@@ -169,8 +169,8 @@ function showMenuItems() {
 }
 
 function justSearch(searchTerm) {
-	$(".button").html("Wait...");
-	$(".button").blur();
+	$("#search-button").html("Wait...");
+	$("#search-button").blur();
 	var url="/search/" + searchTerm + "/8/" 
     //console.log(url);
 	$.ajax({
@@ -181,7 +181,7 @@ function justSearch(searchTerm) {
 			$("#viz-in-gallery").replaceWith( data );
 			//$("body").html( data );
 			//var src="{% static 'js/loginManager.js' %}";
-			$(".button").html("Search!");
+			$("#search-button").html("Search!");
 			setTimeout(function() {
 			    activatePreviews();
 			}, 1);
