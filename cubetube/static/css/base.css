@@ -720,7 +720,7 @@ nav {
 	height: 60px; 
 	padding-top: 20px;
   }
-  .items {
+  li .items {
 	height: 60px;
   }
   .on-overview {
