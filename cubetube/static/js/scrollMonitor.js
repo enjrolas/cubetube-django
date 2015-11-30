@@ -24,7 +24,7 @@ function checkScroll() {
     }
 }
 
-//checkScroll();
+checkScroll();
 
 $('body').on('click', '.scroll', function(e) {
     e.preventDefault();
