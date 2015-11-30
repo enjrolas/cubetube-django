@@ -19,11 +19,11 @@
 		</div>
         <ul class="items">
 	        {% if not logged_in %}
-	            <li class="login sole-item">
+	            <li class="login" style="width: 275px;">
 	                <a href="">Join or Log In</a>
 	            </li>
 	        {% else %}
-	            <li class="user logout-user sole-item">
+	            <li class="user logout-user" style="width: 275px;">
 	                <a class="logout" href="">{{ request.COOKIES.nickname }}</a>
 	            </li>
 	            <li class="on-create">

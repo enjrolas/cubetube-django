@@ -8,16 +8,16 @@ $(document).ready(function(){
 	var menuTimer;
 	$('ul.items').on('mouseover', function() {
 		clearTimeout(menuTimer);
-		if ($('.login').length)
+		/*if ($('.login').length)
 			$('.login').removeClass('sole-item');
 		else
-			$('.logout').removeClass('sole-item');
+			$('.logout').removeClass('sole-item');*/
 		showMenuItems();
 	}).on('mouseleave', function() {
 		if ($('.login').length)
-			menuTimer = setTimeout(function() { $('.login').addClass('sole-item'); hideMenuItems(); }, 800);
+			menuTimer = setTimeout(function() { /*$('.login').addClass('sole-item');*/ hideMenuItems(); }, 800);
 		else
-			menuTimer = setTimeout(function() { $('.logout').addClass('sole-item'); hideMenuItems(); }, 800);
+			menuTimer = setTimeout(function() { /*$('.logout').addClass('sole-item');*/ hideMenuItems(); }, 800);
 	});
 	
 	$('#search-button').on('click', function() {
