@@ -15,10 +15,10 @@ if( $header.length ) {
 function checkScroll() {
     var scrollPos = $window.scrollTop();
     if( scrollPos !== 0 ) {
-		$header.css('background', 'transparent none repeat scroll 0% 0%');
+		$header.css('background', '#1C1521 none repeat scroll 0% 0%');
         //$header.addClass('small');
     } else {
-		$header.css('background', '#1C1521 none repeat scroll 0% 0%');
+		$header.css('background', 'transparent none repeat scroll 0% 0%');
         //$header.removeClass('small');
     }
 }
