@@ -715,8 +715,10 @@ nav {
 	  background: #1c1521;
 	  text-align: center;
 	  opacity: 0.8; }
-  .sole-item {
-	width: 275px;
+  .sole-button {
+	width: 275px; 
+	height: 60px; 
+	padding-top: 20px;
   }
   .on-overview {
 	border-bottom-right-radius: 8px;
