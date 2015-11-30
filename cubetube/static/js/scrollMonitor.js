@@ -3,7 +3,8 @@
  * -- Checks if the page has been scrolled, and shrinks the header.
  */
 
-var $header = $('nav:not(.always-small)');
+//var $header = $('nav:not(.always-small)');
+var $header = $('nav:not([style~=#1C1521])');
 var $window = $(window);
 
 if( $header.length ) {
