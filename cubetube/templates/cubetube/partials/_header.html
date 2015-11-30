@@ -5,7 +5,7 @@
     {% include "cubetube/partials/_login_components.html" %}
 {% endif %}
 
-<nav class="{% if not large %}always-small{% endif %} {{page}}">
+<nav class="always-small {{page}}" style="background: {% if not large %}transparent none repeat scroll 0% 0%{% else %}#1C1521 none repeat scroll 0% 0%{% endif %} !important;">
     <div class="section">
         <a class="logo-box" href="/">
             <img src="/static/images/logo.svg" class="logo" />
