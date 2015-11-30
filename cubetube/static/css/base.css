@@ -720,8 +720,8 @@ nav {
 	height: 60px; 
 	padding-top: 20px;
   }
-  li .items {
-	height: 60px;
+  nav ul li .items {
+	height: 60px !important;
   }
   .on-overview {
 	border-bottom-right-radius: 8px;
