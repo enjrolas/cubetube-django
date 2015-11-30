@@ -720,6 +720,9 @@ nav {
 	height: 60px; 
 	padding-top: 20px;
   }
+  .items {
+	height: 60px;
+  }
   .on-overview {
 	border-bottom-right-radius: 8px;
 	border-bottom-left-radius: 8px;  
