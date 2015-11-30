@@ -703,10 +703,10 @@ nav {
     height: 90px; }
     nav ul li {
       display: inline-block;
-      height: 90px;
+      height: 60px;
       margin-left: 40px;
       position: relative;
-      padding-top: 32px;
+      padding-top: 20px;
       font-weight: bold;
       float: right;
       color: #fff; 
@@ -719,9 +719,6 @@ nav {
 	width: 275px; 
 	height: 60px; 
 	padding-top: 20px;
-  }
-  nav ul li .items {
-	height: 60px !important;
   }
   .on-overview {
 	border-bottom-right-radius: 8px;
