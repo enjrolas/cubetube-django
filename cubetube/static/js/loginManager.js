@@ -8,6 +8,10 @@ $(document).ready(function(){
 	var menuTimer;
 	$('ul.items').on('mouseover', function() {
 		clearTimeout(menuTimer);
+		if ($('.login').length)
+			$('.login').removeClass('sole-item');
+		else
+			$('.logout').removeClass('sole-item');
 		showMenuItems();
 	}).on('mouseleave', function() {
 		if ($('.login').length)
