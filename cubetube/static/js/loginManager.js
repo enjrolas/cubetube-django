@@ -17,6 +17,7 @@ $(document).ready(function(){
 		else
 			menuTimer = setTimeout(function() { hideMenuItems(); }, 800);
 	}).on('click', function() {
+		console.log('ul.items > clicks = ' + clicks);
 		var menuVisible = $('li.on-overview').css('display');
 		if(clicks === 0) {
 			if(menuVisible === 'none') {
@@ -68,6 +69,7 @@ $(document).ready(function(){
 
         // Show login signup
         $('.login').click(function(e) {
+			console.log('.login > clicks = ' + clicks);
 			if(clicks === 0) {
 				$('ul.items').click();
 			} else {
