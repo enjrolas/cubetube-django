@@ -6,6 +6,8 @@
 
 $(document).ready(function(){
 	var menuTimer;
+	var clicks = 0;
+	
 	$('ul.items').on('mouseover', function() {
 		clearTimeout(menuTimer);
 		showMenuItems();
@@ -14,6 +16,20 @@ $(document).ready(function(){
 			menuTimer = setTimeout(function() { hideMenuItems(); }, 800);
 		else
 			menuTimer = setTimeout(function() { hideMenuItems(); }, 800);
+	}).on('click', function() {
+		var menuVisible = $('li.on-overview').css('display');
+		if(clicks === 0) {
+			if(menuVisible === 'none') {
+				clearTimeout(menuTimer);
+				showMenuItems();
+			} else {
+				if ($('.login').length)
+					menuTimer = setTimeout(function() { hideMenuItems(); }, 800);
+				else
+					menuTimer = setTimeout(function() { hideMenuItems(); }, 800);
+			}
+			return false;
+		}
 	});
 	
 	$('#search-button').on('click', function() {
@@ -52,9 +68,13 @@ $(document).ready(function(){
 
         // Show login signup
         $('.login').click(function(e) {
-            e.preventDefault();
-            $popover.show();
-            $glass.show();
+			if(clicks === 0) {
+				$('ul.items').click();
+			} else {
+				e.preventDefault();
+				$popover.show();
+				$glass.show();
+			}
         });
         
         // Sign up forms exist, change type.
@@ -102,12 +122,16 @@ $(document).ready(function(){
      * Log out
      */
     $('.logout').click(function(e) {
-        e.preventDefault();
-        $.removeCookie("accessToken", { path: '/' });
-        $.removeCookie("username", { path: '/' });
-        $.removeCookie("nickname", { path: '/' });
-        $.removeCookie("coreID", { path: '/' });
-        location.reload();
+		if(clicks === 0) {
+			$('ul.items').click();
+		} else {
+			e.preventDefault();
+			$.removeCookie("accessToken", { path: '/' });
+			$.removeCookie("username", { path: '/' });
+			$.removeCookie("nickname", { path: '/' });
+			$.removeCookie("coreID", { path: '/' });
+			location.reload();
+		}
     })
 });
 
@@ -125,6 +149,7 @@ function hideMenuItems() {
 						$('.on-create').addClass('on-overview');
 						$('.on-create').slideUp( 150, "swing" );
 					}
+					clicks = 0;
 				});
 			});
 		});
@@ -145,7 +170,9 @@ function showMenuItems() {
 					$('.on-docs').addClass('on-overview');
 					$('.on-docs').slideDown( 80, "swing", function() {
 						$('.on-docs').removeClass('on-overview');
-						$('.on-overview').slideDown( 80, "swing" );
+						$('.on-overview').slideDown( 80, "swing", function() {
+							clicks = 1;
+						});
 					});
 				});
 			});
@@ -161,7 +188,9 @@ function showMenuItems() {
 				$('.on-docs').addClass('on-overview');
 				$('.on-docs').slideDown( 80, "swing", function() {
 					$('.on-docs').removeClass('on-overview');
-					$('.on-overview').slideDown( 80, "swing" );
+					$('.on-overview').slideDown( 80, "swing", function() {
+						clicks = 1;
+					});
 				});
 			});
 		});
