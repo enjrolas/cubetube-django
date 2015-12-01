@@ -172,6 +172,7 @@ function showMenuItems() {
 					$('.on-docs').slideDown( 80, "swing", function() {
 						$('.on-docs').removeClass('on-overview');
 						$('.on-overview').slideDown( 80, "swing");
+					});
 				});
 			});
 		});
