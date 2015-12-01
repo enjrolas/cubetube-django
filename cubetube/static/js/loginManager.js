@@ -6,7 +6,6 @@
 
 $(document).ready(function(){
 	var menuTimer;
-	var clicks = 0;
 	
 	$('ul.items').on('mouseover', function() {
 		clearTimeout(menuTimer);

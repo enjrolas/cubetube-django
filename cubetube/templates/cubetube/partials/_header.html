@@ -4,7 +4,9 @@
 {% if not logged_in %}
     {% include "cubetube/partials/_login_components.html" %}
 {% endif %}
-
+<script type="text/javascript">
+	var clicks = 0;
+</script>
 <nav class="small {{page}}" style="background: {% if not large %}#1C1521 none repeat scroll 0% 0%{% else %}transparent none repeat scroll 0% 0%{% endif %}">
     <div class="section">
         <a class="logo-box" href="/">
