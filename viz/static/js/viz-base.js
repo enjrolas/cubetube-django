@@ -77,10 +77,9 @@ $(function(){
             parent.postMessage( "close", "*" );
             $body.removeClass('no-scroll');
         } else {
-            
             $('body').animate( 
                 {scrollTop:'0px'},
-                300,
+                100,
                 'swing',
                 function(){ 
                     parent.postMessage( "open", "*" );

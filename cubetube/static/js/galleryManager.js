@@ -33,7 +33,7 @@ function receiveMessage(event) {
 }
 
 function bindCards() {
-    $( "body" ).on( "click", ".viz-card", function(e) {
+    $( "body" ).on( "click", ".viz-card-anchor", function(e) {
       e.preventDefault();
       var $this = $(e.currentTarget);
       openViz( $this.attr('href') );

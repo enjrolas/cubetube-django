@@ -46,7 +46,7 @@ button {
 
 .section {
   max-width: 1340px;
-  min-width: 980px;
+  min-width: 320px;	/*980px;*/
   padding-right: 30px;
   padding-left: 30px;
   margin: auto; }
@@ -56,6 +56,12 @@ button {
 
 .hidden {
   display: none; }
+
+.disabled {
+    opacity: .5;
+    pointer-events: none;
+    cursor: none !important;
+}
 
 /**
  * App
@@ -280,6 +286,7 @@ button {
     .login-signup-popover.join .login-component {
       display: none; }
   .login-signup-popover.login {
+  	width: 320px;
     height: 410px; }
     .login-signup-popover.login p {
       margin-top: 20px; }
@@ -365,6 +372,7 @@ button {
     position: relative;
     text-align: center; }
     .viz-wrapper .viz-demo canvas {
+      width: 310px;
       height: 310px; }
     .viz-wrapper .viz-demo .background-image {
       position: absolute;
@@ -512,7 +520,7 @@ button {
     transform: translateX(-300px);
     box-shadow: 0px 0px 35px 0px rgba(0, 0, 0, 0.3); }
   .viz-wrapper.code-active .viz-demo,
-  .viz-wrapper.code-active canvas {
+  .viz-wrapper.code-active {
     position: relative;
     width: 610px;
     outline: 0; }
@@ -688,27 +696,43 @@ nav {
       height: 50px;
       margin-right: 5px; }
   nav ul {
-    list-style: none;
+	list-style: none;
     float: right;
     padding: 0px;
     margin: 0px;
     height: 90px; }
     nav ul li {
       display: inline-block;
-      height: 90px;
+      height: 60px;
       margin-left: 40px;
       position: relative;
-      padding-top: 32px;
+      padding-top: 20px;
       font-weight: bold;
       float: right;
-      color: #fff; }
+      color: #fff; 
+      /*New styles for collapsing the menu items into a dropdown list*/
+      width: 60%;
+	  background: #1c1521;
+	  text-align: center;
+	  opacity: 0.8; }
+  .sole-button {
+	width: 275px; 
+	height: 60px; 
+	padding-top: 20px;
+  }
+  .on-overview {
+	border-bottom-right-radius: 8px;
+	border-bottom-left-radius: 8px;  
+  }
   nav .create {
     background: #2bc6fb;
     border-radius: 30px;
     padding: 6px 22px 6px 22px; }
   nav .logout-user {
+  	width: 275px;
     margin-left: 10px; }
   nav .user .logout {
+  	width: 275px;
     background: #ee0026;
     border-radius: 30px;
     padding: 6px 22px 6px 22px;
@@ -747,8 +771,21 @@ nav {
     box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.2);
     background: #1c1521;
     height: 60px; }
+  div.small, div.always-small {
+	background:#1C1521;
+	box-shadow:rgba(0, 0, 0, 0.2) 0 2px 2px 0;
+	height:30px;
+	left:27%;
+	padding-right:20px;
+	padding-top:2px;
+	position:fixed;
+	text-align:left;
+	top:17px;
+	width:28%;
+	z-index:3; }
     nav.small ul, nav.small li, nav.always-small ul, nav.always-small li {
-      height: 60px; }
+	  width: 275px;
+	  height: 60px; }
     nav.small .logo-box, nav.always-small .logo-box {
       height: 60px;
       line-height: 34px;
@@ -890,7 +927,6 @@ header {
     float: right; }
   .viz-card .name,
   .viz-card .author {
-    text-decoration: none;
     display: block;
     max-width: 200px;
     overflow: hidden;
@@ -904,18 +940,43 @@ header {
     font-style: italic; }
   .viz-card:hover {
     box-shadow: 1px 4px 5px 1px rgba(0, 0, 0, 0.1); }
-    .viz-card:hover .part {
-      fill: #ee0026; }
+  .viz-card:hover .part {
+    fill: #ee0026; }
+  .viz-card .author:hover {
+  	font-weight: bold;
+  	font-style: unset;
+    color: #ee0026; }
 
 /**
  * - Gallery code.
  */
 .in-gallery {
-  padding-top: 100px; }
+  padding-top: 120px; /*100px;*/ }
 
 .scroll {
   margin-bottom: 60px; }
 
+.scroll-button-left {
+	margin-left: 32px;
+    float: left;
+    width: 240px; }
+
+.search-button {
+  border-radius:3px;
+  float:left;
+  font-size:12px;
+  height:27px;
+  left:97%;
+  letter-spacing:0.2px;
+  margin-top:0 !important;
+  padding-top:6px;
+  position:relative;
+  text-align:center;
+  text-decoration:none;
+  top:0;
+  width:65px;
+  z-index:3; }
+      
 footer {
   background: url(../images/cube-pattern.png);
   color: #fff; }
@@ -950,6 +1011,7 @@ footer {
           padding-bottom: 10px;
           padding-left: 5; }
   footer .bottom {
+  	min-width: 320px;
     height: 410px; }
     footer .bottom .cta {
       font-size: 30px;

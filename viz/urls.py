@@ -4,6 +4,7 @@ from viz import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+    url(r'^gallery/(?P<filter>\w+)/(?P<vizCreator>\w+)/$', views.jsgallery, name='gallery'),
     url(r'^gallery/(?P<filter>\w+)/(?P<featuredViz>\d+)/$', views.jsgallery, name='gallery'),
     url(r'^gallery/(?P<filter>\w+)/$', views.jsgallery, name='gallery'),
     url(r'^gallery/', views.jsgallery, name='gallery'),
@@ -13,6 +14,7 @@ urlpatterns = [
     url(r'^scroll/(?P<page>\d+)/(?P<filter>\w+)/(?P<cardsPerPage>\d+)/$', views.scroll, name='scroll'),
     url(r'^scroll/(?P<page>\d+)/(?P<filter>\w+)/$', views.scroll, name='scroll'),
     url(r'^scroll/(?P<page>\d+)/$', views.scroll, name='scroll'), 
+    url(r'^scroll/(?P<filter>\w+)/(?P<cardsPerPage>\d+)/$', views.scroll, name='scroll'),
     url(r'^fork/(?P<vizId>\d+)/$', views.fork, name='fork'),
     url(r'^compile/', views.compile, name='compile'),
     url(r'^cloudFlash/', views.cloudFlash, name='cloudFlash'),
@@ -26,4 +28,10 @@ urlpatterns = [
     url(r'^upload/', views.upload, name='upload'),
     url(r'^edit/(?P<id>\d+)/$', views.edit, name='edit'),
     url(r'^delete/', views.delete, name='delete'),
+    url(r'^search/$', views.search, name='search'),
+    url(r'^search/(?P<page>\d+)/$', views.search, name='search'),
+    url(r'^search/(?P<filter>\w+)/$', views.search, name='search'),
+    url(r'^search/(?P<page>\d+)/(?P<filter>\w+)/$', views.search, name='search'),
+    url(r'^search/(?P<filter>\w+)/(?P<cardsPerPage>\d+)/$', views.search, name='search'),
+    url(r'^search/(?P<page>\d+)/(?P<filter>\w+)/(?P<cardsPerPage>\d+)/$', views.search, name='search'),
 ]

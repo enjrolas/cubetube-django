@@ -13,6 +13,8 @@ import datetime
 import subprocess
 import os
 from django.core.files import File
+from itertools import chain
+from django.db.models.query import QuerySet
 log = logging.getLogger(__name__)
 
 def filter(request):
@@ -334,22 +336,38 @@ def justCompile(request):
                }
     return JsonResponse(response)
 
-def jsgallery(request, filter="newestFirst", featuredViz=None):
+
+def jsgallery(request, filter="newestFirst", featuredViz=None, vizCreator=None):
     accessToken=request.COOKIES.get('accessToken') 
     try:
         user=CubeUser.objects.filter(accessToken=accessToken).get()
     except CubeUser.DoesNotExist:
         user = None
     if user:
-        userVizs=Viz.objects.filter(creator=user)
-        privateVizs=userVizs.filter(published=False)
-        publicVizs=userVizs.filter(published=True)
+        userVizs=Viz.objects.filter(creator=user).order_by("-created")
+        privateVizs=userVizs.filter(published=False).order_by("-created")
+        publicVizs=userVizs.filter(published=True).order_by("-created")
     else:
         privateVizs=None
         publicVizs=None
 
     if(filter=='newestFirst'):
-        vizs=Viz.objects.all().order_by("-created").exclude(published=False)    
+        vizs=Viz.objects.all().order_by("-pageViews", "-created").exclude(published=False)    
+    elif(filter=='byCreator'):
+        try:
+            vizUser=CubeUser.objects.filter(nickname=vizCreator).first()
+        except CubeUser.DoesNotExist:
+            vizUser=None
+        if(vizUser):        
+            if(user):
+                if(vizUser.nickname!=user.nickname):
+                    vizs=Viz.objects.all().filter(creator=vizUser.id).order_by("-created").exclude(published=False)
+                else:
+                    vizs=Viz.objects.all().filter(creator=vizUser.id, published=True).order_by("-created")
+            else:
+                vizs=Viz.objects.all().filter(creator=vizUser.id).order_by("-created").exclude(published=False)
+        else:
+            vizs=None      
     else:
         vizs=Viz.objects.all().order_by("created").exclude(published=False)      
     
@@ -358,12 +376,19 @@ def jsgallery(request, filter="newestFirst", featuredViz=None):
     else:
         featured=Viz.objects.get(pk=featuredViz)
 
-    totalObjects=vizs.count()
-    if totalObjects<8:
+    if vizs is None:
+        totalObjects=0
+    else:
+        totalObjects=vizs.count()
+    
+    if totalObjects==0:
+        return render(request, "viz/jsgallery.html", { 'visualizations' : None , 'nextPage' : False, 'totalObjects' : totalObjects, 'filter': filter, 'featuredViz' : featured, 'privateVizs': privateVizs, 'publicVizs':publicVizs})        
+    elif totalObjects<=8:
         visualizations=vizs[:totalObjects]
+        return render(request, "viz/jsgallery.html", { 'visualizations' : visualizations , 'nextPage' : False, 'totalObjects' : totalObjects, 'filter': filter, 'featuredViz' : featured, 'privateVizs': privateVizs, 'publicVizs':publicVizs})
     else:
         visualizations=vizs[:8]
-    return render(request, "viz/jsgallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'totalObjects' : totalObjects, 'filter': filter, 'featuredViz' : featured, 'privateVizs': privateVizs, 'publicVizs':publicVizs})
+        return render(request, "viz/jsgallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'totalObjects' : totalObjects, 'filter': filter, 'featuredViz' : featured, 'privateVizs': privateVizs, 'publicVizs':publicVizs})
 
 def index(request):
 #    vizs=Viz.objects.all().order_by("-created").exclude(published=False)
@@ -553,17 +578,29 @@ def code(request, id):
 def create(request):
     return render(request, "viz/create.html")
 
-def scroll(request, page, filter="newestFirst", cardsPerPage=8):
+def scroll(request, page=1, filter="newestFirst", cardsPerPage=8):
     page=int(page)
     if filter=="newestFirst":
-        vizs=Viz.objects.all().exclude(published=False).order_by("-created")[page*cardsPerPage:(page+1)*cardsPerPage]
+        vizs=Viz.objects.all().exclude(published=False).order_by("-pageViews", "-created")[page*cardsPerPage:(page+1)*cardsPerPage]
+    elif filter=="all":
+        vizs=Viz.objects.all().exclude(published=False).order_by("-pageViews", "-created")
+        cardsPerPage=vizs.count()
     else:
-        vizs=Viz.objects.all().exclude(published=False).order_by("created")[page*cardsPerPage:(page+1)*cardsPerPage]
+        vizs=Viz.objects.all().exclude(published=False).order_by("-pageViews", "-created")[page*cardsPerPage:(page+1)*cardsPerPage]
 
-    if vizs.count() >= cardsPerPage:
-        return render(request, "viz/gallery-page.html", { 'visualizations' : vizs , 'nextPage' : page+1, 'filter':filter})    
+    if vizs is None:
+        totalObjects=0
     else:
-        return render(request, "viz/gallery-page.html", { 'visualizations' : vizs , 'nextPage' : False, 'filter':filter})    
+        totalObjects=vizs.count()
+            
+    if totalObjects==0:
+        return render(request, "viz/gallery-page.html", { 'visualizations' : None , 'nextPage' : False, 'filter':filter})
+    elif totalObjects <= cardsPerPage:
+        visualizations=vizs[:totalObjects]
+        return render(request, "viz/gallery-page.html", { 'visualizations' : visualizations , 'nextPage' : False, 'filter':filter})
+    else:
+        visualizations=vizs[:cardsPerPage]
+        return render(request, "viz/gallery-page.html", { 'visualizations' : visualizations , 'nextPage' : page+1, 'filter':filter})    
    
     '''
     page=int(page)
@@ -574,6 +611,49 @@ def scroll(request, page, filter="newestFirst", cardsPerPage=8):
         vizs=Viz.objects.all().order_by("-created")[page*6:(page+1)*6]
     return render(request, "viz/gallery-page.html", { 'visualizations' : vizs , 'nextPage' : page+1})    
     '''
+
+def search(request, page=1, filter=None, cardsPerPage=8):
+    page=int(page)
+    if filter:
+        try:
+            vizUsers=CubeUser.objects.all().filter(nickname__icontains=filter)
+        except CubeUser.DoesNotExist:
+            vizUsers=None
+        
+        vizs=Viz.objects.none()
+        if vizUsers:
+            for user in vizUsers: 
+                vizs=vizs | Viz.objects.all().filter(creator=user.id).exclude(published=False)   #list(chain(vizs, Viz.objects.all().filter(creator=user.id)))
+        else:
+            try:
+                titleQuery=Viz.objects.all().filter(name__icontains=filter).exclude(published=False).order_by("-pageViews", "-created")
+            except Viz.DoesNotExist:
+                titleQuery=None
+            try:
+                descrQuery=Viz.objects.all().filter(description__icontains=filter).exclude(published=False).order_by("-pageViews", "-created")
+            except Viz.DoesNotExist:
+                descrQuery=None
+            
+            if titleQuery:
+                vizs=vizs | titleQuery  #list(chain(vizs, titleQuery))
+            if descrQuery:
+                vizs=vizs | descrQuery  #list(chain(vizs, descrQuery))
+    else: 
+        vizs=Viz.objects.all().exclude(published=False).order_by("-pageViews", "-created")
+    
+    if vizs is None:
+        totalObjects=0
+    else:
+        totalObjects=vizs.count()
+    
+    if totalObjects==0:
+        return render(request, "viz/gallery-page.html", { 'visualizations' : None , 'nextPage' : False, 'filter':filter})
+    elif totalObjects <= cardsPerPage:
+        visualizations=vizs[:totalObjects]
+        return render(request, "viz/gallery-page.html", { 'visualizations' : visualizations , 'nextPage' : False, 'filter':filter})
+    else:
+        visualizations=vizs[:cardsPerPage]
+        return render(request, "viz/gallery-page.html", { 'visualizations' : visualizations , 'nextPage' : page+1, 'filter':filter})
 
 def edit(request, id):
     try:
@@ -724,31 +804,71 @@ def flashWebsocketsListener(request, coreId, processor):
     accessToken=request.COOKIES.get('accessToken')
     log.debug("processor type is %s" % processor)
     if processor=="Photon":
-        directory= "/home/glass/cubetube-production/media/cloudware/"
+        '''
+        directory=os.path.join(settings.MEDIA_ROOT,'cloudware\\') #"/home/glass/cubetube-production/media/cloudware/"
         command=['node', 'directoryflash.js', '%s' % accessToken, '%s' % coreId, "photonListener"]
         log.debug(command)
         p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=directory)
+       
+        jsonResult=""
+        for line in p.stdout.readlines():
+            line=line.replace('Device flashing started successfully: ', '')
+            log.debug(line)
+            jsonResult="%s%s" % (jsonResult, line)
+        '''
+
+        #media_root="/home/glass/cubetube-production/media/"
+        #project_root="/home/glass/cubetube-production"    
+        #log.debug('%s/viz/utils/flash.js' % project_root)
+        directory=os.path.join(settings.PROJECT_ROOT, 'viz\\utils\\')   #"/home/glass/cubetube-production/media/cloudware/"
+        binaryPath=os.path.join(settings.MEDIA_ROOT, "cloudware\\photonListener.bin")   #settings.WEBSOCKETS_LISTENER
+        command=['node', '%sflash.js' % directory, accessToken, coreId, binaryPath]
+        p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        #command=['node', '%s/viz/utils/flash.js' % settings.PROJECT_ROOT, accessToken, coreId, binaryPath]  #['node', 'flash.js', accessToken, coreId, binaryPath]
+        #p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=directory)
         log.debug("waiting for process to complete")
         retval = p.wait()
         log.debug("process completed")
-        jsonResult=""
-        for line in p.stdout.readlines():
-            log.debug(line)
-            line=line.replace('Device flashing started successfully: ', '')
-            jsonResult="%s%s" % (jsonResult, line)
-            i+=1            
-        return JsonResponse(jsonResult, safe=False)
 
+        flash_output=[]
+        flash_error=[]
+        for line in p.stdout.readlines():
+            print line,
+            line.replace('"','\\"')
+            line.replace("'","\\'")
+            flash_output.append(line)
+            
+        for line in p.stderr.readlines():
+            print line,
+            line.replace('"','\\"')
+            line.replace("'","\\'")
+            flash_error.append(line)
+            
+        if flash_error:
+            flash_error.append('PROJECT_ROOT: %s' % settings.PROJECT_ROOT)
+            flash_error.append('directory: %s' % directory)
+            flash_error.append('binaryPath: %s' % binaryPath)
+            compilation_status="error"
+            response={ "compilation_status": compilation_status , 
+                       "flash_error" : flash_error}
+        else:
+            compilation_status="ok"
+        
+        if flash_output:
+            response={ "compilation_status": compilation_status , 
+                       "flash_output" : flash_output}
+        return JsonResponse(response)
     else:
         binaryPath= settings.WEBSOCKETS_LISTENER
         flash_output=[]
         flash_error=[]
 
-        media_root="/home/glass/cubetube-production/media/"
-        project_root="/home/glass/cubetube-production"    
-        log.debug('%s/viz/utils/flash.js' % project_root)
+        #media_root="/home/glass/cubetube-production/media/"
+        #project_root="/home/glass/cubetube-production"    
+        #log.debug('%s/viz/utils/flash.js' % project_root)
         accessToken=request.COOKIES.get('accessToken')
-        p = subprocess.Popen(['node', '%s/viz/utils/flash.js' % project_root,accessToken, coreId, binaryPath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.Popen(['node', 'flash.js', accessToken, coreId, binaryPath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)        #p = subprocess.Popen(['node', '%s/viz/utils/flash.js' % settings.PROJECT_ROOT, accessToken, coreId, binaryPath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        #p = subprocess.Popen(['node', '%s/viz/utils/flash.js' % project_root,accessToken, coreId, binaryPath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         retval = p.wait()
 
         for line in p.stdout.readlines():

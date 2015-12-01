@@ -27,12 +27,11 @@
 <script src="{% static 'js/processing.js' %}"></script>
 <script src="{% static 'js/processing-gallery-helper.js' %}"></script>
 <script src="{% static 'js/spark-helper.js' %}"></script>
-<script src="{% static 'js/gallery-coordinator.js' %}"></script>	
+<script src="{% static 'js/gallery-coordinator.js' %}"></script>
 {% endblock %}
 
 {% block content %}
-<div class="viz-cards in-gallery" data-viz="{% if featuredViz %}{{ featuredViz.pk }}{% endif %}">
-
+<div id="gallery-wrapper" class="viz-cards in-gallery" data-viz="{% if featuredViz %}{{ featuredViz.pk }}{% endif %}">
     {% if privateVizs %}
         <h3 class="viz-title privated">Private</h3>
         {% for viz in privateVizs %}
@@ -43,13 +42,17 @@
     {% if privateVizs %}
         <h3 class="viz-title publiced">Public</h3>
     {% endif %}
-
-    {% for viz in visualizations %}
-        {% jscard viz %}
-    {% endfor %}
-    {% if nextPage %}
-      <div class="scroll button blue" href="{% url 'scroll' nextPage filter %}">Load More!</div>
-    {% endif %}
+	<div id="viz-in-gallery">
+	    {% for viz in visualizations %}
+	        {% jscard viz %}
+	    {% endfor %}
+	    {% if nextPage %}
+	    	<div id="scroll" style="height: 150px; width: 570px; margin: 0 auto;">
+				<div class="scroll button blue scroll-button-left" data-which="more" href="{% url 'scroll' nextPage filter %}">Load More!</div>
+				<div class="scroll button blue scroll-button-left" data-which="all" href="{% url 'scroll'  '1' 'all' %}">Load All!</div>
+			</div>
+	    {% endif %}
+    </div>
 </div>
 
 {% endblock %}

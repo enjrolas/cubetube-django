@@ -12,16 +12,16 @@ function getLocalIP(accessToken, coreID)
     $.get(url, function(data){
 	    localIP=data['result'];
 	    console.log(localIP);
-	if(processor=="Core")
-	{
-	    streaming=new Streaming("ws://" + localIP + ":" + port);
-	    streaming.rate=5;
-	}
-	else
-	{
-	    streaming=new PhotonStreaming("ws://" + localIP + ":" + port);
-	    streaming.rate=30;
-	}
+		if(processor=="Core")
+		{
+		    streaming=new Streaming("ws://" + localIP + ":" + port);
+		    streaming.rate=5;
+		}
+		else
+		{
+		    streaming=new PhotonStreaming("ws://" + localIP + ":" + port);
+		    streaming.rate=30;
+		}
     });    
 }
 
@@ -32,12 +32,11 @@ function checkForListener(coreID)
 	url: url,
 	success: function(data){
 	    vizName=data['result'];
+	    console.log(vizName);
 	    if(vizName=="websocketsListener")		
-		getLocalIP(accessToken, coreID);   //great!  commence the streaming!
+	    	getLocalIP(accessToken, coreID);	//great!  commence the streaming!
 	    else
-	    {
-		flashWebsocketsListener();  //load the websockets listener
-	    }
+	    	flashWebsocketsListener();			//load the websockets listener
 	},
 	error: function(){
 	    flashWebsocketsListener();
@@ -49,7 +48,7 @@ function checkForListener(coreID)
 
 function flashWebsocketsListener()
 {
-    alert("your cube needs to run the listener.  Take a dance break for 20 seconds while we load it onto your cube, and try again when the light on the bottom of your core turns cyan");
+    alert("Your cube needs to run the listener. Take a dance break for\n20 seconds while we load it onto your cube, and try again\nwhen the light on the bottom of your core turns cyan.");
     coreUrl=flashWebsocketsUrl.replace("coreId", coreID).replace("processor", processor);
     console.log(coreUrl);
     $.get(coreUrl);
@@ -57,6 +56,7 @@ function flashWebsocketsListener()
 
 function stream()
 {
+	//alert("We're sorry, streaming functionality is being overhauled and has been deactivated.")
     processor=$('option:selected', $("#cubeName")).attr("processor");
     console.log(processor);
     checkForListener(coreID);  
