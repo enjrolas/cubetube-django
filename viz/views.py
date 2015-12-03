@@ -648,13 +648,14 @@ def search(request, page=1, filter=None, cardsPerPage=8):
             if descrQuery:
                 vizs=vizs | descrQuery
     else: 
-        vizs=Viz.objects.all().exclude(published=False).order_by("-pageViews", "-created")[page*cardsPerPage:(page+1)*cardsPerPage]
+        vizs=Viz.objects.all().exclude(published=False).order_by("-pageViews", "-created")[:page*cardsPerPage]
     
     if vizs is None:
         totalObjects=0
     else:
         totalObjects=vizs.count()
-        cardsPerPage=totalObjects+1
+        if filter:
+            cardsPerPage=totalObjects+1
     
     if totalObjects==0:
         return render(request, "viz/gallery-page.html", { 'visualizations' : None , 'nextPage' : False, 'filter':filter})
