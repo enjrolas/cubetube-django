@@ -338,6 +338,9 @@ def justCompile(request):
 
 
 def jsgallery(request, filter="newestFirst", featuredViz=None, vizCreator=None):
+    log.debug("js gallery")
+    log.debug(vizCreator)
+    
     accessToken=request.COOKIES.get('accessToken') 
     try:
         user=CubeUser.objects.filter(accessToken=accessToken).get()
@@ -391,6 +394,7 @@ def jsgallery(request, filter="newestFirst", featuredViz=None, vizCreator=None):
         return render(request, "viz/jsgallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'totalObjects' : totalObjects, 'filter': filter, 'featuredViz' : featured, 'privateVizs': privateVizs, 'publicVizs':publicVizs})
 
 def index(request):
+    log.debug("index")
 #    vizs=Viz.objects.all().order_by("-created").exclude(published=False)
     vizs=Viz.objects.all().order_by("-created").filter(featured=True).exclude(published=False)
     totalObjects=vizs.count()
