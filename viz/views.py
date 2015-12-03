@@ -339,9 +339,7 @@ def justCompile(request):
 
 def jsgallery(request, filter="newestFirst", featuredViz=None, vizCreator=None):
     accessToken=request.COOKIES.get('accessToken') 
-    cardsPerPage=8
-	
-	try:
+    try:
         user=CubeUser.objects.filter(accessToken=accessToken).get()
     except CubeUser.DoesNotExist:
         user = None
@@ -352,6 +350,8 @@ def jsgallery(request, filter="newestFirst", featuredViz=None, vizCreator=None):
     else:
         privateVizs=None
         publicVizs=None
+
+    cardsPerPage=8
 
     if(filter=='newestFirst'):
         vizs=Viz.objects.all().order_by("-pageViews", "-created").exclude(published=False)    
