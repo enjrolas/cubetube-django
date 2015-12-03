@@ -584,14 +584,17 @@ def scroll(request, page=1, filter="newestFirst", cardsPerPage=8):
         vizs=Viz.objects.all().exclude(published=False).order_by("-pageViews", "-created")[page*cardsPerPage:(page+1)*cardsPerPage]
     elif filter=="all":
         vizs=Viz.objects.all().exclude(published=False).order_by("-pageViews", "-created")
-        cardsPerPage=vizs.count()
     else:
         vizs=Viz.objects.all().exclude(published=False).order_by("-pageViews", "-created")[page*cardsPerPage:(page+1)*cardsPerPage]
 
     if vizs is None:
         totalObjects=0
     else:
-        totalObjects=vizs.count()
+		if filter=="all":
+			totalObjects=vizs.count()
+			cardsPerPage=vizs.count()
+		else:
+			totalObjects=Viz.objects.all().exclude(published=False).count() - (page*vizs.count())
             
     if totalObjects==0:
         return render(request, "viz/gallery-page.html", { 'visualizations' : None , 'nextPage' : False, 'filter':filter})
