@@ -201,7 +201,7 @@ function showMenuItems() {
 function justSearch(searchTerm) {
 	$("#search-button").html("Wait...");
 	$("#search-button").blur();
-	var url="/search/" + searchTerm + "/8/" 
+	var url="/search/1/" + searchTerm + "/8/" 
     //console.log(url);
 	$.ajax({
 		type: 'get',
