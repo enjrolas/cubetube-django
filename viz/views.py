@@ -594,7 +594,7 @@ def scroll(request, page=1, filter="newestFirst", cardsPerPage=8):
 			totalObjects=vizs.count()
 			cardsPerPage=vizs.count()
 		else:
-			totalObjects=vizs.count() - 1
+			totalObjects=vizs.count()
             
     if totalObjects==0:
         return render(request, "viz/gallery-page.html", { 'visualizations' : None , 'nextPage' : False, 'filter':filter})
