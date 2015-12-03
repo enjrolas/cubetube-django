@@ -591,8 +591,8 @@ def scroll(request, page=1, filter="newestFirst", cardsPerPage=8):
         totalObjects=0
     else:
 		if filter=="all":
-			totalObjects=vizs.count()-1
-			cardsPerPage=vizs.count()
+			totalObjects=vizs.count()
+			cardsPerPage=vizs.count()+1
 		else:
 			totalObjects=vizs.count()
             
