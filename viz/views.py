@@ -642,7 +642,7 @@ def search(request, page=1, filter=None, cardsPerPage=8):
             if descrQuery:
                 vizs=vizs | descrQuery  #list(chain(vizs, descrQuery))
     else: 
-        vizs=Viz.objects.all().exclude(published=False).order_by("-pageViews", "-created")
+        vizs=Viz.objects.all().exclude(published=False).order_by("-pageViews", "-created")[page*cardsPerPage:(page+1)*cardsPerPage]
     
     if vizs is None:
         totalObjects=0
