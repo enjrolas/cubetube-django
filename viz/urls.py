@@ -4,7 +4,7 @@ from viz import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-    url(r'^gallery/(?P<filter>[-\w.,!?:_]+)/(?P<vizCreator>\w+)/$', views.jsgallery, name='gallery'),
+    url(r'^gallery/(?P<filter>[\w.,!?:_-]+)/(?P<vizCreator>\w+)/$', views.jsgallery, name='gallery'),
     url(r'^gallery/(?P<filter>\w+)/(?P<featuredViz>\d+)/$', views.jsgallery, name='gallery'),
     url(r'^gallery/(?P<filter>\w+)/$', views.jsgallery, name='gallery'),
     url(r'^gallery/', views.jsgallery, name='gallery'),
