@@ -340,6 +340,7 @@ def justCompile(request):
 def jsgallery(request, filter="newestFirst", featuredViz=None, vizCreator=None):
     accessToken=request.COOKIES.get('accessToken') 
     cardsPerPage=8
+	
 	try:
         user=CubeUser.objects.filter(accessToken=accessToken).get()
     except CubeUser.DoesNotExist:
