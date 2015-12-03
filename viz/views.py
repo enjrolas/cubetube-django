@@ -651,7 +651,7 @@ def search(request, page=1, filter=None, cardsPerPage=8):
     
     if totalObjects==0:
         return render(request, "viz/gallery-page.html", { 'visualizations' : None , 'nextPage' : False, 'filter':filter})
-    elif totalObjects <= cardsPerPage:
+    elif totalObjects < cardsPerPage:
         visualizations=vizs[:totalObjects]
         return render(request, "viz/gallery-page.html", { 'visualizations' : visualizations , 'nextPage' : False, 'filter':filter})
     else:
