@@ -654,7 +654,7 @@ def search(request, page=1, filter=None, cardsPerPage=8):
         totalObjects=0
     else:
         totalObjects=vizs.count()
-		cardsPerPage=totalObjects+1
+        cardsPerPage=totalObjects+1
     
     if totalObjects==0:
         return render(request, "viz/gallery-page.html", { 'visualizations' : None , 'nextPage' : False, 'filter':filter})
