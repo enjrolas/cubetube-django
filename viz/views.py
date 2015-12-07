@@ -381,17 +381,17 @@ def jsgallery(request, filter="newestFirst", featuredViz=None, vizCreator=None):
     if vizs is None:
         totalObjects=0
     else:
-		if filter=="byCreator":
-			totalObjects=vizs.count()
-			cardsPerPage=totalObjects + 1
-		else:
-			totalObjects=vizs.count()
+        if filter=="byCreator":
+            totalObjects=vizs.count()
+            cardsPerPage=totalObjects + 1
+        else:
+            totalObjects=vizs.count()
     
     if totalObjects==0:
-        return render(request, "viz/jsgallery.html", { 'visualizations' : None , 'nextPage' : False, 'totalObjects' : totalObjects, 'filter': filter, 'featuredViz' : featured, 'privateVizs': privateVizs, 'publicVizs':publicVizs})        
+        return render(request, "viz/jsgallery.html", { 'visualizations' : None , 'nextPage' : None, 'totalObjects' : totalObjects, 'filter': filter, 'featuredViz' : featured, 'privateVizs': privateVizs, 'publicVizs':publicVizs})        
     elif totalObjects < cardsPerPage:
         visualizations=vizs[:totalObjects]
-        return render(request, "viz/jsgallery.html", { 'visualizations' : visualizations , 'nextPage' : False, 'totalObjects' : totalObjects, 'filter': filter, 'featuredViz' : featured, 'privateVizs': privateVizs, 'publicVizs':publicVizs})
+        return render(request, "viz/jsgallery.html", { 'visualizations' : visualizations , 'nextPage' : None, 'totalObjects' : totalObjects, 'filter': filter, 'featuredViz' : featured, 'privateVizs': privateVizs, 'publicVizs':publicVizs})
     else:
         visualizations=vizs[:cardsPerPage]
         return render(request, "viz/jsgallery.html", { 'visualizations' : visualizations , 'nextPage' : 1, 'totalObjects' : totalObjects, 'filter': filter, 'featuredViz' : featured, 'privateVizs': privateVizs, 'publicVizs':publicVizs})
@@ -596,20 +596,21 @@ def scroll(request, page=1, filter="newestFirst", cardsPerPage=8):
     if vizs is None:
         totalObjects=0
     else:
-		if filter=="all":
-			totalObjects=vizs.count()
-			cardsPerPage=totalObjects + 1
-		else:
-			totalObjects=vizs.count()
+        if filter=="all":
+            totalObjects=vizs.count()
+            cardsPerPage=totalObjects + 1
+            page=0
+        else:
+            totalObjects=vizs.count()
             
     if totalObjects==0:
         return render(request, "viz/gallery-page.html", { 'visualizations' : None , 'nextPage' : False, 'filter':filter})
     elif totalObjects < cardsPerPage:
         visualizations=vizs[:totalObjects]
-        return render(request, "viz/gallery-page.html", { 'visualizations' : visualizations , 'nextPage' : False, 'filter':filter})
+        return render(request, "viz/gallery-page.html", { 'visualizations' : visualizations , 'nextPage' : False, 'filter':filter, 'prevPage' : page-1})
     else:
         visualizations=vizs[:cardsPerPage]
-        return render(request, "viz/gallery-page.html", { 'visualizations' : visualizations , 'nextPage' : page+1, 'filter':filter})    
+        return render(request, "viz/gallery-page.html", { 'visualizations' : visualizations , 'nextPage' : page+1, 'filter':filter, 'prevPage' : page-1})    
    
     '''
     page=int(page)
