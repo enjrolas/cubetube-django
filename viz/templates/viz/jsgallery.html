@@ -43,9 +43,11 @@
         <h3 class="viz-title publiced">Public</h3>
     {% endif %}
 	<div id="viz-in-gallery">
-	    {% for viz in visualizations %}
-	        {% jscard viz %}
-	    {% endfor %}
+		<div id="viz-cards">
+			{% for viz in visualizations %}
+			    {% jscard viz %}
+			{% endfor %}
+		</div>
 	    {% if nextPage %}
 	    	<div id="scroll" style="height: 150px; width: 570px; margin: 0 auto;">
 				<div class="scroll button blue scroll-button-left" data-which="all" href="{% url 'scroll'  '1' 'all' %}">Load All!</div>
