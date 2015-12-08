@@ -33,8 +33,8 @@ $('body').on('click', '.scroll', function(e) {
     $this.removeClass('blue').addClass('red');
     var url = $this.attr('href');
     var button = $this.attr('data-which');
-	//var vizCardWidth = $(".viz-card").width();
-	//var vizGalleryWidth = $("#viz-cards").width();
+	var vizCardHeight = $(".viz-card").height();
+	var vizGalleryHeight = $("#viz-cards").height();
 
 	$.ajax({
 	    type: 'get',
@@ -44,18 +44,27 @@ $('body').on('click', '.scroll', function(e) {
 	  		//$("#viz-in-gallery").replaceWith( data );
 			var scrollDiv = $(data).find('#scroll');
 			var vizCardsDiv = $(data).find('#viz-cards');
-	  		/*switch(button) {
+			var totalCards=0;
+	  		switch(button) {
 				case "all":
-					$('#viz-cards').fadeOut(1200, "linear").html(vizCardsDiv.html()).fadeIn(1200, "swing");
+					$('#viz-cards').html("");
+					vizCardsDiv.find('.viz-card').each(function() { $(this).appendTo('#viz-cards').fadeOut(400); totalCards++; })
+					var totalRows = totalCards / 4;
+					$('#viz-cards').animate({height: (vizCardHeight+25)*totalRows}, 1200);
+					$('.viz-card').each(function() { $(this).fadeIn(1200); });
 					break;
 				case "more":
 				case "back":
-					$('.viz-card').animate({width: 0}, 1200).animate({width: vizCardWidth}, 1200);
+					vizCardsDiv.find('.viz-card').each(function() { $(this).appendTo('#viz-cards').height(0); totalCards++; })
+					var totalRows = totalCards / 4;
+					$('#viz-cards').height(vizGalleryHeight)
+			  		$('#viz-cards').animate({height: "+=" + (vizCardHeight+25)*totalRows}, 800, "linear");
+			  		$('.viz-card').each(function() { $(this).animate({height: vizCardHeight}, 800, "linear"); });
 					break;
-	  		}*/
-			vizCardsDiv.find('.viz-card').each(function() { $(this).appendTo('#viz-cards') })
-	  		//$('#viz-cards').replaceWith(vizCardsDiv);
+	  		}
 	  		$("#scroll").replaceWith(scrollDiv);
+	  		$("#scroll").height(0);
+	  		$("#scroll").animate({height: "150"}, 600, "linear");
 			setTimeout(function() {
 				activatePreviews();
 			}, 1);

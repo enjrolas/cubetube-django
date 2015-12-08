@@ -1,7 +1,10 @@
 //this file is in charge of going through the vizs in the gallery and starting each sketch
 
+/******************************************************************************************/
+/* These functions were temporarily disabled to allow for page animations to flow better  */
+/******************************************************************************************/
 function activatePreviews(){
-  $("canvas.js-preview:not(.canvas-active)").each(function(){
+/*  $("canvas.js-preview:not(.canvas-active)").each(function(){
         console.log( "hi" );
 	  var id=$(this).attr('id');
 	  var canvas=$(this)[0];
@@ -22,11 +25,11 @@ function activatePreviews(){
 	      console.log(err);
 	  }
       }
-      });
+      });*/
 }
 
 function activateAdditionalPreviews(data){
-    thumbnails=$(data);
+/*    thumbnails=$(data);
     console.log(data);
   thumbnails.find("canvas.js-preview").each(function(){
 	  var id=$(this).attr('id');
@@ -49,5 +52,5 @@ function activateAdditionalPreviews(data){
       }
 
       $(this).addClass('canvas-active');
-    });
+    });*/
 }
