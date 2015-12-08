@@ -51,9 +51,9 @@ $(document).ready(function(){
 
 	// Positioning the search box if we are at the Gallery template
 	if(window.location.pathname.indexOf('gallery') >= 0)
-		$("#search-box-container").fadeIn();
+		$("#search-box-container").show();
 	else
-		$("#search-box-container").fadeOut();
+		$("#search-box-container").hide();
 	//$('#search-button').css('left', ($('#search-box-container').css('left') + $('#search-box-container').css('width')) /*- $('#search-button').css('width')*/);
 	
 /*

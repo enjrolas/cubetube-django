@@ -33,8 +33,8 @@ $('body').on('click', '.scroll', function(e) {
     $this.removeClass('blue').addClass('red');
     var url = $this.attr('href');
     var button = $this.attr('data-which');
-	var vizCardWidth = $(".viz-card").width();
-	var vizGalleryWidth = $("#viz-cards").width();
+	//var vizCardWidth = $(".viz-card").width();
+	//var vizGalleryWidth = $("#viz-cards").width();
 
 	$.ajax({
 	    type: 'get',
@@ -44,7 +44,7 @@ $('body').on('click', '.scroll', function(e) {
 	  		//$("#viz-in-gallery").replaceWith( data );
 			var scrollDiv = $(data).find('#scroll');
 			var vizCardsDiv = $(data).find('#viz-cards');
-	  		switch(button) {
+	  		/*switch(button) {
 				case "all":
 					$('#viz-cards').fadeOut(1200, "linear").html(vizCardsDiv.html()).fadeIn(1200, "swing");
 					break;
@@ -52,7 +52,9 @@ $('body').on('click', '.scroll', function(e) {
 				case "back":
 					$('.viz-card').animate({width: 0}, 1200).animate({width: vizCardWidth}, 1200);
 					break;
-	  		}
+	  		}*/
+			vizCardsDiv.find('.viz-card').each(function() { $(this).appendTo('#viz-cards') })
+	  		//$('#viz-cards').replaceWith(vizCardsDiv);
 	  		$("#scroll").replaceWith(scrollDiv);
 			setTimeout(function() {
 				activatePreviews();

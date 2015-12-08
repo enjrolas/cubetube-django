@@ -7,21 +7,17 @@
 		{% endfor %}
 	</div>
 	{% if nextPage %}
-			{% if prevPage >= 0 %}
+		<div id="scroll" style="height: 150px; width: 570px; margin: 0 auto;">
+<!-- this was added to implement going back and forth across viz cards (already supported by the view action) 
+ 			{% if prevPage >= 0 %}
 				<div id="scroll" style="height: 150px; width: 850px; margin: 0 auto;">
 					<div class="scroll button blue scroll-button-left" data-which="back" href="{% url 'scroll' prevPage filter %}">Go Back!</div>
 			{% else %}
 				<div id="scroll" style="height: 150px; width: 570px; margin: 0 auto;">
-			{% endif %}
+			{% endif %} -->
 			<div class="scroll button blue scroll-button-left" data-which="all" href="{% url 'scroll' '1' 'all' %}">Load All!</div>
 			<div class="scroll button blue scroll-button-left" data-which="more" href="{% url 'scroll' nextPage filter %}">Load More!</div>
 		</div>
 	<!--     <a class="scroll button blue" href="{% url 'scroll' nextPage filter %}">Load More!</a> -->
-	{% else %}
-		{% if prevPage >= 0 %}
-			<div id="scroll" style="height: 150px; width: 310px; margin: 0 auto;">
-				<div class="scroll button blue scroll-button-left" data-which="back" href="{% url 'scroll' prevPage filter %}">Go Back!</div>
-			</div>
-		{% endif %}
 	{% endif %}
 </div>
