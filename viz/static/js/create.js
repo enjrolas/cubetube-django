@@ -22,10 +22,17 @@ $(function(){
 
         $on =  $box.find('.on');
         $off = $box.find('.off');
-
-        $on.removeClass('on').addClass('off');
-        $off.removeClass('off').addClass('on');
-
+        
+        var confirmed = true;
+        if($on.text() === "Private") {
+    		var confirmMessage = "Ready to share with the world? Great!\n\nJust be sure your program compiles and runs on your own Cube.\nRemember, by switching your program to Public, your creation\nwill be seen by Cubeheads around the globe!\n\nClick either \"OK\" to confirm or \"Cancel\" to go back";
+    		confirmed = confirm(confirmMessage);
+        }
+        if(confirmed === true) {
+	        $on.removeClass('on').addClass('off');
+	        $off.removeClass('off').addClass('on');
+        }
+        
         if( $box.hasClass('interactive') ) {
             if( $on.html() === 'Yes') {
             	$('.video-url').animate({ left: '-100px' }, 100, function() {
