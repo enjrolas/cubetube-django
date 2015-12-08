@@ -33,30 +33,19 @@ $('body').on('click', '.scroll', function(e) {
     $this.removeClass('blue').addClass('red');
     var url = $this.attr('href');
     var button = $this.attr('data-which');
-	var vizCardWidth = $(".viz-card").width();
-	var vizGalleryWidth = $("#viz-cards").width();
-
-	$.ajax({
-	    type: 'get',
-	    url: url,
-	    success: function(data) {
+    $.ajax({
+      type: 'get',
+      url: url,
+      success: function(data) {
+    	//if(button == 'all')
 			// Here we replace the entire viz gallery code with the code returned by the view:
-	  		//$("#viz-in-gallery").replaceWith( data );
-			var scrollDiv = $(data).find('#scroll');
-			var vizCardsDiv = $(data).find('#viz-cards');
-	  		switch(button) {
-				case "all":
-					$('#viz-cards').fadeOut(1200, "linear").html(vizCardsDiv.html()).fadeIn(1200, "swing");
-					break;
-				case "more":
-				case "back":
-					$('.viz-card').animate({width: 0}, 1200).animate({width: vizCardWidth}, 1200);
-					break;
-	  		}
-	  		$("#scroll").replaceWith(scrollDiv);
-			setTimeout(function() {
-				activatePreviews();
-			}, 1);
-		}
-	})
+    		$("#viz-in-gallery").replaceWith( data );
+    	/*else
+			// Here we replace just the section below the viz gallery with the code returned by the view:
+    		$("#scroll").replaceWith( data );*/
+    	setTimeout(function() {
+    		activatePreviews();
+        }, 1);
+      }
+    })
 });

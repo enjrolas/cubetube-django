@@ -1,11 +1,9 @@
 {% load staticfiles %}
 {% load card %}
 <div id="viz-in-gallery">
-	<div id="viz-cards">
-		{% for viz in visualizations %}
-		    {% jscard viz %}
-		{% endfor %}
-	</div>
+	{% for viz in visualizations %}
+	    {% jscard viz %}
+	{% endfor %}
 	{% if nextPage %}
 			{% if prevPage >= 0 %}
 				<div id="scroll" style="height: 150px; width: 850px; margin: 0 auto;">
