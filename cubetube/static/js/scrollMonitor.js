@@ -45,18 +45,19 @@ $('body').on('click', '.scroll', function(e) {
 			var scrollDiv = $(data).find('#scroll');
 			var vizCardsDiv = $(data).find('#viz-cards');
 			var totalCards=0;
+			var cardsPerRow = window.innerWidth > 1300 ? 4 : 3;
 	  		switch(button) {
 				case "all":
 					$('#viz-cards').html("");
 					vizCardsDiv.find('.viz-card').each(function() { $(this).appendTo('#viz-cards').fadeOut(400); totalCards++; })
-					var totalRows = totalCards / 4;
+					var totalRows = totalCards / cardsPerRow;
 					$('#viz-cards').animate({height: (vizCardHeight+25)*totalRows}, 1200);
 					$('.viz-card').each(function() { $(this).fadeIn(1200); });
 					break;
 				case "more":
 				case "back":
 					vizCardsDiv.find('.viz-card').each(function() { $(this).appendTo('#viz-cards').height(0); totalCards++; })
-					var totalRows = totalCards / 4;
+					var totalRows = totalCards / cardsPerRow;
 					$('#viz-cards').height(vizGalleryHeight)
 			  		$('#viz-cards').animate({height: "+=" + (vizCardHeight+25)*totalRows}, 800, "linear");
 			  		$('.viz-card').each(function() { $(this).animate({height: vizCardHeight}, 800, "linear"); });
