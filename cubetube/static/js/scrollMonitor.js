@@ -35,12 +35,12 @@ $('body').on('click', '.scroll', function(e) {
     var button = $this.attr('data-which');
 	var vizCardHeight = $(".viz-card").height();
 	var vizGalleryHeight = $("#viz-cards").height();
-
+	var scrollHeight = $("#scroll").length ? $("#scroll").height() : 150;
+	
 	$.ajax({
 	    type: 'get',
 	    url: url,
 	    success: function(data) {
-			// Here we replace the entire viz gallery code with the code returned by the view:
 			var scrollDiv = $(data).find('#scroll');
 			var vizCardsDiv = $(data).find('#viz-cards');
 			var vizCardBottomMargin = parseInt(vizCardsDiv.find('.viz-card').css("margin-bottom")) + 10;
@@ -48,6 +48,7 @@ $('body').on('click', '.scroll', function(e) {
 			var cardsPerRow=1;	//window.innerWidth > 1300 ? 4 : 3;
 	  		switch(button) {
 				case "all":
+					// Here we replace the entire viz gallery code with the code returned by the view
 					$('#viz-cards').html("");
 					vizCardsDiv.find('.viz-card').each(function() {
 						$(this).appendTo('#viz-cards').fadeOut(400, "linear");
@@ -68,6 +69,7 @@ $('body').on('click', '.scroll', function(e) {
 					break;
 				case "more":
 				case "back":
+					// Here we append the code returned by the view to the existing viz gallery code
 					vizCardsDiv.find('.viz-card').each(function() { 
 						$(this).appendTo('#viz-cards').height(0); 
 						if($(this).prev().length) {
@@ -87,10 +89,13 @@ $('body').on('click', '.scroll', function(e) {
 			  		$('.viz-card').each(function() { $(this).animate({height: vizCardHeight}, 800, "linear"); });
 					break;
 	  		}
+	  		// Here we append the code returned by the view for the bottom blue paging buttons
 	  		$("#scroll").replaceWith(scrollDiv);
 	  		$("#scroll").height(0);
 	  		if($("#scroll").length) 
-	  			$("#scroll").animate({height: "150"}, 600, "linear");
+	  			$("#scroll").animate({height: scrollHeight}, 600, "linear");
+  			else
+  				$('#viz-cards').animate({height: "+=" + (scrollHeight*.25)});
   			//setTimeout(function() { activatePreviews(); }, 1);
 		}
 	})
