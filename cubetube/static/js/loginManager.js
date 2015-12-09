@@ -199,6 +199,7 @@ function showMenuItems() {
 }
 
 function justSearch(searchTerm) {
+	clearTimeout();
 	$("#search-button").html("Wait...");
 	$("#search-button").blur();
 	var url="/search/1/" + searchTerm + "/8/" 
@@ -210,9 +211,7 @@ function justSearch(searchTerm) {
 			// Here we replace the entire viz gallery code with the code returned by the view:
 			$("#viz-in-gallery").replaceWith( data );
 			$("#search-button").html("Search!");
-			setTimeout(function() {
-			    activatePreviews();
-			}, 1);
+			//setTimeout(function() { activatePreviews(); }, 1);
 		},
 		error: function(data) {
 			$(".button").html("Search!");

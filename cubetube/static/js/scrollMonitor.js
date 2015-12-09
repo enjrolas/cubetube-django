@@ -41,34 +41,57 @@ $('body').on('click', '.scroll', function(e) {
 	    url: url,
 	    success: function(data) {
 			// Here we replace the entire viz gallery code with the code returned by the view:
-	  		//$("#viz-in-gallery").replaceWith( data );
 			var scrollDiv = $(data).find('#scroll');
 			var vizCardsDiv = $(data).find('#viz-cards');
-			var totalCards=0;
-			var cardsPerRow = window.innerWidth > 1300 ? 4 : 3;
+			var vizCardBottomMargin = parseInt(vizCardsDiv.find('.viz-card').css("margin-bottom")) + 10;
+			var totalRows=0;
+			var cardsPerRow=1;	//window.innerWidth > 1300 ? 4 : 3;
 	  		switch(button) {
 				case "all":
 					$('#viz-cards').html("");
-					vizCardsDiv.find('.viz-card').each(function() { $(this).appendTo('#viz-cards').fadeOut(400); totalCards++; })
-					var totalRows = totalCards / cardsPerRow;
-					$('#viz-cards').animate({height: (vizCardHeight+(cardsPerRow === 4 ? 25 : 45))*totalRows}, 1200);
-					$('.viz-card').each(function() { $(this).fadeIn(1200); });
+					vizCardsDiv.find('.viz-card').each(function() {
+						$(this).appendTo('#viz-cards').fadeOut(400, "linear");
+						if($(this).prev().length) {
+							if($(this).position().top != $(this).prev().position().top) 
+								totalRows++;
+							else 
+								if(totalRows == 1) cardsPerRow++;
+						} else {
+							totalRows++;
+							cardsPerRow++;
+						}
+					});
+					var debugMsg = "totalRows=" + totalRows + "\ncardsPerRow=" + cardsPerRow; 
+					console.log(debugMsg);
+					$('#viz-cards').animate({height: ((vizCardHeight+vizCardBottomMargin)*totalRows)}, 1200, "linear");
+					$('.viz-card').each(function() { $(this).fadeIn(1200, "linear"); });
 					break;
 				case "more":
 				case "back":
-					vizCardsDiv.find('.viz-card').each(function() { $(this).appendTo('#viz-cards').height(0); totalCards++; })
-					var totalRows = totalCards / cardsPerRow;
+					vizCardsDiv.find('.viz-card').each(function() { 
+						$(this).appendTo('#viz-cards').height(0); 
+						if($(this).prev().length) {
+							if($(this).position().top != $(this).prev().position().top) 
+								totalRows++;
+							else 
+								if(totalRows == 1) cardsPerRow++;
+						} else {
+							totalRows++;
+							cardsPerRow++;
+						}
+					});
+					var debugMsg = "totalRows=" + totalRows + "\ncardsPerRow=" + cardsPerRow; 
+					console.log(debugMsg);
 					$('#viz-cards').height(vizGalleryHeight)
-			  		$('#viz-cards').animate({height: "+=" + (vizCardHeight+(cardsPerRow === 4 ? 25 : 45))*totalRows}, 800, "linear");
+			  		$('#viz-cards').animate({height: "+=" + ((vizCardHeight+vizCardBottomMargin)*totalRows)}, 800, "linear");
 			  		$('.viz-card').each(function() { $(this).animate({height: vizCardHeight}, 800, "linear"); });
 					break;
 	  		}
 	  		$("#scroll").replaceWith(scrollDiv);
 	  		$("#scroll").height(0);
-	  		$("#scroll").animate({height: "150"}, 600, "linear");
-			setTimeout(function() {
-				activatePreviews();
-			}, 1);
+	  		if($("#scroll").length) 
+	  			$("#scroll").animate({height: "150"}, 600, "linear");
+  			//setTimeout(function() { activatePreviews(); }, 1);
 		}
 	})
 });
