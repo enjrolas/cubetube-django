@@ -12,10 +12,7 @@ $(document).ready(function(){
 		showMenuItems();
 		clicks = 1;
 	}).on('mouseleave', function() {
-		if ($('.login').length)
-			menuTimer = setTimeout(function() { hideMenuItems(); }, 800);
-		else
-			menuTimer = setTimeout(function() { hideMenuItems(); }, 800);
+		menuTimer = setTimeout(function() { hideMenuItems(); }, 800);
 		clicks = 0;
 	}).on('click', function() {
 		console.log('ul.items > clicks = ' + clicks);
@@ -144,58 +141,23 @@ $(document).ready(function(){
 //window.onresize = $('#search-button').css('left', ($('#search-box-container').css('left') + $('#search-box-container').css('width')) /*- $('#search-button').css('width')*/);
 
 function hideMenuItems() {
-	$('.on-overview').slideUp( 150, "swing", function() {
-		$('.on-docs').addClass('on-overview');
-		$('.on-docs').slideUp( 150, "swing", function() {
-			$('.on-gallery').addClass('on-overview');
-			$('.on-gallery').slideUp( 150, "swing", function() {
-				$('.on-forum').addClass('on-overview');   
-				$('.on-forum').slideUp( 150, "swing", function() {
-					if ($('.on-create').length) {
-						$('.on-create').addClass('on-overview');
-						$('.on-create').slideUp( 150, "swing" );
-					}
-				});
-			});
-		});
+	$($("ul.items > li").get().reverse()).each(function(index) {
+		if(!$(this).hasClass("sole-button")) {
+			$(this).delay(200*index).addClass('on-overview').slideUp( 800, "linear", function() { $(this).delay(150*index).removeClass('on-overview'); });
+		}
 	});
 }
 
 function showMenuItems() {
-	if ($('.on-create').length) {
-		$('.on-create').addClass('on-overview');
-		$('.on-create').slideDown( 80, "swing", function() {
-			$('.on-create').removeClass('on-overview');
-			$('.on-forum').addClass('on-overview');
-			$('.on-forum').slideDown( 80, "swing", function() {
-				$('.on-forum').removeClass('on-overview');
-				$('.on-gallery').addClass('on-overview');
-				$('.on-gallery').slideDown( 80, "swing", function() {
-					$('.on-gallery').removeClass('on-overview');
-					$('.on-docs').addClass('on-overview');
-					$('.on-docs').slideDown( 80, "swing", function() {
-						$('.on-docs').removeClass('on-overview');
-						$('.on-overview').slideDown( 80, "swing");
-					});
-				});
-			});
-		});
-	}
-	else {
-		$('.on-forum').addClass('on-overview');
-		$('.on-forum').slideDown( 80, "swing", function() {
-			$('.on-forum').removeClass('on-overview');
-			$('.on-gallery').addClass('on-overview');
-			$('.on-gallery').slideDown( 80, "swing", function() {
-				$('.on-gallery').removeClass('on-overview');
-				$('.on-docs').addClass('on-overview');
-				$('.on-docs').slideDown( 80, "swing", function() {
-					$('.on-docs').removeClass('on-overview');
-					$('.on-overview').slideDown( 80, "swing");
-				});
-			});
-		});
-	}
+	$('ul.items > li').each(function(index) {
+		if(!$(this).hasClass("sole-button")) {
+			$(this).delay(200*index).addClass('on-overview');
+			if($(this).next().length) {
+				$(this).slideDown( 800, "swing", function() { $(this).delay(150*index).removeClass('on-overview'); });
+			}
+			else $(this).slideDown( 800, "swing");
+		}
+	});
 }
 
 function justSearch(searchTerm) {
