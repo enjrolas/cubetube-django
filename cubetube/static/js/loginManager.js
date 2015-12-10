@@ -149,15 +149,17 @@ function hideMenuItems() {
 }
 
 function showMenuItems() {
-	$('ul.items > li').each(function(index) {
-		if(!$(this).hasClass("sole-button")) {
-			$(this).delay(200*index).addClass('on-overview');
-			if($(this).next().length) {
-				$(this).slideDown( 800, "swing", function() { $(this).delay(150*index).removeClass('on-overview'); });
+	if(!clicks) {
+		$('ul.items > li').each(function(index) {
+			if(!$(this).hasClass("sole-button")) {
+				$(this).delay(200*index).addClass('on-overview');
+				if($(this).next().length) {
+					$(this).slideDown( 800, "swing", function() { $(this).delay(150*index).removeClass('on-overview'); });
+				}
+				else $(this).slideDown( 800, "swing");
 			}
-			else $(this).slideDown( 800, "swing");
-		}
-	});
+		});
+	}
 }
 
 function justSearch(searchTerm) {
