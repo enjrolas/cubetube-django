@@ -19,14 +19,15 @@ $(document).ready(function(){
 		var menuVisible = $('li.on-overview').css('display');
 		if(clicks === 0) {
 			if(menuVisible === 'none') {
-				clearTimeout(menuTimer);
+				//clearTimeout(menuTimer);
 				showMenuItems();
 				clicks = 1;
 			} else {
-				if ($('.login').length)
+				/*if ($('.login').length)
 					menuTimer = setTimeout(function() { hideMenuItems(); }, 800);
-				else
-					menuTimer = setTimeout(function() { hideMenuItems(); }, 800);
+				else*/
+					//menuTimer = setTimeout(function() { hideMenuItems(); }, 800);
+				hideMenuItems();
 				clicks = 0;
 			}
 			return false;
@@ -71,7 +72,16 @@ $(document).ready(function(){
         $('.login').click(function(e) {
 			console.log('.login > clicks = ' + clicks);
 			if(clicks === 0) {
-				$('ul.items').click();
+				var menuVisible = $('li.on-overview').css('display');
+				//$('ul.items').click();
+				if(menuVisible === 'none') {
+					showMenuItems();
+					clicks = 1;
+				} else {
+					hideMenuItems();
+					clicks = 0;
+				}
+				return false;				
 			} else {
 				e.preventDefault();
 				$popover.show();
