@@ -11,15 +11,17 @@ $(document).ready(function(){
 		clearTimeout(menuTimer);
 		showMenuItems();
 		clicks = 1;
+		return false;	//required to dodge the firing of the menu action on mobile devices
 	}).on('mouseleave', function() {
 		menuTimer = setTimeout(function() { hideMenuItems(); }, 800);
 		clicks = 0;
-	}).on('click', function() {
+		return false;	//required to dodge the firing of the menu action on mobile devices
+	});/*.on('click', function() {
 		console.log('ul.items > clicks = ' + clicks);
 		var menuVisible = $('li.on-overview').css('display');
 		if(clicks === 0) {
 			if(menuVisible === 'none') {
-				//clearTimeout(menuTimer);
+				clearTimeout(menuTimer);
 				showMenuItems();
 				clicks = 1;
 			} else {
@@ -27,12 +29,12 @@ $(document).ready(function(){
 					menuTimer = setTimeout(function() { hideMenuItems(); }, 800);
 				else*/
 					//menuTimer = setTimeout(function() { hideMenuItems(); }, 800);
-				hideMenuItems();
-				clicks = 0;
+				//hideMenuItems();
+				/*clicks = 0;
 			}
 			return false;
 		}
-	});
+	});*/
 	
 	$('#search-button').on('click', function() {
 		justSearch($('#search-box').val());
@@ -71,18 +73,13 @@ $(document).ready(function(){
         // Show login signup
         $('.login').click(function(e) {
 			console.log('.login > clicks = ' + clicks);
-			if(clicks === 0) {
-				var menuVisible = $('li.on-overview').css('display');
-				//$('ul.items').click();
-				if(menuVisible === 'none') {
-					showMenuItems();
-					clicks = 1;
-				} else {
-					hideMenuItems();
-					clicks = 0;
-				}
-				return false;				
+			var menuVisible = $('li.on-overview').css('display');
+			if(menuVisible === 'none') {
+				showMenuItems();
+				clicks = 1;
+				return false;
 			} else {
+				hideMenuItems();
 				e.preventDefault();
 				$popover.show();
 				$glass.show();
@@ -135,9 +132,13 @@ $(document).ready(function(){
      * Log out
      */
     $('.logout').click(function(e) {
-		if(clicks === 0) {
-			$('ul.items').click();
+		var menuVisible = $('li.on-overview').css('display');
+		if(menuVisible === 'none') {
+			showMenuItems();
+			clicks = 1;
+			return false;
 		} else {
+			hideMenuItems();
 			e.preventDefault();
 			$.removeCookie("accessToken", { path: '/' });
 			$.removeCookie("username", { path: '/' });
