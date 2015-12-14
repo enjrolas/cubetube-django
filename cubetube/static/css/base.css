@@ -715,20 +715,58 @@ nav {
 	  background: #1c1521;
 	  text-align: center;
 	  opacity: 0.8; }
-  .sole-button {
-	width: 275px; 
-	height: 60px; 
-	padding-top: 20px;
-  }
-  div.separator {
-  	float: left; 
-  	padding: 8px; 
-  	opacity: 0;
-  }
-  .on-overview {
-	border-bottom-right-radius: 8px;
-	border-bottom-left-radius: 8px;  
-  }
+	.sole-button {
+		width: 275px; 
+		height: 60px; 
+		padding-top: 20px;
+	}
+	div.separator {
+		float: left; 
+		padding: 8px; 
+		opacity: 0;
+	}
+	.on-overview {
+		border-bottom-right-radius: 8px;
+		border-bottom-left-radius: 8px;  
+	}
+	
+	/*styles for animating ellipsis*/
+	.one {
+		color: #fff;
+	    opacity: 0;
+	    -webkit-animation: dot 1.3s infinite;
+	    -webkit-animation-delay: 0.0s;
+	    animation: dot 1.3s infinite;
+	    animation-delay: 0.0s;
+	}
+	.two {
+		color: #fff;
+		opacity: 0;
+		-webkit-animation: dot 1.3s infinite;
+		-webkit-animation-delay: 0.2s;
+		animation: dot 1.3s infinite;
+		animation-delay: 0.2s;
+	}
+	.three {
+		color: #fff;
+		opacity: 0;
+		-webkit-animation: dot 1.3s infinite;
+		-webkit-animation-delay: 0.3s;
+		animation: dot 1.3s infinite;
+		animation-delay: 0.3s;
+	}
+	@-webkit-keyframes dot {
+	      0% { opacity: 0; }
+	     50% { opacity: 0; }
+	    100% { opacity: 1; }
+	}
+	@keyframes dot {
+	      0% { opacity: 0; }
+	     50% { opacity: 0; }
+	    100% { opacity: 1; }
+	}
+	/*[END] styles for the animated ellipsis*/
+
   nav .create {
     background: #2bc6fb;
     border-radius: 30px;

@@ -29,8 +29,10 @@ checkScroll();
 $('body').on('click', '.scroll', function(e) {
     e.preventDefault();
     var $this = $(this);
-    $this.html("Loading...");
+    $this.html("Loading<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>");
     $this.removeClass('blue').addClass('red');
+    $('div.scroll').prop( "disabled", true );
+
     var url = $this.attr('href');
     var button = $this.attr('data-which');
 	var vizCardHeight = $(".viz-card").height();
@@ -41,6 +43,7 @@ $('body').on('click', '.scroll', function(e) {
 	    type: 'get',
 	    url: url,
 	    success: function(data) {
+	    	$('div.scroll').prop( "disabled", false );
 			var scrollDiv = $(data).find('#scroll');
 			var vizCardsDiv = $(data).find('#viz-cards');
 			var vizCardBottomMargin = parseInt(vizCardsDiv.find('.viz-card').css("margin-bottom")) + 10;

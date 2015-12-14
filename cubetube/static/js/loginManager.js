@@ -158,8 +158,9 @@ function showMenuItems() {
 
 function justSearch(searchTerm) {
 	clearTimeout();
-	$("#search-button").html("Wait...");
-	$("#search-button").blur();
+	$("#search-button").html("Wait<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>");
+    $('#search-button').prop( "disabled", true );
+
 	var url="/search/1/" + searchTerm + "/8/" 
     //console.log(url);
 	$.ajax({
@@ -169,10 +170,12 @@ function justSearch(searchTerm) {
 			// Here we replace the entire viz gallery code with the code returned by the view:
 			$("#viz-in-gallery").replaceWith( data );
 			$("#search-button").html("Search!");
+			$('#search-button').prop( "disabled", false );
 			//setTimeout(function() { activatePreviews(); }, 1);
 		},
 		error: function(data) {
-			$(".button").html("Search!");
+			$("#search-button").html("Search!");
+			$('#search-button').prop( "disabled", false );
 			console.log('Error retrieving search!')
 			console.log(data)
 		}
