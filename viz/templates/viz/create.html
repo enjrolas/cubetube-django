@@ -46,37 +46,6 @@
 		});
 	}
 	
-	function deleteViz(){
-	    //var vizAuthor = $('.viz-wrapper').attr('data-viz-author');
-		//if (vizAuthor == $.cookie("nickname")){
-			var confirmMessage="Sure to get rid of this viz? (this action CANNOT be undone)\n\nClick either \"OK\" to proceed or \"Cancel\" to go back";
-			if (confirm(confirmMessage) == true){
-				var request=$.ajax({
-					type:"POST",
-					url:"{% url 'delete' %}", 
-					data: {"vizId":"{{ viz.pk }}" },
-					dataType:"text",
-					success: function(data){
-						var result = $.parseJSON(data);
-						if (result.success) {
-							alert("Viz Deleted!");
-							//Remove the viz card from view in the gallery
-							parent.$("#"+"{{ viz.pk }}").remove();
-							//Call the parent js method to close the iframe
-							parent.closeViz();
-						}
-						else alert("Whoops! Something unexpected happened.");
-					},
-					error: function(data){
-						var result = $.parseJSON(data);
-						if(result.error) alert(result.error);
-						else alert('Something went terribly wrong - Call 911');
-					}
-				});
-			}
-		//}
-	}
-
 	function confirmClose(){
 		var confirmMessage = "Whoops, looks like you left unsaved changes in your code!\nIs it alright for me to discard them?\n\nClick either \"OK\" to exit without saving or \"Cancel\" to go back and save your work";
 		if (confirm(confirmMessage) == true){
@@ -192,7 +161,9 @@
 			if (e.keyCode == 27) $('.close-button').click();	//Esc
 		});
 		//For the above to work straight out of loading, gotta focus on something
-		$('#cubeName').focus();	//this one works fine
+		if($('#cubeName').length) $('#cubeName').focus();
+		else if($('.comments-input').length) $('.comments-input').focus();
+		else window.focus();
 	});
 </script>
 
@@ -284,7 +255,7 @@
   <div class="viz-code">
     <div class="viz-code-header">
  	{% if viz %}
-   		<a id="btnDeleteViz" class="round-button button-transparent" onclick="deleteViz();">Delete this Viz</a>
+   		<!-- <a id="btnDeleteViz" class="round-button button-transparent" onclick="deleteViz();">Delete this Viz</a> -->
    	{% endif %}
     <a class="round-button button-red run-sketch">Update Demo</a>
 	{% if viz %}

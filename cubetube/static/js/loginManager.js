@@ -10,31 +10,11 @@ $(document).ready(function(){
 	$('ul.items').on('mouseover', function() {
 		clearTimeout(menuTimer);
 		showMenuItems();
-		clicks = 1;
 		return false;	//required to dodge the firing of the menu action on mobile devices
 	}).on('mouseleave', function() {
 		menuTimer = setTimeout(function() { hideMenuItems(); }, 800);
-		clicks = 0;
 		return false;	//required to dodge the firing of the menu action on mobile devices
-	});/*.on('click', function() {
-		console.log('ul.items > clicks = ' + clicks);
-		var menuVisible = $('li.on-overview').css('display');
-		if(clicks === 0) {
-			if(menuVisible === 'none') {
-				clearTimeout(menuTimer);
-				showMenuItems();
-				clicks = 1;
-			} else {
-				/*if ($('.login').length)
-					menuTimer = setTimeout(function() { hideMenuItems(); }, 800);
-				else*/
-					//menuTimer = setTimeout(function() { hideMenuItems(); }, 800);
-				//hideMenuItems();
-				/*clicks = 0;
-			}
-			return false;
-		}
-	});*/
+	});
 	
 	$('#search-button').on('click', function() {
 		justSearch($('#search-box').val());
@@ -75,15 +55,15 @@ $(document).ready(function(){
 			console.log('.login > clicks = ' + clicks);
 			var menuVisible = $('li.on-overview').css('display');
 			if(menuVisible === 'none') {
+				clearTimeout(menuTimer);
 				showMenuItems();
-				clicks = 1;
+				menuTimer = setTimeout(function() { hideMenuItems(); }, 5000);
 				return false;
 			} else {
 				hideMenuItems();
 				e.preventDefault();
 				$popover.show();
 				$glass.show();
-				clicks = 0;
 			}
         });
         
@@ -134,8 +114,9 @@ $(document).ready(function(){
     $('.logout').click(function(e) {
 		var menuVisible = $('li.on-overview').css('display');
 		if(menuVisible === 'none') {
+			clearTimeout(menuTimer);
 			showMenuItems();
-			clicks = 1;
+			menuTimer = setTimeout(function() { hideMenuItems(); }, 5000);
 			return false;
 		} else {
 			hideMenuItems();
@@ -152,6 +133,7 @@ $(document).ready(function(){
 //window.onresize = $('#search-button').css('left', ($('#search-box-container').css('left') + $('#search-box-container').css('width')) /*- $('#search-button').css('width')*/);
 
 function hideMenuItems() {
+	clicks = 0;
 	$($("ul.items > li").get().reverse()).each(function(index) {
 		if(!$(this).hasClass("sole-button")) {
 			$(this).delay(200*index).addClass('on-overview').slideUp( 800, "linear", function() { $(this).delay(150*index).removeClass('on-overview'); });
@@ -161,6 +143,7 @@ function hideMenuItems() {
 
 function showMenuItems() {
 	if(!clicks) {
+		clicks = 1;
 		$('ul.items > li').each(function(index) {
 			if(!$(this).hasClass("sole-button")) {
 				$(this).delay(200*index).addClass('on-overview');

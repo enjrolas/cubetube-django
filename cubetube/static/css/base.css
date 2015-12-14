@@ -720,6 +720,11 @@ nav {
 	height: 60px; 
 	padding-top: 20px;
   }
+  div.separator {
+  	float: left; 
+  	padding: 8px; 
+  	opacity: 0;
+  }
   .on-overview {
 	border-bottom-right-radius: 8px;
 	border-bottom-left-radius: 8px;  
