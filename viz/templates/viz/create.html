@@ -36,12 +36,12 @@
 				output="";
 				if(result.ok){
 					$("a.sent-to-cube").fadeOut("slow").html("Flashing<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>")
-					.css({"color": "white", "background": "#c20078", "border-color": "#b20068"}).animate({display: "block"}, "fast", function() {
+					.css({"color": "white", "background": "#d20088", "border-color": "#b20068"}).animate({display: "block"}, "fast", function() {
 						sendButtonTimer = setTimeout(function() { 
 							$("a.sent-to-cube").fadeOut("slow").html("Send to Cube").css({"color": "black", "background": "white", "border-color": "#cccccc"}).fadeIn("fast");	//.animate({display: "block"});
 							$("a.sent-to-cube").prop( "disabled", false );
 							clearTimeout(sendButtonTimer);
-						}, 60000); });
+						}, 30000); });
 					output+="compilation status:  ok\n";
 					output+=result.message;
 				}
