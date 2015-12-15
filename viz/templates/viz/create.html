@@ -35,6 +35,8 @@
 				console.log(result);
 				output="";
 				if(result.ok){
+					output+="compilation status:  ok\n";
+					output+=result.message;
 					$("a.sent-to-cube").fadeOut("slow").html("Flashing<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>")
 					.css({"color": "white", "background": "#d20088", "border-color": "#b20068"}).animate({display: "block"}, "fast", function() {
 						sendButtonTimer = setTimeout(function() { 
@@ -42,10 +44,9 @@
 							$("a.sent-to-cube").prop( "disabled", false );
 							clearTimeout(sendButtonTimer);
 						}, 20000); });
-					output+="compilation status:  ok\n";
-					output+=result.message;
 				}
 				else{
+					output+="compilation status: "+result.ok+"\nerrors:\n"+result.errors+"\n";
 					$("a.sent-to-cube").fadeOut("slow").html("Error!").css({"color": "white", "background": "#ee0026", "border-color": "#de0016"})
 					.animate({display: "block"}, "fast", function() {
 						if(!$('div.viz-wrapper').hasClass('code-active')) $('.view-code').click();
@@ -55,7 +56,6 @@
 							$("textarea.output").animate({"color": "#ee0026", "background-color": "#fafad2"}, 600).delay(1200).animate({"color": "black", "background-color": "white"}, 1200);
 							clearTimeout(sendButtonTimer);
 						}, 1200); });
-					output+="compilation status: "+result.ok+"\nerrors:\n"+result.errors+"\n";
 				}
 				$("textarea.output").val(output);
 			},
