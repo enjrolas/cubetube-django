@@ -13,6 +13,7 @@
 	var compilerData;
 	var JSONstring;
 	var descTimer;
+	var sendButtonTimer;
 	
 	$(document).ready(function() {
 		// Enabling Esc key to close the viz
@@ -34,6 +35,10 @@
 	});
 
 	function flashCube(){
+		$("a.sent-to-cube").fadeOut("slow").html("Compiling<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>")
+		.css({"color": "white", "background": "#12d396", "border-color": "#008376"}).fadeIn("fast");	//.animate({display: "block"});
+		$("a.sent-to-cube").prop( "disabled", true );
+		
 		var request=$.ajax({
 			type:"POST",
 			url:"{% url 'cloudFlash' %}", 
@@ -49,10 +54,26 @@
 				console.log(result);
 				output="";
 				if(result.ok){
+					$("a.sent-to-cube").fadeOut("slow").html("Flashing<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>")
+					.css({"color": "white", "background": "#c20078", "border-color": "#b20068"}).animate({display: "block"}, "fast", function() {
+						sendButtonTimer = setTimeout(function() { 
+							$("a.sent-to-cube").fadeOut("slow").html("Send to Cube").css({"color": "black", "background": "white", "border-color": "#cccccc"}).fadeIn("fast");	//.animate({display: "block"});
+							$("a.sent-to-cube").prop( "disabled", false );
+							clearTimeout(sendButtonTimer);
+						}, 60000); });
 					output+="compilation status:  ok\n";
 					output+=result.message;
 				}
 				else{
+					$("a.sent-to-cube").fadeOut("slow").html("Error!").css({"color": "white", "background": "#ee0026", "border-color": "#de0016"})
+					.animate({display: "block"}, "fast", function() {
+						if(!$('div.viz-wrapper').hasClass('code-active')) $('.view-code').click();
+						sendButtonTimer = setTimeout(function() { 
+							$("a.sent-to-cube").fadeOut("slow").html("Send to Cube").css({"color": "black", "background": "white", "border-color": "#cccccc"}).fadeIn("fast");	//.animate({display: "block"});
+							$("a.sent-to-cube").prop( "disabled", false );
+							$("textarea.output").animate({"color": "#ee0026", "background-color": "#fafad2"}, 600).delay(1200).animate({"color": "black", "background-color": "white"}, 1200);
+							clearTimeout(sendButtonTimer);
+						}, 1200); });
 					output+="compilation status: "+result.ok+"\nerrors:\n"+result.errors+"\n";
 				}
 				$("textarea.output").val(output);
