@@ -336,6 +336,9 @@ button {
       margin-right: -9px; }
     .viz-wrapper .round-button:active {
       opacity: 0.8; }
+	.sent-to-cube, .select-cube {
+		height: 35px;
+	}
   .viz-wrapper .button-transparent {
     box-shadow: inset 0px 0px 0px 1px rgba(255, 255, 255, 0.4); }
   .viz-wrapper .button-red {
@@ -634,7 +637,9 @@ button {
       background: rgba(255, 255, 255, 0.2); }
 
 #cubeName {
-  max-width: 165px; }
+	max-width: 165px; 
+	margin-top: -2px;
+}
 
 .fb-share-button {
   position: absolute !important;
