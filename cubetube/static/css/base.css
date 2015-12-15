@@ -336,7 +336,7 @@ button {
       margin-right: -9px; }
     .viz-wrapper .round-button:active {
       opacity: 0.8; }
-	.sent-to-cube, .select-cube {
+	.sent-to-cube, .select-cube, .view-code {
 		height: 35px;
 	}
   .viz-wrapper .button-transparent {
