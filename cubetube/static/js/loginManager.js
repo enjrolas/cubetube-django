@@ -55,9 +55,8 @@ $(document).ready(function(){
 			console.log('.login > clicks = ' + clicks);
 			var menuVisible = $('li.on-overview').css('display');
 			if(menuVisible === 'none') {
-				clearTimeout(menuTimer);
 				showMenuItems();
-				menuTimer = setTimeout(function() { hideMenuItems(); }, 5000);
+				menuTimer = setTimeout(function() { hideMenuItems(); clearTimeout(menuTimer); }, 5000);
 				return false;
 			} else {
 				hideMenuItems();
@@ -114,9 +113,8 @@ $(document).ready(function(){
     $('.logout').click(function(e) {
 		var menuVisible = $('li.on-overview').css('display');
 		if(menuVisible === 'none') {
-			clearTimeout(menuTimer);
 			showMenuItems();
-			menuTimer = setTimeout(function() { hideMenuItems(); }, 5000);
+			menuTimer = setTimeout(function() { hideMenuItems(); clearTimeout(menuTimer); }, 5000);
 			return false;
 		} else {
 			hideMenuItems();
@@ -135,9 +133,8 @@ $(document).ready(function(){
 function hideMenuItems() {
 	clicks = 0;
 	$($("ul.items > li").get().reverse()).each(function(index) {
-		if(!$(this).hasClass("sole-button")) {
+		if(!$(this).hasClass("sole-button"))
 			$(this).delay(200*index).addClass('on-overview').slideUp( 800, "linear", function() { $(this).delay(150*index).removeClass('on-overview'); });
-		}
 	});
 }
 
@@ -147,9 +144,8 @@ function showMenuItems() {
 		$('ul.items > li').each(function(index) {
 			if(!$(this).hasClass("sole-button")) {
 				$(this).delay(200*index).addClass('on-overview');
-				if($(this).next().length) {
-					$(this).slideDown( 800, "swing", function() { $(this).delay(150*index).removeClass('on-overview'); });
-				}
+				if($(this).next().length)
+					$(this).slideDown( 800, "linear", function() { $(this).delay(150*index).removeClass('on-overview'); });
 				else $(this).slideDown( 800, "swing");
 			}
 		});

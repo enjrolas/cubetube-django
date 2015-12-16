@@ -35,9 +35,9 @@
 	});
 
 	function flashCube(){
+		if($("a.sent-to-cube").html() != "Send to Cube") return false;	//setting disabled=true won't work; so here's my take on the subject
 		$("a.sent-to-cube").fadeOut("slow").html("Compiling<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>")
 		.css({"color": "white", "background": "#12d396", "border-color": "#008376"}).fadeIn("fast");	//.animate({display: "block"});
-		$("a.sent-to-cube").prop( "disabled", true );
 		
 		var request=$.ajax({
 			type:"POST",
@@ -59,9 +59,8 @@
 					$("a.sent-to-cube").fadeOut("slow").html("Flashing<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>")
 					.css({"color": "white", "background": "#d20088", "border-color": "#b20068"}).animate({display: "block"}, "fast", function() {
 						sendButtonTimer = setTimeout(function() { 
-							$("a.sent-to-cube").fadeOut("slow").html("Send to Cube").css({"color": "black", "background": "white", "border-color": "#cccccc"}).fadeIn("fast");	//.animate({display: "block"});
-							$("a.sent-to-cube").prop( "disabled", false );
-							clearTimeout(sendButtonTimer);
+							$("a.sent-to-cube").fadeOut("slow").html("Send to Cube").css({"color": "black", "background": "white", "border-color": "#cccccc"})
+							.fadeIn("fast", function() { clearTimeout(sendButtonTimer); });	//.animate({display: "block"});
 						}, 20000); });
 				}
 				else{
@@ -70,10 +69,12 @@
 					.animate({display: "block"}, "fast", function() {
 						if(!$('div.viz-wrapper').hasClass('code-active')) $('.view-code').click();
 						sendButtonTimer = setTimeout(function() { 
-							$("a.sent-to-cube").fadeOut("slow").html("Send to Cube").css({"color": "black", "background": "white", "border-color": "#cccccc"}).fadeIn("fast");	//.animate({display: "block"});
-							$("a.sent-to-cube").prop( "disabled", false );
-							$("textarea.output").animate({"color": "#ee0026", "background-color": "#fafad2"}, 600).delay(1200).animate({"color": "black", "background-color": "white"}, 1200);
-							clearTimeout(sendButtonTimer);
+							$("a.sent-to-cube").fadeOut("slow").html("Send to Cube").css({"color": "black", "background": "white", "border-color": "#cccccc"})
+							.fadeIn("fast", function() { 
+								$("textarea.output").animate({"color": "#ee0026", "background-color": "#fafad2"}, 600)
+								.delay(1200).animate({"color": "black", "background-color": "white"}, 1200);
+								clearTimeout(sendButtonTimer); 
+							});	//.animate({display: "block"});
 						}, 1200); });
 				}
 				$("textarea.output").val(output);
