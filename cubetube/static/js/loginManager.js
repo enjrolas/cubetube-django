@@ -7,18 +7,6 @@
 $(document).ready(function(){
 	var menuTimer;
 	
-	$('.logo-box').on('mouseover', function() {
-		//var $header = $('nav:not([style~=#1C1521])');
-		//if( !$header.length ) {
-			clearTimeout(menuTimer);
-			$("div.tagline").slideDown( 400, "swing");
-		//}
-	}).on('mouseleave', function() {
-		//var $header = $('nav:not([style~=#1C1521])');
-		//if( !$header.length ) {
-			menuTimer = setTimeout(function() { $("div.tagline").slideUp( 600, "swing"); }, 1200);
-	});
-	
 	$('ul.items').on('mouseover', function() {
 		clearTimeout(menuTimer);
 		showMenuItems();
