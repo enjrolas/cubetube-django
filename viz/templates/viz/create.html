@@ -27,29 +27,32 @@
 			dataType:"text",
 			success: function(data){ 
 				console.log("success flashing");
-				console.log(data);
 				JSONstring=data;
+				console.log(JSONstring);
 				var result = $.parseJSON(data);
 				var result = $.parseJSON(result);
 				compilerData=result;
-				console.log(result);
+				console.log(compilerData);
 				output="";
 				if(result.ok){
 					output+="compilation status:  ok\n";
 					output+=result.message;
-					$("a.sent-to-cube").fadeOut("slow").html("Flashing<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>")
-					.css({"color": "white", "background": "#d20088", "border-color": "#b20068"}).animate({display: "block"}, "fast", function() {
-						sendButtonTimer = setTimeout(function() { 
-							$("a.sent-to-cube").fadeOut("slow").html("Send to Cube").css({"color": "black", "background": "white", "border-color": "#cccccc"})
-							.fadeIn("fast", function() { clearTimeout(sendButtonTimer); });	//.animate({display: "block"});
-						}, 20000); });
+					var breatheAtInterval = setInterval(function() {
+						$("a.sent-to-cube").fadeOut("slow").html("Flashing<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>")
+						.css({"color": "white", "background": "#d20088", "border-color": "#b20068"}).animate({display: "block"}, "fast");
+					}, 1200); 
+					var sendButtonTimer = setTimeout(function() {
+						clearInterval(breatheAtInterval);
+						$("a.sent-to-cube").fadeOut("slow").html("Send to Cube").css({"color": "black", "background": "white", "border-color": "#cccccc"})
+						.fadeIn("fast", function() { clearTimeout(sendButtonTimer); });	//.animate({display: "block"});
+					}, 18000);
 				}
 				else{
 					output+="compilation status: "+result.ok+"\nerrors:\n"+result.errors+"\n";
 					$("a.sent-to-cube").fadeOut("slow").html("Error!").css({"color": "white", "background": "#ee0026", "border-color": "#de0016"})
 					.animate({display: "block"}, "fast", function() {
 						if(!$('div.viz-wrapper').hasClass('code-active')) $('.view-code').click();
-						sendButtonTimer = setTimeout(function() { 
+						var sendButtonTimer = setTimeout(function() { 
 							$("a.sent-to-cube").fadeOut("slow").html("Send to Cube").css({"color": "black", "background": "white", "border-color": "#cccccc"})
 							.fadeIn("fast", function() { 
 								$("textarea.output").animate({"color": "#ee0026", "background-color": "#fafad2"}, 600)
