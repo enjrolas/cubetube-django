@@ -6,12 +6,29 @@
 //var $header = $('nav:not(.always-small)');
 var $header = $('nav:not([style~=#1C1521])');
 var $window = $(window);
+var taglineTimer;
 
 if( $header.length ) {
     $window.scroll(function() {
         checkScroll();
     })
+    $("div.tagline").show();
 }
+else
+	$("div.tagline").hide();
+
+$('.logo-box').on('mouseover', function() {
+	clearTimeout(taglineTimer);
+	if( $header.length ) 
+		return false;
+	else
+		$("div.tagline").slideDown( 400, "swing");
+}).on('mouseleave', function() {
+	if( $header.length )
+		return false;
+	else
+		taglineTimer = setTimeout(function() { $("div.tagline").slideUp( 600, "swing"); }, 2400);
+});
 
 function checkScroll() {
     var scrollPos = $window.scrollTop();

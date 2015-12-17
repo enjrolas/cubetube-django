@@ -701,6 +701,26 @@ nav {
     nav .logo-box img {
       height: 50px;
       margin-right: 5px; }
+    nav .tagline {
+		color: #fff;
+		background: #1c1521;
+		opacity: 0.8;
+		margin-top: -2px;
+		padding: 0 8;
+		border-bottom-right-radius: 8px;
+		border-bottom-left-radius: 8px; 
+	/*	float:left;*/
+    }
+    nav .logo-link {
+	/*	text-decoration: none;*/
+	/*	padding: 0px;*/
+	    line-height: 34px;
+	    padding-top: 14px;
+	    vertical-align: top;
+	}
+    nav .heart {
+		color: #B50016;
+	}  
   nav ul {
 	list-style: none;
     float: right;
