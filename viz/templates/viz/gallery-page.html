@@ -1,13 +1,22 @@
 {% load staticfiles %}
 {% load card %}
 <div id="viz-in-gallery">
-	{% for viz in visualizations %}
-	    {% jscard viz %}
-	{% endfor %}
+	<div id="viz-cards">
+		{% for viz in visualizations %}
+		    {% jscard viz %}
+		{% endfor %}
+	</div>
 	{% if nextPage %}
 		<div id="scroll" style="height: 150px; width: 570px; margin: 0 auto;">
-			<div class="scroll button blue scroll-button-left" data-which="more" href="{% url 'scroll' nextPage filter %}">Load More!</div>
+<!-- this was added to implement going back and forth across viz cards (already supported by the view action) 
+ 			{% if prevPage >= 0 %}
+				<div id="scroll" style="height: 150px; width: 850px; margin: 0 auto;">
+					<div class="scroll button blue scroll-button-left" data-which="back" href="{% url 'scroll' prevPage filter %}">Go Back!</div>
+			{% else %}
+				<div id="scroll" style="height: 150px; width: 570px; margin: 0 auto;">
+			{% endif %} -->
 			<div class="scroll button blue scroll-button-left" data-which="all" href="{% url 'scroll' '1' 'all' %}">Load All!</div>
+			<div class="scroll button blue scroll-button-left" data-which="more" href="{% url 'scroll' nextPage filter %}">Load More<span class="one">.</span><span class="two">.</span><span class="three">.</span></div>
 		</div>
 	<!--     <a class="scroll button blue" href="{% url 'scroll' nextPage filter %}">Load More!</a> -->
 	{% endif %}

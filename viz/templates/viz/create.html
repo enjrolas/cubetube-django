@@ -16,67 +16,60 @@
 	var codeSnap;
 
 	function flashCube(){
+		if($("a.sent-to-cube").html() != "Send to Cube") return false;	//setting disabled=true won't work; so here's my take on the subject
+		$("a.sent-to-cube").fadeOut("slow").html("Compiling<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>")
+		.css({"color": "white", "background": "#12d396", "border-color": "#008376"}).fadeIn("fast");	//.animate({display: "block"});
+		
 		var request=$.ajax({
 			type:"POST",
 			url:"{% url 'cloudFlash' %}", 
 			data: {"code": $(".code").val(), "accessToken":accessToken, "deviceID":$("#cubeName").val(), "vizName": "{{ viz.name }}", "vizId":"{{ viz.pk }}" },
 			dataType:"text",
-			success: function(data){
+			success: function(data){ 
 				console.log("success flashing");
-				console.log(data);
 				JSONstring=data;
+				console.log(JSONstring);
 				var result = $.parseJSON(data);
 				var result = $.parseJSON(result);
 				compilerData=result;
-				console.log(result);
+				console.log(compilerData);
 				output="";
 				if(result.ok){
 					output+="compilation status:  ok\n";
 					output+=result.message;
+					var breatheAtInterval = setInterval(function() {
+						$("a.sent-to-cube").fadeOut("slow").html("Flashing<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>")
+						.css({"color": "white", "background": "#d20088", "border-color": "#b20068"}).animate({display: "block"}, "fast");
+					}, 1200); 
+					var sendButtonTimer = setTimeout(function() {
+						clearInterval(breatheAtInterval);
+						$("a.sent-to-cube").fadeOut("slow").html("Send to Cube").css({"color": "black", "background": "white", "border-color": "#cccccc"})
+						.fadeIn("fast", function() { clearTimeout(sendButtonTimer); });	//.animate({display: "block"});
+					}, 18000);
 				}
 				else{
 					output+="compilation status: "+result.ok+"\nerrors:\n"+result.errors+"\n";
+					$("a.sent-to-cube").fadeOut("slow").html("Error!").css({"color": "white", "background": "#ee0026", "border-color": "#de0016"})
+					.animate({display: "block"}, "fast", function() {
+						if(!$('div.viz-wrapper').hasClass('code-active')) $('.view-code').click();
+						var sendButtonTimer = setTimeout(function() { 
+							$("a.sent-to-cube").fadeOut("slow").html("Send to Cube").css({"color": "black", "background": "white", "border-color": "#cccccc"})
+							.fadeIn("fast", function() { 
+								$("textarea.output").animate({"color": "#ee0026", "background-color": "#fafad2"}, 600)
+								.delay(1200).animate({"color": "black", "background-color": "white"}, 1200);
+								clearTimeout(sendButtonTimer); 
+							});	//.animate({display: "block"});
+						}, 1200); });
 				}
 				$("textarea.output").val(output);
 			},
 			error: function(data){
-				console.log("fail");
-				console.log(data);
+					console.log("fail");
+					console.log(data);
 			}
 		});
 	}
 	
-	function deleteViz(){
-	    //var vizAuthor = $('.viz-wrapper').attr('data-viz-author');
-		//if (vizAuthor == $.cookie("nickname")){
-			var confirmMessage="Sure to get rid of this viz? (this action CANNOT be undone)\n\nClick either \"OK\" to proceed or \"Cancel\" to go back";
-			if (confirm(confirmMessage) == true){
-				var request=$.ajax({
-					type:"POST",
-					url:"{% url 'delete' %}", 
-					data: {"vizId":"{{ viz.pk }}" },
-					dataType:"text",
-					success: function(data){
-						var result = $.parseJSON(data);
-						if (result.success) {
-							alert("Viz Deleted!");
-							//Remove the viz card from view in the gallery
-							parent.$("#"+"{{ viz.pk }}").remove();
-							//Call the parent js method to close the iframe
-							parent.closeViz();
-						}
-						else alert("Whoops! Something unexpected happened.");
-					},
-					error: function(data){
-						var result = $.parseJSON(data);
-						if(result.error) alert(result.error);
-						else alert('Something went terribly wrong - Call 911');
-					}
-				});
-			}
-		//}
-	}
-
 	function confirmClose(){
 		var confirmMessage = "Whoops, looks like you left unsaved changes in your code!\nIs it alright for me to discard them?\n\nClick either \"OK\" to exit without saving or \"Cancel\" to go back and save your work";
 		if (confirm(confirmMessage) == true){
@@ -192,7 +185,9 @@
 			if (e.keyCode == 27) $('.close-button').click();	//Esc
 		});
 		//For the above to work straight out of loading, gotta focus on something
-		$('#cubeName').focus();	//this one works fine
+		if($('#cubeName').length) $('#cubeName').focus();
+		else if($('.comments-input').length) $('.comments-input').focus();
+		else window.focus();
 	});
 </script>
 
@@ -284,7 +279,7 @@
   <div class="viz-code">
     <div class="viz-code-header">
  	{% if viz %}
-   		<a id="btnDeleteViz" class="round-button button-transparent" onclick="deleteViz();">Delete this Viz</a>
+   		<!-- <a id="btnDeleteViz" class="round-button button-transparent" onclick="deleteViz();">Delete this Viz</a> -->
    	{% endif %}
     <a class="round-button button-red run-sketch">Update Demo</a>
 	{% if viz %}

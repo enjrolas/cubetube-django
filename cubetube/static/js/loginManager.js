@@ -10,30 +10,10 @@ $(document).ready(function(){
 	$('ul.items').on('mouseover', function() {
 		clearTimeout(menuTimer);
 		showMenuItems();
-		clicks = 1;
+		return false;	//required to dodge the firing of the menu action on mobile devices
 	}).on('mouseleave', function() {
-		if ($('.login').length)
-			menuTimer = setTimeout(function() { hideMenuItems(); }, 800);
-		else
-			menuTimer = setTimeout(function() { hideMenuItems(); }, 800);
-		clicks = 0;
-	}).on('click', function() {
-		console.log('ul.items > clicks = ' + clicks);
-		var menuVisible = $('li.on-overview').css('display');
-		if(clicks === 0) {
-			if(menuVisible === 'none') {
-				clearTimeout(menuTimer);
-				showMenuItems();
-				clicks = 1;
-			} else {
-				if ($('.login').length)
-					menuTimer = setTimeout(function() { hideMenuItems(); }, 800);
-				else
-					menuTimer = setTimeout(function() { hideMenuItems(); }, 800);
-				clicks = 0;
-			}
-			return false;
-		}
+		menuTimer = setTimeout(function() { hideMenuItems(); }, 800);
+		return false;	//required to dodge the firing of the menu action on mobile devices
 	});
 	
 	$('#search-button').on('click', function() {
@@ -51,9 +31,9 @@ $(document).ready(function(){
 
 	// Positioning the search box if we are at the Gallery template
 	if(window.location.pathname.indexOf('gallery') >= 0)
-		$("#search-box-container").fadeIn();
+		$("#search-box-container").show();
 	else
-		$("#search-box-container").fadeOut();
+		$("#search-box-container").hide();
 	//$('#search-button').css('left', ($('#search-box-container').css('left') + $('#search-box-container').css('width')) /*- $('#search-button').css('width')*/);
 	
 /*
@@ -73,13 +53,16 @@ $(document).ready(function(){
         // Show login signup
         $('.login').click(function(e) {
 			console.log('.login > clicks = ' + clicks);
-			if(clicks === 0) {
-				$('ul.items').click();
+			var menuVisible = $('li.on-overview').css('display');
+			if(menuVisible === 'none') {
+				showMenuItems();
+				menuTimer = setTimeout(function() { hideMenuItems(); clearTimeout(menuTimer); }, 5000);
+				return false;
 			} else {
+				hideMenuItems();
 				e.preventDefault();
 				$popover.show();
 				$glass.show();
-				clicks = 0;
 			}
         });
         
@@ -128,9 +111,13 @@ $(document).ready(function(){
      * Log out
      */
     $('.logout').click(function(e) {
-		if(clicks === 0) {
-			$('ul.items').click();
+		var menuVisible = $('li.on-overview').css('display');
+		if(menuVisible === 'none') {
+			showMenuItems();
+			menuTimer = setTimeout(function() { hideMenuItems(); clearTimeout(menuTimer); }, 5000);
+			return false;
 		} else {
+			hideMenuItems();
 			e.preventDefault();
 			$.removeCookie("accessToken", { path: '/' });
 			$.removeCookie("username", { path: '/' });
@@ -144,63 +131,32 @@ $(document).ready(function(){
 //window.onresize = $('#search-button').css('left', ($('#search-box-container').css('left') + $('#search-box-container').css('width')) /*- $('#search-button').css('width')*/);
 
 function hideMenuItems() {
-	$('.on-overview').slideUp( 150, "swing", function() {
-		$('.on-docs').addClass('on-overview');
-		$('.on-docs').slideUp( 150, "swing", function() {
-			$('.on-gallery').addClass('on-overview');
-			$('.on-gallery').slideUp( 150, "swing", function() {
-				$('.on-forum').addClass('on-overview');   
-				$('.on-forum').slideUp( 150, "swing", function() {
-					if ($('.on-create').length) {
-						$('.on-create').addClass('on-overview');
-						$('.on-create').slideUp( 150, "swing" );
-					}
-				});
-			});
-		});
+	clicks = 0;
+	$($("ul.items > li").get().reverse()).each(function(index) {
+		if(!$(this).hasClass("sole-button"))
+			$(this).delay(200*index).addClass('on-overview').slideUp( 800, "linear", function() { $(this).delay(150*index).removeClass('on-overview'); });
 	});
 }
 
 function showMenuItems() {
-	if ($('.on-create').length) {
-		$('.on-create').addClass('on-overview');
-		$('.on-create').slideDown( 80, "swing", function() {
-			$('.on-create').removeClass('on-overview');
-			$('.on-forum').addClass('on-overview');
-			$('.on-forum').slideDown( 80, "swing", function() {
-				$('.on-forum').removeClass('on-overview');
-				$('.on-gallery').addClass('on-overview');
-				$('.on-gallery').slideDown( 80, "swing", function() {
-					$('.on-gallery').removeClass('on-overview');
-					$('.on-docs').addClass('on-overview');
-					$('.on-docs').slideDown( 80, "swing", function() {
-						$('.on-docs').removeClass('on-overview');
-						$('.on-overview').slideDown( 80, "swing");
-					});
-				});
-			});
-		});
-	}
-	else {
-		$('.on-forum').addClass('on-overview');
-		$('.on-forum').slideDown( 80, "swing", function() {
-			$('.on-forum').removeClass('on-overview');
-			$('.on-gallery').addClass('on-overview');
-			$('.on-gallery').slideDown( 80, "swing", function() {
-				$('.on-gallery').removeClass('on-overview');
-				$('.on-docs').addClass('on-overview');
-				$('.on-docs').slideDown( 80, "swing", function() {
-					$('.on-docs').removeClass('on-overview');
-					$('.on-overview').slideDown( 80, "swing");
-				});
-			});
+	if(!clicks) {
+		clicks = 1;
+		$('ul.items > li').each(function(index) {
+			if(!$(this).hasClass("sole-button")) {
+				$(this).delay(200*index).addClass('on-overview');
+				if($(this).next().length)
+					$(this).slideDown( 800, "linear", function() { $(this).delay(150*index).removeClass('on-overview'); });
+				else $(this).slideDown( 800, "swing");
+			}
 		});
 	}
 }
 
 function justSearch(searchTerm) {
-	$("#search-button").html("Wait...");
-	$("#search-button").blur();
+	clearTimeout();
+	$("#search-button").html("Wait<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>");
+    $('#search-button').prop( "disabled", true );
+
 	var url="/search/1/" + searchTerm + "/8/" 
     //console.log(url);
 	$.ajax({
@@ -210,12 +166,12 @@ function justSearch(searchTerm) {
 			// Here we replace the entire viz gallery code with the code returned by the view:
 			$("#viz-in-gallery").replaceWith( data );
 			$("#search-button").html("Search!");
-			setTimeout(function() {
-			    activatePreviews();
-			}, 1);
+			$('#search-button').prop( "disabled", false );
+			//setTimeout(function() { activatePreviews(); }, 1);
 		},
 		error: function(data) {
-			$(".button").html("Search!");
+			$("#search-button").html("Search!");
+			$('#search-button').prop( "disabled", false );
 			console.log('Error retrieving search!')
 			console.log(data)
 		}

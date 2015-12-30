@@ -1,5 +1,8 @@
 //this file is in charge of going through the vizs in the gallery and starting each sketch
 
+/******************************************************************************************/
+/* These functions were temporarily disabled to allow for page animations to flow better  */
+/******************************************************************************************/
 function activatePreviews(){
   $("canvas.js-preview:not(.canvas-active)").each(function(){
         console.log( "hi" );

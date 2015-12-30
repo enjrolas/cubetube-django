@@ -20,9 +20,9 @@
 			if (e.keyCode == 27) $('.close-button').click();	//Esc
 		});
 		// For the above to work straight out of loading, gotta focus on something
-		if ($('#cubeName').length) $('.comments-input').focus();
-		else if ($('.comments-input').length) $('.comments-input').focus().click();
-		else $('body').focus().click();
+		if ($('#cubeName').length) $('#cubeName').focus();
+		else if ($('.comments-input').length) $('.comments-input').focus();
+		else window.focus();
 
 		// Controls the expanding/collapsing the viz description text field
 		$('.viz-description').on('mouseover', function() {
@@ -34,6 +34,10 @@
 	});
 
 	function flashCube(){
+		if($("a.sent-to-cube").html() != "Send to Cube") return false;	//setting disabled=true won't work; so here's my take on the subject
+		$("a.sent-to-cube").fadeOut("slow").html("Compiling<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>")
+		.css({"color": "white", "background": "#12d396", "border-color": "#008376"}).fadeIn("fast");	//.animate({display: "block"});
+		
 		var request=$.ajax({
 			type:"POST",
 			url:"{% url 'cloudFlash' %}", 
@@ -41,19 +45,39 @@
 			dataType:"text",
 			success: function(data){ 
 				console.log("success flashing");
-				console.log(data);
 				JSONstring=data;
+				console.log(JSONstring);
 				var result = $.parseJSON(data);
 				var result = $.parseJSON(result);
 				compilerData=result;
-				console.log(result);
+				console.log(compilerData);
 				output="";
 				if(result.ok){
 					output+="compilation status:  ok\n";
 					output+=result.message;
+					var breatheAtInterval = setInterval(function() {
+						$("a.sent-to-cube").fadeOut("slow").html("Flashing<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>")
+						.css({"color": "white", "background": "#d20088", "border-color": "#b20068"}).animate({display: "block"}, "fast");
+					}, 1200); 
+					var sendButtonTimer = setTimeout(function() {
+						clearInterval(breatheAtInterval);
+						$("a.sent-to-cube").fadeOut("slow").html("Send to Cube").css({"color": "black", "background": "white", "border-color": "#cccccc"})
+						.fadeIn("fast", function() { clearTimeout(sendButtonTimer); });	//.animate({display: "block"});
+					}, 18000);
 				}
 				else{
 					output+="compilation status: "+result.ok+"\nerrors:\n"+result.errors+"\n";
+					$("a.sent-to-cube").fadeOut("slow").html("Error!").css({"color": "white", "background": "#ee0026", "border-color": "#de0016"})
+					.animate({display: "block"}, "fast", function() {
+						if(!$('div.viz-wrapper').hasClass('code-active')) $('.view-code').click();
+						var sendButtonTimer = setTimeout(function() { 
+							$("a.sent-to-cube").fadeOut("slow").html("Send to Cube").css({"color": "black", "background": "white", "border-color": "#cccccc"})
+							.fadeIn("fast", function() { 
+								$("textarea.output").animate({"color": "#ee0026", "background-color": "#fafad2"}, 600)
+								.delay(1200).animate({"color": "black", "background-color": "white"}, 1200);
+								clearTimeout(sendButtonTimer); 
+							});	//.animate({display: "block"});
+						}, 1200); });
 				}
 				$("textarea.output").val(output);
 			},
@@ -62,6 +86,37 @@
 					console.log(data);
 			}
 		});
+	}
+	
+	function deleteViz(){
+	    //var vizAuthor = $('.viz-wrapper').attr('data-viz-author');
+		//if (vizAuthor == $.cookie("nickname")){
+			var confirmMessage="Sure to get rid of this viz? (this action CANNOT be undone)\n\nClick either \"OK\" to proceed or \"Cancel\" to go back";
+			if (confirm(confirmMessage) == true){
+				var request=$.ajax({
+					type:"POST",
+					url:"{% url 'delete' %}", 
+					data: {"vizId":"{{ viz.pk }}" },
+					dataType:"text",
+					success: function(data){
+						var result = $.parseJSON(data);
+						if (result.success) {
+							alert("Viz Deleted!");
+							//Remove the viz card from view in the gallery
+							parent.$("#"+"{{ viz.pk }}").remove();
+							//Call the parent js method to close the iframe
+							parent.closeViz();
+						}
+						else alert("Whoops! Something unexpected happened.");
+					},
+					error: function(data){
+						var result = $.parseJSON(data);
+						if(result.error) alert(result.error);
+						else alert('Something went terribly wrong - Call 911');
+					}
+				});
+			}
+		//}
 	}
 	
 	//Parses the supplied string to a html-renderable string 
@@ -151,6 +206,10 @@
     {% endif %}
 
     {% if logged_in %}
+	 	{% if viz.creator.nickname == request.COOKIES.nickname %}
+	 		<div class="separator" ></div>
+	   		<a title="This will DELETE this viz! Be careful!" id="btnDeleteViz" class="close-button" onclick="deleteViz();">Delete</a>
+	   	{% endif %}
       <div class="cube-options">
 	{% if viz.vizType == "L3D" %}
         <a class="round-button button-grey sent-to-cube" onclick="flashCube()">Send to Cube</a>

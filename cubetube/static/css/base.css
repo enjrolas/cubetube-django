@@ -336,6 +336,9 @@ button {
       margin-right: -9px; }
     .viz-wrapper .round-button:active {
       opacity: 0.8; }
+	.sent-to-cube, .select-cube, .view-code {
+		height: 35px;
+	}
   .viz-wrapper .button-transparent {
     box-shadow: inset 0px 0px 0px 1px rgba(255, 255, 255, 0.4); }
   .viz-wrapper .button-red {
@@ -492,7 +495,7 @@ button {
     padding-top: 58px;
     position: fixed;
     top: 0px;
-    left: 910px;
+    left: 938px;
     border: 0px;
     height: 100%;
     width: 690px;
@@ -512,7 +515,7 @@ button {
       border: 0px;
       outline: 0px; }
   .viz-wrapper.code-active .viz-nav {
-    padding-right: 220px; }
+    padding-right: 187px; }
   .viz-wrapper.code-active .viz-code {
     -webkit-transform: translateX(-300px);
     -moz-transform: translateX(-300px);
@@ -522,7 +525,7 @@ button {
   .viz-wrapper.code-active .viz-demo,
   .viz-wrapper.code-active {
     position: relative;
-    width: 610px;
+    width: 638px;
     outline: 0; }
 
 .viz-template {
@@ -534,7 +537,8 @@ button {
   border: 0;
   z-index: 2; }
   .viz-template.more-open {
-    width: 1300px; }
+/*  Increase width to accomodate new delete viz button in nav*/
+	width: 1330px; }
 
 .create-template {
   position: fixed;
@@ -633,7 +637,9 @@ button {
       background: rgba(255, 255, 255, 0.2); }
 
 #cubeName {
-  max-width: 165px; }
+	max-width: 165px; 
+	margin-top: -2px;
+}
 
 .fb-share-button {
   position: absolute !important;
@@ -695,6 +701,26 @@ nav {
     nav .logo-box img {
       height: 50px;
       margin-right: 5px; }
+    nav .tagline {
+		color: #fff;
+		background: #1c1521;
+		opacity: 0.8;
+		margin-top: -2px;
+		padding: 0 8;
+		border-bottom-right-radius: 8px;
+		border-bottom-left-radius: 8px; 
+	/*	float:left;*/
+    }
+    nav .logo-link {
+	/*	text-decoration: none;*/
+	/*	padding: 0px;*/
+	    line-height: 34px;
+	    padding-top: 14px;
+	    vertical-align: top;
+	}
+    nav .heart {
+		color: #B50016;
+	}  
   nav ul {
 	list-style: none;
     float: right;
@@ -715,15 +741,55 @@ nav {
 	  background: #1c1521;
 	  text-align: center;
 	  opacity: 0.8; }
-  .sole-button {
-	width: 275px; 
-	height: 60px; 
-	padding-top: 20px;
-  }
-  .on-overview {
-	border-bottom-right-radius: 8px;
-	border-bottom-left-radius: 8px;  
-  }
+	.sole-button {
+		width: 275px; 
+		height: 60px; 
+		padding-top: 20px;
+	}
+	div.separator {
+		float: left; 
+		padding: 8px; 
+		opacity: 0;
+	}
+	.on-overview {
+		border-bottom-right-radius: 8px;
+		border-bottom-left-radius: 8px;  
+	}
+	
+	/*styles for animating ellipsis*/
+	.one {
+	    opacity: 0;
+	    -webkit-animation: dot 1.3s infinite;
+	    -webkit-animation-delay: 0.0s;
+	    animation: dot 1.3s infinite;
+	    animation-delay: 0.0s;
+	}
+	.two {
+		opacity: 0;
+		-webkit-animation: dot 1.3s infinite;
+		-webkit-animation-delay: 0.2s;
+		animation: dot 1.3s infinite;
+		animation-delay: 0.2s;
+	}
+	.three {
+		opacity: 0;
+		-webkit-animation: dot 1.3s infinite;
+		-webkit-animation-delay: 0.3s;
+		animation: dot 1.3s infinite;
+		animation-delay: 0.3s;
+	}
+	@-webkit-keyframes dot {
+	      0% { opacity: 0; }
+	     50% { opacity: 0; }
+	    100% { opacity: 1; }
+	}
+	@keyframes dot {
+	      0% { opacity: 0; }
+	     50% { opacity: 0; }
+	    100% { opacity: 1; }
+	}
+	/*[END] styles for the animated ellipsis*/
+
   nav .create {
     background: #2bc6fb;
     border-radius: 30px;
