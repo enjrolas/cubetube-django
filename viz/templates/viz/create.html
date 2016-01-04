@@ -265,13 +265,15 @@
       	</a>
 	  {% endif %}
    	{% if viz %} 
-       	{% if viz.interactive %} 
-	   		<input class="video-url" placeholder="Interactive! Please add a youtube link here" value="{{ viz.videoURL }}"/>
+       	{% if viz.videoURL %}
+	   		<input class="video-url" placeholder="Please add a youtube link here" value="{{ viz.videoURL }}"/>
        	{% else %}
-       		<input class="video-url hidden" placeholder="Interactive! Please add a youtube link here"/>
+       		<input class="video-url" placeholder="Please add a youtube link here" value=""/>
+       		<!-- <input class="video-url hidden" placeholder="Please add a youtube link here"/> -->
        	{% endif %}
    	{% else %}
-       	<input class="video-url hidden" placeholder="Interactive! Please add a youtube link here"/>
+   		<input class="video-url" placeholder="Please add a youtube link here" value=""/>
+       	<!-- <input class="video-url hidden" placeholder="Interactive! Please add a youtube link here"/> -->
    	{% endif %}
     </div>
   </div>
