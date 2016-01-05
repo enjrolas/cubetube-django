@@ -16,4 +16,4 @@ urlpatterns = patterns('',
                        url(r'^flash/(?P<id>\d+)/$', views.flash, name='flash'),
                        (r'^', include('viz.urls')),
                        (r'^', include('comments.urls')),
-                      )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                      )+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT, settings.MEDIA_URL + '/Unity3D/Deployment.html')
