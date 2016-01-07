@@ -49,23 +49,6 @@ $(document).ready(function(){
     var $popover = $( '.login-signup-popover' );
     var $glass   = $( '.glass' );
     if( $popover.length ) {
-
-        // Show login signup
-        $('.login').click(function(e) {
-			console.log('.login > clicks = ' + clicks);
-			var menuVisible = $('li.on-overview').css('display');
-			if(menuVisible === 'none') {
-				showMenuItems();
-				menuTimer = setTimeout(function() { hideMenuItems(); clearTimeout(menuTimer); }, 5000);
-				return false;
-			} else {
-				hideMenuItems();
-				e.preventDefault();
-				$popover.show();
-				$glass.show();
-			}
-        });
-        
         // Sign up forms exist, change type.
         $('.login-title .link').click(function() {
             if( $popover.hasClass('login') ) {
@@ -106,24 +89,44 @@ $(document).ready(function(){
             sparkLogin(email, password);
         });
     }
+    
+    // Show login signup
+    $('#login-button').click(function(e) {
+		console.log('.login > clicks = ' + clicks);
+		var menuVisible = $('li.on-overview').css('display');
+		if(menuVisible === 'none' || !clicks) {
+			showMenuItems();
+			menuTimer = setTimeout(function() { hideMenuItems(); clearTimeout(menuTimer); }, 5000);
+			return false;
+		} else {
+			//hideMenuItems();
+			e.preventDefault();
+			if(clicks) {
+				$popover.show();
+				$glass.show();
+			}
+		}
+    });
 
     /**
      * Log out
      */
     $('.logout').click(function(e) {
 		var menuVisible = $('li.on-overview').css('display');
-		if(menuVisible === 'none') {
+		if(menuVisible === 'none' || !clicks) {
 			showMenuItems();
 			menuTimer = setTimeout(function() { hideMenuItems(); clearTimeout(menuTimer); }, 5000);
 			return false;
 		} else {
-			hideMenuItems();
+			//hideMenuItems();
 			e.preventDefault();
-			$.removeCookie("accessToken", { path: '/' });
-			$.removeCookie("username", { path: '/' });
-			$.removeCookie("nickname", { path: '/' });
-			$.removeCookie("coreID", { path: '/' });
-			location.reload();
+			if(clicks) {
+				$.removeCookie("accessToken", { path: '/' });
+				$.removeCookie("username", { path: '/' });
+				$.removeCookie("nickname", { path: '/' });
+				$.removeCookie("coreID", { path: '/' });
+				location.reload();
+			}
 		}
     })
 });
@@ -179,18 +182,33 @@ function justSearch(searchTerm) {
 }
 
 function createNewUser(email, nickname, password) {
-    
     // Register with spark.
     window.spark.createUser(email, password, function(err, data) {
-    
         // We try to login and get back an accessToken to verify user creation
         if (!err) {
-            sparkSignup(email, nickname, password);
+        	if(nickname.trim().length > 0)
+        		sparkSignup(email, nickname, password);
+        	else 
+        		displayError(err, 'Whoops - Please enter a nickname.');
         } else {
             if(err.message.indexOf("already exists")>-1) {
                 sparkSignup(email, nickname, password);
             } else {
-                displayError(err);
+            	var message;
+            	if (err === undefined || err === null) {
+            		message = 'Could not signup, please try again.';
+            	} else {
+        	    	// Invalid username or password
+        	        if(err.message.toLowerCase() === 'invalid_grant') {
+        	        	message = 'Sorry, invalid username or password.';
+        	        } else if (err.message.toLowerCase() === 'username must be an email address.') {
+        	        	message = 'Urp, username must be an email address!';
+        	        } else if(err.message.toLowerCase() === "invalid_client")
+        	    		message = 'Please enter both username and password.';
+                }
+            	displayError(err, message);
+            	//console.log(err.message);
+                //displayError(err);
             }
         }
     });
@@ -201,31 +219,45 @@ function sparkSignup(email, nickname, password) {
     var loginPromise = window.spark.login({ username: email, password: password });
     loginPromise.then(function(data){
         // They have logged in with spark.
-
         var accessToken = data.access_token;
         $.cookie("accessToken", data.access_token, { expires: data.expires_in/86400 , path: '/'});
-
         //let the server know that we're logged in
         $.post("/login/", {
             email: email,
             accessToken: data.access_token,
             dataType: 'script',
         }).success(function(data) {
-            
             // Logged in.
             if( data['status'] == "ok" ) {
                 nickname=data['nickname'];
                 $.cookie("nickname", nickname, { expires: data.expires_in/86400 , path: '/'});
                 location.reload();
-
             // Create new user
             } else if ( data['status'] == "newUser" ) {
                 cubetubeSignup(email, accessToken, nickname)
             }
-        }).error(function(data) {});
+        
+        }).error(function(data) {
+        	//console.log(data);
+        });
 
     }, function(error){
-        displayError(error);
+    	var message;
+    	if (error === undefined || error === null) {
+    		message = 'Could not validate login, please try again.';
+    	} else {
+	    	// Invalid username or password
+	        if(error.message.toLowerCase() === 'invalid_grant') {
+	        	message = 'Sorry, invalid username or password.';
+	        } else if (error.message.toLowerCase() === 'username must be an email address.') {
+	        	message = 'Urp, username must be an email address!';
+	        } else if(error.message.toLowerCase() === "invalid_client")
+	    		message = 'Please enter both username and password.';
+        }
+    	displayError(error, message);
+    	
+    	//console.log(error.message);
+        //displayError(error);
     });
 }
 
@@ -258,7 +290,6 @@ function sparkLogin(email, password) {
     var loginPromise = window.spark.login({ username: email, password: password });
     loginPromise.then(function(data){
         // They have logged in with spark.
-
         var accessToken = data.access_token;
         $.cookie("accessToken", data.access_token, { expires: data.expires_in/86400 , path: '/'});
 
@@ -268,7 +299,6 @@ function sparkLogin(email, password) {
             accessToken: data.access_token,
             dataType: 'script',
         }).success(function(data) {
-            
             // Logged in.
             if( data['status'] == "ok" ) {
                 nickname=data['nickname'];
@@ -277,13 +307,28 @@ function sparkLogin(email, password) {
             } else {
                 cubetubeSignup(email, accessToken, email.split('@')[0]);
             }
-
+        
         }).error(function(data) {
             cubetubeSignup(email, accessToken, email.split('@')[0]);
         });
-
+    
     }, function(error){
-        displayError(error, "Sorry, already used username or email!");
+    	var message;
+    	if (error === undefined || error === null) {
+    		message = 'Could not validate login, please try again.';
+    	} else {
+	    	// Invalid username or password
+	        if(error.message.toLowerCase() === 'invalid_grant') {
+	        	message = 'Sorry, invalid username or password.';
+	        } else if (error.message.toLowerCase() === 'username must be an email address.') {
+	        	message = 'Urp, username must be an email address!';
+	        } else if(error.message.toLowerCase() === "invalid_client")
+	    		message = 'Please enter both username and password.';
+        }
+    	displayError(error, message);
+    	
+    	//console.log(error.message);
+        //displayError(error, "Sorry, already used username or email!");
     });
 }
 
@@ -302,23 +347,15 @@ function cubetubeSignup(email, accessToken, nickname) {
             location.reload();
         },
         error: function( errorMessage ) {
-            console.log( errorMessage );
+            //console.log( errorMessage );
         }
     })
 }
 
 function displayError(error, message) {
-
     if( message ) {
         $('.error-area').html(message);
         return;
-    }
-    
-    // Invalid username or password
-    if( error.message === 'invalid_grant' ) {
-        $('.error-area').html('Sorry, invalid name or password');
-    } else if (error.message === 'Username must be an email address.') {
-        $('.error-area').html('Urp, username must be an email address!');
     }
 }
 
