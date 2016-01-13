@@ -2,7 +2,7 @@
 <div class="viz-card" id="{{ viz.pk }}">
   <a class="viz-card-anchor" href="{% url 'viz' viz.pk %}">
   <div class="viz-demo">
-      {% if viz.interactive %}
+      {% if viz.videoURL %}
         <div class="interactive-bg"></div>
         <div class="play-icon"></div>
       {% else %}

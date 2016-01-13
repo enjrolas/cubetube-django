@@ -132,10 +132,11 @@ function validate(data) {
         return false;
     }
 
-    if( data.interactive === true && ( data.videoURL.indexOf("youtube") == -1) ) {
+    //With interactive viz'es disabled we're making a YT URL optional to users
+	/*if( data.interactive === true && ( data.videoURL.indexOf("youtube") == -1) ) {
         showConsoleError("Oh no, this interactive viz needs a youtube url to save!");
         return;
-    }
+    }*/
 
     return true;
 }

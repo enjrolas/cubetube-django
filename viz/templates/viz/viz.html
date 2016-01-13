@@ -228,8 +228,7 @@
   </div>
   <div class="viz-demo">
     {% if source %}
-
-      {% if viz.interactive %}
+      {% if viz.videoURL %}
         <div class="youtube-video" data-url={{ viz.videoURL }}></div>
       {% else %}
         <canvas class="demo-canvas"></canvas>

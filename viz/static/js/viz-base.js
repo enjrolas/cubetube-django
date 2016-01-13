@@ -16,15 +16,11 @@ var editor;
 
  $.get('/static/js/l3d-library.js', function(data) {
       library=data;
-
       var vizType = getVizType();
-
-
+      
       // I've got a canvas, lets render!
       if( $('canvas').length ) {
-
         if( vizType === 'L3D') {
-
             parseSparkCode( getVizUrl(), function() {
                 setTimeout( function() {
                     formatCode();
@@ -32,23 +28,19 @@ var editor;
                     setHeight();
                 }, 1);
             } );
-
-        } else if ( vizType === 'javascript' ) {
-
+        //With interactive viz'es disabled we're making a YT URL optional to users
+        /*} else if ( vizType === 'javascript' ) {
             setTimeout( function() {
                 formatCode();  //applies codeMirror formatting to the code
                 runSketch();
                 setHeight();
-            }, 1)
+            }, 1)*/
         }
       } else {
-
         var $videoContainer = $('.youtube-video');
         if( $videoContainer.length ) {
-
           formatCode();
           setHeight();
-
           var url = $videoContainer.attr('data-url');
           var id = youtube_parser(url);
           createVideo( id, $videoContainer);
