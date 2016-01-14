@@ -16,7 +16,7 @@
     	<a class="viz-card-anchor" style="text-decoration:none" href="{% url 'viz' viz.pk %}">
 			<span class="name">{{ viz.name }}</span>
 		</a>
-		<a style="text-decoration: none" title="Click to group all visualizations by {{ viz.creator }}!" href="{% url 'gallery' filter='byCreator' vizCreator=viz.creator %}">
+		<a style="text-decoration: none" title="Click to group all visualizations by {{ viz.creator }}!" href="{% url 'gallery' filter='byCreator' filterTerm=viz.creator %}">
 			<span class="author">by {{ viz.creator }}</span>
 		</a>
     </div>
