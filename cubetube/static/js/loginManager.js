@@ -76,7 +76,23 @@ $(document).ready(function(){
 //	    var ToS=checkbox.prop("checked");
 //	    console.log(ToS);
             clearError();
-            createNewUser(email, nickname, password);
+            var loginStatus=$.cookie("loginStatus");
+            if((!(loginStatus === undefined || loginStatus === null)) 
+            		&& loginStatus === 'newUser') {
+                var accessToken=$.cookie("accessToken");
+                if(!(accessToken === undefined || accessToken === null)) {
+                	if(nickname.trim().length > 0)
+                		cubetubeSignup(email, accessToken, nickname);
+                	else 
+                		displayError(null, 'Whoops - Please enter a nickname.');
+                }
+                else {
+                	$.removeCookie("loginStatus", { path: '/' });
+                	displayError(null, 'Please contact <a href="mailto:alex@lookingglassfactory.com?Subject=Invalid%20login%20status%20in%20(\'.signup-button\').click()" target="_top">alex@lookingglassfactory.com.</a>');
+                }
+            }
+            else
+            	createNewUser(email, nickname, password);
         });
 
         /**
@@ -234,10 +250,17 @@ function sparkSignup(email, nickname, password) {
                 location.reload();
             // Create new user
             } else if ( data['status'] == "newUser" ) {
-                cubetubeSignup(email, accessToken, nickname)
+            	$.cookie("loginStatus", data['status'].trim(), { expires: data.expires_in/86400 , path: '/'});
+            	$('.login-signup-popover').removeClass('login').addClass('join');
+            	$('.email').val(email);
+            	$('.password').val(password);
+            	displayError(null, "Please, enter your nickname again? Thanks!");
+                //cubetubeSignup(email, accessToken, nickname)
             }
         
         }).error(function(data) {
+        	console.log('status: ' + data['status']);
+        	displayError(null, 'Please contact <a href="mailto:alex@lookingglassfactory.com?Subject=Network%20transport%20error%20in%20sparkSignup()" target="_top">alex@lookingglassfactory.com.</a>');
         	//console.log(data);
         });
 
@@ -255,7 +278,6 @@ function sparkSignup(email, nickname, password) {
 	    		message = 'Please enter both username and password.';
         }
     	displayError(error, message);
-    	
     	//console.log(error.message);
         //displayError(error);
     });
@@ -305,11 +327,21 @@ function sparkLogin(email, password) {
                 $.cookie("nickname", nickname, { expires: data.expires_in/86400 , path: '/'});
                 location.reload();
             } else {
-                cubetubeSignup(email, accessToken, email.split('@')[0]);
+            	console.log('status: ' + data['status']);
+            	if ( data['status'] == "newUser" ) {
+            		$.cookie("loginStatus", data['status'].trim(), { expires: data.expires_in/86400 , path: '/'});
+                	$('.login-signup-popover').removeClass('login').addClass('join');
+                	$('.email').val(email);
+                	$('.password').val(password);
+                	displayError(null, "Please, enter your nickname again? Thanks!");
+            	}
+                //cubetubeSignup(email, accessToken, email.split('@')[0]);
             }
         
         }).error(function(data) {
-            cubetubeSignup(email, accessToken, email.split('@')[0]);
+        	console.log('status: ' + data['status']);
+        	displayError(null, 'Please contact <a href="mailto:alex@lookingglassfactory.com?Subject=Network%20transport%20error%20in%20sparkLogin()" target="_top">alex@lookingglassfactory.com.</a>');
+            //cubetubeSignup(email, accessToken, email.split('@')[0]);
         });
     
     }, function(error){
@@ -326,7 +358,6 @@ function sparkLogin(email, password) {
 	    		message = 'Please enter both username and password.';
         }
     	displayError(error, message);
-    	
     	//console.log(error.message);
         //displayError(error, "Sorry, already used username or email!");
     });
@@ -344,6 +375,9 @@ function cubetubeSignup(email, accessToken, nickname) {
         success: function( data ) {
             nickname=data['nickname'];
             $.cookie("nickname", nickname, { expires: data.expires_in/86400 , path: '/'});
+            var loginStatus=$.cookie("loginStatus");
+            if(!(loginStatus === undefined || loginStatus === null)) 
+            	$.removeCookie("loginStatus", { path: '/' });
             location.reload();
         },
         error: function( errorMessage ) {
