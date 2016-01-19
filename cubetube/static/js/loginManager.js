@@ -5,14 +5,21 @@
 //var checkbox;
 
 $(document).ready(function(){
-	var menuTimer;
+	var menuTimer = null;
+	var isMouseOut = false;
 	
 	$('ul.items').on('mouseover', function() {
 		clearTimeout(menuTimer);
-		showMenuItems();
+		isMouseOut = false;
+		var menuVisible = $('li.on-forum').css('display');
+		if(menuVisible === 'none')
+			menuTimer = setTimeout(function() { if(!isMouseOut) showMenuItems(); }, 600);
+		else
+			showMenuItems();
 		return false;	//required to dodge the firing of the menu action on mobile devices
 	}).on('mouseleave', function() {
-		menuTimer = setTimeout(function() { hideMenuItems(); }, 800);
+		isMouseOut = true;
+		menuTimer = setTimeout(function() { hideMenuItems(); clearTimeout(menuTimer); }, 400);
 		return false;	//required to dodge the firing of the menu action on mobile devices
 	});
 	
@@ -109,9 +116,11 @@ $(document).ready(function(){
     // Show login signup
     $('#login-button').click(function(e) {
 		console.log('.login > clicks = ' + clicks);
+		//This is for showing the menu on mobile devices (no mouseOver support)
 		var menuVisible = $('li.on-overview').css('display');
 		if(menuVisible === 'none' || !clicks) {
 			showMenuItems();
+			//We wait a longer time before hiding the menu
 			menuTimer = setTimeout(function() { hideMenuItems(); clearTimeout(menuTimer); }, 5000);
 			return false;
 		} else {
@@ -153,7 +162,7 @@ function hideMenuItems() {
 	clicks = 0;
 	$($("ul.items > li").get().reverse()).each(function(index) {
 		if(!$(this).hasClass("sole-button"))
-			$(this).delay(200*index).addClass('on-overview').slideUp( 800, "linear", function() { $(this).delay(150*index).removeClass('on-overview'); });
+			$(this).stop(true).delay(200*index).addClass('on-overview').delay(150*index).slideUp( 800, "linear", function() { $(this).delay(150*index).removeClass('on-overview'); });
 	});
 }
 
@@ -162,10 +171,10 @@ function showMenuItems() {
 		clicks = 1;
 		$('ul.items > li').each(function(index) {
 			if(!$(this).hasClass("sole-button")) {
-				$(this).delay(200*index).addClass('on-overview');
+				$(this).stop(true).delay(200*index).addClass('on-overview');
 				if($(this).next().length)
-					$(this).slideDown( 800, "linear", function() { $(this).delay(150*index).removeClass('on-overview'); });
-				else $(this).slideDown( 800, "swing");
+					$(this).stop(true).delay(150*index).slideDown( 800, "linear", function() { $(this).stop(true).delay(150*index).removeClass('on-overview'); });
+				else $(this).stop(true).delay(150*index).slideDown( 800, "linear");
 			}
 		});
 	}
