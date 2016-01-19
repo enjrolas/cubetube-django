@@ -12,7 +12,8 @@
 <script type="text/javascript">
 	var compilerData;
 	var JSONstring;
-	var descTimer;
+	var descTimer = null;
+	var isMouseOut = false;
 	
 	$(document).ready(function() {
 		// Enabling Esc key to close the viz
@@ -24,14 +25,26 @@
 		else if ($('.comments-input').length) $('.comments-input').focus();
 		else window.focus();
 
-		// Controls the expanding/collapsing the viz description text field
-		$('.viz-description').on('mouseover', function() {
+		/*$('.viz-description').on('mouseover', function() {
 			clearTimeout(descTimer);
-			expandDesc();
+			isMouseOut = false;
+			descTimer = setTimeout(function() { if(!isMouseOut) expandDesc(); }, 600);
 		}).on('mouseleave', function() {
-			descTimer = setTimeout(function() { collapseDesc(); }, 800);
-		});
+			isMouseOut = true;
+			descTimer = setTimeout(function() { collapseDesc(); clearTimeout(descTimer); }, 400);
+		});*/
 	});
+	
+	// Controls the expanding/collapsing the viz description text field
+	function expandDescription() {
+		clearTimeout(descTimer);
+		isMouseOut = false;
+		descTimer = setTimeout(function() { if(!isMouseOut) expandDesc(); }, 600);
+	}
+	function collapseDescription() {
+		isMouseOut = true;
+		descTimer = setTimeout(function() { collapseDesc(); clearTimeout(descTimer); }, 400);
+	}
 
 	function flashCube(){
 		if($("a.sent-to-cube").html() != "Send to Cube") return false;	//setting disabled=true won't work; so here's my take on the subject
@@ -265,7 +278,7 @@
 			<span id="viz-description">{{ viz.description }}</span>
 		</div>
 	{% else %}
-      	<div class="viz-description" style="width: 585px; overflow: auto;">
+      	<div class="viz-description" style="width: 585px; overflow: auto;" onmouseover="expandDescription();" onmouseleave="collapseDescription();">
 			<span id="viz-description">{{ viz.description|truncatechars:79 }}</span>
 		</div>
 	{% endif %}
