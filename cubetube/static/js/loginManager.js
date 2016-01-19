@@ -138,8 +138,10 @@ $(document).ready(function(){
      */
     $('.logout').click(function(e) {
 		var menuVisible = $('li.on-overview').css('display');
+		//This is for showing the menu on mobile devices (no mouseOver support)
 		if(menuVisible === 'none' || !clicks) {
 			showMenuItems();
+			//We wait a longer time before hiding the menu
 			menuTimer = setTimeout(function() { hideMenuItems(); clearTimeout(menuTimer); }, 5000);
 			return false;
 		} else {
