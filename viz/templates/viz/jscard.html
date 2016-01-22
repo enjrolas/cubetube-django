@@ -4,6 +4,9 @@
   <div class="viz-demo">
       {% if viz.videoURL %}
         <div class="interactive-bg"></div>
+        <div class="interactive-bg-video" data-url={{ viz.videoURL }} data-vizId={{ viz.pk }}>
+        	<div class="player" id="player-{{ viz.pk }}"></div>
+        </div>
         <div class="play-icon"></div>
       {% else %}
         <canvas class="js-preview" id="{{ viz.pk }}" type="{{ viz.vizType }}" interactive="{{ viz.interactive }}"></canvas>   
