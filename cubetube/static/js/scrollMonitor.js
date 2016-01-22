@@ -85,12 +85,38 @@ $('body').on('click', '.scroll', function(e) {
 					var debugMsg = "totalRows=" + totalRows + "\ncardsPerRow=" + cardsPerRow; 
 					console.log(debugMsg);
 					$('#viz-cards').animate({height: ((vizCardHeight+vizCardBottomMargin)*totalRows)}, 1200, "linear");
-					$('.viz-card').each(function() { $(this).fadeIn(1200, "linear"); });
+					$('.viz-card').each(function() { 
+						//First, we need to rebind the YT video previews to the viz card
+				    	var $vizDemo = $(this).find('div.viz-demo');
+				    	var $videoContainer = $(this).find('div.interactive-bg-video'); 
+				    	if($videoContainer.length) {
+				    	    //Bind the YT thumbnail image to the card that has a YT URL attached to it;
+				    		var url = $videoContainer.attr('data-url');	//This is our YT URL
+				    		var id = youtube_parser(url);				//This is the Video ID part
+				    		var thumbUrl = 'url("http://img.youtube.com/vi/' + id + '/mqdefault.jpg")';
+				    		var $playerContainer = $vizDemo.find('div.interactive-bg');
+				    		//Replace the default background with the YT video background image
+				    		$playerContainer.css('background-image',thumbUrl);
+				    		//Adjust the dimensions of the new image to fit the container
+				    		$playerContainer.css('background-size',$playerContainer.width() + 'px ' + $playerContainer.height() + 'px');
+				    	    //Also bind the mouse events to trigger the video loading/unloading
+				    		$(this).on('mouseover', function() {
+								clearTimeout(unbindTimer); 
+				    			bindVideoThumbnail($($vizDemo)); 
+				    		}).on('mouseleave', function() {
+				    			unbindTimer = setTimeout(function() {
+				    				unbindVideoThumbnail($($vizDemo)); 
+				    			}, 1600); 
+				    		});
+				    	}
+						//Then we fade it in
+						$(this).fadeIn(1200, "linear"); 
+					});
 					break;
 				case "more":
 				case "back":
-					// Here we append the code returned by the view to the existing viz gallery code
-					vizCardsDiv.find('.viz-card').each(function() { 
+					vizCardsDiv.find('.viz-card').each(function() {
+				    	//First, we append the code returned by the view to the existing viz gallery code
 						$(this).appendTo('#viz-cards').height(0); 
 						if($(this).prev().length) {
 							if($(this).position().top != $(this).prev().position().top) 
@@ -101,6 +127,29 @@ $('body').on('click', '.scroll', function(e) {
 							totalRows++;
 							cardsPerRow++;
 						}
+						//Then we need to rebind the YT video previews to the viz card
+				    	var $vizDemo = $(this).find('div.viz-demo');
+				    	var $videoContainer = $(this).find('div.interactive-bg-video'); 
+				    	if($videoContainer.length) {
+				    	    //Bind the YT thumbnail images to each card that has a YT URL attached to it;
+				    		var url = $videoContainer.attr('data-url');	//This is our YT URL
+				    		var id = youtube_parser(url);				//This is the Video ID part
+				    		var thumbUrl = 'url("http://img.youtube.com/vi/' + id + '/mqdefault.jpg")';
+				    		var $playerContainer = $vizDemo.find('div.interactive-bg');
+				    		//Replace the default background with the YT video background image
+				    		$playerContainer.css('background-image',thumbUrl);
+				    		//Adjust the dimensions of the new image to fit the container
+				    		$playerContainer.css('background-size',$playerContainer.width() + 'px ' + $playerContainer.height() + 'px');
+				    	    //Also bind the mouse events to trigger the video loading/unloading
+				    		$(this).on('mouseover', function() {
+								clearTimeout(unbindTimer); 
+				    			bindVideoThumbnail($($vizDemo)); 
+				    		}).on('mouseleave', function() {
+				    			unbindTimer = setTimeout(function() {
+				    				unbindVideoThumbnail($($vizDemo)); 
+				    			}, 1600); 
+				    		});
+				    	}						
 					});
 					var debugMsg = "totalRows=" + totalRows + "\ncardsPerRow=" + cardsPerRow; 
 					console.log(debugMsg);
