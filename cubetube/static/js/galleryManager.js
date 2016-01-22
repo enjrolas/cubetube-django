@@ -168,6 +168,7 @@ function bindVideoPreviews(card) {
 		$playerContainer.css('background-image',thumbUrl);
 		//Adjust the dimensions of the new image to fit the container
 		$playerContainer.css('background-size',$playerContainer.width() + 'px ' + $playerContainer.height() + 'px');
+		$vizDemo.find('div.play-icon').remove();	//Also remove the 'play arrow' from the preview area (requested by Alex)
 	    //Also bind the mouse events to trigger the video loading/unloading
 		card.on('mouseover', function() {
 			clearTimeout(card.unbindTimer); 
