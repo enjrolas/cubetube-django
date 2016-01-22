@@ -150,7 +150,7 @@ function unbindVideoThumbnail( container ) {
 	var vizId = $videoContainer.attr('data-vizId');
 	var frame = $videoContainer.find('iframe#player-' + vizId);
 	if(frame.length) {	//Try to locate if there's an iframe created by YT
-		$videoContainer.html('<div id="player-' + vizId + '"></div>');
+		$videoContainer.html('<div class="player" id="player-' + vizId + '"></div>');
 		container.find('div.interactive-bg').stop().fadeTo(300,0.5);
 	}
 }
