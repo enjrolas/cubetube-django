@@ -86,7 +86,7 @@ $('body').on('click', '.scroll', function(e) {
 					console.log(debugMsg);
 					$('#viz-cards').animate({height: ((vizCardHeight+vizCardBottomMargin)*totalRows)}, 1200, "linear");
 					$('.viz-card').each(function() { 
-						//First, we need to rebind the YT video previews to the viz card
+						//First, we need to rebind the YT video preview to the viz card
 						bindVideoPreviews($(this));
 						//Then we fade it in
 						$(this).fadeIn(1200, "linear"); 
@@ -106,7 +106,7 @@ $('body').on('click', '.scroll', function(e) {
 							totalRows++;
 							cardsPerRow++;
 						}
-						//Then we need to rebind the YT video previews to the viz card
+						//Then we need to rebind the YT video preview to the viz card
 						bindVideoPreviews($(this));
 					});
 					var debugMsg = "totalRows=" + totalRows + "\ncardsPerRow=" + cardsPerRow; 
