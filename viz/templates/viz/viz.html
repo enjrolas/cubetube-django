@@ -13,6 +13,7 @@
 	var compilerData;
 	var JSONstring;
 	var descTimer = null;
+	var overflowTimer = null;
 	var isMouseOut = false;
 	
 	$(document).ready(function() {
@@ -25,25 +26,30 @@
 		else if ($('.comments-input').length) $('.comments-input').focus();
 		else window.focus();
 
-		/*$('.viz-description').on('mouseover', function() {
-			clearTimeout(descTimer);
-			isMouseOut = false;
-			descTimer = setTimeout(function() { if(!isMouseOut) expandDesc(); }, 600);
+		$('a.viz-next').on('mouseover', function() {
+			clearTimeout(overflowTimer);
+			$('div.viz-wrapper').css('overflow-y', 'auto');
 		}).on('mouseleave', function() {
-			isMouseOut = true;
-			descTimer = setTimeout(function() { collapseDesc(); clearTimeout(descTimer); }, 400);
-		});*/
+			overflowTimer = setTimeout(function() {
+				$('div.viz-wrapper').css('overflow-y', ''); 
+			}, 2400);
+		});
 	});
 	
 	// Controls the expanding/collapsing the viz description text field
 	function expandDescription() {
 		clearTimeout(descTimer);
+		clearTimeout(overflowTimer);
+		$('div.viz-wrapper').css('overflow-y', 'auto');
 		isMouseOut = false;
 		descTimer = setTimeout(function() { if(!isMouseOut) expandDesc(); }, 600);
 	}
 	function collapseDescription() {
 		isMouseOut = true;
 		descTimer = setTimeout(function() { collapseDesc(); clearTimeout(descTimer); }, 400);
+		overflowTimer = setTimeout(function() {
+			$('div.viz-wrapper').css('overflow-y', ''); 
+		}, 2400);
 	}
 
 	function flashCube(){
