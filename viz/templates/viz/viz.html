@@ -76,6 +76,7 @@
 									if(result.error)
 										if(result.error.indexOf('already voted for Viz') >= 0) {
 											votedFor += "{{ viz.pk }};";
+											console.log('votedFor: ' + votedFor);
 											$.cookie("votedFor", votedFor, { expires: data.expires_in/86400 , path: '/'});
 											displayError(null, 'Whoops! You\'ve already voted for this viz.');
 										}

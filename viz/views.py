@@ -674,47 +674,43 @@ def rate(request):
     
     if authenticate(nickname, accessToken):
         try:
+            viz=Viz.objects.get(pk=vizId)
             user=CubeUser.objects.get(nickname=nickname)
             userRatings=Rating.objects.filter(reviewer=user.id)
+        except Viz.DoesNotExist:
+            return HttpResponse('{ "success": false , "error" : "Viz %s does not exist" }' % vizId, content_type="application/json")
         except Rating.DoesNotExist:
             userRatings=None
         if userRatings:
-            try:
-                votedFor=userRatings.filter(viz=vizId)
-            except Rating.DoesNotExist: 
-                votedFor=None
+            votedFor=userRatings.filter(viz=viz).count()
         else:
-            votedFor=None
-        if votedFor is None:
-            try:
-                viz=Viz.objects.get(pk=vizId)
-                allRatings=Rating.objects.filter(viz=viz)
-                '''Weight each review computed for this Viz'''  
-                fiveStars=(allRatings.filter(rating=5).count()+(1 if int(userVote)==5 else 0))
-                fourStars=(allRatings.filter(rating=4).count()+(1 if int(userVote)==4 else 0))
-                threeStars=(allRatings.filter(rating=3).count()+(1 if int(userVote)==3 else 0))
-                twoStars=(allRatings.filter(rating=2).count()+(1 if int(userVote)==2 else 0))
-                oneStar=(allRatings.filter(rating=1).count()+(1 if int(userVote)==1 else 0))
-                
-                viz.numberOfRatings+=1
-                '''Sum of (weight * number of reviews at that weight) / total number of reviews'''
-                viz.averageRating = int((5*fiveStars + 4*fourStars + 3*threeStars + 2*twoStars + oneStar)/viz.numberOfRatings)
-                
-                '''Create a new rating object and populate with new values'''
-                rating=Rating()
-                rating.viz=viz
-                rating.reviewer=user
-                rating.rating=int(userVote)
-                rating.date=date.today()
+            votedFor=0
+        if votedFor==0:
+            allRatings=Rating.objects.filter(viz=viz)
+            '''Weight each review computed for this Viz'''  
+            fiveStars=(allRatings.filter(rating=5).count()+(1 if int(userVote)==5 else 0))
+            fourStars=(allRatings.filter(rating=4).count()+(1 if int(userVote)==4 else 0))
+            threeStars=(allRatings.filter(rating=3).count()+(1 if int(userVote)==3 else 0))
+            twoStars=(allRatings.filter(rating=2).count()+(1 if int(userVote)==2 else 0))
+            oneStar=(allRatings.filter(rating=1).count()+(1 if int(userVote)==1 else 0))
+            
+            viz.numberOfRatings+=1
+            '''Sum of (weight * number of reviews at that weight) / total number of reviews'''
+            viz.averageRating = int((5*fiveStars + 4*fourStars + 3*threeStars + 2*twoStars + oneStar)/viz.numberOfRatings)
+            
+            '''Create a new rating object and populate with new values'''
+            rating=Rating()
+            rating.viz=viz
+            rating.reviewer=user
+            rating.rating=int(userVote)
+            rating.date=date.today()
 
-                '''Save the new rating average for this Viz'''
-                viz.save()
-                '''Save the new user rating for this Viz'''
-                rating.save()
-                
-                return HttpResponse('{ "success": true, "newAverage": "%s"}' % viz.averageRating, content_type="application/json")
-            except Viz.DoesNotExist:
-                return HttpResponse('{ "success": false , "error" : "Viz %s does not exist" }' % vizId, content_type="application/json")
+            '''Save the new rating average for this Viz'''
+            viz.save()
+            '''Save the new user rating for this Viz'''
+            rating.save()
+            
+            return HttpResponse('{ "success": true, "newAverage": "%s"}' % viz.averageRating, content_type="application/json")
         else:
             return HttpResponse('{ "success": false , "error" : "User %s already voted for Viz %s" }' % (nickname, vizId), content_type="application/json")
     else:
