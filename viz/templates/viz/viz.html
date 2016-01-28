@@ -53,8 +53,9 @@
 				    else votedFor = '';
 				    //console.log('votedFor: ' + votedFor);
 				    if(hasVoted) {
-						$('span.error-area').css({'color':'red', 'line-height':'25px'});
-				    	displayError(null, 'Whoops! You\'ve already voted for this viz.');
+				    	alert('Whoops! You\'ve already voted for this viz.');
+						/*$('span.error-area').css({'color':'red', 'line-height':'25px'});
+				    	displayError(null, 'Whoops! You\'ve already voted for this viz.');*/
 				    	return;
 				    }
 				    else {
@@ -68,8 +69,9 @@
 								if (result.success) {
 									votedFor += "{{ viz.pk }};";
 									$.cookie("votedFor", votedFor, { expires: data.expires_in/86400 , path: '/'});
-									$('span.error-area').css({'color':'blue', 'line-height':'25px'});
-									displayError(null, 'You voted: ' + value + ' / New average: ' + result.newAverage);
+									alert('You voted: ' + value + ' / New average: ' + result.newAverage);
+									/*$('span.error-area').css({'color':'blue', 'line-height':'25px'});
+									displayError(null, 'You voted: ' + value + ' / New average: ' + result.newAverage);*/
 								}
 								else {
 									$('span.error-area').css({'color':'red', 'line-height':'25px'});
@@ -78,18 +80,22 @@
 											votedFor += "{{ viz.pk }};";
 											console.log('votedFor: ' + votedFor);
 											$.cookie("votedFor", votedFor, { expires: data.expires_in/86400 , path: '/'});
-											displayError(null, 'Whoops! You\'ve already voted for this viz.');
+											alert('Whoops! You\'ve already voted for this viz.');
+											//displayError(null, 'Whoops! You\'ve already voted for this viz.');
 										}
-										else
-											displayError(null, result.error);
-									else displayError(null, 'Whoops! Couldn\'t compute your vote.');
+										else alert('Whoa! This error just came in:\n\n' + result.error);
+											//displayError(null, result.error);
+									else alert('Whoops! Something unexpected happened.\nCouldn\'t compute your vote.');
+										//displayError(null, 'Whoops! Couldn\'t compute your vote.');
 								}
 							},
 							error: function(data){
 								var result = $.parseJSON(data);
 								$('span.error-area').css({'color':'red', 'line-height':'25px'});
-								if(result.error) displayError(null, result.error);
-								else displayError(null, 'Whoops! Couldn\'t compute your vote.');
+								if(result.error) alert('Whoa! This error just came in:\n\n' + result.error);
+									//displayError(null, result.error);
+								else alert('Whoops! Something unexpected happened.\nCouldn\'t compute your vote.');
+									//displayError(null, 'Whoops! Couldn\'t compute your vote.');
 							}
 						});
 				    }
