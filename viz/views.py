@@ -15,6 +15,7 @@ import os
 from django.core.files import File
 from itertools import chain
 from django.db.models.query import QuerySet
+from datetime import date
 log = logging.getLogger(__name__)
 
 def filter(request):
@@ -481,41 +482,6 @@ def viz(request, id):
     else:
         return render(request, "viz/viz.html", { 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})
 
-''' Redeclaring above method; keeping it here for a while, until it's safe to remove
-def viz(request, id):
-    currentViz=Viz.objects.get(pk=id)
-    try:
-        binary=Binary.objects.get(viz=currentViz)
-    except Binary.DoesNotExist:
-        binary=None
-    
-    try:
-        photo = Photo.objects.filter(viz=currentViz)[:1].get()  #get the main image associated with this viz, and use it as the photo
-    except Photo.DoesNotExist:
-        photo = False
-
-    comments=Comment.objects.filter(viz=currentViz)
-    currentViz.pageViews=currentViz.pageViews+1
-    currentViz.save()
-
-    # 17 is the beginning of the new cube viz's
-    # @TODO: Change number for production
-    if int(id) >= 2:
-        source=SourceCode.objects.get(viz=currentViz)
-        photo = False
-    else:
-        source = False;
-        
-    try:
-        nextViz = currentViz.get_previous_by_created()
-    except:
-        nextViz=None
-
-    if nextViz:
-        return render(request, "viz/viz.html", { 'nextViz': nextViz, 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})    
-    else:
-        return render(request, "viz/viz.html", { 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})
-'''
 def vizText(request, id):
     currentViz=Viz.objects.get(pk=id)
     try:
@@ -699,6 +665,63 @@ def delete(request):
                         "accessToken": accessToken,
                         "authenticated":authenticate(nickname, accessToken)})
 
+@csrf_exempt
+def rate(request):
+    nickname    = request.COOKIES['nickname']
+    accessToken = request.COOKIES['accessToken']
+    vizId=request.POST['vizId']
+    userVote=request.POST['rating']
+    
+    if authenticate(nickname, accessToken):
+        try:
+            user=CubeUser.objects.get(nickname=nickname)
+            userRatings=Rating.objects.filter(reviewer=user.id)
+        except Rating.DoesNotExist:
+            userRatings=None
+        if userRatings:
+            try:
+                votedFor=userRatings.filter(viz=vizId)
+            except Rating.DoesNotExist: 
+                votedFor=None
+        else:
+            votedFor=None
+        if votedFor is None:
+            try:
+                viz=Viz.objects.get(pk=vizId)
+                allRatings=Rating.objects.filter(viz=viz)
+                '''Weight each review computed for this Viz'''  
+                fiveStars=(allRatings.filter(rating=5).count()+(1 if int(userVote)==5 else 0))
+                fourStars=(allRatings.filter(rating=4).count()+(1 if int(userVote)==4 else 0))
+                threeStars=(allRatings.filter(rating=3).count()+(1 if int(userVote)==3 else 0))
+                twoStars=(allRatings.filter(rating=2).count()+(1 if int(userVote)==2 else 0))
+                oneStar=(allRatings.filter(rating=1).count()+(1 if int(userVote)==1 else 0))
+                
+                viz.numberOfRatings+=1
+                '''Sum of (weight * number of reviews at that weight) / total number of reviews'''
+                viz.averageRating = int((5*fiveStars + 4*fourStars + 3*threeStars + 2*twoStars + oneStar)/viz.numberOfRatings)
+                
+                '''Create a new rating object and populate with new values'''
+                rating=Rating()
+                rating.viz=viz
+                rating.reviewer=user
+                rating.rating=int(userVote)
+                rating.date=date.today()
+
+                '''Save the new rating average for this Viz'''
+                viz.save()
+                '''Save the new user rating for this Viz'''
+                rating.save()
+                
+                return HttpResponse('{ "success": true, "newAverage": "%s"}' % viz.averageRating, content_type="application/json")
+            except Viz.DoesNotExist:
+                return HttpResponse('{ "success": false , "error" : "Viz %s does not exist" }' % vizId, content_type="application/json")
+        else:
+            return HttpResponse('{ "success": false , "error" : "User %s already voted for Viz %s" }' % (nickname, vizId), content_type="application/json")
+    else:
+        return render(request, "viz/authentication-error.html", 
+                      { "nickname": nickname,
+                        "accessToken": accessToken,
+                        "authenticated":authenticate(nickname, accessToken)})
 
 @csrf_exempt
 def save(request):

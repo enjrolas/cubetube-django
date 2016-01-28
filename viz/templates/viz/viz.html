@@ -15,8 +15,11 @@
 	var descTimer = null;
 	var overflowTimer = null;
 	var isMouseOut = false;
+	var loggedIn = false;
 	
 	$(document).ready(function() {
+		console.log('loggedIn: ' + loggedIn);
+		
 		// Enabling Esc key to close the viz
 		$(document).keydown(function(e) {
 			if (e.keyCode == 27) $('.close-button').click();	//Esc
@@ -34,7 +37,79 @@
 				$('div.viz-wrapper').css('overflow-y', ''); 
 			}, 2400);
 		});
+		
+		$("span.rating").ratyli({
+			disable: !loggedIn,
+			unrateable: !loggedIn,
+			onRated:function(value,init) {
+				// rating callback
+				if(!init) {	// prevent run at init
+					clearError();
+					var votedFor = $.cookie("votedFor");
+					var hasVoted = false;
+				    if(!(votedFor === undefined || votedFor === null)) {
+				    	hasVoted = (votedFor.indexOf("{{ viz.pk }}") >= 0);
+				    }
+				    else votedFor = '';
+				    //console.log('votedFor: ' + votedFor);
+				    if(hasVoted) {
+						$('span.error-area').css({'color':'red', 'line-height':'25px'});
+				    	displayError(null, 'Whoops! You\'ve already voted for this viz.');
+				    	return;
+				    }
+				    else {
+						var request=$.ajax({
+							type:"POST",
+							url:"{% url 'rate' %}", 
+							data: {"vizId":"{{ viz.pk }}", "rating":value },
+							dataType:"text",
+							success: function(data){
+								var result = $.parseJSON(data);
+								if (result.success) {
+									votedFor += "{{ viz.pk }};";
+									$.cookie("votedFor", votedFor, { expires: data.expires_in/86400 , path: '/'});
+									$('span.error-area').css({'color':'blue', 'line-height':'25px'});
+									displayError(null, 'You voted: ' + value + ' / New average: ' + result.newAverage);
+								}
+								else {
+									$('span.error-area').css({'color':'red', 'line-height':'25px'});
+									if(result.error)
+										if(result.error.indexOf('already voted for Viz') >= 0) {
+											votedFor += "{{ viz.pk }};";
+											$.cookie("votedFor", votedFor, { expires: data.expires_in/86400 , path: '/'});
+											displayError(null, 'Whoops! You\'ve already voted for this viz.');
+										}
+										else
+											displayError(null, result.error);
+									else displayError(null, 'Whoops! Couldn\'t compute your vote.');
+								}
+							},
+							error: function(data){
+								var result = $.parseJSON(data);
+								$('span.error-area').css({'color':'red', 'line-height':'25px'});
+								if(result.error) displayError(null, result.error);
+								else displayError(null, 'Whoops! Couldn\'t compute your vote.');
+							}
+						});
+				    }
+				}
+			}
+		});		
 	});
+
+	function displayError(error, message) {
+	    if( message ) {
+	    	$('span.error-area').fadeTo(300,0);
+	        $('span.error-area').html(message);
+	        $('span.error-area').fadeTo(300,1);
+	        return;
+	    }
+	}
+	function clearError() {
+	    $('span.error-area').fadeTo(300,0);
+	    $('span.error-area').html('');
+	    $('span.error-area').show();
+	}
 	
 	// Controls the expanding/collapsing the viz description text field
 	function expandDescription() {
@@ -211,6 +286,15 @@
 
 {% load utils %}
 {% logged_in_status as logged_in %}
+{% if logged_in %}
+	<script type="text/javascript">
+		loggedIn = true;
+	</script>
+{% else %}
+	<script type="text/javascript">
+		loggedIn = false;
+	</script>
+{% endif %}
 
 {% if source %}
   <div class="viz-wrapper" data-viz-type="{{ viz.vizType }}" data-viz-id="{{ viz.pk }}" data-viz-author="{{ viz.creator.nickname }}" data-viz-url="{% url 'code' source.pk %}">
@@ -267,7 +351,9 @@
       
       <div class="viz-created">
         <div class="title">
-          {{ viz.name }}
+			{{ viz.name }}
+			<span class="rating" data-rate="{{ viz.averageRating }}" data-ratemax="5"></span>
+			<span class="error-area"></span>
         </div>
         <div class="created">
           Created by {{ viz.creator.nickname }} on {{ viz.created|date:"F d, Y" }}

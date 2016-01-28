@@ -314,7 +314,7 @@ function loginWithAccessToken()
     var loginPromise = window.spark.login({ accessToken: accessToken });
     loginPromise.then(
 		      function(data) {
-			  console.log("logged in");
+		    	  console.log("logged in");
 		      });
 }
 
