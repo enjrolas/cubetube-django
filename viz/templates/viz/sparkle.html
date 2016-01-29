@@ -77,7 +77,7 @@
 	});
 	
 	function getDeviceID(){
-		return $("#cubeName").val().indexOf('No cores online') >= 0 ? '' : $("#cubeName").val();
+		return $("#cubeName > option:selected").val().indexOf('No cores online') >= 0 ? '' : $("#cubeName > option:selected").val();
 	}
 	
 	function setMode(){
@@ -90,7 +90,7 @@
 	<div class="viz-cards">
 		<div class="cube-options">
 			<div class="round-button button-grey select-cube">
-				<select id="cubeName"></select>
+				<select id="cubeName" onchange="clearInterval(populateModesTimer); populateInterval();"></select>
 			</div>
 		</div>
 		<div style="clear: both; height: 25px;"></div>
