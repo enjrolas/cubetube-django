@@ -49,18 +49,22 @@
 		$("#modes").empty();  //clear all the existing modes before appending new ones
 		deviceID=getDeviceID();
 		$.get("https://api.particle.io/v1/devices/"+deviceID+"/mode/?access_token=" + accessToken, function(data){
-			console.log('currentMode: [' + data.result + ']');
+			console.log('data.result: [' + data.result.trim() + ']');
 			currentMode = data.result.trim();
+			$("span#mode").html(currentMode);
+			console.log('currentMode: [' + currentMode + ']');
 		});
 		$.get("https://api.particle.io/v1/devices/"+deviceID+"/modeList/?access_token=" + accessToken, function(data){
-			console.log(data.result);
+			//console.log(data.result);
 			var modes=data.result.split(";");
 			for(var index=0; index<modes.length-1; index++){
 				var mode=modes[index].trim();
 				//console.log('mode: [' + mode + ']');
-				var selected = (currentMode==mode ? ' selected=\"selected\"' : '');
-				$("#modes").append("<option value=\"" + mode + "\"" + selected + ">" + mode + "</option>");
-				$("span#mode").html(currentMode);
+				$("select#modes").append("<option value=\"" + mode + "\">" + mode + "</option>");
+				$("select#modes > option").each(function(){
+					if($(this).val() === currentMode)
+						$(this).prop("selected", "selected");
+				});
 				//$("#modes").append("<button onclick=\"setMode('"+mode+"')\">"+mode+"</button><br/>");
 			}
 		});
