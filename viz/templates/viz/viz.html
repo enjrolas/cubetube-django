@@ -315,6 +315,15 @@
 		loggedIn = false;
 	</script>
 {% endif %}
+{% if logged_in %}
+	<script type="text/javascript">
+		loggedIn = true;
+	</script>
+{% else %}
+	<script type="text/javascript">
+		loggedIn = false;
+	</script>
+{% endif %}
 
 {% if source %}
   <div class="viz-wrapper" data-viz-type="{{ viz.vizType }}" data-viz-id="{{ viz.pk }}" data-viz-author="{{ viz.creator.nickname }}" data-viz-url="{% url 'code' source.pk %}">
@@ -371,10 +380,16 @@
       
       <div class="viz-created">
 		<div id="meterContainer">
-			<div class="industrial thermometer size one"> <span class="ticks" data-amount="10"></span>
-				<div class="space"></div>
-				<div class="meter"></div>
-			</div>
+		{% if viz.averageRating > 0 %}
+			<a href="#" title="This viz's popularity rank: {% widthratio viz.pageViews viz.averageRating 1 %}">
+		{% else %}
+			<a href="#" title="This viz's popularity rank: {% widthratio viz.pageViews 1 1 %}">
+		{% endif %}
+				<div class="industrial thermometer size one"> <span class="ticks" data-amount="10"></span>
+					<div class="space"></div>
+					<div class="meter"></div>
+				</div>
+			</a>
 		</div>
         <div class="title">
 			{{ viz.name }}
