@@ -72,16 +72,12 @@
 		}
 	}
 	
-	$( "#cubeName" ).change(function() {
-		alert( "Handler for .change() called." );
-	});
-	
 	function getDeviceID(){
 		return $("#cubeName > option:selected").val().indexOf('No cores online') >= 0 ? '' : $("#cubeName > option:selected").val();
 	}
 	
 	function setMode(){
-		currentMode = $('#modes').find(":selected").text();
+		currentMode = $('#modes').find(":selected").val();
 		var mode = 'M:' + currentMode + ',S:5,B:20,';
 		$("span#mode").html(currentMode);
 		$.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", { access_token: accessToken, args: mode });
