@@ -75,7 +75,9 @@
 	}
 	
 	function setMode(){
-		var mode = 'M:' + $('#modes').find(":selected").text() + ',S:5,B:20,';
+		currentMode = $('#modes').find(":selected").text();
+		var mode = 'M:' + currentMode + ',S:5,B:20,';
+		$("span#mode").html(currentMode);
 		$.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", { access_token: accessToken, args: mode });
 	}
 </script>
