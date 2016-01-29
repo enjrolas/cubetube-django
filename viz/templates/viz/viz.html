@@ -38,6 +38,19 @@
 			}, 2400);
 		});
 		
+		var titleLength = $("div.title").text().length*6;
+		var createdLength = $("div.created").text().length*6;
+		var padding = Math.max(titleLength, createdLength); 
+		$("div#meterContainer").css({'float':'right', 'padding-right':'calc(100% - ' + padding + 'px)'});
+		$(".industrial").css({'height':'calc(65px * 1)', 'animation':'dot 0s both', 'float':'right'}).industrial({});
+		var averageRating = parseInt('{{ viz.averageRating }}');
+		var pageViews = parseInt('{{ viz.pageViews }}');
+		console.log(pageViews/averageRating);
+		if(averageRating == 0) averageRating = 1;
+        $(".industrial.thermometer").each(function() {
+			$(this).industrial((pageViews/averageRating)*100);
+        });
+		
 		$("span.rating").ratyli({
 			disable: !loggedIn,
 			unrateable: !loggedIn,
@@ -357,11 +370,18 @@
     <div class="inner-wrapper">
       
       <div class="viz-created">
+		<div id="meterContainer">
+			<div class="industrial thermometer size one"> <span class="ticks" data-amount="10"></span>
+				<div class="space"></div>
+				<div class="meter"></div>
+			</div>
+		</div>
         <div class="title">
 			{{ viz.name }}
 			<span class="rating" data-rate="{{ viz.averageRating }}" data-ratemax="5"></span>
-			<span class="error-area"></span>
+			<!-- <span class="error-area"></span> -->
         </div>
+
         <div class="created">
           Created by {{ viz.creator.nickname }} on {{ viz.created|date:"F d, Y" }}
         </div>
