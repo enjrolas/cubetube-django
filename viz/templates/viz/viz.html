@@ -48,7 +48,7 @@
 		console.log(pageViews/averageRating);
 		if(averageRating == 0) averageRating = 1;
         $(".industrial.thermometer").each(function() {
-			$(this).industrial((pageViews/averageRating)*100);
+			$(this).industrial(pageViews/averageRating);
         });
 		
 		$("span.rating").ratyli({
