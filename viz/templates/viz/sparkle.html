@@ -61,12 +61,12 @@
 				var mode=modes[index].trim();
 				//console.log('mode: [' + mode + ']');
 				$("select#modes").append("<option value=\"" + mode + "\">" + mode + "</option>");
-				$("select#modes > option").each(function(){
-					if($(this).val() === currentMode)
-						$(this).prop("selected", "selected");
-				});
 				//$("#modes").append("<button onclick=\"setMode('"+mode+"')\">"+mode+"</button><br/>");
 			}
+			$("select#modes > option").each(function(){
+				if($(this).val() === currentMode)
+					$(this).attr("selected", "selected");
+			});
 		});
 	}
 	
