@@ -48,26 +48,28 @@
 	function populateModes(){
 		$("#modes").empty();  //clear all the existing modes before appending new ones
 		deviceID=getDeviceID();
-		$.get("https://api.particle.io/v1/devices/"+deviceID+"/mode/?access_token=" + accessToken, function(data){
-			console.log('data.result: [' + data.result.trim() + ']');
-			currentMode = data.result.trim();
-			$("span#mode").html(currentMode);
-			console.log('currentMode: [' + currentMode + ']');
-		});
-		$.get("https://api.particle.io/v1/devices/"+deviceID+"/modeList/?access_token=" + accessToken, function(data){
-			//console.log(data.result);
-			var modes=data.result.split(";");
-			for(var index=0; index<modes.length-1; index++){
-				var mode=modes[index].trim();
-				//console.log('mode: [' + mode + ']');
-				$("select#modes").append("<option value=\"" + mode + "\">" + mode + "</option>");
-				//$("#modes").append("<button onclick=\"setMode('"+mode+"')\">"+mode+"</button><br/>");
-			}
-			$("select#modes > option").each(function(){
-				if($(this).val() === currentMode)
-					$(this).attr("selected", "selected");
+		if(deviceID.trim().length > 0) {
+			$.get("https://api.particle.io/v1/devices/"+deviceID+"/mode/?access_token=" + accessToken, function(data){
+				console.log('data.result: [' + data.result.trim() + ']');
+				currentMode = data.result.trim();
+				$("span#mode").html(currentMode);
+				console.log('currentMode: [' + currentMode + ']');
 			});
-		});
+			$.get("https://api.particle.io/v1/devices/"+deviceID+"/modeList/?access_token=" + accessToken, function(data){
+				//console.log(data.result);
+				var modes=data.result.split(";");
+				for(var index=0; index<modes.length-1; index++){
+					var mode=modes[index].trim();
+					//console.log('mode: [' + mode + ']');
+					$("select#modes").append("<option value=\"" + mode + "\">" + mode + "</option>");
+					//$("#modes").append("<button onclick=\"setMode('"+mode+"')\">"+mode+"</button><br/>");
+				}
+				$("select#modes > option").each(function(){
+					if($(this).val() === currentMode)
+						$(this).attr("selected", "selected");
+				});
+			});
+		}
 	}
 	
 	$( "#cubeName" ).change(function() {
@@ -75,7 +77,7 @@
 	});
 	
 	function getDeviceID(){
-		return $("#cubeName").val();
+		return $("#cubeName").val().indexOf('No cores online') >= 0 ? '' : $("#cubeName").val();
 	}
 	
 	function setMode(){
