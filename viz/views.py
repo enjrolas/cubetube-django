@@ -482,6 +482,9 @@ def viz(request, id):
     else:
         return render(request, "viz/viz.html", { 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})
 
+def sparkle(request):
+        return render(request, "viz/sparkle.html")
+
 def vizText(request, id):
     currentViz=Viz.objects.get(pk=id)
     try:
