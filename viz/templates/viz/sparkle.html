@@ -24,6 +24,7 @@
 	var deviceID;
 	var currentMode = '';
 	var populateModesTimer = null;
+	var selectFromDropdownTimer = null;
 	
 	$(function(){
 		$("#cubeName").css({'margin-top':'58px', 'float':'left'});
@@ -41,6 +42,14 @@
 			}
 			else {
 				clearInterval(populateModesTimer);
+				selectFromDropdownTimer = setInterval(function() {
+					$("select#modes > option").each(function() {
+						if($(this).val() === currentMode) {
+							$(this).attr("selected", "selected");
+							clearInterval(selectFromDropdownTimer);
+						}
+					});
+				}, 100);
 			}
 		}, 1000);
 	}
@@ -50,10 +59,10 @@
 		deviceID=getDeviceID();
 		if(deviceID.trim().length > 0) {
 			$.get("https://api.particle.io/v1/devices/"+deviceID+"/mode/?access_token=" + accessToken, function(data){
-				console.log('data.result: [' + data.result.trim() + ']');
+				//console.log('data.result: [' + data.result.trim() + ']');
 				currentMode = data.result.trim();
 				$("span#mode").html(currentMode);
-				console.log('currentMode: [' + currentMode + ']');
+				//console.log('currentMode: [' + currentMode + ']');
 			});
 			$.get("https://api.particle.io/v1/devices/"+deviceID+"/modeList/?access_token=" + accessToken, function(data){
 				//console.log(data.result);
@@ -64,10 +73,6 @@
 					$("select#modes").append("<option value=\"" + mode + "\">" + mode + "</option>");
 					//$("#modes").append("<button onclick=\"setMode('"+mode+"')\">"+mode+"</button><br/>");
 				}
-				$("select#modes > option").each(function(){
-					if($(this).val() === currentMode)
-						$(this).attr("selected", "selected");
-				});
 			});
 		}
 	}
@@ -78,9 +83,9 @@
 	
 	function setMode(){
 		currentMode = $('#modes').find(":selected").val();
-		var mode = 'M:' + currentMode + ',S:5,B:20,';
+		var commandString = 'M:' + currentMode + ',S:5,B:20,';
 		$("span#mode").html(currentMode);
-		$.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", { access_token: accessToken, args: mode });
+		$.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", { access_token: accessToken, args: commandString });
 	}
 </script>
 	<div class="viz-cards">
