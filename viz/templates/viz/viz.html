@@ -319,15 +319,6 @@
 		loggedIn = false;
 	</script>
 {% endif %}
-{% if logged_in %}
-	<script type="text/javascript">
-		loggedIn = true;
-	</script>
-{% else %}
-	<script type="text/javascript">
-		loggedIn = false;
-	</script>
-{% endif %}
 
 {% if source %}
   <div class="viz-wrapper" data-viz-type="{{ viz.vizType }}" data-viz-id="{{ viz.pk }}" data-viz-author="{{ viz.creator.nickname }}" data-viz-url="{% url 'code' source.pk %}">
