@@ -29,49 +29,53 @@ function listCubes() {
     var deviceInList = false;
     var deviceID;
     var connectedCores = 0;
+    var accessToken=$.cookie("accessToken");
 
     devicesPr.then(
         function(devices) {
-		    $("#cubeName").empty();//clear the list
+		    $("#cubeName").empty();	//clear the list
 		    //console.log('Devices: ', devices);
-		    
-		    for( var i = 0; i < devices.length; i++ ) {
-		        var device = devices[i];
-		        //console.log(device.name+" "+device.connected+" "+device.productId);
-	            if( device.connected ) {
-		            connectedCores++;
-	                
-		            if( deviceID != 'undefined' ) {
-		                deviceID=device.id;
-		                //console.log(deviceID);
-	                }
-	                
-	                //console.log(device.name+" is connected");
-				    deviceType=device.productId;
-				    if(deviceType=='0')
-					deviceType="Core";
-				    else
-					deviceType="Photon";
-		            $("#cubeName").append($("<option></option>").val(device.id).attr("processor", deviceType).html("("+deviceType+") "+device.name));  //append the cube name and ID to thr dropdown list
-		            
-		            if(device.name == coreID) {
-			            deviceInList = true;
-		            }
-	            }
-		    }
-
-            if( deviceInList == true ) {
-            	$('#cubeName').val(coreID);     
-            } else {
-            	$('#cubeName').val(deviceID);       
-            	coreID = deviceID;
-            	var date = new Date();
-            	$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});   
+            if(devices.length == 0) {
+            	$("#cubeName").append($("<option></option>").html('Add a photon to get started'));
             }
-    
-            if(devices.length==0) {
-            	$("#cubeName").append($("<option></option>").html('Add a core to get started'));  //append the cube name and ID to thr dropdown list
-            } else if(connectedCores==0) {
+            else {
+            	devices.forEach(function(x,i,a) {
+            		var device = devices[i];
+            		if(!(accessToken === undefined || accessToken === null)) {
+            			$.get("https://api.particle.io/v1/devices/" + device.id + "?access_token=" + accessToken, function(data) {
+            				console.log(data.name + ': ' + (data.connected ? 'connected' : 'not connected'));
+            				if(data.connected) {
+            					connectedCores++;
+            					$("#cubeName").find("option:contains('No cores online :(')").remove();
+	    			            if( deviceID != 'undefined' ) {
+	    			                deviceID=device.id;
+	    			                //console.log(deviceID);
+	    		                }
+            					
+            					deviceType = (device.productId === '0' ? 'Core' : 'Photon');
+    							//append the cube name and ID to thr dropdown list
+	    						if(!$("#cubeName").find("option:contains('" + device.name + "')").length)
+	    							$("#cubeName").append($("<option></option>").val(device.id).attr("processor", deviceType).html("(" + deviceType + ") " + device.name));
+	    						
+	    						if(device.name == coreID)
+	    				            deviceInList = true;
+            				}
+            			});
+            		}
+            	});
+	
+	            if( deviceInList === true ) {
+	            	$('#cubeName').val(coreID); 
+	            	$('#cubeName').change();
+	            } else {
+	            	$('#cubeName').val(deviceID);
+	            	coreID = deviceID;
+	            	var date = new Date();
+	            	$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});   
+	            	$('#cubeName').change();
+	            }
+            }
+            if(connectedCores === 0) {
             	$("#cubeName").append($("<option></option>").html('No cores online :('));  //append the cube name and ID to thr dropdown list
             }
         },
