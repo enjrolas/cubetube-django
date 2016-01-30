@@ -60,6 +60,8 @@ function listCubes() {
 	    						if(device.name == coreID)
 	    				            deviceInList = true;
             				}
+            				else
+            					$("#cubeName").find("option:contains('" + data.name + "')").remove();
             			});
             		}
             	});
