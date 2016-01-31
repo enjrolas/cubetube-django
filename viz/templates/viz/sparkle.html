@@ -5,103 +5,75 @@
   - Currently duplicated from javascript.html (old code is in there)
 -->
 
-{% extends "cubetube/base.html" %}
+{% extends "viz/viz-base.html" %}
 {% load staticfiles %}
-
-{% block headx %}
-	<!-- to keep this view from reloading from the cache (especially nasty after deletions) -->
-	<meta http-equiv="Pragma" content="no-cache">
-	<meta http-equiv="Expires" content="-1">
-{% endblock %}
-
-{% block header %}
-	{% include "cubetube/partials/_header.html" %}
-{% endblock %}
 
 {% block content %}
 <script type="text/javascript">
-	var accessToken=$.cookie("accessToken");
-	var deviceID;
-	var currentMode = '';
-	var populateModesTimer = null;
-	var selectFromDropdownTimer = null;
-	
-	$(function(){
-		$("#cubeName").css({'margin-top':'58px', 'float':'left'});
-		$("div.viz-cards").css({'padding-top':'35px', 'padding-bottom':'30px'});
-		$("div.round-button").css('padding-left', 'calc(100% / 2.2)');
+var accessToken=$.cookie("accessToken");
+var deviceID;
+$(function(){
+populateModes();
+setInterval('update()', 5000);  //update the modes every five seconds
+});
 
-		if(currentMode == '') populateInterval();
-	});
-	
-	function populateInterval() {
-		currentMode = '';
-		populateModesTimer = setInterval(function() {
-			if(currentMode == '') {
-				populateModes();
-			}
-			else {
-				clearInterval(populateModesTimer);
-				selectFromDropdownTimer = setInterval(function() {
-					$("select#modes > option").each(function() {
-						if($(this).val() === currentMode) {
-							$(this).attr("selected", "selected");
-							clearInterval(selectFromDropdownTimer);
-						}
-					});
-				}, 100);
-			}
-		}, 1000);
-	}
-	
-	function populateModes(){
-		$("#modes").empty();  //clear all the existing modes before appending new ones
-		deviceID=getDeviceID();
-		if(deviceID.trim().length > 0) {
-			$.get("https://api.particle.io/v1/devices/"+deviceID+"/mode/?access_token=" + accessToken, function(data){
-				//console.log('data.result: [' + data.result.trim() + ']');
-				currentMode = data.result.trim();
-				$("span#mode").html(currentMode);
-				//console.log('currentMode: [' + currentMode + ']');
-			});
-			$.get("https://api.particle.io/v1/devices/"+deviceID+"/modeList/?access_token=" + accessToken, function(data){
-				//console.log(data.result);
-				var modes=data.result.split(";");
-				for(var index=0; index<modes.length-1; index++){
-					var mode=modes[index].trim();
-					//console.log('mode: [' + mode + ']');
-					$("select#modes").append("<option value=\"" + mode + "\">" + mode + "</option>");
-					//$("#modes").append("<button onclick=\"setMode('"+mode+"')\">"+mode+"</button><br/>");
-				}
-			});
-		}
-	}
-	
-	function getDeviceID(){
-		return $("#cubeName > option:selected").val().indexOf('No cores online') >= 0 ? '' : $("#cubeName > option:selected").val();
-	}
-	
-	function setMode(){
-		currentMode = $('#modes').find(":selected").val();
-		var commandString = 'M:' + currentMode + ',S:5,B:20,';
-		$("span#mode").html(currentMode);
-		$.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", { access_token: accessToken, args: commandString });
-	}
+function populateModes(){
+deviceID=getDeviceID();
+$.get("https://api.particle.io/v1/devices/"+deviceID+"/modes/?access_token="+accessToken, function(data){
+console.log(data.result);
+$("#modes").empty();  //clear all the existing modes before appending new ones
+var modes=data.result.split(";");
+for(var index in modes)
+{
+var mode=modes[index];
+$("#modes").append("<button onclick=\"setMode('"+mode+"')\">"+mode+"</button><br/>");
+}
+});
+};
+
+$( "#cubeName" ).change(function() {
+  alert( "Handler for .change() called." );
+});
+
+function getDeviceID()
+{
+return $("#cubeName").val();
+}
+
+function setMode(mode)
+{
+$.post("https://api.particle.io/v1/devices/"+deviceID+"/setMode/", { access_token: accessToken, args: mode } );
+$("#mode").text(mode)}
+
+function update()
+{
+deviceID=getDeviceID();
+populateModes();
+$.get("https://api.particle.io/v1/devices/"+deviceID+"/mode/?access_token="+accessToken, function(data){
+$("#mode").text(data.result)
+});
+}
+
+function flashSparkle()
+{
+deviceID=getDeviceID();
+$.post( "{% url 'flashSparkle' %}", { deviceID: deviceID, accessToken: accessToken } );
+}
+
 </script>
-	<div class="viz-cards">
-		<div class="cube-options">
-			<div class="round-button button-grey select-cube">
-				<select id="cubeName" onchange="clearInterval(populateModesTimer); populateInterval();"></select>
-			</div>
-		</div>
-		<div style="clear: both; height: 25px;"></div>
-		<div>Current Mode:  <span id="mode"></span></div>
-		<div id="possibleModes"></div>
-		<button onclick="clearInterval(populateModesTimer); populateInterval();">Get modes list!</button>
-		<select id="modes" onchange="setMode();"></select>
-	</div>
-{% endblock %}
+<div id="wrapper" style="margin-left:50px;margin-top:100px;">
+      <div class="cube-options">
+        <div class="round-button button-grey select-cube">
+          <select id="cubeName"></select>
+        </div>
+      </div>
 
-{% block footer %}
-    {% include "cubetube/partials/_footer.html" %}
+<button onclick="flashSparkle()">flash sparkle</button><br/>
+<a href="http://beta.cubetube.org/gallery/newestFirst/37/">View Source</a>
+<br/>
+<hr>
+<br/>
+<div>mode:  <span id="mode"></span></div>
+<div id="modes"></div>
+</div>
 {% endblock %}

@@ -33,10 +33,9 @@ function listCubes() {
 
     devicesPr.then(
         function(devices) {
-		    $("#cubeName").empty();	//clear the list
 		    //console.log('Devices: ', devices);
             if(devices.length == 0) {
-            	$("#cubeName").append($("<option></option>").html('Add a photon to get started'));
+            	$("#cubeName").empty().append($("<option></option>").html('Add a photon to get started'));
             }
             else {
             	devices.forEach(function(x,i,a) {
@@ -46,39 +45,50 @@ function listCubes() {
             				console.log(data.name + ': ' + (data.connected ? 'connected' : 'not connected'));
             				if(data.connected) {
             					connectedCores++;
-            					$("#cubeName").find("option:contains('No cores online :(')").remove();
+            					//$("#cubeName").find("option:contains('No cores online :(')").remove();
+            					$("#cubeName").find("option[value='-1']").remove();
 	    			            if( deviceID != 'undefined' ) {
 	    			                deviceID=device.id;
 	    			                //console.log(deviceID);
 	    		                }
-            					
             					deviceType = (device.productId === '0' ? 'Core' : 'Photon');
+								if(device.name == coreID)
+								    deviceInList = true;
+								    
     							//append the cube name and ID to thr dropdown list
-	    						if(!$("#cubeName").find("option:contains('" + device.name + "')").length)
-	    							$("#cubeName").append($("<option></option>").val(device.id).attr("processor", deviceType).html("(" + deviceType + ") " + device.name));
-	    						
-	    						if(device.name == coreID)
-	    				            deviceInList = true;
+	    						//if(!$("#cubeName").find("option:contains('" + device.name + "')").length)
+    							if(!deviceInList) {
+	    							$("#cubeName").append($("<option></option>")
+	    								.val(device.id)
+	    								.attr("processor", deviceType)
+	    								.html("(" + deviceType + ") " + device.name))
+	    								.find("option").sort();
+    								$('#cubeName').change();
+    							}
             				}
-            				else
+            				else {
             					$("#cubeName").find("option:contains('" + data.name + "')").remove();
+            					$('#cubeName').change();
+            				}
             			});
             		}
             	});
-	
-	            if( deviceInList === true ) {
-	            	$('#cubeName').val(coreID); 
-	            	$('#cubeName').change();
-	            } else {
-	            	$('#cubeName').val(deviceID);
-	            	coreID = deviceID;
-	            	var date = new Date();
-	            	$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});   
-	            	$('#cubeName').change();
-	            }
-            }
-            if(connectedCores === 0) {
-            	$("#cubeName").append($("<option></option>").html('No cores online :('));  //append the cube name and ID to thr dropdown list
+                
+            	if(connectedCores === 0) {
+                	$("#cubeName").empty()
+                		.append($("<option></option>")
+                		.val('-1').html('No cores online :('));
+                }
+                else {
+		            if( deviceInList === true ) {
+		            	$('#cubeName').val(coreID);
+		            } else {
+		            	$('#cubeName').val(deviceID);
+		            	coreID = deviceID;
+		            	var date = new Date();
+		            	$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});   
+		            }
+            	}
             }
         },
         function(err) {

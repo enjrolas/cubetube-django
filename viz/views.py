@@ -179,8 +179,6 @@ def cloudFlash(request):
         vizName="undefined"
 
 
-    #not sure if this is causing a problem with connectivity, pulling it out for now
-    #code="%s\nchar* vizName=\"%s\";\nint vizId=%d;\n%s" % (settings.SPARK_LIBRARY, vizName, vizId, code)
     code="%s\n%s" % (settings.SPARK_LIBRARY, code)
 
     lines=code.split('\n')
@@ -190,57 +188,6 @@ def cloudFlash(request):
         code="%s\n%s" % (code, line)
         i+=1
 
-    #original version, inserts viz ID and name as spark variables -- I suspect it's monkeying with stuff
-    '''
-    lines=code.split('\n')
-    i=0
-    code=""
-    setupStarted=False
-    codeInserted=False
-    for line in lines:
-        if not codeInserted:
-            if not setupStarted:
-                if line.find("setup()")!=-1:
-                    setupStarted=True
-            else:
-                if line.find("}")!=-1:
-                    log.debug("inserting code")
-                    code="%s\n%s" % (code,  "Spark.variable(\"vizName\", vizName, STRING);\nSpark.variable(\"vizId\", &vizId, INT);")                
-                    codeInserted=True
-        code="%s\n%s" % (code, line)
-        i+=1
-
-    '''
-
-    '''
-
-    lines=code.split('\n')
-    i=0
-    code=""
-    setupStarted=False
-    codeInserted=False
-    for line in lines:
-        if not setupCodeInserted:
-            if not setupStarted:
-                if line.find("setup()")!=-1:
-                    setupStarted=True
-            else:
-                if line.find("}")!=-1:
-                    log.debug("inserting code")
-                    code="%s\n%s" % (code,  "Spark.variable(\"vizName\", vizName, STRING);\nSpark.variable(\"vizId\", &vizId, INT);")                
-                    setupCodeInserted=True
-            if not setupCodeInserted:
-            if not setupStarted:
-                if line.find("setup()")!=-1:
-                    setupStarted=True
-            else:
-                if line.find("}")!=-1:
-                    log.debug("inserting code")
-                    code="%s\n%s" % (code,  "Spark.variable(\"vizName\", vizName, STRING);\nSpark.variable(\"vizId\", &vizId, INT);")                
-                    setupCodeInserted=True
-        code="%s\n%s" % (code, line)
-        i+=1
-    '''
 
     timestamp=datetime.datetime.now().strftime('%Y-%m-%d--%H.%M.%S')
     filename=timestamp+".ino"
@@ -264,6 +211,20 @@ def cloudFlash(request):
         
     return JsonResponse(jsonResult, safe=False)
 
+@csrf_exempt
+def flashSparkle(request):
+    accessToken=request.POST['accessToken']
+    deviceID=request.POST['deviceID']        
+    directory=settings.CODE_DIRECTORY
+    command=['node', 'flashSparkle.js', '%s' % accessToken, '%s' % deviceID]
+    log.debug(command)
+    p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=directory)
+    jsonResult=""
+    for line in p.stdout.readlines():
+        jsonResult="%s%s" % (jsonResult, line)
+    retval = p.wait() 
+        
+    return JsonResponse(jsonResult, safe=False)
 
 @csrf_exempt
 def justCompile(request):
@@ -411,6 +372,8 @@ def index(request):
         visualizations=vizs[:8]
     return render(request, "viz/index.html", { 'visualizations' : visualizations, 'totalObjects' : totalObjects})
 
+
+
 @csrf_exempt
 def fork(request, vizId=None):
     accessToken = request.COOKIES['accessToken']
@@ -483,7 +446,11 @@ def viz(request, id):
         return render(request, "viz/viz.html", { 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})
 
 def sparkle(request):
-        return render(request, "viz/sparkle.html")
+    return render(request, "viz/sparkle.html")
+def sparkleGallery(request):
+    return render(request, "viz/sparkleGallery.html", { 'visualizations' : None , 'nextPage' : None})        
+def spark_pixels(request):
+    return render(request, "viz/spark_pixels.html")
 
 def vizText(request, id):
     currentViz=Viz.objects.get(pk=id)
