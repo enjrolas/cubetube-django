@@ -972,6 +972,7 @@ header {
       height: 100%;      
       border-radius: 3px 3px 0px 0px; }
     .viz-card .viz-demo .player {
+	  pointer-events: none;
       position: absolute;
       top: 0px;
       left: 0px;

@@ -126,20 +126,20 @@ function bindVideoThumbnail( container ) {
 	var vizId = $videoContainer.attr('data-vizId');
 	var frame = $videoContainer.find('iframe#player-' + vizId);  
 	if(!frame.length) {
-    	var url = $videoContainer.attr('data-url');	//This is our YT URL
-		var id = youtube_parser(url);				//This is the Video ID part
-		var playerId = 'player-' + vizId;			//This is our player's 'id'
-		bindPlayer(id, playerId);	//We'll create the video player programatically
-		frame = $videoContainer.find('iframe#player-' + vizId);
-		if(frame.length) {
-			var $playerContainer = container.find('div.interactive-bg');
-			//We need to force the iframe to bear our desired attributes
-			frame.attr('frameborder', '0');
-			frame.attr('allowfullscreen', '0');
-			frame.attr('width', $playerContainer.width());
-			frame.attr('height', $playerContainer.height());
-		}
-		container.find('div.interactive-bg').stop().fadeTo(300,0);
+        	var url = $videoContainer.attr('data-url');	//This is our YT URL
+    		var id = youtube_parser(url);			//This is the Video ID part
+    		var playerId = 'player-' + vizId;		//This is our player's 'id'
+    		bindPlayer(id, playerId);			//We'll create the video player programatically
+    		frame = $videoContainer.find('iframe#player-' + vizId);
+    		if(frame.length) {
+    		    var $playerContainer = container.find('div.interactive-bg');
+    		    //We need to force the iframe to bear our desired attributes
+    		    frame.attr('frameborder', '0');
+    		    frame.attr('allowfullscreen', '0');
+    		    frame.attr('width', $playerContainer.width());
+    		    frame.attr('height', $playerContainer.height());
+    		}
+    		container.find('div.interactive-bg').stop().fadeTo(300,0);
 	}
 }
 
@@ -175,7 +175,7 @@ function bindVideoPreviews(card) {
 			bindVideoThumbnail($($vizDemo)); 
 		}).on('mouseleave', function() {
 			card.unbindTimer = setTimeout(function() {
-				unbindVideoThumbnail($($vizDemo)); 
+			unbindVideoThumbnail($($vizDemo)); 
 			}, 1600); 
 		});
 	}
