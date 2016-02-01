@@ -44,7 +44,7 @@
 		console.log('titleLength:'+titleLength);
 		console.log('createdLength:'+createdLength);
 		console.log('padding:'+padding);
-		$("div#meterContainer").css({'float':'right', 'padding-right':'calc(100% - ' + padding + 'px)'});*/
+		$("div#meterContainer").css({'float':'right', 'padding-right':'calc(100% - ' + padding + 'px)'});
 		$("div#meterContainer").css('float', 'right');
 		$(".industrial").css({'height':'calc(65px * 1)', 'animation':'dot 0s both', 'float':'right'}).industrial({});
 		var averageRating = parseInt('{{ viz.averageRating }}');
@@ -53,7 +53,7 @@
 		if(averageRating == 0) averageRating = 1;
         $(".industrial.thermometer").each(function() {
 			$(this).industrial(pageViews/averageRating);
-        });
+        });*/
 		
 		$("span.rating").ratyli({
 			disable: !loggedIn,
@@ -374,7 +374,8 @@
     <div class="inner-wrapper">
       
       <div class="viz-created">
-		<div id="meterContainer">
+<!--
+ 		<div id="meterContainer">
 		{% if viz.averageRating > 0 %}
 			<a href="#" title="This viz's popularity rank: {% widthratio viz.pageViews viz.averageRating 1 %}">
 		{% else %}
@@ -386,6 +387,7 @@
 				</div>
 			</a>
 		</div>
+-->
         <div class="title">
 			{{ viz.name }}
 			<span class="rating" data-rate="{{ viz.averageRating }}" data-ratemax="5"></span>
