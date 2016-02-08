@@ -3,6 +3,7 @@ var kBoardHeight= 8;
 var kPickerWidth = 3;
 var kPickerHeight= 5;
 var kNumPieces = 64;
+var kNumColors = 15;
 var kPieceWidth = 50;
 var kPieceHeight= 50;
 var kPixelWidth = 1 + (kBoardWidth * kPieceWidth);
@@ -33,7 +34,7 @@ function Cell(row, column, fillColor, isFilled) {
     this.isFilled = isFilled;
 }
 
-function getCursorPosition(e) {
+function getCursorPosition(e, canvasElement, cellArray) {
     /* returns Cell with .row and .column properties */
     var x, newX;
     var y, newY;
@@ -47,23 +48,33 @@ function getCursorPosition(e) {
 		y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
     }
     
-    x -= gCanvasElement.offsetLeft;
-    y -= gCanvasElement.offsetTop;
+    x -= canvasElement.offsetLeft;
+    y -= canvasElement.offsetTop;
     x = Math.min(x, kBoardWidth * kPieceWidth);
     y = Math.min(y, kBoardHeight * kPieceHeight);
     
     newX = Math.floor(y/kPieceHeight);
     newY = Math.floor(x/kPieceWidth);
-    return getCell(newX, newY);
+    return getCell(newX, newY, cellArray);
 }
 
-function getCell(row, column) {
-    var i = gLayer*kNumPieces;
-    for (var idx=i; idx < (i+kNumPieces); idx++) {
-		if ((gPieces[idx].row == row) && 
-		    (gPieces[idx].column == column)) {
-		    return gPieces[idx];
-		}
+function getCell(row, column, cellArray) {
+	if(cellArray.length > kNumColors) {
+	    var i = gLayer*kNumPieces;
+	    for (var idx=i; idx < (i+kNumPieces); idx++) {
+			if ((cellArray[idx].row == row) && 
+			    (cellArray[idx].column == column)) {
+			    return cellArray[idx];
+			}
+	    }
+    }
+    else {
+	    for (var idx=0; idx < cellArray.length; idx++) {
+			if ((cellArray[idx].row == row) && 
+			    (cellArray[idx].column == column)) {
+			    return cellArray[idx];
+			}
+	    }
     }
 }
 
@@ -83,50 +94,57 @@ function decreaseLayer() {
 	drawCube();
 }
 
-function cubeOnClick(e) {
-    var cell = getCursorPosition(e);
-    var i = gLayer*kNumPieces;
-    for (var idx=i; idx < (i+kNumPieces); idx++) {
-		if ((gPieces[idx].row == cell.row) && 
-		    (gPieces[idx].column == cell.column)) {
-		    clickOnPiece(idx);
-		    return;
-		}
-    }
-}
-
-function pickerOnClick(e) {
-    var cell = getCursorPosition(e);
-    var i = gLayer*kNumPieces;
-    for (var idx=i; idx < (i+kNumPieces); idx++) {
-		if ((gPieces[idx].row == cell.row) && 
-		    (gPieces[idx].column == cell.column)) {
-		    clickOnPiece(idx);
-		    return;
-		}
-    }
-}
-
-function clickOnPiece(pieceIndex) {
-    //if (gSelectedPieceIndex == pieceIndex) { return; }
-    gSelectedPieceIndex = ((gLayer*kNumPieces) + (gPieces[pieceIndex].column*(kNumPieces/8)) + (kBoardHeight - gPieces[pieceIndex].row)) - 1;
-    console.log('Piece index: ' + gSelectedPieceIndex);
-    
-    gSelectedPieceHasMoved = false;
-    gPieces[pieceIndex].isFilled = !gPieces[pieceIndex].isFilled; 
-    gPieces[pieceIndex].fillColor = gPieces[pieceIndex].isFilled ? $('#colors').find(":selected").val() : '#000000';
-    
-    setVoxel(gSelectedPieceIndex, gPieces[pieceIndex].fillColor);
-    drawCube();
-}
-
 function updateLayerCountElem() {
 	if(gLayer === 7)
 		gLayerCountElem.html(" Front ");
 	else if(gLayer === 0)
 		gLayerCountElem.html(" Back ");
 	else
-		gLayerCountElem.html("Layer: " + (gLayer+1));
+		gLayerCountElem.html(" Layer: " + (gLayer+1) + " ");
+}
+
+function cubeOnClick(e) {
+    var cell = getCursorPosition(e, gCanvasElement, gPieces);
+    var i = gLayer*kNumPieces;
+    for (var idx=i; idx < (i+kNumPieces); idx++) {
+		if ((gPieces[idx].row == cell.row) && 
+		    (gPieces[idx].column == cell.column)) {
+		    clickOnPiece(idx, gPieces);
+		    return;
+		}
+    }
+}
+
+function pickerOnClick(e) {
+    var cell = getCursorPosition(e, gPickerElement, gColors);
+    for (var idx=0; idx < kNumColors; idx++) {
+		if ((gColors[idx].row == cell.row) && 
+		    (gColors[idx].column == cell.column)) {
+		    clickOnPiece(idx, gColors);
+		    return;
+		}
+    }
+}
+
+function clickOnPiece(pieceIndex, cellArray) {
+    //if (gSelectedPieceIndex == pieceIndex) { return; }
+	if(cellArray.length > kNumColors)
+		gSelectedPieceIndex = ((gLayer*kNumPieces) + (cellArray[pieceIndex].column*(kNumPieces/8)) + (kBoardHeight - cellArray[pieceIndex].row)) - 1;
+	else
+		gSelectedPieceIndex = pieceIndex;
+	console.log('Piece index: ' + gSelectedPieceIndex);
+    
+    //gSelectedPieceHasMoved = false;
+    if(cellArray.length > kNumColors) {
+    	cellArray[pieceIndex].isFilled = !cellArray[pieceIndex].isFilled; 
+	    cellArray[pieceIndex].fillColor = cellArray[pieceIndex].isFilled ? $('#colors').find(":selected").val() : '#000000';
+	    setVoxel(gSelectedPieceIndex, cellArray[pieceIndex].fillColor);
+	    drawCube();
+    }
+    else {
+    	$('#colors').val(cellArray[pieceIndex].fillColor)
+    }
+    
 }
 
 function clearPieces(startIdx, endIdx) {
@@ -179,7 +197,7 @@ function drawPiece(p, isFilled) {
     gDrawingContext.beginPath();
     gDrawingContext.arc(x, y, radius, 0, Math.PI*2, false);
     gDrawingContext.closePath();
-    gDrawingContext.strokeStyle = isFilled ? p.fillColor : "#000";
+    gDrawingContext.strokeStyle = isFilled ? "#ccc" : "#000";
     gDrawingContext.stroke();
     
     if (isFilled) {
@@ -193,10 +211,10 @@ function drawPicker() {
     gPickerContext.beginPath();
     
     /* vertical lines */
-    for (var x = 0; x <= kPixelWidth; x += kPickerWidth) {
-		gPickerContext.moveTo(0.5 + x, 0);
-		gPickerContext.lineTo(0.5 + x, kPickerHeight);
-    }
+	gPickerContext.moveTo(0.5, 0);
+	gPickerContext.lineTo(0.5, kPickerHeight);
+	gPickerContext.moveTo(kPickerWidth, 0);
+	gPickerContext.lineTo(kPickerWidth, kPickerHeight);
     
     /* horizontal lines */
     for (var y = 0; y <= kPickerHeight; y += kPieceHeight) {
@@ -222,7 +240,7 @@ function drawColor(p, isFilled) {
     gPickerContext.beginPath();
     gPickerContext.arc(x, y, radius, 0, Math.PI*2, false);
     gPickerContext.closePath();
-    gPickerContext.strokeStyle = p.fillColor;
+    gPickerContext.strokeStyle = "#ccc";
     gPickerContext.stroke();
 	gPickerContext.fillStyle = p.fillColor;
 	gPickerContext.fill();
@@ -302,7 +320,7 @@ function newGame() {
     gGameInProgress = true;
     
     drawCube();
-    //drawPicker();
+    drawPicker();
 }
 
 function isTheGameOver() {

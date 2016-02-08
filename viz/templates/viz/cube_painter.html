@@ -160,8 +160,8 @@
 		</select>
 	</div>
 	<div style="clear: both; height: 25px;"></div>
-	<div id="canvas" style="padding:0px 20px 40px 115px; height:490px; width:537px">
-		<div id="layerButtons" style="text-align: center; padding-bottom: 10px">
+	<div id="canvas" style="padding:0px 20px 40px 115px; height:490px; width:710px">
+		<div id="layerButtons" style="width: 402px; text-align: center; padding-bottom: 10px">
 			<button onclick="decreaseLayer();">One Layer Back</button>
 			<span id="currentLayer"></span>
 			<button onclick="increaseLayer();">One Layer Forward</button>
@@ -169,16 +169,14 @@
 		<canvas height="401" width="401" id="cube_canvas">
 		    Your browser does not support the HTML5 canvas element.
 		</canvas>
-		<div id="clearButtons" style="text-align: center; padding-top: 10px">
+		<canvas style="float: right;" height="255" width="155" id="colors_canvas">
+		    Your browser does not support the HTML5 canvas element.
+		</canvas>
+		<div id="clearButtons" style="width: 402px; text-align: center; padding-top: 10px">
 			<button onclick="clearVoxels(gLayer*kNumPieces, (gLayer*kNumPieces)+kNumPieces);">Clear Layer</button>
 			<span id="currentLayer"></span>
 			<button onclick="clearVoxels(0, 511);">Clear All</button>
 		</div>
-	</div>
-	<div id="colorPicker" style="float: right; padding:0px 20px 40px 20px; height:192px; width:192px">
-		<canvas height="151" width="151" id="colors_canvas">
-		    Your browser does not support the HTML5 canvas element.
-		</canvas>
 	</div>
 {% endblock %}
 
