@@ -65,7 +65,7 @@ function listCubes() {
 	    							$("#cubeName").append($("<option></option>")
 	    								.val(device.id)
 	    								.attr("processor", deviceType)
-	    								.attr("selected", "");
+	    								.attr("selected", "")
 	    								.html("(" + deviceType + ") " + device.name));
     							}
             				}
