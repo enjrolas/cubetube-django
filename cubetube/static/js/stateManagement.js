@@ -53,10 +53,9 @@ function listCubes() {
 	    		                }
             					deviceType = (device.productId === '0' ? 'Core' : 'Photon');
             					
-            					$('#cubeName > option').each(function() {
-            						if($(this).val() == device.id) {
+            					$('#cubeName option').each(function() {
+            						if($(this).val() === device.id)
             							deviceInList = true;
-            						}
             					});
             					/*if(device.name == coreID)
 								    deviceInList = true;*/
@@ -66,6 +65,7 @@ function listCubes() {
 	    							$("#cubeName").append($("<option></option>")
 	    								.val(device.id)
 	    								.attr("processor", deviceType)
+	    								.attr("selected", "");
 	    								.html("(" + deviceType + ") " + device.name));
     							}
             				}
@@ -81,11 +81,11 @@ function listCubes() {
                 	$("#cubeName").empty()
                 		.append($("<option></option>")
                 		.val('-1').html('No cores online :('));
-                }
+            		$('#cubeName').val(-1);
+            	}
                 else {
 	            	coreID = $.cookie("coreID");
 	            	if( coreID === 'undefined' || coreID === null ) {
-		            	$('#cubeName').val(deviceID);
 		            	coreID = deviceID;
 		            	var date = new Date();
 		            	$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});

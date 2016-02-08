@@ -23,7 +23,6 @@ var gNumPieces;
 var gNumColors;
 var gSelectedPieceIndex;
 var gPickedColorIndex;
-//var gSelectedPieceHasMoved;
 var gLayerCountElem;
 var gGameInProgress;
 
@@ -127,14 +126,12 @@ function pickerOnClick(e) {
 }
 
 function clickOnPiece(pieceIndex, cellArray) {
-    //if (gSelectedPieceIndex == pieceIndex) { return; }
 	if(cellArray.length > kNumColors)
 		gSelectedPieceIndex = ((gLayer*kNumPieces) + (cellArray[pieceIndex].column*(kNumPieces/8)) + (kBoardHeight - cellArray[pieceIndex].row)) - 1;
 	else
 		gSelectedPieceIndex = pieceIndex;
-	console.log('Piece index: ' + gSelectedPieceIndex);
+	//console.log('Piece index: ' + gSelectedPieceIndex);
     
-    //gSelectedPieceHasMoved = false;
     if(cellArray.length > kNumColors) {
     	cellArray[pieceIndex].isFilled = !cellArray[pieceIndex].isFilled; 
 	    cellArray[pieceIndex].fillColor = cellArray[pieceIndex].isFilled ? $('#colors').find(":selected").val() : '#000000';
@@ -143,6 +140,8 @@ function clickOnPiece(pieceIndex, cellArray) {
     }
     else {
     	$('#colors').val(cellArray[pieceIndex].fillColor)
+	    gGameInProgress = true;
+	    saveGameState();
     }
     
 }
@@ -156,9 +155,6 @@ function clearPieces(startIdx, endIdx) {
 }
 
 function drawCube() {
-    if (gGameInProgress && isTheGameOver())
-    	endGame();
-
     gDrawingContext.clearRect(0, 0, kPixelWidth, kPixelHeight);
     gDrawingContext.beginPath();
     
@@ -184,6 +180,7 @@ function drawCube() {
 
     updateLayerCountElem();
     
+    gGameInProgress = true;
     saveGameState();
 }
 
@@ -253,16 +250,18 @@ function supportsLocalStorage() {
 function saveGameState() {
     if (!supportsLocalStorage()) { return false; }
     
-    localStorage["halma.game.in.progress"] = gGameInProgress;
+    localStorage["cubetube.game.in.progress"] = gGameInProgress;
     
-    for (var i = 0; i < kNumPieces; i++) {
-		localStorage["halma.piece." + i + ".row"] = gPieces[i].row;
-		localStorage["halma.piece." + i + ".column"] = gPieces[i].column;
+    for (var i = 0; i < gNumPieces; i++) {
+		localStorage["cubetube.piece." + i + ".row"] = gPieces[i].row;
+		localStorage["cubetube.piece." + i + ".column"] = gPieces[i].column;
+		localStorage["cubetube.piece." + i + ".fillColor"] = gPieces[i].fillColor;
+		localStorage["cubetube.piece." + i + ".isFilled"] = gPieces[i].isFilled;
     }
     
-    localStorage["halma.selectedpiece"] = gSelectedPieceIndex;
-    localStorage["halma.selectedpiecehasmoved"] = gSelectedPieceHasMoved;
-    //localStorage["halma.movecount"] = gMoveCount;
+    localStorage["cubetube.currentlayer"] = gLayer;
+    localStorage["cubetube.selectedpiece"] = gSelectedPieceIndex;
+    localStorage["cubetube.selectedcolor"] = $("#colors").val();
     
     return true;
 }
@@ -270,31 +269,51 @@ function saveGameState() {
 function resumeGame() {
     if (!supportsLocalStorage()) { return false; }
     
-    gGameInProgress = (localStorage["halma.game.in.progress"] == "true");
+    gGameInProgress = (localStorage["cubetube.game.in.progress"] == "true");
     if (!gGameInProgress) { return false; }
     
-    gPieces = new Array(kNumPieces);
+    gNumPieces = kNumPieces*kBoardWidth;
+    gPieces = new Array();
     
-    for (var i = 0; i < kNumPieces; i++) {
-		var row = parseInt(localStorage["halma.piece." + i + ".row"]);
-		var column = parseInt(localStorage["halma.piece." + i + ".column"]);
-		gPieces[i] = new Cell(row, column);
+    for (var i = 0; i < gNumPieces; i++) {
+		var row = parseInt(localStorage["cubetube.piece." + i + ".row"]);
+		var column = parseInt(localStorage["cubetube.piece." + i + ".column"]);
+		var fillColor = localStorage["cubetube.piece." + i + ".fillColor"];
+		var isFilled = localStorage["cubetube.piece." + i + ".isFilled"] == 'true';
+		gPieces.push(new Cell(row, column, fillColor, isFilled));
+		//gPieces[i] = new Cell(row, column, fillColor, isFilled);
     }
+	
+    gColors = new Array(new Cell(0, 0, "#929591", true),
+						new Cell(1, 0, "#ffff14", true),
+						new Cell(2, 0, "#fdf5e6", true),
+						new Cell(3, 0, "#c20078", true),
+						new Cell(4, 0, "#f97306", true),
+						new Cell(0, 1, "#029386", true),
+						new Cell(1, 1, "#02ffff", true),
+						new Cell(2, 1, "#e50000", true),
+						new Cell(3, 1, "#653700", true),
+						new Cell(4, 1, "#ff81c0", true),
+						new Cell(0, 2, "#ffc0cb", true),
+						new Cell(1, 2, "#0343df", true),
+						new Cell(2, 2, "#15b01a", true),
+						new Cell(3, 2, "#7e1e9c", true),
+						new Cell(4, 2, "#ffffff", true));
     
-    gNumPieces = kNumPieces;
-    gSelectedPieceIndex = parseInt(localStorage["halma.selectedpiece"]);
-    gSelectedPieceHasMoved = localStorage["halma.selectedpiecehasmoved"] == "true";
-    //gMoveCount = parseInt(localStorage["halma.movecount"]);
+    gLayer = parseInt(localStorage["cubetube.currentlayer"]);
+    gSelectedPieceIndex = parseInt(localStorage["cubetube.selectedpiece"]);
+    $("#colors").val(localStorage["cubetube.selectedcolor"]);
     
     drawCube();
+    drawPicker();
     return true;
 }
 
 function newGame() {
 	gPieces = new Array();
-	for (var z=0; z<8; z++)
-		for (var r=0; r<8; r++)
-			for (var c=0; c<8; c++)
+	for (var z=0; z<kBoardWidth; z++)
+		for (var r=0; r<kBoardHeight; r++)
+			for (var c=0; c<kBoardWidth; c++)
 				gPieces.push(new Cell(r, c, "#00000", false));
     
 	gColors = new Array(new Cell(0, 0, "#929591", true),
@@ -315,15 +334,14 @@ function newGame() {
 		
     gNumPieces = gPieces.length;
     gSelectedPieceIndex = -1;
-    gSelectedPieceHasMoved = false;
     gLayer = 7;
-    gGameInProgress = true;
+    gGameInProgress = false;
     
     drawCube();
     drawPicker();
 }
 
-function isTheGameOver() {
+/*function isTheGameOver() {
     for (var i = 0; i < gNumPieces; i++) {
 		if (gPieces[i].row > 2)
 		    return false;
@@ -338,7 +356,7 @@ function isTheGameOver() {
 function endGame() {
     gSelectedPieceIndex = -1;
     gGameInProgress = false;
-}
+}*/
 
 function initGame(canvasElement, pickerElement) {
     gCanvasElement = canvasElement;
@@ -353,6 +371,6 @@ function initGame(canvasElement, pickerElement) {
     gPickerContext = gPickerElement.getContext("2d");
     gLayerCountElem = $("span#currentLayer");
     
-    //if (!resumeGame())
+    if (!resumeGame())
     	newGame();
 }
