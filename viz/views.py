@@ -451,6 +451,8 @@ def sparkleGallery(request):
     return render(request, "viz/sparkleGallery.html", { 'visualizations' : None , 'nextPage' : None})        
 def spark_pixels(request):
     return render(request, "viz/spark_pixels.html")
+def cube_painter(request):
+    return render(request, "viz/cube_painter.html")
 
 def vizText(request, id):
     currentViz=Viz.objects.get(pk=id)

@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^viz/(?P<id>\d+)/$', views.viz, name='viz'),
     url(r'^sparkleViz/$', views.sparkle, name='sparkleViz'),
     url(r'^spark_pixels/$', views.spark_pixels, name='spark_pixels'),
+    url(r'^cube_painter/$', views.cube_painter, name='cube_painter'),
     url(r'^vizText/(?P<id>\d+)/$', views.vizText, name='vizText'),
     url(r'^scroll/(?P<page>\d+)/(?P<filter>\w+)/(?P<cardsPerPage>\d+)/$', views.scroll, name='scroll'),
     url(r'^scroll/(?P<page>\d+)/(?P<filter>\w+)/$', views.scroll, name='scroll'),

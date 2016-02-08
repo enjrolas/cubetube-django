@@ -52,23 +52,26 @@ function listCubes() {
 	    			                //console.log(deviceID);
 	    		                }
             					deviceType = (device.productId === '0' ? 'Core' : 'Photon');
-								if(device.name == coreID)
-								    deviceInList = true;
+            					
+            					$('#cubeName > option').each(function() {
+            						if($(this).val() == device.id) {
+            							deviceInList = true;
+            						}
+            					});
+            					/*if(device.name == coreID)
+								    deviceInList = true;*/
 								    
     							//append the cube name and ID to thr dropdown list
-	    						//if(!$("#cubeName").find("option:contains('" + device.name + "')").length)
     							if(!deviceInList) {
 	    							$("#cubeName").append($("<option></option>")
 	    								.val(device.id)
 	    								.attr("processor", deviceType)
-	    								.html("(" + deviceType + ") " + device.name))
-	    								.find("option").sort();
-    								$('#cubeName').change();
+	    								.html("(" + deviceType + ") " + device.name));
     							}
             				}
             				else {
             					$("#cubeName").find("option:contains('" + data.name + "')").remove();
-            					$('#cubeName').change();
+            					//$('#cubeName').change();
             				}
             			});
             		}
@@ -80,14 +83,14 @@ function listCubes() {
                 		.val('-1').html('No cores online :('));
                 }
                 else {
-		            if( deviceInList === true ) {
-		            	$('#cubeName').val(coreID);
-		            } else {
+	            	coreID = $.cookie("coreID");
+	            	if( coreID === 'undefined' || coreID === null ) {
 		            	$('#cubeName').val(deviceID);
 		            	coreID = deviceID;
 		            	var date = new Date();
-		            	$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});   
-		            }
+		            	$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});
+	            	}
+            		$('#cubeName').val(coreID);
             	}
             }
         },

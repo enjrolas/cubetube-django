@@ -1,0 +1,188 @@
+<!-- 
+  Viz view, contains comments and details.
+  And also Code editing options.
+
+  - Currently duplicated from javascript.html (old code is in there)
+-->
+
+{% extends "cubetube/base.html" %}
+{% load staticfiles %}
+
+{% block headx %}
+	<!-- to keep this view from reloading from the cache (especially nasty after deletions) -->
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Expires" content="-1">
+{% endblock %}
+
+{% block header %}
+	{% include "cubetube/partials/_header.html" %}
+{% endblock %}
+
+{% block content %}
+	<script type="text/javascript">
+		var accessToken=$.cookie("accessToken");
+		//var deviceID = null;
+		var currentMode = '';
+		var populateModesTimer = null;
+		var selectFromDropdownTimer = null;
+		
+		$(function(){
+			$("#cubeName").css({'margin-top':'75px', 'float':'left'});
+			$("div.viz-cards").css({'padding-top':'35px', 'padding-bottom':'30px'});
+			$("div.round-button").css('padding-left', 'calc(100% / 2.2)');
+			
+			if(currentMode == '') populateInterval();
+			
+			var $canvas = document.getElementById('cube_canvas');
+			var $colors = document.getElementById('colors_canvas');
+			initGame($canvas, $colors);
+		});
+	
+		function populateInterval() {
+			currentMode = '';
+			populateModesTimer = setInterval(function() {
+				if(currentMode == '') {
+					populateModes();
+				}
+				else {
+					clearInterval(populateModesTimer);
+					selectFromDropdownTimer = setInterval(function() {
+						$("select#modes > option").each(function() {
+							if($(this).val() === currentMode) {
+								$(this).attr("selected", "selected");
+								clearInterval(selectFromDropdownTimer);
+							}
+						});
+					}, 100);
+				}
+			}, 1000);
+		}
+		
+		function populateModes(){
+			$("#modes").empty();  //clear all the existing modes before appending new ones
+			var deviceID=getDeviceID();
+			if(deviceID.trim().length > 0) {
+				$.get("https://api.particle.io/v1/devices/"+deviceID+"/mode/?access_token=" + accessToken, function(data){
+					currentMode = data.result.trim();
+					$("span#mode").html(currentMode);
+				});
+				$.get("https://api.particle.io/v1/devices/"+deviceID+"/modeList/?access_token=" + accessToken, function(data){
+					var modes=data.result.split(";");
+					for(var index=0; index<modes.length-1; index++){
+						var mode=modes[index].trim();
+						$("select#modes").append("<option value=\"" + mode + "\">" + mode + "</option>");
+					}
+				});
+			}
+		}
+		
+		function cubeNameOnChange() {
+		    var deviceID = $("#cubeName").val() === '-1' ? '' : $("#cubeName").val();
+		    console.log('deviceID: ' + deviceID);
+		    coreID = $.cookie("coreID");
+		    if(coreID === undefined || coreID === null) {
+			    coreID = deviceID;
+	           	var date = new Date();
+	           	$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});
+		    }
+		    else {
+				if(coreID != deviceID) {
+				    coreID = deviceID;
+					$.removeCookie("coreID", { path: '/' });
+		           	var date = new Date();
+		           	$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});
+				}
+			}
+		    clearInterval(populateModesTimer); 
+		    populateInterval();
+		}
+		
+		function getDeviceID() {
+		    var deviceID = $.cookie("coreID");
+		    if(deviceID === undefined || deviceID === null) {
+				deviceID = $("#cubeName").val() === '-1' ? '' : $("#cubeName").val();
+	           	var date = new Date();
+	           	$.cookie("coreID", deviceID, { expires: date.getTime()+86400 , path: '/'});
+		    }
+			return deviceID;
+		}
+		
+		function setMode(){
+		    var deviceID = getDeviceID(); 
+			currentMode = $('#modes').find(":selected").val();
+			var commandString = 'M:' + currentMode + ',S:5,B:20,';
+			$("span#mode").html(currentMode);
+			$.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", { access_token: accessToken, args: commandString });
+		}
+		
+		function setVoxel(index, color){
+			var deviceID = getDeviceID();
+			var commandString = 'I' + index + ',' + color + ',';
+			console.log(commandString);
+			$.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", { access_token: accessToken, args: commandString });
+		}
+		
+		function clearVoxels(startIdx, endIdx) {
+			var deviceID = getDeviceID();
+			var commandString = 'C' + startIdx + ':' + endIdx + ',';
+			console.log(commandString);
+			$.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", { access_token: accessToken, args: commandString });
+			clearPieces(startIdx, endIdx);
+		}
+	</script>
+	<div class="cube-options">
+		<div class="round-button button-grey select-cube">
+			<select id="cubeName" onchange="cubeNameOnChange();"></select>
+		</div>
+	</div>
+	<div class="viz-cards">
+		<div style="clear: both; height: 25px;"></div>
+		<div>Current Mode:  <span id="mode"></span></div>
+		<div id="possibleModes"></div>
+		<button onclick="cubeNameOnChange();">Get modes list!</button>
+		<select id="modes" onchange="setMode();"></select>
+		<select id="colors">
+			<option value="#929591">Grey</option>
+			<option value="#ffff14">Yellow</option>
+			<option value="#fdf5e6">Incandescent</option>
+			<option value="#c20078">Magenta</option>
+			<option value="#f97306">Orange</option>
+			<option value="#029386">Teal</option>
+			<option value="#02ffff">Cyan</option>
+			<option value="#e50000">Red</option>
+			<option value="#653700">Brown</option>
+			<option value="#ff81c0">Pink</option>
+			<option value="#ffc0cb">Light Pink</option>
+			<option value="#0343df">Blue</option>
+			<option value="#15b01a">Green</option>
+			<option value="#7e1e9c">Purple</option>  
+			<option value="#ffffff">White</option>       
+		</select>
+	</div>
+	<div style="clear: both; height: 25px;"></div>
+	<div id="canvas" style="padding:0px 20px 40px 115px; height:490px; width:537px">
+		<div id="layerButtons" style="text-align: center; padding-bottom: 10px">
+			<button onclick="decreaseLayer();">One Layer Back</button>
+			<span id="currentLayer"></span>
+			<button onclick="increaseLayer();">One Layer Forward</button>
+		</div>
+		<canvas height="401" width="401" id="cube_canvas">
+		    Your browser does not support the HTML5 canvas element.
+		</canvas>
+		<div id="clearButtons" style="text-align: center; padding-top: 10px">
+			<button onclick="clearVoxels(gLayer*kNumPieces, (gLayer*kNumPieces)+kNumPieces);">Clear Layer</button>
+			<span id="currentLayer"></span>
+			<button onclick="clearVoxels(0, 511);">Clear All</button>
+		</div>
+	</div>
+	<div id="colorPicker" style="float: right; padding:0px 20px 40px 20px; height:192px; width:192px">
+		<canvas height="151" width="151" id="colors_canvas">
+		    Your browser does not support the HTML5 canvas element.
+		</canvas>
+	</div>
+{% endblock %}
+
+{% block footer %}
+	<script src="{% static 'js/cubePainterManager.js' %}"></script>
+    {% include "cubetube/partials/_footer.html" %}
+{% endblock %}
