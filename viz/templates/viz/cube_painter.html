@@ -28,8 +28,9 @@
 		
 		$(function(){
 			$("#cubeName").css({'margin-top':'75px', 'float':'left'});
-			$("div.viz-cards").css({'padding-top':'35px', 'padding-bottom':'30px'});
+			//$("div.viz-cards").css({'padding-top':'35px', 'padding-bottom':'30px'});
 			$("div.round-button").css('padding-left', 'calc(100% / 2.2)');
+			$("select#colors").prop('disabled', 'disabled');
 			
 			if(currentMode == '') populateInterval();
 			
@@ -135,33 +136,35 @@
 			<select id="cubeName" onchange="cubeNameOnChange();"></select>
 		</div>
 	</div>
-	<div class="viz-cards">
+	<div style="padding-bottom: 12px" class="viz-cards">
 		<div style="clear: both; height: 25px;"></div>
 		<div>Current Mode:  <span id="mode"></span></div>
 		<div id="possibleModes"></div>
 		<button onclick="cubeNameOnChange();">Get modes list!</button>
 		<select id="modes" onchange="setMode();"></select>
-		<select id="colors">
-			<option value="#929591">Grey</option>
-			<option value="#ffff14">Yellow</option>
-			<option value="#fdf5e6">Incandescent</option>
-			<option value="#c20078">Magenta</option>
-			<option value="#f97306">Orange</option>
-			<option value="#029386">Teal</option>
-			<option value="#02ffff">Cyan</option>
-			<option value="#e50000">Red</option>
-			<option value="#653700">Brown</option>
-			<option value="#ff81c0">Pink</option>
-			<option value="#ffc0cb">Light Pink</option>
-			<option value="#0343df">Blue</option>
-			<option value="#15b01a">Green</option>
-			<option value="#7e1e9c">Purple</option>  
-			<option value="#ffffff">White</option>       
-		</select>
 	</div>
-	<div style="clear: both; height: 25px;"></div>
-	<div id="canvas" style="padding:0px 20px 40px 115px; height:490px; width:710px">
-		<div id="layerButtons" style="width: 402px; text-align: center; padding-bottom: 10px">
+	<div style="clear: both; height: 7px; background: #1C1521 none repeat scroll 0% 0%"></div>
+	<div class="viz-cards" id="canvas" style="text-align: center; padding: 7px 380px 40px; height:490px; width:85%">
+		<div id="color_select" style="float: right; height: 32px; width: 152px; text-align: center; padding-bottom: 10px">
+			<select id="colors">
+				<option value="#929591">Grey</option>
+				<option value="#ffff14">Yellow</option>
+				<option value="#fdf5e6">Incandescent</option>
+				<option value="#c20078">Magenta</option>
+				<option value="#f97306">Orange</option>
+				<option value="#029386">Teal</option>
+				<option value="#02ffff">Cyan</option>
+				<option value="#e50000">Red</option>
+				<option value="#653700">Brown</option>
+				<option value="#ff81c0">Pink</option>
+				<option value="#ffc0cb">Light Pink</option>
+				<option value="#0343df">Blue</option>
+				<option value="#15b01a">Green</option>
+				<option value="#7e1e9c">Purple</option>  
+				<option value="#ffffff">White</option>       
+			</select>
+		</div>
+		<div id="layerButtons" style="margin-left: 3%; width: 402px; text-align: center; padding-bottom: 10px">
 			<button onclick="decreaseLayer();">One Layer Back</button>
 			<span id="currentLayer"></span>
 			<button onclick="increaseLayer();">One Layer Forward</button>
@@ -172,7 +175,7 @@
 		<canvas style="float: right;" height="255" width="155" id="colors_canvas">
 		    Your browser does not support the HTML5 canvas element.
 		</canvas>
-		<div id="clearButtons" style="width: 402px; text-align: center; padding-top: 10px">
+		<div id="clearButtons" style="margin-left: 3%; width: 402px; text-align: center; padding-top: 10px">
 			<button onclick="clearVoxels(gLayer*kNumPieces, (gLayer*kNumPieces)+kNumPieces);">Clear Layer</button>
 			<span id="currentLayer"></span>
 			<button onclick="clearVoxels(0, 511);">Clear All</button>
