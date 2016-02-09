@@ -82,7 +82,7 @@
 		}
 		
 		function cubeNameOnChange() {
-		    var deviceID = $("#cubeName").val() === '-1' ? '' : $("#cubeName").val();
+		    var deviceID = getDeviceID();
 		    console.log('deviceID: ' + deviceID);
 		    coreID = $.cookie("coreID");
 		    if(coreID === undefined || coreID === null) {
@@ -127,14 +127,14 @@
 		function setVoxel(index, color){
 			var deviceID = getDeviceID();
 			var commandString = 'I' + index + ',' + color + ',';
-			console.log(commandString);
+			//console.log(commandString);
 			$.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", { access_token: accessToken, args: commandString });
 		}
 		
 		function clearVoxels(startIdx, endIdx) {
 			var deviceID = getDeviceID();
 			var commandString = 'C' + startIdx + ':' + endIdx + ',';
-			console.log(commandString);
+			//console.log(commandString);
 			$.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", { access_token: accessToken, args: commandString });
 			clearPieces(startIdx, endIdx);
 		}

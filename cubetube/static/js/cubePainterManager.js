@@ -22,6 +22,7 @@ var gColors;
 var gNumPieces;
 var gNumColors;
 var gSelectedPieceIndex;
+var gSelectedPieceArrayIndex;
 var gPickedColorIndex;
 var gLayerCountElem;
 var gGameInProgress;
@@ -126,10 +127,15 @@ function pickerOnClick(e) {
 }
 
 function clickOnPiece(pieceIndex, cellArray) {
-	if(cellArray.length > kNumColors)
+	if(cellArray.length > kNumColors) {
 		gSelectedPieceIndex = ((gLayer*kNumPieces) + (cellArray[pieceIndex].column*(kNumPieces/8)) + (kBoardHeight - cellArray[pieceIndex].row)) - 1;
-	else
+		gSelectedPieceArrayIndex = pieceIndex;
+	}
+	else {
 		gSelectedPieceIndex = pieceIndex;
+		gPickedColorIndex = pieceIndex;
+	}
+		
 	//console.log('Piece index: ' + gSelectedPieceIndex);
     
     if(cellArray.length > kNumColors) {
@@ -140,10 +146,10 @@ function clickOnPiece(pieceIndex, cellArray) {
     }
     else {
     	$('#colors').val(cellArray[pieceIndex].fillColor)
-	    gGameInProgress = true;
-	    saveGameState();
+    	drawPicker();
+	    //gGameInProgress = true;
+	    //saveGameState();
     }
-    
 }
 
 function clearPieces(startIdx, endIdx) {
@@ -160,12 +166,14 @@ function drawCube() {
     
     /* vertical lines */
     for (var x = 0; x <= kPixelWidth; x += kPieceWidth) {
+    	gDrawingContext.lineWidth = ((x == 0) || (x == kPixelWidth)) ? 4 : 1;
 		gDrawingContext.moveTo(0.5 + x, 0);
 		gDrawingContext.lineTo(0.5 + x, kPixelHeight);
     }
     
     /* horizontal lines */
     for (var y = 0; y <= kPixelHeight; y += kPieceHeight) {
+    	gDrawingContext.lineWidth = ((y == 0) || (y == kPixelHeight)) ? 4 : 1;
 		gDrawingContext.moveTo(0, 0.5 + y);
 		gDrawingContext.lineTo(kPixelWidth, 0.5 +  y);
     }
@@ -176,7 +184,7 @@ function drawCube() {
     
     var i = gLayer*kNumPieces;
     for (var idx=i; idx < (i+kNumPieces); idx++)
-    	drawPiece(gPieces[idx], gPieces[idx].isFilled);
+    	drawPiece(gPieces[idx], gPieces[idx].isFilled, gSelectedPieceArrayIndex === idx);
 
     updateLayerCountElem();
     
@@ -184,7 +192,7 @@ function drawCube() {
     saveGameState();
 }
 
-function drawPiece(p, isFilled) {
+function drawPiece(p, isFilled, isSelected = false) {
     var column = p.column;
     var row = p.row;
     var x = (column * kPieceWidth) + (kPieceWidth/2);
@@ -194,13 +202,19 @@ function drawPiece(p, isFilled) {
     gDrawingContext.beginPath();
     gDrawingContext.arc(x, y, radius, 0, Math.PI*2, false);
     gDrawingContext.closePath();
-    gDrawingContext.strokeStyle = isFilled ? "#ccc" : "#000";
+    gDrawingContext.strokeStyle = isSelected ? "#0343df" : isFilled ? "#ccc" : "#000";
+    gDrawingContext.lineWidth = isSelected ? 4 : 2;
     gDrawingContext.stroke();
     
     if (isFilled) {
 		gDrawingContext.fillStyle = p.fillColor;
 		gDrawingContext.fill();
     }
+    else {
+		gDrawingContext.fillStyle = "#ffffff";
+		gDrawingContext.fill();
+    }
+    
 }
 
 function drawPicker() {
@@ -208,6 +222,7 @@ function drawPicker() {
     gPickerContext.beginPath();
     
     /* vertical lines */
+	gPickerContext.lineWidth = 2;
 	gPickerContext.moveTo(0.5, 0);
 	gPickerContext.lineTo(0.5, kPickerHeight);
 	gPickerContext.moveTo(kPickerWidth, 0);
@@ -215,6 +230,7 @@ function drawPicker() {
     
     /* horizontal lines */
     for (var y = 0; y <= kPickerHeight; y += kPieceHeight) {
+    	gPickerContext.lineWidth = ((y == 0) || (y == kPickerHeight)) ? 2 : 4;
 		gPickerContext.moveTo(0, 0.5 + y);
 		gPickerContext.lineTo(kPickerWidth, 0.5 +  y);
     }
@@ -224,10 +240,13 @@ function drawPicker() {
     gPickerContext.stroke();
     
     for (var idx=0; idx < gColors.length; idx++)
-    	drawColor(gColors[idx], gColors[idx].isFilled);
+    	drawColor(gColors[idx], gColors[idx].isFilled, gPickedColorIndex === idx);
+    
+    gGameInProgress = true;
+    saveGameState();
 }
 
-function drawColor(p, isFilled) {
+function drawColor(p, isFilled, isSelected = false) {
     var column = p.column;
     var row = p.row;
     var x = (column * kPieceWidth) + (kPieceWidth/2);
@@ -237,7 +256,8 @@ function drawColor(p, isFilled) {
     gPickerContext.beginPath();
     gPickerContext.arc(x, y, radius, 0, Math.PI*2, false);
     gPickerContext.closePath();
-    gPickerContext.strokeStyle = "#ccc";
+    gPickerContext.strokeStyle = isSelected ? "#0343df" : "#ccc";
+    gPickerContext.lineWidth = isSelected ? 4 : 2;
     gPickerContext.stroke();
 	gPickerContext.fillStyle = p.fillColor;
 	gPickerContext.fill();
@@ -261,6 +281,8 @@ function saveGameState() {
     
     localStorage["cubetube.currentlayer"] = gLayer;
     localStorage["cubetube.selectedpiece"] = gSelectedPieceIndex;
+    localStorage["cubetube.selectedarray"] = gSelectedPieceArrayIndex;
+    localStorage["cubetube.selectedcolorindex"] = gPickedColorIndex;
     localStorage["cubetube.selectedcolor"] = $("#colors").val();
     
     return true;
@@ -281,27 +303,28 @@ function resumeGame() {
 		var fillColor = localStorage["cubetube.piece." + i + ".fillColor"];
 		var isFilled = localStorage["cubetube.piece." + i + ".isFilled"] == 'true';
 		gPieces.push(new Cell(row, column, fillColor, isFilled));
-		//gPieces[i] = new Cell(row, column, fillColor, isFilled);
     }
 	
-    gColors = new Array(new Cell(0, 0, "#929591", true),
-						new Cell(1, 0, "#ffff14", true),
-						new Cell(2, 0, "#fdf5e6", true),
-						new Cell(3, 0, "#c20078", true),
-						new Cell(4, 0, "#f97306", true),
-						new Cell(0, 1, "#029386", true),
-						new Cell(1, 1, "#02ffff", true),
-						new Cell(2, 1, "#e50000", true),
-						new Cell(3, 1, "#653700", true),
-						new Cell(4, 1, "#ff81c0", true),
-						new Cell(0, 2, "#ffc0cb", true),
-						new Cell(1, 2, "#0343df", true),
-						new Cell(2, 2, "#15b01a", true),
-						new Cell(3, 2, "#7e1e9c", true),
+    gColors = new Array(new Cell(0, 0, "#e50000", true),
+						new Cell(1, 0, "#f97306", true),
+						new Cell(2, 0, "#ff81c0", true),
+						new Cell(3, 0, "#ffc0cb", true),
+						new Cell(4, 0, "#fdf5e6", true),
+						new Cell(0, 1, "#15b01a", true),
+						new Cell(1, 1, "#029386", true),
+						new Cell(2, 1, "#02ffff", true),
+						new Cell(3, 1, "#ffff14", true),
+						new Cell(4, 1, "#929591", true),
+						new Cell(0, 2, "#0343df", true),
+						new Cell(1, 2, "#7e1e9c", true),
+						new Cell(2, 2, "#c20078", true),
+						new Cell(3, 2, "#653700", true),
 						new Cell(4, 2, "#ffffff", true));
     
     gLayer = parseInt(localStorage["cubetube.currentlayer"]);
     gSelectedPieceIndex = parseInt(localStorage["cubetube.selectedpiece"]);
+    gSelectedPieceArrayIndex = parseInt(localStorage["cubetube.selectedarray"]);
+    gPickedColorIndex = parseInt(localStorage["cubetube.selectedcolorindex"]);
     $("#colors").val(localStorage["cubetube.selectedcolor"]);
     
     drawCube();
@@ -316,24 +339,25 @@ function newGame() {
 			for (var c=0; c<kBoardWidth; c++)
 				gPieces.push(new Cell(r, c, "#00000", false));
     
-	gColors = new Array(new Cell(0, 0, "#929591", true),
-						new Cell(1, 0, "#ffff14", true),
-						new Cell(2, 0, "#fdf5e6", true),
-						new Cell(3, 0, "#c20078", true),
-						new Cell(4, 0, "#f97306", true),
-						new Cell(0, 1, "#029386", true),
-						new Cell(1, 1, "#02ffff", true),
-						new Cell(2, 1, "#e50000", true),
-						new Cell(3, 1, "#653700", true),
-						new Cell(4, 1, "#ff81c0", true),
-						new Cell(0, 2, "#ffc0cb", true),
-						new Cell(1, 2, "#0343df", true),
-						new Cell(2, 2, "#15b01a", true),
-						new Cell(3, 2, "#7e1e9c", true),
+    gColors = new Array(new Cell(0, 0, "#e50000", true),
+						new Cell(1, 0, "#f97306", true),
+						new Cell(2, 0, "#ff81c0", true),
+						new Cell(3, 0, "#ffc0cb", true),
+						new Cell(4, 0, "#fdf5e6", true),
+						new Cell(0, 1, "#15b01a", true),
+						new Cell(1, 1, "#029386", true),
+						new Cell(2, 1, "#02ffff", true),
+						new Cell(3, 1, "#ffff14", true),
+						new Cell(4, 1, "#929591", true),
+						new Cell(0, 2, "#0343df", true),
+						new Cell(1, 2, "#7e1e9c", true),
+						new Cell(2, 2, "#c20078", true),
+						new Cell(3, 2, "#653700", true),
 						new Cell(4, 2, "#ffffff", true));
 		
     gNumPieces = gPieces.length;
     gSelectedPieceIndex = -1;
+    gSelectedPieceArrayIndex = -1;
     gLayer = 7;
     gGameInProgress = false;
     
