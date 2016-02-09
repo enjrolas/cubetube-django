@@ -40,14 +40,14 @@ function listCubes() {
             else {
             	devices.forEach(function(x,i,a) {
             		var device = devices[i];
-            		if(!(accessToken === undefined || accessToken === null)) {
+            		if(!(typeof accessToken === 'undefined' || accessToken === null)) {
             			$.get("https://api.particle.io/v1/devices/" + device.id + "?access_token=" + accessToken, function(data) {
             				console.log(data.name + ': ' + (data.connected ? 'connected' : 'not connected'));
             				if(data.connected) {
             					connectedCores++;
             					//$("#cubeName").find("option:contains('No cores online :(')").remove();
             					$("#cubeName").find("option[value='-1']").remove();
-	    			            if( deviceID != 'undefined' ) {
+	    			            if( typeof deviceID != 'undefined' ) {
 	    			                deviceID=device.id;
 	    			                //console.log(deviceID);
 	    		                }
@@ -85,7 +85,7 @@ function listCubes() {
             	}
                 else {
 	            	coreID = $.cookie("coreID");
-	            	if( coreID === 'undefined' || coreID === null ) {
+	            	if( typeof coreID === 'undefined' || coreID === null ) {
 		            	coreID = deviceID;
 		            	var date = new Date();
 		            	$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});

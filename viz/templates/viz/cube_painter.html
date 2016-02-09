@@ -26,9 +26,16 @@
 		var populateModesTimer = null;
 		var selectFromDropdownTimer = null;
 		
-		$(function(){
+		$(function() {
+			var browserType = navigator.userAgent.toLowerCase();
+			if (browserType.indexOf('chrome') >= 0) {
+				$("div#canvas").css({'text-align':'center','padding':'7px 328px 40px','height':'490px','width':'100%'});
+				$("select#colors").css('margin-left', '-300px');
+			}
+			else
+			    $("div#canvas").css({'text-align':'center','padding':'7px 380px 40px','height':'490px','width':'85%'});
+			
 			$("#cubeName").css({'margin-top':'75px', 'float':'left'});
-			//$("div.viz-cards").css({'padding-top':'35px', 'padding-bottom':'30px'});
 			$("div.round-button").css('padding-left', 'calc(100% / 2.2)');
 			$("select#colors").prop('disabled', 'disabled');
 			
@@ -85,7 +92,7 @@
 		    var deviceID = getDeviceID();
 		    console.log('deviceID: ' + deviceID);
 		    coreID = $.cookie("coreID");
-		    if(coreID === undefined || coreID === null) {
+		    if(typeof coreID === 'undefined' || coreID === null) {
 			    coreID = deviceID;
 	           	var date = new Date();
 	           	$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});
@@ -101,14 +108,14 @@
 			$("#cubeName option").each(function() {
 			    if($(this).val() === getDeviceID())
 					$("span#device").html($(this).html());
-			})
+			});
 		    clearInterval(populateModesTimer); 
 		    populateInterval();
 		}
 		
 		function getDeviceID() {
 		    var deviceID = $.cookie("coreID");
-		    if(deviceID === undefined || deviceID === null) {
+		    if(typeof deviceID === 'undefined' || deviceID === null) {
 				deviceID = $("#cubeName").val() === '-1' ? '' : $("#cubeName").val();
 	           	var date = new Date();
 	           	$.cookie("coreID", deviceID, { expires: date.getTime()+86400 , path: '/'});
@@ -154,7 +161,7 @@
 		<select id="modes" onchange="setMode();"></select>
 	</div>
 	<div style="clear: both; height: 7px; background: #1C1521 none repeat scroll 0% 0%"></div>
-	<div class="viz-cards" id="canvas" style="text-align: center; padding: 7px 380px 40px; height:490px; width:85%">
+	<div class="viz-cards" id="canvas">
 		<div id="color_select" style="float: right; height: 32px; width: 152px; text-align: center; padding-bottom: 10px">
 			<select id="colors">
 				<option value="#929591">Grey</option>
