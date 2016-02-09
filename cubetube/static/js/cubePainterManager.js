@@ -246,7 +246,7 @@ function drawPicker() {
     saveGameState();
 }
 
-function drawColor(p, isFilled, isSelected = false) {
+function drawColor(p, isFilled, isSelected) {
     var column = p.column;
     var row = p.row;
     var x = (column * kPieceWidth) + (kPieceWidth/2);
