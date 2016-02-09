@@ -192,7 +192,7 @@ function drawCube() {
     saveGameState();
 }
 
-function drawPiece(p, isFilled, isSelected = false) {
+function drawPiece(p, isFilled, isSelected) {
     var column = p.column;
     var row = p.row;
     var x = (column * kPieceWidth) + (kPieceWidth/2);
