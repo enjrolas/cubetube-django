@@ -28,7 +28,7 @@ function listCubes() {
     var devicesPr = spark.listDevices();
     var deviceInList = false;
     var deviceID;
-    var connectedCores = 0;
+    //var connectedCores = 0;
     var accessToken=$.cookie("accessToken");
 
     devicesPr.then(
@@ -40,22 +40,23 @@ function listCubes() {
             else {
             	devices.forEach(function(x,i,a) {
             		var device = devices[i];
-            		if(!(typeof accessToken === 'undefined' || accessToken === null)) {
+            		if(typeof accessToken !== 'undefined' && accessToken !== null) {
             			$.get("https://api.particle.io/v1/devices/" + device.id + "?access_token=" + accessToken, function(data) {
             				console.log(data.name + ': ' + (data.connected ? 'connected' : 'not connected'));
             				if(data.connected) {
-            					connectedCores++;
+            					//connectedCores++;
             					//$("#cubeName").find("option:contains('No cores online :(')").remove();
             					$("#cubeName").find("option[value='-1']").remove();
-	    			            if( typeof deviceID != 'undefined' ) {
+	    			            if( typeof deviceID !== 'undefined' && deviceID !== null ) {
 	    			                deviceID=device.id;
 	    			                //console.log(deviceID);
 	    		                }
             					deviceType = (device.productId === '0' ? 'Core' : 'Photon');
             					
             					$('#cubeName option').each(function() {
-            						if($(this).val() === device.id)
+            						if($(this).val() == device.id) {
             							deviceInList = true;
+            						}
             					});
             					/*if(device.name == coreID)
 								    deviceInList = true;*/
@@ -65,8 +66,8 @@ function listCubes() {
 	    							$("#cubeName").append($("<option></option>")
 	    								.val(device.id)
 	    								.attr("processor", deviceType)
-	    								.attr("selected", "")
-	    								.html("(" + deviceType + ") " + device.name));
+	    								.html("(" + deviceType + ") " + device.name))
+	    								.sort();
     							}
             				}
             				else {
@@ -76,16 +77,18 @@ function listCubes() {
             			});
             		}
             	});
-                
-            	if(connectedCores === 0) {
+            	
+            	//console.log('cubeName items count: ' + $("#cubeName option").length);
+            	//console.log('connectedCores: ' + connectedCores);
+            	if($("#cubeName option").length === 0) {
                 	$("#cubeName").empty()
                 		.append($("<option></option>")
                 		.val('-1').html('No cores online :('));
-            		$('#cubeName').val(-1);
-            	}
+                }
                 else {
 	            	coreID = $.cookie("coreID");
 	            	if( typeof coreID === 'undefined' || coreID === null ) {
+		            	$('#cubeName').val(deviceID);
 		            	coreID = deviceID;
 		            	var date = new Date();
 		            	$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});

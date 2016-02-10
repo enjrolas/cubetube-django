@@ -23,6 +23,7 @@
 		var accessToken=$.cookie("accessToken");
 		//var deviceID = null;
 		var currentMode = '';
+		//var selectedCoreId = '';
 		var populateModesTimer = null;
 		var selectFromDropdownTimer = null;
 		
@@ -68,15 +69,15 @@
 		
 		function populateModes(){
 			$("#modes").empty();  //clear all the existing modes before appending new ones
-			var deviceID=getDeviceID();
-			if(deviceID.trim().length > 2) {
+			var deviceID = (typeof coreID !== 'undefined' && coreID !== null) ? coreID : getDeviceID();
+			if(typeof deviceID !== 'undefined' && deviceID !== null) {
 				$.get("https://api.particle.io/v1/devices/"+deviceID+"/mode/?access_token=" + accessToken, function(data){
 					currentMode = data.result.trim();
 					$("span#mode").html(currentMode);
 					$("#cubeName option").each(function() {
 					    if($(this).val() === getDeviceID())
 							$("span#device").html($(this).html());
-					})				
+					});				
 				});
 				$.get("https://api.particle.io/v1/devices/"+deviceID+"/modeList/?access_token=" + accessToken, function(data){
 					var modes=data.result.split(";");
@@ -89,38 +90,34 @@
 		}
 		
 		function cubeNameOnChange() {
-		    var deviceID = getDeviceID();
+		    var deviceID = getDeviceID();	// Reads currently 'selected' value from dropdown
 		    console.log('deviceID: ' + deviceID);
-		    coreID = $.cookie("coreID");
-		    if(typeof coreID === 'undefined' || coreID === null) {
-			    coreID = deviceID;
-	           	var date = new Date();
-	           	$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});
-		    }
-		    else {
-				if(coreID != deviceID) {
-				    coreID = deviceID;
-					$.removeCookie("coreID", { path: '/' });
-		           	var date = new Date();
-		           	$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});
-				}
-			}
-			$("#cubeName option").each(function() {
-			    if($(this).val() === getDeviceID())
+			//selectedCoreId = deviceID;
+			
+			coreID = $.cookie("coreID");
+           	if( typeof coreID === 'undefined' || coreID === null ) {
+            	coreID = deviceID;
+            	var date = new Date();
+            	$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});
+           	}
+           	else {
+				$.removeCookie("coreID", { path: '/' });
+				coreID = deviceID;
+				var date = new Date();
+				$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});
+           	}
+		    
+		    $("#cubeName option").each(function() {
+			    if($(this).val() === deviceID)
 					$("span#device").html($(this).html());
 			});
+		    
 		    clearInterval(populateModesTimer); 
 		    populateInterval();
 		}
 		
 		function getDeviceID() {
-		    var deviceID = $.cookie("coreID");
-		    if(typeof deviceID === 'undefined' || deviceID === null) {
-				deviceID = $("#cubeName").val() === '-1' ? '' : $("#cubeName").val();
-	           	var date = new Date();
-	           	$.cookie("coreID", deviceID, { expires: date.getTime()+86400 , path: '/'});
-		    }
-			return deviceID;
+		    return $("#cubeName").val();
 		}
 		
 		function setMode(){
@@ -134,14 +131,12 @@
 		function setVoxel(index, color){
 			var deviceID = getDeviceID();
 			var commandString = 'I' + index + ',' + color + ',';
-			//console.log(commandString);
 			$.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", { access_token: accessToken, args: commandString });
 		}
 		
 		function clearVoxels(startIdx, endIdx) {
 			var deviceID = getDeviceID();
 			var commandString = 'C' + startIdx + ':' + endIdx + ',';
-			//console.log(commandString);
 			$.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", { access_token: accessToken, args: commandString });
 			clearPieces(startIdx, endIdx);
 		}
@@ -153,12 +148,13 @@
 	</div>
 	<div style="padding: 0px 25% 12px; text-align: center;" class="viz-cards">
 		<div style="clear: both; height: 10px;"></div>
-		<div style="width: 75%; text-align: justify; padding-left: 29%;">
+ 		<div style="width: 75%; text-align: justify; padding-left: 29%;">
 			<div>Selected Cube:  <span id="device"></span></div>
 			<div>Selected Mode:  <span id="mode"></span></div>
 		</div>
 		<button onclick="cubeNameOnChange();">Get modes list!</button>
-		<select id="modes" onchange="setMode();"></select>
+
+ 		<select id="modes" onchange="setMode();"></select>
 	</div>
 	<div style="clear: both; height: 7px; background: #1C1521 none repeat scroll 0% 0%"></div>
 	<div class="viz-cards" id="canvas">
