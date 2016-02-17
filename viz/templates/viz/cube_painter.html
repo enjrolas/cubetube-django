@@ -21,22 +21,41 @@
 {% block content %}
 	<script type="text/javascript">
 		var accessToken=$.cookie("accessToken");
-		//var deviceID = null;
 		var currentMode = '';
-		//var selectedCoreId = '';
 		var populateModesTimer = null;
 		var selectFromDropdownTimer = null;
+		if(typeof accessToken === 'undefined' || accessToken === null) {
+			console.log('accessToken: Null');
+		    //$("#controlsWrapper").hide();
+		    $(".cubePainter").hide();
+		    $("div#updateListDiv").hide();
+		    $("div#brightnessControl").hide();
+		    $("span#device").html("Please Log In");
+		    $("span#mode").html("Please Log In");
+		}
+		else {
+		    console.log('accessToken: ' + accessToken);
+		    //$("#controlsWrapper").fadeIn(300);
+		    $(".cubePainter").fadeIn(300);
+		    $("div#updateListDiv").fadeIn(300);
+		    $("div#brightnessControl").fadeIn(300);
+		    setBrightness();
+		}
 		
 		$(function() {
+		    // Dirty hack to allow for consistent display on Chrome
 			var browserType = navigator.userAgent.toLowerCase();
 			if (browserType.indexOf('chrome') >= 0) {
-				$("div#canvas").css({'text-align':'center','padding':'7px 328px 40px','height':'490px','width':'100%'});
-				$("select#colors").css('margin-left', '-300px');
+				$("div#canvas").css({'text-align':'center','padding':'10px 410px 40px','height':'510px','width':'100%'});
+				$("select#colors").css('margin-top', '24px');
 			}
-			else
-			    $("div#canvas").css({'text-align':'center','padding':'7px 380px 40px','height':'490px','width':'85%'});
+			else {
+			    $("div#canvas").css({'text-align':'center','padding':'10px 380px 40px','height':'510px','width':'85%'});
+			    $("select#colors").css('margin-top', '23px');
+			}
 			
-			$("#cubeName").css({'margin-top':'75px', 'float':'left'});
+			//$(".cubePainter").show();
+			//setBrightness();
 			$("div.round-button").css('padding-left', 'calc(100% / 2.2)');
 			$("select#colors").prop('disabled', 'disabled');
 			
@@ -56,36 +75,59 @@
 				else {
 					clearInterval(populateModesTimer);
 					selectFromDropdownTimer = setInterval(function() {
-						$("select#modes > option").each(function() {
-							if($(this).val() === currentMode) {
-								$(this).attr("selected", "selected");
-								clearInterval(selectFromDropdownTimer);
-							}
-						});
+					    if($("select#modes").val() !== currentMode)
+							$("select#modes").val(currentMode);
+					    else {
+							//$("#controlsWrapper").fadeIn(300);
+						    $("div#updateListDiv").fadeIn(300);
+						    $("div#brightnessControl").fadeIn(300);
+							$(".cubePainter").fadeIn(300);
+							setBrightness();
+							clearInterval(selectFromDropdownTimer);
+					    }
 					}, 100);
 				}
 			}, 1000);
 		}
 		
-		function populateModes(){
-			$("#modes").empty();  //clear all the existing modes before appending new ones
+		function populateModes() {
+			$("select#modes").fadeOut(100).empty();  //clear all the existing modes before appending new ones
 			var deviceID = (typeof coreID !== 'undefined' && coreID !== null) ? coreID : getDeviceID();
 			if(typeof deviceID !== 'undefined' && deviceID !== null) {
-				$.get("https://api.particle.io/v1/devices/"+deviceID+"/mode/?access_token=" + accessToken, function(data){
+				$.get("https://api.particle.io/v1/devices/"+deviceID+"/mode/?access_token=" + accessToken, function(data) {
 					currentMode = data.result.trim();
 					$("span#mode").html(currentMode);
-					$("#cubeName option").each(function() {
+					$("select#cubeName option").each(function() {
 					    if($(this).val() === getDeviceID())
 							$("span#device").html($(this).html());
 					});				
+					//$("select#modes").val(currentMode);
+					$("select#modes").fadeIn(300);
+					/*$(".cubePainter").fadeIn(300);
+				    $("div#updateListDiv").fadeIn(300);
+				    $("div#brightnessControl").fadeIn(300);*/
+				}, "json")
+				.fail(function() {
+					var message = '';
+					if(typeof deviceID !== 'undefined' && deviceID !== null && deviceID !== '-1') {
+						var device = $("select#cubeName option[value = '" + deviceID + "']").text();
+						if(typeof device !== 'undefined' && device !== null && device !== '') {
+							message += 'The selected Cube (\"' + device.substr(device.indexOf(')') + 2) 
+									+ '\") does not appear to be running the Spark Pixels viz.';
+							message += '\nPlease head to Cubetube, select this viz from the gallery and load it into your Cube.';
+							message += '\nIf your Cube is already running Spark Pixels, try resetting it. Make sure it connects (breathing cyan).';
+							alert(message);
+						}
+						return;
+					}
 				});
-				$.get("https://api.particle.io/v1/devices/"+deviceID+"/modeList/?access_token=" + accessToken, function(data){
+				$.get("https://api.particle.io/v1/devices/"+deviceID+"/modeList/?access_token=" + accessToken, function(data) {
 					var modes=data.result.split(";");
-					for(var index=0; index<modes.length-1; index++){
+					for(var index=0; index<modes.length-1; index++) {
 						var mode=modes[index].trim();
 						$("select#modes").append("<option value=\"" + mode + "\">" + mode + "</option>");
 					}
-				});
+				}, "json");
 			}
 		}
 		
@@ -120,15 +162,25 @@
 		    return $("#cubeName").val();
 		}
 		
-		function setMode(){
+		function setMode() {
 		    var deviceID = getDeviceID(); 
 			currentMode = $('#modes').find(":selected").val();
-			var commandString = 'M:' + currentMode + ',S:5,B:20,';
+			var brightness = $("#brightnessSlider").val();
+			var commandString = 'M:' + currentMode + ',S:5,B:' + brightness + ',';
+			//var commandString = 'M:' + currentMode + ',S:5,B:20,';
 			$("span#mode").html(currentMode);
 			$.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", { access_token: accessToken, args: commandString });
 		}
 		
-		function setVoxel(index, color){
+		function setBrightness() {
+		    var deviceID = getDeviceID(); 
+			var brightness = $("#brightnessSlider").val();
+			var commandString = 'B:' + brightness + ',';
+			$("span#brightness").html(brightness);
+			$.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", { access_token: accessToken, args: commandString });
+		}
+		
+		function setVoxel(index, color) {
 			var deviceID = getDeviceID();
 			var commandString = 'I' + index + ',' + color + ',';
 			$.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", { access_token: accessToken, args: commandString });
@@ -141,46 +193,57 @@
 			clearPieces(startIdx, endIdx);
 		}
 	</script>
-	<div class="cube-options">
-		<div class="round-button button-grey select-cube">
-			<select id="cubeName" onchange="cubeNameOnChange();"></select>
-		</div>
-	</div>
-	<div style="padding: 0px 25% 12px; text-align: center;" class="viz-cards">
-		<div style="clear: both; height: 10px;"></div>
- 		<div style="width: 75%; text-align: justify; padding-left: 29%;">
+	<div style="margin-top: 60px; padding: 0px 25% 12px; text-align: center; background: #1C1521">
+		<div id="cubeAndModeText">
 			<div>Selected Cube:  <span id="device"></span></div>
 			<div>Selected Mode:  <span id="mode"></span></div>
 		</div>
-		<button onclick="cubeNameOnChange();">Get modes list!</button>
-
- 		<select id="modes" onchange="setMode();"></select>
+		<div style="clear: both; height: 10px; background: #1C1521"></div>
+		<div id="updateListDiv">
+			<a id="updateListButton" href="#" onclick="cubeNameOnChange();" title="Click here to refresh the modes list!">Update List</a>
+	 		<select id="modes" onchange="setMode();"></select>
+	 	</div>
+ 		<div style="clear: both; height: 15px; background: #1C1521"></div>
+		<div id="brightnessControl">
+			<div>Brightness:  <span style="margin-right: 10px" id="brightness"></span>
+				<input id="brightnessSlider" type="range" min="0" max="100" step="1" value="20" onchange="setBrightness();" />
+			</div>
+		</div>
 	</div>
 	<div style="clear: both; height: 7px; background: #1C1521 none repeat scroll 0% 0%"></div>
 	<div class="viz-cards" id="canvas">
 		<div id="color_select" style="float: right; height: 32px; width: 152px; text-align: center; padding-bottom: 10px">
 			<select id="colors">
-				<option value="#929591">Grey</option>
-				<option value="#ffff14">Yellow</option>
-				<option value="#fdf5e6">Incandescent</option>
-				<option value="#c20078">Magenta</option>
-				<option value="#f97306">Orange</option>
-				<option value="#029386">Teal</option>
-				<option value="#02ffff">Cyan</option>
-				<option value="#e50000">Red</option>
-				<option value="#653700">Brown</option>
-				<option value="#ff81c0">Pink</option>
-				<option value="#ffc0cb">Light Pink</option>
-				<option value="#0343df">Blue</option>
-				<option value="#15b01a">Green</option>
-				<option value="#7e1e9c">Purple</option>  
-				<option value="#ffffff">White</option>       
+				<option value="#660000">Dark Red</option>
+				<option value="#FF0000">Red</option>
+				<option value="#FF6666">Pink</option>
+				<option value="#FF9999">Light Pink</option>
+				<option value="#FFB266">Tangerine</option>
+				<option value="#FF9933">Orange</option>
+				<option value="#FF8000">Tan</option>
+				<option value="#CC3300">Dark Tan</option>
+				<option value="#006600">Dark Green</option>
+				<option value="#00FF00">Green</option>
+				<option value="#99FF99">Lime</option>
+				<option value="#00FFFF">Cyan</option>
+				<option value="#FFFF99">Light Yellow</option>
+				<option value="#FFFF14">Yellow</option>  
+				<option value="#666600">Mustard</option>       
+				<option value="#929591">Grey</option>       
+				<option value="#000066">Dark Blue</option>       
+				<option value="#0000FF">Blue</option>       
+				<option value="#0066CC">Royal Blue</option>       
+				<option value="#0080FF">Light Blue</option>       
+				<option value="#029386">Teal</option>       
+				<option value="#C20078">Magenta</option>       
+				<option value="#7E1E9C">Purple</option>       
+				<option value="#FFFFFF">White</option>      
 			</select>
 		</div>
 		<div id="layerButtons" style="margin-left: 3%; width: 402px; text-align: center; padding-bottom: 10px">
-			<button onclick="decreaseLayer();">One Layer Back</button>
+			<a id="layerButtons" href="#" onclick="decreaseLayer();" title="Click to move back one layer (towards back of Cube)">[-] One Layer</a>
 			<span id="currentLayer"></span>
-			<button onclick="increaseLayer();">One Layer Forward</button>
+			<a id="layerButtons" href="#" onclick="increaseLayer();" title="Click to move forth one layer (towards front of Cube)">[+] One Layer</a>
 		</div>
 		<canvas height="401" width="401" id="cube_canvas">
 		    Your browser does not support the HTML5 canvas element.
@@ -189,9 +252,9 @@
 		    Your browser does not support the HTML5 canvas element.
 		</canvas>
 		<div id="clearButtons" style="margin-left: 3%; width: 402px; text-align: center; padding-top: 10px">
-			<button onclick="clearVoxels(gLayer*kNumPieces, (gLayer*kNumPieces)+kNumPieces);">Clear Layer</button>
+			<a id="clearButtons" href="#" onclick="clearVoxels(gLayer*kNumPieces, (gLayer*kNumPieces)+kNumPieces);" title="Click to clear the current layer">Clear Layer</a>
 			<span id="currentLayer"></span>
-			<button onclick="clearVoxels(0, 512);">Clear All</button>
+			<a id="clearButtons" href="#" onclick="clearVoxels(0, 512);" title="Click to clear the whole Cube">Clear All</a>
 		</div>
 	</div>
 {% endblock %}

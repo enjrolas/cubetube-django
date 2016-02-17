@@ -646,6 +646,66 @@ button {
 	max-width: 145px; 
 	margin-top: -2px;
 }
+.cubePainter {
+	min-width: 145px !important; 
+	max-width: 265px !important; 
+	margin-top: 21px !important;
+	margin-left: 37%;
+	display: none;	
+}
+#cubeAndModeText, #pleaseLogInText {
+	width: 50%; 
+	font-weight: bold;
+	color: #2bc6fb;
+	text-align: justify; 
+	margin-left: 34%;
+	/*padding-left: 8%;*/
+}
+#updateListDiv, a#layerButtons, a#clearButtons {
+	width: 275px; 
+	background: #ee0026; 
+	color: #fff; 
+	border-radius: 30px; 
+	padding: 6px 22px; 
+	text-align: center; 
+	text-decoration: none;
+	/*height: 100%;*/ 
+	line-height: 32px;
+}
+span#currentLayer {
+	font-size:18px;
+	font-weight: bold;
+	color: #2bc6fb;
+}
+#updateListDiv {
+	width: 300px; 
+	margin-left: 33%;
+	/*margin-right: 2%;*/
+	font-weight: bold;
+}
+a#updateListButton {
+	width: 175px !important; 
+	background: #ee0026; 
+	color: #fff; 
+	text-align: center; 
+	text-decoration: none;
+	margin-right: 2%;
+}
+#brightnessControl {
+	width: 440px;
+	font-weight: bold;
+	background: #ee0026; 
+	color: #fff; 
+	border-radius: 30px; 
+	margin-left: 23%;
+	padding: 6px 22px; 
+	text-align: center;
+	/*padding: 8px 8px;*/
+}
+#brightnessSlider {
+	width: 250px;
+	height: 10px;
+}
 
 .fb-share-button {
   position: absolute !important;

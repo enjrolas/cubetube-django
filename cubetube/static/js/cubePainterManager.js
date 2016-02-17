@@ -1,9 +1,9 @@
 var kBoardWidth = 8;
 var kBoardHeight= 8;
 var kPickerWidth = 3;
-var kPickerHeight= 5;
+var kPickerHeight= 8;
 var kNumPieces = 64;
-var kNumColors = 15;
+var kNumColors = 24;
 var kPieceWidth = 50;
 var kPieceHeight= 50;
 var kPixelWidth = 1 + (kBoardWidth * kPieceWidth);
@@ -11,6 +11,7 @@ var kPixelHeight= 1 + (kBoardHeight * kPieceHeight);
 var kPickerWidth = 1 + (kPickerWidth * kPieceWidth);
 var kPickerHeight= 1 + (kPickerHeight * kPieceHeight);
 
+var gVoxelImage;
 var gCanvasElement;
 var gDrawingContext;
 var gPickerElement;
@@ -96,11 +97,11 @@ function decreaseLayer() {
 
 function updateLayerCountElem() {
 	if(gLayer === 7)
-		gLayerCountElem.html(" Front ");
+		gLayerCountElem.html("&nbsp;&nbsp;Front&nbsp;&nbsp;");
 	else if(gLayer === 0)
-		gLayerCountElem.html(" Back ");
+		gLayerCountElem.html("&nbsp;&nbsp;Back&nbsp;&nbsp;");
 	else
-		gLayerCountElem.html(" Layer: " + (gLayer+1) + " ");
+		gLayerCountElem.html("&nbsp;&nbsp;Layer: " + ((7 - gLayer) + 1) + "&nbsp;&nbsp;");
 }
 
 function cubeOnClick(e) {
@@ -147,8 +148,6 @@ function clickOnPiece(pieceIndex, cellArray) {
     else {
     	$('#colors').val(cellArray[pieceIndex].fillColor)
     	drawPicker();
-	    //gGameInProgress = true;
-	    //saveGameState();
     }
 }
 
@@ -161,8 +160,11 @@ function clearPieces(startIdx, endIdx) {
 }
 
 function drawCube() {
-    gDrawingContext.clearRect(0, 0, kPixelWidth, kPixelHeight);
+	gDrawingContext.clearRect(0, 0, kPixelWidth, kPixelHeight);
     gDrawingContext.beginPath();
+	
+	/* voxel background image */
+	drawBackground();
     
     /* vertical lines */
     for (var x = 0; x <= kPixelWidth; x += kPieceWidth) {
@@ -181,15 +183,22 @@ function drawCube() {
     /* draw it! */
     gDrawingContext.strokeStyle = "#ccc";
     gDrawingContext.stroke();
-    
+	
     var i = gLayer*kNumPieces;
     for (var idx=i; idx < (i+kNumPieces); idx++)
     	drawPiece(gPieces[idx], gPieces[idx].isFilled, gSelectedPieceArrayIndex === idx);
-
+	
     updateLayerCountElem();
     
     gGameInProgress = true;
     saveGameState();
+}
+
+/* voxel background image */
+function drawBackground() {
+	for (var x = 0; x <= kPixelWidth; x += kPieceWidth)
+		for (var y = 0; y <= kPixelHeight; y += kPieceHeight)
+			gDrawingContext.drawImage(gVoxelImage, x, y, kPieceWidth, kPieceHeight);
 }
 
 function drawPiece(p, isFilled, isSelected) {
@@ -202,19 +211,22 @@ function drawPiece(p, isFilled, isSelected) {
     gDrawingContext.beginPath();
     gDrawingContext.arc(x, y, radius, 0, Math.PI*2, false);
     gDrawingContext.closePath();
-    gDrawingContext.strokeStyle = isSelected ? "#0343df" : isFilled ? "#ccc" : "#000";
+    gDrawingContext.strokeStyle = isSelected ? "#0343df" : isFilled ? p.fillColor : "#ccc";
     gDrawingContext.lineWidth = isSelected ? 4 : 2;
     gDrawingContext.stroke();
     
     if (isFilled) {
+		gDrawingContext.globalAlpha = 0.8;	// Set transparency
 		gDrawingContext.fillStyle = p.fillColor;
 		gDrawingContext.fill();
     }
     else {
+		gDrawingContext.globalAlpha = 0.2;	// Set transparency
 		gDrawingContext.fillStyle = "#ffffff";
 		gDrawingContext.fill();
     }
-    
+	// Turn transparency off
+	gDrawingContext.globalAlpha = 1.0;
 }
 
 function drawPicker() {
@@ -284,7 +296,7 @@ function saveGameState() {
     localStorage["cubetube.selectedarray"] = gSelectedPieceArrayIndex;
     localStorage["cubetube.selectedcolorindex"] = gPickedColorIndex;
     localStorage["cubetube.selectedcolor"] = $("#colors").val();
-    
+
     return true;
 }
 
@@ -305,28 +317,37 @@ function resumeGame() {
 		gPieces.push(new Cell(row, column, fillColor, isFilled));
     }
 	
-    gColors = new Array(new Cell(0, 0, "#e50000", true),
-						new Cell(1, 0, "#f97306", true),
-						new Cell(2, 0, "#ff81c0", true),
-						new Cell(3, 0, "#ffc0cb", true),
-						new Cell(4, 0, "#fdf5e6", true),
-						new Cell(0, 1, "#15b01a", true),
-						new Cell(1, 1, "#029386", true),
-						new Cell(2, 1, "#02ffff", true),
-						new Cell(3, 1, "#ffff14", true),
-						new Cell(4, 1, "#929591", true),
-						new Cell(0, 2, "#0343df", true),
-						new Cell(1, 2, "#7e1e9c", true),
-						new Cell(2, 2, "#c20078", true),
-						new Cell(3, 2, "#653700", true),
-						new Cell(4, 2, "#ffffff", true));
-    
+    gColors = new Array(new Cell(0, 0, "#660000", true),
+						new Cell(1, 0, "#FF0000", true),
+						new Cell(2, 0, "#FF6666", true),
+						new Cell(3, 0, "#FF9999", true),
+						new Cell(4, 0, "#FFB266", true),
+						new Cell(5, 0, "#FF9933", true),
+						new Cell(6, 0, "#FF8000", true),
+						new Cell(7, 0, "#CC3300", true),
+						new Cell(0, 1, "#006600", true),
+						new Cell(1, 1, "#00FF00", true),
+						new Cell(2, 1, "#99FF99", true),
+						new Cell(3, 1, "#029386", true),
+						new Cell(4, 1, "#FFFF99", true),
+						new Cell(5, 1, "#FFFF14", true),
+						new Cell(6, 1, "#666600", true),
+						new Cell(7, 1, "#929591", true),
+						new Cell(0, 2, "#000066", true),
+						new Cell(1, 2, "#0000FF", true),
+						new Cell(2, 2, "#0066CC", true),
+						new Cell(3, 2, "#0080FF", true),
+						new Cell(4, 2, "#00FFFF", true),
+						new Cell(5, 2, "#C20078", true),
+						new Cell(6, 2, "#7E1E9C", true),
+						new Cell(7, 2, "#FFFFFF", true));
+
     gLayer = parseInt(localStorage["cubetube.currentlayer"]);
     gSelectedPieceIndex = parseInt(localStorage["cubetube.selectedpiece"]);
     gSelectedPieceArrayIndex = parseInt(localStorage["cubetube.selectedarray"]);
     gPickedColorIndex = parseInt(localStorage["cubetube.selectedcolorindex"]);
     $("#colors").val(localStorage["cubetube.selectedcolor"]);
-    
+
     drawCube();
     drawPicker();
     return true;
@@ -338,49 +359,41 @@ function newGame() {
 		for (var r=0; r<kBoardHeight; r++)
 			for (var c=0; c<kBoardWidth; c++)
 				gPieces.push(new Cell(r, c, "#00000", false));
-    
-    gColors = new Array(new Cell(0, 0, "#e50000", true),
-						new Cell(1, 0, "#f97306", true),
-						new Cell(2, 0, "#ff81c0", true),
-						new Cell(3, 0, "#ffc0cb", true),
-						new Cell(4, 0, "#fdf5e6", true),
-						new Cell(0, 1, "#15b01a", true),
-						new Cell(1, 1, "#029386", true),
-						new Cell(2, 1, "#02ffff", true),
-						new Cell(3, 1, "#ffff14", true),
-						new Cell(4, 1, "#929591", true),
-						new Cell(0, 2, "#0343df", true),
-						new Cell(1, 2, "#7e1e9c", true),
-						new Cell(2, 2, "#c20078", true),
-						new Cell(3, 2, "#653700", true),
-						new Cell(4, 2, "#ffffff", true));
-		
+
+    gColors = new Array(new Cell(0, 0, "#660000", true),
+						new Cell(1, 0, "#FF0000", true),
+						new Cell(2, 0, "#FF6666", true),
+						new Cell(3, 0, "#FF9999", true),
+						new Cell(4, 0, "#FFB266", true),
+						new Cell(5, 0, "#FF9933", true),
+						new Cell(6, 0, "#FF8000", true),
+						new Cell(7, 0, "#CC3300", true),
+						new Cell(0, 1, "#006600", true),
+						new Cell(1, 1, "#00FF00", true),
+						new Cell(2, 1, "#99FF99", true),
+						new Cell(3, 1, "#029386", true),
+						new Cell(4, 1, "#FFFF99", true),
+						new Cell(5, 1, "#FFFF14", true),
+						new Cell(6, 1, "#666600", true),
+						new Cell(7, 1, "#929591", true),
+						new Cell(0, 2, "#000066", true),
+						new Cell(1, 2, "#0000FF", true),
+						new Cell(2, 2, "#0066CC", true),
+						new Cell(3, 2, "#0080FF", true),
+						new Cell(4, 2, "#00FFFF", true),
+						new Cell(5, 2, "#C20078", true),
+						new Cell(6, 2, "#7E1E9C", true),
+						new Cell(7, 2, "#FFFFFF", true));
+
     gNumPieces = gPieces.length;
     gSelectedPieceIndex = -1;
     gSelectedPieceArrayIndex = -1;
     gLayer = 7;
     gGameInProgress = false;
-    
+	
     drawCube();
-    drawPicker();
+	drawPicker();
 }
-
-/*function isTheGameOver() {
-    for (var i = 0; i < gNumPieces; i++) {
-		if (gPieces[i].row > 2)
-		    return false;
-
-		if (gPieces[i].column < (kBoardWidth - 3))
-		    return false;
-    }
-    
-    return true;
-}
-
-function endGame() {
-    gSelectedPieceIndex = -1;
-    gGameInProgress = false;
-}*/
 
 function initGame(canvasElement, pickerElement) {
     gCanvasElement = canvasElement;
@@ -394,7 +407,13 @@ function initGame(canvasElement, pickerElement) {
     gDrawingContext = gCanvasElement.getContext("2d");
     gPickerContext = gPickerElement.getContext("2d");
     gLayerCountElem = $("span#currentLayer");
-    
-    if (!resumeGame())
-    	newGame();
+
+	/* voxel background image */
+    gVoxelImage = new Image();
+	gVoxelImage.src = "/static/images/voxel.png";
+	gVoxelImage.onload = function() {
+		// At this point, the image is fully loaded
+		if (!resumeGame())
+			newGame();
+	};
 }
