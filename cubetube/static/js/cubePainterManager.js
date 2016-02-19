@@ -16,6 +16,7 @@ var gCanvasElement;
 var gDrawingContext;
 var gPickerElement;
 var gPickerContext;
+var gSelectedColor;
 
 var gLayer;
 var gPieces;
@@ -28,9 +29,10 @@ var gPickedColorIndex;
 var gLayerCountElem;
 var gGameInProgress;
 
-function Cell(row, column, fillColor, isFilled) {
+function Cell(row, column, zIndex, fillColor, isFilled) {
     this.row = row;
     this.column = column;
+    this.zIndex = zIndex;
     this.fillColor = fillColor;
     this.isFilled = isFilled;
 }
@@ -129,7 +131,7 @@ function pickerOnClick(e) {
 
 function clickOnPiece(pieceIndex, cellArray) {
 	if(cellArray.length > kNumColors) {
-		gSelectedPieceIndex = ((gLayer*kNumPieces) + (cellArray[pieceIndex].column*(kNumPieces/8)) + (kBoardHeight - cellArray[pieceIndex].row)) - 1;
+		gSelectedPieceIndex = ((gLayer*kNumPieces) + (cellArray[pieceIndex].column*(kNumPieces/kBoardWidth)) + (kBoardHeight - cellArray[pieceIndex].row)) - 1;
 		gSelectedPieceArrayIndex = pieceIndex;
 	}
 	else {
@@ -140,13 +142,14 @@ function clickOnPiece(pieceIndex, cellArray) {
 	//console.log('Piece index: ' + gSelectedPieceIndex);
     
     if(cellArray.length > kNumColors) {
+    	cellArray[pieceIndex].zIndex = gLayer;
     	cellArray[pieceIndex].isFilled = !cellArray[pieceIndex].isFilled; 
-	    cellArray[pieceIndex].fillColor = cellArray[pieceIndex].isFilled ? $('#colors').find(":selected").val() : '#000000';
+	    cellArray[pieceIndex].fillColor = cellArray[pieceIndex].isFilled ? gSelectedColor : '#000000';
 	    setVoxel(gSelectedPieceIndex, cellArray[pieceIndex].fillColor);
 	    drawCube();
     }
     else {
-    	$('#colors').val(cellArray[pieceIndex].fillColor)
+    	gSelectedColor = cellArray[pieceIndex].fillColor;
     	drawPicker();
     }
 }
@@ -287,6 +290,7 @@ function saveGameState() {
     for (var i = 0; i < gNumPieces; i++) {
 		localStorage["cubetube.piece." + i + ".row"] = gPieces[i].row;
 		localStorage["cubetube.piece." + i + ".column"] = gPieces[i].column;
+		localStorage["cubetube.piece." + i + ".zIndex"] = gPieces[i].zIndex;
 		localStorage["cubetube.piece." + i + ".fillColor"] = gPieces[i].fillColor;
 		localStorage["cubetube.piece." + i + ".isFilled"] = gPieces[i].isFilled;
     }
@@ -295,7 +299,7 @@ function saveGameState() {
     localStorage["cubetube.selectedpiece"] = gSelectedPieceIndex;
     localStorage["cubetube.selectedarray"] = gSelectedPieceArrayIndex;
     localStorage["cubetube.selectedcolorindex"] = gPickedColorIndex;
-    localStorage["cubetube.selectedcolor"] = $("#colors").val();
+    localStorage["cubetube.selectedcolor"] = gSelectedColor;
 
     return true;
 }
@@ -312,41 +316,42 @@ function resumeGame() {
     for (var i = 0; i < gNumPieces; i++) {
 		var row = parseInt(localStorage["cubetube.piece." + i + ".row"]);
 		var column = parseInt(localStorage["cubetube.piece." + i + ".column"]);
+		var zIndex = parseInt(localStorage["cubetube.piece." + i + ".zIndex"]);
 		var fillColor = localStorage["cubetube.piece." + i + ".fillColor"];
 		var isFilled = localStorage["cubetube.piece." + i + ".isFilled"] == 'true';
-		gPieces.push(new Cell(row, column, fillColor, isFilled));
+		gPieces.push(new Cell(row, column, zIndex, fillColor, isFilled));
     }
 	
-    gColors = new Array(new Cell(0, 0, "#660000", true),
-						new Cell(1, 0, "#FF0000", true),
-						new Cell(2, 0, "#FF6666", true),
-						new Cell(3, 0, "#FF9999", true),
-						new Cell(4, 0, "#FFB266", true),
-						new Cell(5, 0, "#FF9933", true),
-						new Cell(6, 0, "#FF8000", true),
-						new Cell(7, 0, "#CC3300", true),
-						new Cell(0, 1, "#006600", true),
-						new Cell(1, 1, "#00FF00", true),
-						new Cell(2, 1, "#99FF99", true),
-						new Cell(3, 1, "#029386", true),
-						new Cell(4, 1, "#FFFF99", true),
-						new Cell(5, 1, "#FFFF14", true),
-						new Cell(6, 1, "#666600", true),
-						new Cell(7, 1, "#929591", true),
-						new Cell(0, 2, "#000066", true),
-						new Cell(1, 2, "#0000FF", true),
-						new Cell(2, 2, "#0066CC", true),
-						new Cell(3, 2, "#0080FF", true),
-						new Cell(4, 2, "#00FFFF", true),
-						new Cell(5, 2, "#C20078", true),
-						new Cell(6, 2, "#7E1E9C", true),
-						new Cell(7, 2, "#FFFFFF", true));
+    gColors = new Array(new Cell(0, 0, -1, "#660000", true),
+						new Cell(1, 0, -1, "#FF0000", true),
+						new Cell(2, 0, -1, "#FF6666", true),
+						new Cell(3, 0, -1, "#FF9999", true),
+						new Cell(4, 0, -1, "#FFB266", true),
+						new Cell(5, 0, -1, "#FF9933", true),
+						new Cell(6, 0, -1, "#FF8000", true),
+						new Cell(7, 0, -1, "#CC3300", true),
+						new Cell(0, 1, -1, "#006600", true),
+						new Cell(1, 1, -1, "#00FF00", true),
+						new Cell(2, 1, -1, "#99FF99", true),
+						new Cell(3, 1, -1, "#029386", true),
+						new Cell(4, 1, -1, "#FFFF99", true),
+						new Cell(5, 1, -1, "#FFFF14", true),
+						new Cell(6, 1, -1, "#666600", true),
+						new Cell(7, 1, -1, "#929591", true),
+						new Cell(0, 2, -1, "#000066", true),
+						new Cell(1, 2, -1, "#0000FF", true),
+						new Cell(2, 2, -1, "#0066CC", true),
+						new Cell(3, 2, -1, "#0080FF", true),
+						new Cell(4, 2, -1, "#00FFFF", true),
+						new Cell(5, 2, -1, "#C20078", true),
+						new Cell(6, 2, -1, "#7E1E9C", true),
+						new Cell(7, 2, -1, "#FFFFFF", true));
 
     gLayer = parseInt(localStorage["cubetube.currentlayer"]);
     gSelectedPieceIndex = parseInt(localStorage["cubetube.selectedpiece"]);
     gSelectedPieceArrayIndex = parseInt(localStorage["cubetube.selectedarray"]);
     gPickedColorIndex = parseInt(localStorage["cubetube.selectedcolorindex"]);
-    $("#colors").val(localStorage["cubetube.selectedcolor"]);
+    gSelectedColor = localStorage["cubetube.selectedcolor"];
 
     drawCube();
     drawPicker();
@@ -358,32 +363,32 @@ function newGame() {
 	for (var z=0; z<kBoardWidth; z++)
 		for (var r=0; r<kBoardHeight; r++)
 			for (var c=0; c<kBoardWidth; c++)
-				gPieces.push(new Cell(r, c, "#00000", false));
+				gPieces.push(new Cell(r, c, -1, "#00000", false));
 
-    gColors = new Array(new Cell(0, 0, "#660000", true),
-						new Cell(1, 0, "#FF0000", true),
-						new Cell(2, 0, "#FF6666", true),
-						new Cell(3, 0, "#FF9999", true),
-						new Cell(4, 0, "#FFB266", true),
-						new Cell(5, 0, "#FF9933", true),
-						new Cell(6, 0, "#FF8000", true),
-						new Cell(7, 0, "#CC3300", true),
-						new Cell(0, 1, "#006600", true),
-						new Cell(1, 1, "#00FF00", true),
-						new Cell(2, 1, "#99FF99", true),
-						new Cell(3, 1, "#029386", true),
-						new Cell(4, 1, "#FFFF99", true),
-						new Cell(5, 1, "#FFFF14", true),
-						new Cell(6, 1, "#666600", true),
-						new Cell(7, 1, "#929591", true),
-						new Cell(0, 2, "#000066", true),
-						new Cell(1, 2, "#0000FF", true),
-						new Cell(2, 2, "#0066CC", true),
-						new Cell(3, 2, "#0080FF", true),
-						new Cell(4, 2, "#00FFFF", true),
-						new Cell(5, 2, "#C20078", true),
-						new Cell(6, 2, "#7E1E9C", true),
-						new Cell(7, 2, "#FFFFFF", true));
+    gColors = new Array(new Cell(0, 0, -1, "#660000", true),
+						new Cell(1, 0, -1, "#FF0000", true),
+						new Cell(2, 0, -1, "#FF6666", true),
+						new Cell(3, 0, -1, "#FF9999", true),
+						new Cell(4, 0, -1, "#FFB266", true),
+						new Cell(5, 0, -1, "#FF9933", true),
+						new Cell(6, 0, -1, "#FF8000", true),
+						new Cell(7, 0, -1, "#CC3300", true),
+						new Cell(0, 1, -1, "#006600", true),
+						new Cell(1, 1, -1, "#00FF00", true),
+						new Cell(2, 1, -1, "#99FF99", true),
+						new Cell(3, 1, -1, "#029386", true),
+						new Cell(4, 1, -1, "#FFFF99", true),
+						new Cell(5, 1, -1, "#FFFF14", true),
+						new Cell(6, 1, -1, "#666600", true),
+						new Cell(7, 1, -1, "#929591", true),
+						new Cell(0, 2, -1, "#000066", true),
+						new Cell(1, 2, -1, "#0000FF", true),
+						new Cell(2, 2, -1, "#0066CC", true),
+						new Cell(3, 2, -1, "#0080FF", true),
+						new Cell(4, 2, -1, "#00FFFF", true),
+						new Cell(5, 2, -1, "#C20078", true),
+						new Cell(6, 2, -1, "#7E1E9C", true),
+						new Cell(7, 2, -1, "#FFFFFF", true));
 
     gNumPieces = gPieces.length;
     gSelectedPieceIndex = -1;

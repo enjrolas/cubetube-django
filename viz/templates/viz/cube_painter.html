@@ -21,49 +21,35 @@
 {% block content %}
 	<script type="text/javascript">
 		var accessToken=$.cookie("accessToken");
+		var coreID = $.cookie("coreID");
 		var currentMode = '';
 		var populateModesTimer = null;
 		var selectFromDropdownTimer = null;
-		if(typeof accessToken === 'undefined' || accessToken === null) {
-			console.log('accessToken: Null');
-		    //$("#controlsWrapper").hide();
-		    $(".cubePainter").hide();
-		    $("div#updateListDiv").hide();
-		    $("div#brightnessControl").hide();
-		    $("span#device").html("Please Log In");
-		    $("span#mode").html("Please Log In");
-		}
-		else {
-		    console.log('accessToken: ' + accessToken);
-		    //$("#controlsWrapper").fadeIn(300);
-		    $(".cubePainter").fadeIn(300);
-		    $("div#updateListDiv").fadeIn(300);
-		    $("div#brightnessControl").fadeIn(300);
-		    setBrightness();
+		var syncInterval = null;
+		var idxArr = 0;
+		//var actualWidth = $(window).width();
+		
+		if(typeof accessToken !== 'undefined' && accessToken !== null) {
+		    $(".cubePainter").show();
 		}
 		
 		$(function() {
-		    // Dirty hack to allow for consistent display on Chrome
-			var browserType = navigator.userAgent.toLowerCase();
-			if (browserType.indexOf('chrome') >= 0) {
-				$("div#canvas").css({'text-align':'center','padding':'10px 410px 40px','height':'510px','width':'100%'});
-				$("select#colors").css('margin-top', '24px');
-			}
-			else {
-			    $("div#canvas").css({'text-align':'center','padding':'10px 380px 40px','height':'510px','width':'85%'});
-			    $("select#colors").css('margin-top', '23px');
-			}
-			
-			//$(".cubePainter").show();
-			//setBrightness();
-			$("div.round-button").css('padding-left', 'calc(100% / 2.2)');
+		    $("div.round-button").css('padding-left', 'calc(100% / 2.2)');
 			$("select#colors").prop('disabled', 'disabled');
+			
+			$("div.tagline").show();
+			$('.logo-box').on('mouseleave', function() {
+				clearTimeout(taglineTimer);
+				return false;
+			});
 			
 			if(currentMode == '') populateInterval();
 			
 			var $canvas = document.getElementById('cube_canvas');
 			var $colors = document.getElementById('colors_canvas');
 			initGame($canvas, $colors);
+			//clearInterval(syncInterval);
+		    //syncVoxels();
 		});
 	
 		function populateInterval() {
@@ -78,11 +64,9 @@
 					    if($("select#modes").val() !== currentMode)
 							$("select#modes").val(currentMode);
 					    else {
-							//$("#controlsWrapper").fadeIn(300);
-						    $("div#updateListDiv").fadeIn(300);
-						    $("div#brightnessControl").fadeIn(300);
-							$(".cubePainter").fadeIn(300);
-							setBrightness();
+	                		$("div#cubeAndModeText").show();
+							$("div#updateListDiv").show();
+							$("div#brightnessControl").show();
 							clearInterval(selectFromDropdownTimer);
 					    }
 					}, 100);
@@ -91,21 +75,20 @@
 		}
 		
 		function populateModes() {
-			$("select#modes").fadeOut(100).empty();  //clear all the existing modes before appending new ones
 			var deviceID = (typeof coreID !== 'undefined' && coreID !== null) ? coreID : getDeviceID();
 			if(typeof deviceID !== 'undefined' && deviceID !== null) {
-				$.get("https://api.particle.io/v1/devices/"+deviceID+"/mode/?access_token=" + accessToken, function(data) {
+				$("select#modes").fadeOut(100).empty();  //clear all the existing modes before appending new ones
+				$.get("https://api.particle.io/v1/devices/" + deviceID + "/mode/?access_token=" + accessToken, function(data) {
 					currentMode = data.result.trim();
 					$("span#mode").html(currentMode);
 					$("select#cubeName option").each(function() {
 					    if($(this).val() === getDeviceID())
 							$("span#device").html($(this).html());
 					});				
-					//$("select#modes").val(currentMode);
 					$("select#modes").fadeIn(300);
-					/*$(".cubePainter").fadeIn(300);
-				    $("div#updateListDiv").fadeIn(300);
-				    $("div#brightnessControl").fadeIn(300);*/
+					$("div#cubeAndModeText").fadeIn(300);
+					$("div#updateListDiv").fadeIn(300);
+					$("div#brightnessControl").fadeIn(300);
 				}, "json")
 				.fail(function() {
 					var message = '';
@@ -132,28 +115,29 @@
 		}
 		
 		function cubeNameOnChange() {
-		    var deviceID = getDeviceID();	// Reads currently 'selected' value from dropdown
+		    deviceID = getDeviceID();	// Reads currently 'selected' value from dropdown
 		    console.log('deviceID: ' + deviceID);
-			//selectedCoreId = deviceID;
-			
-			coreID = $.cookie("coreID");
-           	if( typeof coreID === 'undefined' || coreID === null ) {
-            	coreID = deviceID;
-            	var date = new Date();
-            	$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});
-           	}
-           	else {
-				$.removeCookie("coreID", { path: '/' });
-				coreID = deviceID;
-				var date = new Date();
-				$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});
-           	}
+
+			$.removeCookie("coreID", { path: '/' });
+           	coreID = deviceID;
+           	var date = new Date();
+           	$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});
 		    
-		    $("#cubeName option").each(function() {
+			$("select#cubeName option").each(function() {
 			    if($(this).val() === deviceID)
 					$("span#device").html($(this).html());
 			});
-		    
+
+       		if(coreID !== '-1') {
+				$("div#updateListDiv").fadeIn(300);
+				$("div#brightnessControl").fadeIn(300);
+	   		}
+	   		else {
+				$("span#mode").text('');
+				$("div#updateListDiv").fadeOut(100)
+				$("div#brightnessControl").fadeOut(100)
+	   		}
+       		setBrightness();
 		    clearInterval(populateModesTimer); 
 		    populateInterval();
 		}
@@ -163,41 +147,80 @@
 		}
 		
 		function setMode() {
-		    var deviceID = getDeviceID(); 
-			currentMode = $('#modes').find(":selected").val();
-			var brightness = $("#brightnessSlider").val();
-			var commandString = 'M:' + currentMode + ',S:5,B:' + brightness + ',';
-			//var commandString = 'M:' + currentMode + ',S:5,B:20,';
-			$("span#mode").html(currentMode);
-			$.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", { access_token: accessToken, args: commandString });
+		    if(typeof accessToken !== 'undefined' && accessToken !== null) {
+			    var deviceID = getDeviceID(); 
+				currentMode = $('#modes').find("option:selected").val();
+				var brightness = $("#brightnessSlider").val();
+				var commandString = 'M:' + currentMode + ',S:5,B:' + brightness + ',';
+				$("span#mode").html(currentMode);
+				$.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", { access_token: accessToken, args: commandString });
+		    }
 		}
 		
 		function setBrightness() {
-		    var deviceID = getDeviceID(); 
-			var brightness = $("#brightnessSlider").val();
-			var commandString = 'B:' + brightness + ',';
-			$("span#brightness").html(brightness);
-			$.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", { access_token: accessToken, args: commandString });
+		    if(typeof accessToken !== 'undefined' && accessToken !== null 
+			    && $("span#mode").html().trim().toUpperCase() === 'CUBE PAINTER') {
+			    var deviceID = getDeviceID(); 
+				var brightness = $("#brightnessSlider").val();
+				var commandString = 'B:' + (brightness > 0 ? brightness : 1) + ',';
+				$("span#brightness").html(brightness);
+				$.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", { access_token: accessToken, args: commandString });
+		    }
 		}
-		
+
 		function setVoxel(index, color) {
-			var deviceID = getDeviceID();
-			var commandString = 'I' + index + ',' + color + ',';
-			$.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", { access_token: accessToken, args: commandString });
+		    if(typeof accessToken !== 'undefined' && accessToken !== null
+			    && $("span#mode").html().trim().toUpperCase() === 'CUBE PAINTER') {
+				var deviceID = getDeviceID();
+				var commandString = 'I' + index + ',' + color + ',';
+				$.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", { access_token: accessToken, args: commandString });
+		    }
 		}
 		
 		function clearVoxels(startIdx, endIdx) {
-			var deviceID = getDeviceID();
-			var commandString = 'C' + startIdx + ':' + endIdx + ',';
-			$.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", { access_token: accessToken, args: commandString });
-			clearPieces(startIdx, endIdx);
+		    if(typeof accessToken !== 'undefined' && accessToken !== null 
+			    && $("span#mode").html().trim().toUpperCase() === 'CUBE PAINTER') {
+				var deviceID = getDeviceID();
+				var commandString = 'C' + startIdx + ':' + endIdx + ',';
+				$.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", { access_token: accessToken, args: commandString });
+				clearPieces(startIdx, endIdx);
+		    }
+		}
+
+		function syncVoxels() {
+		    if(typeof accessToken !== 'undefined' && accessToken !== null 
+			    && $("span#mode").html().trim().toUpperCase() === 'CUBE PAINTER') {
+				var deviceID = getDeviceID();
+				var commandString = 'C0:' + gNumPieces + ',';
+				$.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", { access_token: accessToken, args: commandString });
+				
+				var gDrawing = new Array();
+				for(var idxArrDr = 0; idxArrDr < gNumPieces; idxArrDr++)
+				    if(gPieces[idxArrDr].isFilled)
+						gDrawing.push(new Cell(gPieces[idxArrDr].row, gPieces[idxArrDr].column, gPieces[idxArrDr].zIndex, gPieces[idxArrDr].fillColor, true));
+				
+				idxArr = 0;
+				syncInterval = setInterval(function() {
+					    if(idxArr < gDrawing.length) {
+							var voxelIndex = ((gDrawing[idxArr].zIndex*kNumPieces) + (gDrawing[idxArr].column*(kNumPieces/kBoardWidth)) + (kBoardHeight - gDrawing[idxArr].row)) - 1;
+							//console.log('Setting voxel #' + voxelIndex);
+							setVoxel(voxelIndex, gDrawing[idxArr].fillColor);
+						    idxArr++;
+					    }
+					else
+						clearInterval(syncInterval);
+				}, 60);
+			}
 		}
 	</script>
+{% load utils %}
+{% logged_in_status as logged_in %}
 	<div style="margin-top: 60px; padding: 0px 25% 12px; text-align: center; background: #1C1521">
 		<div id="cubeAndModeText">
-			<div>Selected Cube:  <span id="device"></span></div>
+			<div>Selected Cube:  <span id="device">Please Log In</span></div>
 			<div>Selected Mode:  <span id="mode"></span></div>
 		</div>
+	{% if logged_in %}
 		<div style="clear: both; height: 10px; background: #1C1521"></div>
 		<div id="updateListDiv">
 			<a id="updateListButton" href="#" onclick="cubeNameOnChange();" title="Click here to refresh the modes list!">Update List</a>
@@ -209,49 +232,27 @@
 				<input id="brightnessSlider" type="range" min="0" max="100" step="1" value="20" onchange="setBrightness();" />
 			</div>
 		</div>
+	{% endif %}
 	</div>
-	<div style="clear: both; height: 7px; background: #1C1521 none repeat scroll 0% 0%"></div>
-	<div class="viz-cards" id="canvas">
-		<div id="color_select" style="float: right; height: 32px; width: 152px; text-align: center; padding-bottom: 10px">
-			<select id="colors">
-				<option value="#660000">Dark Red</option>
-				<option value="#FF0000">Red</option>
-				<option value="#FF6666">Pink</option>
-				<option value="#FF9999">Light Pink</option>
-				<option value="#FFB266">Tangerine</option>
-				<option value="#FF9933">Orange</option>
-				<option value="#FF8000">Tan</option>
-				<option value="#CC3300">Dark Tan</option>
-				<option value="#006600">Dark Green</option>
-				<option value="#00FF00">Green</option>
-				<option value="#99FF99">Lime</option>
-				<option value="#00FFFF">Cyan</option>
-				<option value="#FFFF99">Light Yellow</option>
-				<option value="#FFFF14">Yellow</option>  
-				<option value="#666600">Mustard</option>       
-				<option value="#929591">Grey</option>       
-				<option value="#000066">Dark Blue</option>       
-				<option value="#0000FF">Blue</option>       
-				<option value="#0066CC">Royal Blue</option>       
-				<option value="#0080FF">Light Blue</option>       
-				<option value="#029386">Teal</option>       
-				<option value="#C20078">Magenta</option>       
-				<option value="#7E1E9C">Purple</option>       
-				<option value="#FFFFFF">White</option>      
-			</select>
-		</div>
-		<div id="layerButtons" style="margin-left: 3%; width: 402px; text-align: center; padding-bottom: 10px">
-			<a id="layerButtons" href="#" onclick="decreaseLayer();" title="Click to move back one layer (towards back of Cube)">[-] One Layer</a>
+	<div style="clear: both; height: 7px; background: #1C1521"></div>
+	<div id="canvas">
+		<div style="float: right; height: 32px; width: 152px; text-align: center; padding-top: 10px"></div>
+		<div id="layerButtons" style=" /*margin-left: 15%; width: 402px;*/ text-align: center; padding-bottom: 10px">
+			<a id="layerButtons" href="#" onclick="decreaseLayer();" title="Click to move back one layer (towards back of Cube)">[+] One Layer</a>
 			<span id="currentLayer"></span>
-			<a id="layerButtons" href="#" onclick="increaseLayer();" title="Click to move forth one layer (towards front of Cube)">[+] One Layer</a>
+			<a id="layerButtons" href="#" onclick="increaseLayer();" title="Click to move forth one layer (towards front of Cube)">[-] One Layer</a>
+		</div>
+		<div id="layerButtons" style="text-align: center; padding-bottom: 10px; padding-right: 21%">
+			<a id="layerButtons" href="#" onclick="syncVoxels();" title="Click to resync your drawing to the Cube!">Resync Cube!</a>
 		</div>
 		<canvas height="401" width="401" id="cube_canvas">
 		    Your browser does not support the HTML5 canvas element.
 		</canvas>
-		<canvas style="float: right;" height="255" width="155" id="colors_canvas">
+		<canvas style="/*float: none;*/ padding-left: 15px" height="255" width="155" id="colors_canvas">
 		    Your browser does not support the HTML5 canvas element.
 		</canvas>
-		<div id="clearButtons" style="margin-left: 3%; width: 402px; text-align: center; padding-top: 10px">
+		<div style="float: right; height: 32px; width: 152px; text-align: center; padding-top: 10px"></div>
+		<div id="clearButtons" style="/*margin-left: 3%; width: 402px;*/ text-align: center; padding-top: 10px">
 			<a id="clearButtons" href="#" onclick="clearVoxels(gLayer*kNumPieces, (gLayer*kNumPieces)+kNumPieces);" title="Click to clear the current layer">Clear Layer</a>
 			<span id="currentLayer"></span>
 			<a id="clearButtons" href="#" onclick="clearVoxels(0, 512);" title="Click to clear the whole Cube">Clear All</a>

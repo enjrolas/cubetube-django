@@ -4,6 +4,7 @@
  */
 
 var isActive = true;
+var cubeNamesUpdateInterval = null;
 
 window.onfocus = function () {
     isActive = true;
@@ -18,7 +19,7 @@ $(function(){
 	//$cubeOptions = $( '.cube-options' );
 	if( $("select#cubeName").length ) {
 		listCubes();
-		setInterval('listCubes()', 15000);  //update the list of cubes every 15 seconds
+		cubeNamesUpdateInterval = setInterval('listCubes()', 1250);  //update the list of cubes every 1 second
 	}
 	else
 	    console.log("no cube options");
@@ -42,24 +43,16 @@ function listCubes() {
             		var device = devices[i];
             		if(typeof accessToken !== 'undefined' && accessToken !== null) {
             			$.get("https://api.particle.io/v1/devices/" + device.id + "?access_token=" + accessToken, function(data) {
-            				console.log(data.name + ': ' + (data.connected ? 'connected' : 'not connected'));
+            				//console.log(data.name + ': ' + (data.connected ? 'connected' : 'not connected'));
             				if(data.connected) {
             					//connectedCores++;
-            					//$("select#cubeName").find("option:contains('No cores online :(')").remove();
-            					$("select#cubeName").find("option[value='-1']").remove();
-	    			            if( typeof deviceID !== 'undefined' && deviceID !== null ) {
-	    			                deviceID=device.id;
-	    			                //console.log(deviceID);
-	    		                }
+            					$("select#cubeName option[value='-1']").remove();
             					deviceType = (device.productId === '0' ? 'Core' : 'Photon');
-            					
-            					$("select#cubeName option").each(function() {
-            						if($(this).val() == device.id) {
-            							deviceInList = true;
-            						}
-            					});
-            					/*if(device.name == coreID)
-								    deviceInList = true;*/
+            					deviceInList = $("select#cubeName option[value = '" + device.id + "']").length;
+								if( typeof deviceID !== 'undefined' && deviceID !== null ) {
+									deviceID=device.id;
+									//console.log(deviceID);
+								}            					
 								    
     							//append the cube name and ID to thr dropdown list
     							if(!deviceInList) {
@@ -72,7 +65,6 @@ function listCubes() {
             				}
             				else {
             					$("select#cubeName").find("option:contains('" + data.name + "')").remove();
-            					//$('#cubeName').change();
             				}
             			});
             		}
@@ -84,17 +76,20 @@ function listCubes() {
                 	$("select#cubeName").empty()
                 		.append($("<option></option>")
                 		.val('-1').html('No cores online :('));
+                	$('select#cubeName').change();
                 }
                 else {
 	            	coreID = $.cookie("coreID");
-	            	if( typeof coreID === 'undefined' || coreID === null ) {
-		            	$("select#cubeName").val(deviceID);
-		            	coreID = deviceID;
-		            	var date = new Date();
-		            	$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});
-	            	}
-            		$("select#cubeName").val(coreID);
-            	}
+	            	if( typeof coreID !== 'undefined' && coreID !== null )
+	            		coreID = $('select#cubeName').val();
+	            	if( typeof deviceID !== 'undefined' && deviceID !== null )
+	            		deviceID = coreID;
+	            	//console.log('coreID: ' + coreID);
+					var valueChanged = $('select#cubeName').val() !== coreID;
+					$('select#cubeName').val(coreID);
+					if(valueChanged)
+						$('select#cubeName').change();
+                }
             }
         },
         function(err) {

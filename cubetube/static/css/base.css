@@ -650,7 +650,7 @@ button {
 	min-width: 145px !important; 
 	max-width: 265px !important; 
 	margin-top: 21px !important;
-	margin-left: 37%;
+	margin-left: 27%;
 	display: none;	
 }
 #cubeAndModeText, #pleaseLogInText {
@@ -706,7 +706,14 @@ a#updateListButton {
 	width: 250px;
 	height: 10px;
 }
-
+div#canvas {
+	margin-left: 5%;
+	text-align: center;
+	padding: 10px 340px 40px;
+	height: 560px;
+	max-width: 1400px;
+	width: 120%;
+}
 .fb-share-button {
   position: absolute !important;
   top: 0px !important;
