@@ -158,12 +158,12 @@
 		}
 		
 		function setBrightness() {
+			var brightness = $("#brightnessSlider").val();
+			$("span#brightness").html(brightness);
 		    if(typeof accessToken !== 'undefined' && accessToken !== null 
 			    && $("span#mode").html().trim().toUpperCase() === 'CUBE PAINTER') {
 			    var deviceID = getDeviceID(); 
-				var brightness = $("#brightnessSlider").val();
 				var commandString = 'B:' + (brightness > 0 ? brightness : 1) + ',';
-				$("span#brightness").html(brightness);
 				$.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", { access_token: accessToken, args: commandString });
 		    }
 		}
