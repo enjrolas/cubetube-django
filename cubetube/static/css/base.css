@@ -678,7 +678,7 @@ span#currentLayer {
 	color: #2bc6fb;
 }
 #updateListDiv {
-	width: 300px; 
+	width: 310px; 
 	margin-left: 33%;
 	/*margin-right: 2%;*/
 	font-weight: bold;
@@ -707,7 +707,7 @@ a#updateListButton {
 	height: 10px;
 }
 div#canvas {
-	margin-left: 2%;
+	/*margin-left: 2%;*/
 	text-align: center;
 	padding: 10px 340px 40px;
 	height: 560px;
@@ -715,11 +715,11 @@ div#canvas {
 	width: 129%;
 }
 .gradient {
-    background: #1C1521; /* For browsers that do not support gradients */    
-    background: -webkit-linear-gradient(left, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0)); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0)); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0)); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(to right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0)); /* Standard syntax (must be last) */
+    background: #1C1521;	/* For browsers that do not support gradients */    
+    background: -webkit-linear-gradient(left, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));	/* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Firefox 3.6 to 15 */
+    background: linear-gradient(to right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* Standard syntax (must be last) */
 }
 .fb-share-button {
   position: absolute !important;
