@@ -12,6 +12,7 @@
 	<!-- to keep this view from reloading from the cache (especially nasty after deletions) -->
 	<meta http-equiv="Pragma" content="no-cache">
 	<meta http-equiv="Expires" content="-1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 {% endblock %}
 
 {% block header %}
@@ -215,18 +216,19 @@
 	</script>
 {% load utils %}
 {% logged_in_status as logged_in %}
-	<div style="margin-top: 60px; padding: 0px 25% 12px; text-align: center; background: #1C1521">
+<div id="gallery-wrapper" class="viz-cards" style="padding-top: 0px !important;">
+	<div class="gradient" style="margin-top: 60px; padding: 0px 25% 12px; text-align: center; border-radius: 0px 0px 30px 30px">
 		<div id="cubeAndModeText">
 			<div>Selected Cube:  <span id="device">Please Log In</span></div>
 			<div>Selected Mode:  <span id="mode"></span></div>
 		</div>
 	{% if logged_in %}
-		<div style="clear: both; height: 10px; background: #1C1521"></div>
+		<div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
 		<div id="updateListDiv">
 			<a id="updateListButton" href="#" onclick="cubeNameOnChange();" title="Click here to refresh the modes list!">Update List</a>
 	 		<select id="modes" onchange="setMode();"></select>
 	 	</div>
- 		<div style="clear: both; height: 15px; background: #1C1521"></div>
+ 		<div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
 		<div id="brightnessControl">
 			<div>Brightness:  <span style="margin-right: 10px" id="brightness"></span>
 				<input id="brightnessSlider" type="range" min="0" max="100" step="1" value="20" onchange="setBrightness();" />
@@ -234,7 +236,7 @@
 		</div>
 	{% endif %}
 	</div>
-	<div style="clear: both; height: 7px; background: #1C1521"></div>
+	<!-- <div style="clear: both; height: 7px; background: #1C1521"></div> -->
 	<div id="canvas">
 		<div style="float: right; height: 32px; width: 152px; text-align: center; padding-top: 10px"></div>
 		<div id="layerButtons" style=" /*margin-left: 15%; width: 402px;*/ text-align: center; padding-bottom: 10px">
@@ -252,12 +254,13 @@
 		    Your browser does not support the HTML5 canvas element.
 		</canvas>
 		<div style="float: right; height: 32px; width: 152px; text-align: center; padding-top: 10px"></div>
-		<div id="clearButtons" style="/*margin-left: 3%; width: 402px;*/ text-align: center; padding-top: 10px">
+		<div id="clearButtons" style="text-align: center; padding-top: 10px">
 			<a id="clearButtons" href="#" onclick="clearVoxels(gLayer*kNumPieces, (gLayer*kNumPieces)+kNumPieces);" title="Click to clear the current layer">Clear Layer</a>
 			<span id="currentLayer"></span>
 			<a id="clearButtons" href="#" onclick="clearVoxels(0, 512);" title="Click to clear the whole Cube">Clear All</a>
 		</div>
 	</div>
+</div>
 {% endblock %}
 
 {% block footer %}
