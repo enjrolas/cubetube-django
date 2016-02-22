@@ -736,7 +736,7 @@ div.mobile-splitter {
 		padding: 10px 170px 40px;
 	}
 }
-@media screen and (min-width: 1210px) and (max-width: 1300px) {
+@media screen and (min-width: 1110px) and (max-width: 1300px) {
 	div#canvas {
 		padding: 10px 280px 40px;
 	}
