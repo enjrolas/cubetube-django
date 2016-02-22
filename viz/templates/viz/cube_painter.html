@@ -161,8 +161,7 @@
 		function setBrightness() {
 			var brightness = $("#brightnessSlider").val();
 			$("span#brightness").html(brightness);
-		    if(typeof accessToken !== 'undefined' && accessToken !== null 
-			    && $("span#mode").html().trim().toUpperCase() === 'CUBE PAINTER') {
+		    if(typeof accessToken !== 'undefined' && accessToken !== null) {
 			    var deviceID = getDeviceID(); 
 				var commandString = 'B:' + (brightness > 0 ? brightness : 1) + ',';
 				$.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", { access_token: accessToken, args: commandString });
@@ -238,22 +237,23 @@
 	</div>
 	<!-- <div style="clear: both; height: 7px; background: #1C1521"></div> -->
 	<div id="canvas">
-		<div style="float: right; height: 32px; width: 152px; text-align: center; padding-top: 10px"></div>
-		<div id="layerButtons" style=" /*margin-left: 15%; width: 402px;*/ text-align: center; padding-bottom: 10px">
+		<div class="spacer"></div>
+		<div id="layerButtons" style="text-align: center; padding-bottom: 10px">
 			<a id="layerButtons" href="#" onclick="decreaseLayer();" title="Click to move back one layer (towards back of Cube)">[+] One Layer</a>
 			<span id="currentLayer"></span>
 			<a id="layerButtons" href="#" onclick="increaseLayer();" title="Click to move forth one layer (towards front of Cube)">[-] One Layer</a>
 		</div>
-		<div id="layerButtons" style="text-align: center; padding-bottom: 10px; padding-right: 21%">
-			<a id="layerButtons" href="#" onclick="syncVoxels();" title="Click to resync your drawing to the Cube!">Resync Cube!</a>
+		<div class="mobile-splitter"></div>
+		<div id="syncButton">
+			<a id="syncButton" href="#" onclick="syncVoxels();" title="Click to resync your drawing to the Cube!">Resync Cube!</a>
 		</div>
 		<canvas height="401" width="401" id="cube_canvas">
 		    Your browser does not support the HTML5 canvas element.
 		</canvas>
-		<canvas style="/*float: none;*/ padding-left: 15px" height="255" width="155" id="colors_canvas">
+		<canvas style="padding-left: 15px" height="255" width="155" id="colors_canvas">
 		    Your browser does not support the HTML5 canvas element.
 		</canvas>
-		<div style="float: right; height: 32px; width: 152px; text-align: center; padding-top: 10px"></div>
+		<div class="spacer"></div>
 		<div id="clearButtons" style="text-align: center; padding-top: 10px">
 			<a id="clearButtons" href="#" onclick="clearVoxels(gLayer*kNumPieces, (gLayer*kNumPieces)+kNumPieces);" title="Click to clear the current layer">Clear Layer</a>
 			<span id="currentLayer"></span>

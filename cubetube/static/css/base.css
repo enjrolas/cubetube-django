@@ -659,9 +659,8 @@ button {
 	color: #2bc6fb;
 	text-align: justify; 
 	margin-left: 34%;
-	/*padding-left: 8%;*/
 }
-#updateListDiv, a#layerButtons, a#clearButtons {
+#updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
 	width: 275px; 
 	background: #ee0026; 
 	color: #fff; 
@@ -669,7 +668,6 @@ button {
 	padding: 6px 22px; 
 	text-align: center; 
 	text-decoration: none;
-	/*height: 100%;*/ 
 	line-height: 32px;
 }
 span#currentLayer {
@@ -680,7 +678,6 @@ span#currentLayer {
 #updateListDiv {
 	width: 310px; 
 	margin-left: 33%;
-	/*margin-right: 2%;*/
 	font-weight: bold;
 }
 a#updateListButton {
@@ -700,19 +697,32 @@ a#updateListButton {
 	margin-left: 23%;
 	padding: 6px 22px; 
 	text-align: center;
-	/*padding: 8px 8px;*/
 }
 #brightnessSlider {
 	width: 250px;
 	height: 10px;
 }
 div#canvas {
-	/*margin-left: 2%;*/
 	text-align: center;
 	padding: 10px 340px 40px;
 	height: 560px;
 	max-width: 1400px;
-	width: 129%;
+}
+div#syncButton {
+	text-align: center; 
+	padding-bottom: 10px; 
+	padding-right: 21%;
+}
+div.spacer {
+	display: block;
+	float: right; 
+	height: 32px; 
+	width: 152px; 
+	text-align: center; 
+	padding-top: 10px
+}
+div.mobile-splitter {
+	display: none;
 }
 .gradient {
     background: #1C1521;	/* For browsers that do not support gradients */    
@@ -721,6 +731,85 @@ div#canvas {
     background: -moz-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Firefox 3.6 to 15 */
     background: linear-gradient(to right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* Standard syntax (must be last) */
 }
+@media screen and (max-width: 1100px) {
+	div#canvas {
+		padding: 10px 170px 40px;
+	}
+}
+@media screen and (min-width: 1210px) and (max-width: 1300px) {
+	div#canvas {
+		padding: 10px 280px 40px;
+	}
+}
+@media screen and (max-width: 500px) {
+	ul.items {
+		position: absolute;
+		margin-left: 48px;
+		margin-top: -9px;
+	}
+	div.tagline {
+		width: 275px !important;
+		margin-top: -60px !important;
+		margin-left: 80px !important;
+	}
+	.cubePainter {
+		min-width: 145px !important; 
+		max-width: 265px !important; 
+		margin-top: -25px !important;
+		margin-left: 29%;
+		display: none;	
+	}
+	#cubeAndModeText, #pleaseLogInText {
+		width: 350px; 
+		margin-left: -20px;
+	}
+	div#updateListDiv {
+		width: 300px;
+		margin-left: -40px;
+		margin-right: 0px;
+	}
+	div#brightnessControl {
+		width: 300px;
+		margin-left: -40px;
+		margin-right: 0px;
+	}
+	#brightnessSlider {
+		width: 100px;
+		height: 10px;
+	}
+	div#canvas {
+		padding: 10px 0 40px;
+		height: 950px;
+		max-width: 500px;
+	}
+	a#updateListButton {
+		width: 125px; 
+		margin-right: 0px;
+	}
+	div#syncButton {
+		padding-bottom: 10px; 
+		padding-left: 0px !important;
+		padding-right: 0px !important;
+	}
+	div.mobile-splitter {
+		display: block;
+		float: left; 
+		height: 32px; 
+		width: 1px; 
+		padding-top: 10px;
+	}
+	div.spacer {
+		display: none;
+	}
+	.gradient {
+	    background: #1C1521;	/* For browsers that do not support gradients */    
+	    background: -webkit-linear-gradient(left, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));	/* For Safari 5.1 to 6.0 */
+	    background: -o-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Opera 11.1 to 12.0 */
+	    background: -moz-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Firefox 3.6 to 15 */
+	    background: linear-gradient(to right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* Standard syntax (must be last) */
+	}
+}
+
 .fb-share-button {
   position: absolute !important;
   top: 0px !important;
