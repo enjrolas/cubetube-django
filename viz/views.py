@@ -337,10 +337,9 @@ def justCompile(request):
     return JsonResponse(response)
 
 
-def jsgallery(request, filter="newestFirst", featuredViz=None, vizCreator=None):
-    log.debug("js gallery")
-    log.debug(vizCreator)
-    
+#def jsgallery(request, filter="newestFirst", featuredViz=None, vizCreator=None):
+def jsgallery(request, filter="newestFirst", filterTerm=None):
+    featuredViz = None  #request.GET.get('featuredViz', None)
     accessToken=request.COOKIES.get('accessToken') 
     try:
         user=CubeUser.objects.filter(accessToken=accessToken).get()
@@ -357,10 +356,12 @@ def jsgallery(request, filter="newestFirst", featuredViz=None, vizCreator=None):
     cardsPerPage=8
 
     if(filter=='newestFirst'):
+        if filterTerm:
+            featuredViz = int(filterTerm)
         vizs=Viz.objects.all().order_by("-pageViews", "-created").exclude(published=False)    
     elif(filter=='byCreator'):
         try:
-            vizUser=CubeUser.objects.filter(nickname=vizCreator).first()
+            vizUser=CubeUser.objects.filter(nickname=filterTerm).first()
         except CubeUser.DoesNotExist:
             vizUser=None
         if(vizUser):        
