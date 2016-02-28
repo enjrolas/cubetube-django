@@ -85,12 +85,17 @@ $('body').on('click', '.scroll', function(e) {
 					var debugMsg = "totalRows=" + totalRows + "\ncardsPerRow=" + cardsPerRow; 
 					console.log(debugMsg);
 					$('#viz-cards').animate({height: ((vizCardHeight+vizCardBottomMargin)*totalRows)}, 1200, "linear");
-					$('.viz-card').each(function() { $(this).fadeIn(1200, "linear"); });
+					$('.viz-card').each(function() { 
+						//First, we need to rebind the YT video preview to the viz card
+						bindVideoPreviews($(this));
+						//Then we fade it in
+						$(this).fadeIn(1200, "linear"); 
+					});
 					break;
 				case "more":
 				case "back":
-					// Here we append the code returned by the view to the existing viz gallery code
-					vizCardsDiv.find('.viz-card').each(function() { 
+					vizCardsDiv.find('.viz-card').each(function() {
+				    	//First, we append the code returned by the view to the existing viz gallery code
 						$(this).appendTo('#viz-cards').height(0); 
 						if($(this).prev().length) {
 							if($(this).position().top != $(this).prev().position().top) 
@@ -101,6 +106,8 @@ $('body').on('click', '.scroll', function(e) {
 							totalRows++;
 							cardsPerRow++;
 						}
+						//Then we need to rebind the YT video preview to the viz card
+						bindVideoPreviews($(this));
 					});
 					var debugMsg = "totalRows=" + totalRows + "\ncardsPerRow=" + cardsPerRow; 
 					console.log(debugMsg);

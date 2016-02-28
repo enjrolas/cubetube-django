@@ -169,6 +169,10 @@ button {
     opacity: 1;
     margin-top: 0px; } }
 
+
+/* active signs (hover)*/
+.rate-active{color: #ee0026;}
+
 /**
  * - Popover appeared. Stop all scrolling. 
  */
@@ -303,6 +307,7 @@ button {
 
 .error-area {
   text-align: center;
+  vertical-align: middle;
   font-size: 12px;
   line-height: 29px;
   height: 10px;
@@ -437,7 +442,8 @@ button {
     background: #f9f9f9;
     padding-top: 5px;
     padding-bottom: 35px;
-    margin-top: 25px;
+    margin-top: 35px;
+    clear: both;
     border-top: 1px solid #ededed; }
     .viz-wrapper .viz-comments .comments-title {
       font-weight: 700;
@@ -639,6 +645,169 @@ button {
 #cubeName {
 	max-width: 145px; 
 	margin-top: -2px;
+}
+.cubePainter {
+	min-width: 145px !important; 
+	max-width: 265px !important; 
+	margin-top: 21px !important;
+	margin-left: 27%;
+	display: none;	
+}
+#cubeAndModeText, #pleaseLogInText {
+	width: 50%; 
+	font-weight: bold;
+	color: #2bc6fb;
+	text-align: justify; 
+	margin-left: 34%;
+}
+#updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
+	width: 275px; 
+	background: #ee0026; 
+	color: #fff; 
+	border-radius: 30px; 
+	padding: 6px 22px; 
+	text-align: center; 
+	text-decoration: none;
+	line-height: 32px;
+}
+span#currentLayer {
+	font-size:18px;
+	font-weight: bold;
+	color: #2bc6fb;
+}
+#updateListDiv {
+	width: 310px; 
+	margin-left: 33%;
+	font-weight: bold;
+}
+a#updateListButton {
+	width: 175px !important; 
+	background: #ee0026; 
+	color: #fff; 
+	text-align: center; 
+	text-decoration: none;
+	margin-right: 2%;
+}
+#brightnessControl {
+	width: 440px;
+	font-weight: bold;
+	background: #ee0026; 
+	color: #fff; 
+	border-radius: 30px; 
+	margin-left: 23%;
+	padding: 6px 22px; 
+	text-align: center;
+}
+#brightnessSlider {
+	width: 250px;
+	height: 10px;
+}
+div#canvas {
+	text-align: center;
+	padding: 10px 340px 40px;
+	height: 560px;
+	max-width: 1400px;
+}
+div#syncButton {
+	text-align: center; 
+	padding-bottom: 10px; 
+	padding-right: 21%;
+}
+div.spacer {
+	display: block;
+	float: right; 
+	height: 32px; 
+	width: 152px; 
+	text-align: center; 
+	padding-top: 10px;
+}
+div.mobile-splitter {
+	display: none;
+}
+.gradient {
+    background: #1C1521;	/* For browsers that do not support gradients */    
+    background: -webkit-linear-gradient(left, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));	/* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Firefox 3.6 to 15 */
+    background: linear-gradient(to right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* Standard syntax (must be last) */
+}
+@media screen and (max-width: 1100px) {
+	div#canvas {
+		padding: 10px 170px 40px;
+	}
+}
+@media screen and (min-width: 1110px) and (max-width: 1300px) {
+	div#canvas {
+		padding: 10px 280px 40px;
+	}
+}
+@media screen and (max-width: 500px) {
+	ul.items {
+		position: absolute;
+		margin-left: 48px;
+		margin-top: -9px;
+	}
+	div.tagline {
+		width: 275px !important;
+		margin-top: -60px !important;
+		margin-left: 80px !important;
+	}
+	.cubePainter {
+		min-width: 145px !important; 
+		max-width: 265px !important; 
+		margin-top: -25px !important;
+		margin-left: 29%;
+		display: none;	
+	}
+	#cubeAndModeText, #pleaseLogInText {
+		width: 350px; 
+		margin-left: -20px;
+	}
+	div#updateListDiv {
+		width: 300px;
+		margin-left: -40px;
+		margin-right: 0px;
+	}
+	div#brightnessControl {
+		width: 300px;
+		margin-left: -40px;
+		margin-right: 0px;
+	}
+	#brightnessSlider {
+		width: 100px;
+		height: 10px;
+	}
+	div#canvas {
+		padding: 10px 0 40px;
+		height: 950px;
+		max-width: 500px;
+	}
+	a#updateListButton {
+		width: 125px; 
+		margin-right: 0px;
+	}
+	div#syncButton {
+		padding-bottom: 10px; 
+		padding-left: 0px !important;
+		padding-right: 0px !important;
+	}
+	div.mobile-splitter {
+		display: block;
+		float: left; 
+		height: 32px; 
+		width: 1px; 
+		padding-top: 10px;
+	}
+	div.spacer {
+		display: none;
+	}
+	.gradient {
+	    background: #1C1521;	/* For browsers that do not support gradients */    
+	    background: -webkit-linear-gradient(left, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));	/* For Safari 5.1 to 6.0 */
+	    background: -o-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Opera 11.1 to 12.0 */
+	    background: -moz-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Firefox 3.6 to 15 */
+	    background: linear-gradient(to right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* Standard syntax (must be last) */
+	}
 }
 
 .fb-share-button {
@@ -959,7 +1128,19 @@ header {
     .viz-card .viz-demo canvas {
       width: 100%;
       height: 150px;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      height: 100%;      
       border-radius: 3px 3px 0px 0px; }
+    .viz-card .viz-demo .player {
+	  pointer-events: none;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      height: 100%; }	
   .viz-card .play-icon {
     position: absolute;
     top: 50%;

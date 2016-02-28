@@ -13,9 +13,13 @@
 	var compilerData;
 	var JSONstring;
 	var descTimer = null;
+	var overflowTimer = null;
 	var isMouseOut = false;
+	var loggedIn = false;
 	
 	$(document).ready(function() {
+		console.log('loggedIn: ' + loggedIn);
+		
 		// Enabling Esc key to close the viz
 		$(document).keydown(function(e) {
 			if (e.keyCode == 27) $('.close-button').click();	//Esc
@@ -24,15 +28,96 @@
 		if ($('#cubeName').length) $('#cubeName').focus();
 		else if ($('.comments-input').length) $('.comments-input').focus();
 		else window.focus();
-
-		/*$('.viz-description').on('mouseover', function() {
-			clearTimeout(descTimer);
-			isMouseOut = false;
-			descTimer = setTimeout(function() { if(!isMouseOut) expandDesc(); }, 600);
+		$('a.viz-next').on('mouseover', function() {
+			clearTimeout(overflowTimer);
+			$('div.viz-wrapper').css('overflow-y', 'auto');
 		}).on('mouseleave', function() {
-			isMouseOut = true;
-			descTimer = setTimeout(function() { collapseDesc(); clearTimeout(descTimer); }, 400);
-		});*/
+			overflowTimer = setTimeout(function() {
+				$('div.viz-wrapper').css('overflow-y', ''); 
+			}, 2400);
+		});
+		
+		/*var titleLength = $("div.title").text().length*6;
+		var createdLength = $("div.created").text().length*6;
+		var padding = Math.max(titleLength, createdLength);
+		console.log('titleLength:'+titleLength);
+		console.log('createdLength:'+createdLength);
+		console.log('padding:'+padding);
+		$("div#meterContainer").css({'float':'right', 'padding-right':'calc(100% - ' + padding + 'px)'});
+		$("div#meterContainer").css('float', 'right');
+		$(".industrial").css({'height':'calc(65px * 1)', 'animation':'dot 0s both', 'float':'right'}).industrial({});
+		var averageRating = parseInt('{{ viz.averageRating }}');
+		var pageViews = parseInt('{{ viz.pageViews }}');
+		console.log(pageViews/averageRating);
+		if(averageRating == 0) averageRating = 1;
+        $(".industrial.thermometer").each(function() {
+			$(this).industrial(pageViews/averageRating);
+        });*/
+		
+		$("span.rating").ratyli({
+			disable: !loggedIn,
+			unrateable: !loggedIn,
+			onRated:function(value,init) {
+				// rating callback
+				if(!init) {	// prevent run at init
+					clearError();
+					var votedFor = $.cookie("votedFor");
+					var hasVoted = false;
+				    if(!(votedFor === undefined || votedFor === null)) {
+				    	hasVoted = (votedFor.indexOf("{{ viz.pk }}") >= 0);
+				    }
+				    else votedFor = '';
+				    //console.log('votedFor: ' + votedFor);
+				    if(hasVoted) {
+				    	alert('Whoops! You\'ve already voted for this viz.');
+						/*$('span.error-area').css({'color':'red', 'line-height':'25px'});
+				    	displayError(null, 'Whoops! You\'ve already voted for this viz.');*/
+				    	return;
+				    }
+				    else {
+						var request=$.ajax({
+							type:"POST",
+							url:"{% url 'rate' %}", 
+							data: {"vizId":"{{ viz.pk }}", "rating":value },
+							dataType:"text",
+							success: function(data){
+								var result = $.parseJSON(data);
+								if (result.success) {
+									votedFor += "{{ viz.pk }};";
+									$.cookie("votedFor", votedFor, { expires: data.expires_in/86400 , path: '/'});
+									alert('You voted: ' + value + ' / New average: ' + result.newAverage);
+									/*$('span.error-area').css({'color':'blue', 'line-height':'25px'});
+									displayError(null, 'You voted: ' + value + ' / New average: ' + result.newAverage);*/
+								}
+								else {
+									$('span.error-area').css({'color':'red', 'line-height':'25px'});
+									if(result.error)
+										if(result.error.indexOf('already voted for Viz') >= 0) {
+											votedFor += "{{ viz.pk }};";
+											console.log('votedFor: ' + votedFor);
+											$.cookie("votedFor", votedFor, { expires: data.expires_in/86400 , path: '/'});
+											alert('Whoops! You\'ve already voted for this viz.');
+											//displayError(null, 'Whoops! You\'ve already voted for this viz.');
+										}
+										else alert('Whoa! This error just came in:\n\n' + result.error);
+											//displayError(null, result.error);
+									else alert('Whoops! Something unexpected happened.\nCouldn\'t compute your vote.');
+										//displayError(null, 'Whoops! Couldn\'t compute your vote.');
+								}
+							},
+							error: function(data){
+								var result = $.parseJSON(data);
+								$('span.error-area').css({'color':'red', 'line-height':'25px'});
+								if(result.error) alert('Whoa! This error just came in:\n\n' + result.error);
+									//displayError(null, result.error);
+								else alert('Whoops! Something unexpected happened.\nCouldn\'t compute your vote.');
+									//displayError(null, 'Whoops! Couldn\'t compute your vote.');
+							}
+						});
+				    }
+				}
+			}
+		});		
 	});
 	
 	// Controls the expanding/collapsing the viz description text field
@@ -44,6 +129,36 @@
 	function collapseDescription() {
 		isMouseOut = true;
 		descTimer = setTimeout(function() { collapseDesc(); clearTimeout(descTimer); }, 400);
+	}
+
+	function displayError(error, message) {
+	    if( message ) {
+	    	$('span.error-area').fadeTo(300,0);
+	        $('span.error-area').html(message);
+	        $('span.error-area').fadeTo(300,1);
+	        return;
+	    }
+	}
+	function clearError() {
+	    $('span.error-area').fadeTo(300,0);
+	    $('span.error-area').html('');
+	    $('span.error-area').show();
+	}
+	
+	// Controls the expanding/collapsing the viz description text field
+	function expandDescription() {
+		clearTimeout(descTimer);
+		clearTimeout(overflowTimer);
+		$('div.viz-wrapper').css('overflow-y', 'auto');
+		isMouseOut = false;
+		descTimer = setTimeout(function() { if(!isMouseOut) expandDesc(); }, 600);
+	}
+	function collapseDescription() {
+		isMouseOut = true;
+		descTimer = setTimeout(function() { collapseDesc(); clearTimeout(descTimer); }, 400);
+		overflowTimer = setTimeout(function() {
+			$('div.viz-wrapper').css('overflow-y', ''); 
+		}, 2400);
 	}
 
 	function flashCube(){
@@ -95,8 +210,8 @@
 				$("textarea.output").val(output);
 			},
 			error: function(data){
-					console.log("fail");
-					console.log(data);
+				console.log("fail");
+				console.log(data);
 			}
 		});
 	}
@@ -205,6 +320,15 @@
 
 {% load utils %}
 {% logged_in_status as logged_in %}
+{% if logged_in %}
+	<script type="text/javascript">
+		loggedIn = true;
+	</script>
+{% else %}
+	<script type="text/javascript">
+		loggedIn = false;
+	</script>
+{% endif %}
 
 {% if source %}
   <div class="viz-wrapper" data-viz-type="{{ viz.vizType }}" data-viz-id="{{ viz.pk }}" data-viz-author="{{ viz.creator.nickname }}" data-viz-url="{% url 'code' source.pk %}">
@@ -260,9 +384,26 @@
     <div class="inner-wrapper">
       
       <div class="viz-created">
+<!--
+ 		<div id="meterContainer">
+		{% if viz.averageRating > 0 %}
+			<a href="#" title="This viz's popularity rank: {% widthratio viz.pageViews viz.averageRating 1 %}">
+		{% else %}
+			<a href="#" title="This viz's popularity rank: {% widthratio viz.pageViews 1 1 %}">
+		{% endif %}
+				<div class="industrial thermometer size one"> <span class="ticks" data-amount="10"></span>
+					<div class="space"></div>
+					<div class="meter"></div>
+				</div>
+			</a>
+		</div>
+-->
         <div class="title">
-          {{ viz.name }}
+			{{ viz.name }}
+			<span class="rating" data-rate="{{ viz.averageRating }}" data-ratemax="5"></span>
+			<!-- <span class="error-area"></span> -->
         </div>
+
         <div class="created">
           Created by {{ viz.creator.nickname }} on {{ viz.created|date:"F d, Y" }}
         </div>
@@ -283,7 +424,7 @@
 		</div>
 	{% endif %}
     </div>
-
+	<div style="clear: both"></div>
     <div class="viz-comments clearfix" style="height: 160px; overflow: auto;">
       <div class="inner-wrapper">
         <div class="comments-title">

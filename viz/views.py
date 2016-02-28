@@ -15,6 +15,7 @@ import os
 from django.core.files import File
 from itertools import chain
 from django.db.models.query import QuerySet
+from datetime import date
 log = logging.getLogger(__name__)
 
 def filter(request):
@@ -178,8 +179,6 @@ def cloudFlash(request):
         vizName="undefined"
 
 
-    #not sure if this is causing a problem with connectivity, pulling it out for now
-    #code="%s\nchar* vizName=\"%s\";\nint vizId=%d;\n%s" % (settings.SPARK_LIBRARY, vizName, vizId, code)
     code="%s\n%s" % (settings.SPARK_LIBRARY, code)
 
     lines=code.split('\n')
@@ -189,57 +188,6 @@ def cloudFlash(request):
         code="%s\n%s" % (code, line)
         i+=1
 
-    #original version, inserts viz ID and name as spark variables -- I suspect it's monkeying with stuff
-    '''
-    lines=code.split('\n')
-    i=0
-    code=""
-    setupStarted=False
-    codeInserted=False
-    for line in lines:
-        if not codeInserted:
-            if not setupStarted:
-                if line.find("setup()")!=-1:
-                    setupStarted=True
-            else:
-                if line.find("}")!=-1:
-                    log.debug("inserting code")
-                    code="%s\n%s" % (code,  "Spark.variable(\"vizName\", vizName, STRING);\nSpark.variable(\"vizId\", &vizId, INT);")                
-                    codeInserted=True
-        code="%s\n%s" % (code, line)
-        i+=1
-
-    '''
-
-    '''
-
-    lines=code.split('\n')
-    i=0
-    code=""
-    setupStarted=False
-    codeInserted=False
-    for line in lines:
-        if not setupCodeInserted:
-            if not setupStarted:
-                if line.find("setup()")!=-1:
-                    setupStarted=True
-            else:
-                if line.find("}")!=-1:
-                    log.debug("inserting code")
-                    code="%s\n%s" % (code,  "Spark.variable(\"vizName\", vizName, STRING);\nSpark.variable(\"vizId\", &vizId, INT);")                
-                    setupCodeInserted=True
-            if not setupCodeInserted:
-            if not setupStarted:
-                if line.find("setup()")!=-1:
-                    setupStarted=True
-            else:
-                if line.find("}")!=-1:
-                    log.debug("inserting code")
-                    code="%s\n%s" % (code,  "Spark.variable(\"vizName\", vizName, STRING);\nSpark.variable(\"vizId\", &vizId, INT);")                
-                    setupCodeInserted=True
-        code="%s\n%s" % (code, line)
-        i+=1
-    '''
 
     timestamp=datetime.datetime.now().strftime('%Y-%m-%d--%H.%M.%S')
     filename=timestamp+".ino"
@@ -263,6 +211,20 @@ def cloudFlash(request):
         
     return JsonResponse(jsonResult, safe=False)
 
+@csrf_exempt
+def flashSparkle(request):
+    accessToken=request.POST['accessToken']
+    deviceID=request.POST['deviceID']        
+    directory=settings.CODE_DIRECTORY
+    command=['node', 'flashSparkle.js', '%s' % accessToken, '%s' % deviceID]
+    log.debug(command)
+    p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=directory)
+    jsonResult=""
+    for line in p.stdout.readlines():
+        jsonResult="%s%s" % (jsonResult, line)
+    retval = p.wait() 
+        
+    return JsonResponse(jsonResult, safe=False)
 
 @csrf_exempt
 def justCompile(request):
@@ -337,10 +299,9 @@ def justCompile(request):
     return JsonResponse(response)
 
 
-def jsgallery(request, filter="newestFirst", featuredViz=None, vizCreator=None):
-    log.debug("js gallery")
-    log.debug(vizCreator)
-    
+#def jsgallery(request, filter="newestFirst", featuredViz=None, vizCreator=None):
+def jsgallery(request, filter="newestFirst", filterTerm=None):
+    featuredViz = None  #request.GET.get('featuredViz', None)
     accessToken=request.COOKIES.get('accessToken') 
     try:
         user=CubeUser.objects.filter(accessToken=accessToken).get()
@@ -357,10 +318,12 @@ def jsgallery(request, filter="newestFirst", featuredViz=None, vizCreator=None):
     cardsPerPage=8
 
     if(filter=='newestFirst'):
+        if filterTerm:
+            featuredViz = int(filterTerm)
         vizs=Viz.objects.all().order_by("-pageViews", "-created").exclude(published=False)    
     elif(filter=='byCreator'):
         try:
-            vizUser=CubeUser.objects.filter(nickname=vizCreator).first()
+            vizUser=CubeUser.objects.filter(nickname=filterTerm).first()
         except CubeUser.DoesNotExist:
             vizUser=None
         if(vizUser):        
@@ -409,6 +372,8 @@ def index(request):
     else:
         visualizations=vizs[:8]
     return render(request, "viz/index.html", { 'visualizations' : visualizations, 'totalObjects' : totalObjects})
+
+
 
 @csrf_exempt
 def fork(request, vizId=None):
@@ -481,41 +446,15 @@ def viz(request, id):
     else:
         return render(request, "viz/viz.html", { 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})
 
-''' Redeclaring above method; keeping it here for a while, until it's safe to remove
-def viz(request, id):
-    currentViz=Viz.objects.get(pk=id)
-    try:
-        binary=Binary.objects.get(viz=currentViz)
-    except Binary.DoesNotExist:
-        binary=None
-    
-    try:
-        photo = Photo.objects.filter(viz=currentViz)[:1].get()  #get the main image associated with this viz, and use it as the photo
-    except Photo.DoesNotExist:
-        photo = False
+def sparkle(request):
+    return render(request, "viz/sparkle.html")
+def sparkleGallery(request):
+    return render(request, "viz/sparkleGallery.html", { 'visualizations' : None , 'nextPage' : None})        
+def spark_pixels(request):
+    return render(request, "viz/spark_pixels.html")
+def cube_painter(request):
+    return render(request, "viz/cube_painter.html")
 
-    comments=Comment.objects.filter(viz=currentViz)
-    currentViz.pageViews=currentViz.pageViews+1
-    currentViz.save()
-
-    # 17 is the beginning of the new cube viz's
-    # @TODO: Change number for production
-    if int(id) >= 2:
-        source=SourceCode.objects.get(viz=currentViz)
-        photo = False
-    else:
-        source = False;
-        
-    try:
-        nextViz = currentViz.get_previous_by_created()
-    except:
-        nextViz=None
-
-    if nextViz:
-        return render(request, "viz/viz.html", { 'nextViz': nextViz, 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})    
-    else:
-        return render(request, "viz/viz.html", { 'viz' : currentViz , 'photo':photo, 'binary':binary, 'comments': comments, 'source': source})
-'''
 def vizText(request, id):
     currentViz=Viz.objects.get(pk=id)
     try:
@@ -699,6 +638,59 @@ def delete(request):
                         "accessToken": accessToken,
                         "authenticated":authenticate(nickname, accessToken)})
 
+@csrf_exempt
+def rate(request):
+    nickname    = request.COOKIES['nickname']
+    accessToken = request.COOKIES['accessToken']
+    vizId=request.POST['vizId']
+    userVote=request.POST['rating']
+    
+    if authenticate(nickname, accessToken):
+        try:
+            viz=Viz.objects.get(pk=vizId)
+            user=CubeUser.objects.get(nickname=nickname)
+            userRatings=Rating.objects.filter(reviewer=user.id)
+        except Viz.DoesNotExist:
+            return HttpResponse('{ "success": false , "error" : "Viz %s does not exist" }' % vizId, content_type="application/json")
+        except Rating.DoesNotExist:
+            userRatings=None
+        if userRatings:
+            votedFor=userRatings.filter(viz=viz).count()
+        else:
+            votedFor=0
+        if votedFor==0:
+            allRatings=Rating.objects.filter(viz=viz)
+            '''Weight each review computed for this Viz'''  
+            fiveStars=(allRatings.filter(rating=5).count()+(1 if int(userVote)==5 else 0))
+            fourStars=(allRatings.filter(rating=4).count()+(1 if int(userVote)==4 else 0))
+            threeStars=(allRatings.filter(rating=3).count()+(1 if int(userVote)==3 else 0))
+            twoStars=(allRatings.filter(rating=2).count()+(1 if int(userVote)==2 else 0))
+            oneStar=(allRatings.filter(rating=1).count()+(1 if int(userVote)==1 else 0))
+            
+            viz.numberOfRatings+=1
+            '''Sum of (weight * number of reviews at that weight) / total number of reviews'''
+            viz.averageRating = int((5*fiveStars + 4*fourStars + 3*threeStars + 2*twoStars + oneStar)/viz.numberOfRatings)
+            
+            '''Create a new rating object and populate with new values'''
+            rating=Rating()
+            rating.viz=viz
+            rating.reviewer=user
+            rating.rating=int(userVote)
+            rating.date=date.today()
+
+            '''Save the new rating average for this Viz'''
+            viz.save()
+            '''Save the new user rating for this Viz'''
+            rating.save()
+            
+            return HttpResponse('{ "success": true, "newAverage": "%s"}' % viz.averageRating, content_type="application/json")
+        else:
+            return HttpResponse('{ "success": false , "error" : "User %s already voted for Viz %s" }' % (nickname, vizId), content_type="application/json")
+    else:
+        return render(request, "viz/authentication-error.html", 
+                      { "nickname": nickname,
+                        "accessToken": accessToken,
+                        "authenticated":authenticate(nickname, accessToken)})
 
 @csrf_exempt
 def save(request):

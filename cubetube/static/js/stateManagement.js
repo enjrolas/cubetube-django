@@ -4,6 +4,7 @@
  */
 
 var isActive = true;
+var cubeNamesUpdateInterval = null;
 
 window.onfocus = function () {
     isActive = true;
@@ -15,10 +16,10 @@ window.onblur = function () {
 $(function(){
 	checkCookie();
 	// If user is logged in, check for cubes via spark.
-	$cubeOptions = $( '.cube-options' );
-	if( $cubeOptions.length ) {
+	//$cubeOptions = $( '.cube-options' );
+	if( $("select#cubeName").length ) {
 		listCubes();
-		setInterval('listCubes()', 15000);  //update the list of cubes every 15 seconds
+		cubeNamesUpdateInterval = setInterval('listCubes()', 1250);  //update the list of cubes every 1 second
 	}
 	else
 	    console.log("no cube options");
@@ -28,51 +29,67 @@ function listCubes() {
     var devicesPr = spark.listDevices();
     var deviceInList = false;
     var deviceID;
-    var connectedCores = 0;
+    //var connectedCores = 0;
+    var accessToken=$.cookie("accessToken");
 
     devicesPr.then(
         function(devices) {
-		    $("#cubeName").empty();//clear the list
 		    //console.log('Devices: ', devices);
-		    
-		    for( var i = 0; i < devices.length; i++ ) {
-		        var device = devices[i];
-		        //console.log(device.name+" "+device.connected+" "+device.productId);
-	            if( device.connected ) {
-		            connectedCores++;
-	                
-		            if( deviceID != 'undefined' ) {
-		                deviceID=device.id;
-		                //console.log(deviceID);
-	                }
-	                
-	                //console.log(device.name+" is connected");
-				    deviceType=device.productId;
-				    if(deviceType=='0')
-					deviceType="Core";
-				    else
-					deviceType="Photon";
-		            $("#cubeName").append($("<option></option>").val(device.id).attr("processor", deviceType).html("("+deviceType+") "+device.name));  //append the cube name and ID to thr dropdown list
-		            
-		            if(device.name == coreID) {
-			            deviceInList = true;
-		            }
-	            }
-		    }
-
-            if( deviceInList == true ) {
-            	$('#cubeName').val(coreID);     
-            } else {
-            	$('#cubeName').val(deviceID);       
-            	coreID = deviceID;
-            	var date = new Date();
-            	$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});   
+            if(devices.length == 0) {
+            	$("select#cubeName").empty().append($("<option></option>").html('Add a photon to get started'));
             }
-    
-            if(devices.length==0) {
-            	$("#cubeName").append($("<option></option>").html('Add a core to get started'));  //append the cube name and ID to thr dropdown list
-            } else if(connectedCores==0) {
-            	$("#cubeName").append($("<option></option>").html('No cores online :('));  //append the cube name and ID to thr dropdown list
+            else {
+            	devices.forEach(function(x,i,a) {
+            		var device = devices[i];
+            		if(typeof accessToken !== 'undefined' && accessToken !== null) {
+            			$.get("https://api.particle.io/v1/devices/" + device.id + "?access_token=" + accessToken, function(data) {
+            				//console.log(data.name + ': ' + (data.connected ? 'connected' : 'not connected'));
+            				if(data.connected) {
+            					//connectedCores++;
+            					$("select#cubeName option[value='-1']").remove();
+            					deviceType = (device.productId === '0' ? 'Core' : 'Photon');
+            					deviceInList = $("select#cubeName option[value = '" + device.id + "']").length;
+								if( typeof deviceID !== 'undefined' && deviceID !== null ) {
+									deviceID=device.id;
+									//console.log(deviceID);
+								}            					
+								    
+    							//append the cube name and ID to thr dropdown list
+    							if(!deviceInList) {
+	    							$("select#cubeName").append($("<option></option>")
+	    								.val(device.id)
+	    								.attr("processor", deviceType)
+	    								.html("(" + deviceType + ") " + device.name))
+	    								.sort();
+    							}
+            				}
+            				else {
+            					$("select#cubeName").find("option:contains('" + data.name + "')").remove();
+            				}
+            			});
+            		}
+            	});
+            	
+            	//console.log('cubeName items count: ' + $("#cubeName option").length);
+            	//console.log('connectedCores: ' + connectedCores);
+            	if($("select#cubeName option").length === 0) {
+                	$("select#cubeName").empty()
+                		.append($("<option></option>")
+                		.val('-1').html('No cores online :('));
+                	$('select#cubeName').change();
+                }
+                else {
+	            	coreID = $.cookie("coreID");
+	            	if( typeof coreID !== 'undefined' && coreID !== null )
+	            		coreID = $('select#cubeName').val();
+	            	if( typeof deviceID !== 'undefined' && deviceID !== null )
+	            		deviceID = coreID;
+	            	//console.log('coreID: ' + coreID);
+					var valueChanged = $('select#cubeName').val() !== coreID;
+					$('select#cubeName').val(coreID);
+					if(valueChanged)
+						$('select#cubeName').change();
+                }
             }
         },
         function(err) {

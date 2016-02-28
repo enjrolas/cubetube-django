@@ -29,6 +29,11 @@
 <script src="{% static 'js/spark-helper.js' %}"></script>
 <script src="{% static 'js/gallery-coordinator.js' %}"></script>
 <script src="http://www.youtube.com/player_api"></script>
+<script type="text/javascript">
+$(function(){
+openViz("{% url 'sparkleViz'%}");
+});
+</script>
 {% endblock %}
 
 {% block content %}

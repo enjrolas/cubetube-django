@@ -1,0 +1,79 @@
+<!-- 
+  Viz view, contains comments and details.
+  And also Code editing options.
+
+  - Currently duplicated from javascript.html (old code is in there)
+-->
+
+{% extends "viz/viz-base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+<script type="text/javascript">
+var accessToken=$.cookie("accessToken");
+var deviceID;
+$(function(){
+populateModes();
+setInterval('update()', 5000);  //update the modes every five seconds
+});
+
+function populateModes(){
+deviceID=getDeviceID();
+$.get("https://api.particle.io/v1/devices/"+deviceID+"/modes/?access_token="+accessToken, function(data){
+console.log(data.result);
+$("#modes").empty();  //clear all the existing modes before appending new ones
+var modes=data.result.split(";");
+for(var index in modes)
+{
+var mode=modes[index];
+$("#modes").append("<button onclick=\"setMode('"+mode+"')\">"+mode+"</button><br/>");
+}
+});
+};
+
+$( "#cubeName" ).change(function() {
+  alert( "Handler for .change() called." );
+});
+
+function getDeviceID()
+{
+return $("#cubeName").val();
+}
+
+function setMode(mode)
+{
+$.post("https://api.particle.io/v1/devices/"+deviceID+"/setMode/", { access_token: accessToken, args: mode } );
+$("#mode").text(mode)}
+
+function update()
+{
+deviceID=getDeviceID();
+populateModes();
+$.get("https://api.particle.io/v1/devices/"+deviceID+"/mode/?access_token="+accessToken, function(data){
+$("#mode").text(data.result)
+});
+}
+
+function flashSparkle()
+{
+deviceID=getDeviceID();
+$.post( "{% url 'flashSparkle' %}", { deviceID: deviceID, accessToken: accessToken } );
+}
+
+</script>
+<div id="wrapper" style="margin-left:50px;margin-top:100px;">
+      <div class="cube-options">
+        <div class="round-button button-grey select-cube">
+          <select id="cubeName"></select>
+        </div>
+      </div>
+
+<button onclick="flashSparkle()">flash sparkle</button><br/>
+<a href="http://beta.cubetube.org/gallery/newestFirst/37/">View Source</a>
+<br/>
+<hr>
+<br/>
+<div>mode:  <span id="mode"></span></div>
+<div id="modes"></div>
+</div>
+{% endblock %}
