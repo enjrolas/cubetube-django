@@ -189,6 +189,20 @@
 		else if($('.comments-input').length) $('.comments-input').focus();
 		else window.focus();
 	});
+
+	function getDeviceID() {
+	    return $("select#cubeName").val();
+	}
+	
+	function cubeNameOnChange() {
+	    deviceID = getDeviceID();	// Reads currently 'selected' value from dropdown
+	    console.log('deviceID: ' + deviceID);
+
+		$.removeCookie("coreID", { path: '/' });
+	   	coreID = deviceID;
+	   	var date = new Date();
+	   	$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});
+	}	
 </script>
 
 {% load utils %}
@@ -209,7 +223,7 @@
 	{% else %}
 	{% endif %}
       <div class="round-button button-grey select-cube">
-	  <select id="cubeName"></select>
+	  <select id="cubeName" onchange="cubeNameOnChange();"></select>
       </div>
     </div>
 
