@@ -76,7 +76,8 @@ function listCubes() {
                 	$("select#cubeName").empty()
                 		.append($("<option></option>")
                 		.val('-1').html('No cores online :('));
-                	$('select#cubeName').change();
+                	if($('select#cubeName').length) 
+                		$('select#cubeName').change();
                 }
                 else {
 	            	coreID = $.cookie("coreID");
@@ -86,9 +87,11 @@ function listCubes() {
 	            		deviceID = coreID;
 	            	//console.log('coreID: ' + coreID);
 					var valueChanged = $('select#cubeName').val() !== coreID;
-					$('select#cubeName').val(coreID);
-					if(valueChanged)
-						$('select#cubeName').change();
+					if(valueChanged) {
+						$('select#cubeName').val(coreID);
+						if($('select#cubeName').length)
+							$('select#cubeName').change();
+					}
                 }
             }
         },
