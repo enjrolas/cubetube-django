@@ -34,12 +34,8 @@ urlpatterns = [
     url(r'^create/$', views.create, name='create'),
     url(r'^upload/$', views.upload, name='upload'),
     url(r'^edit/(?P<id>\d+)/$', views.edit, name='edit'),
-<<<<<<< HEAD
-    url(r'^delete/$', views.delete, name='delete'),
-=======
     url(r'^delete/', views.delete, name='delete'),
     url(r'^rate/', views.rate, name='rate'),
->>>>>>> development
     url(r'^search/$', views.search, name='search'),
     url(r'^search/(?P<page>\d+)/$', views.search, name='search'),
     url(r'^search/(?P<filter>\w+)/$', views.search, name='search'),
