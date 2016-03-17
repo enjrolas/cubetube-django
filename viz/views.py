@@ -36,9 +36,9 @@ def appInfo(request):
 
 def gallery(request, filter="newestFirst"):
     if(filter=='newestFirst'):
-        vizs=Viz.objects.all().order_by("-created").exclude(published=False)
+        vizs=Viz.objects.filter(vizType="L3D").order_by("-created").exclude(published=False)
     else:
-        vizs=Viz.objects.all().order_by("created").exclude(published=False)      
+        vizs=Viz.objects.filter(vizType="L3D").order_by("created").exclude(published=False)      
 
     totalObjects=vizs.count()
     if totalObjects<8:
@@ -310,7 +310,7 @@ def jsgallery(request, filter="newestFirst", filterTerm=None):
     if user:
         userVizs=Viz.objects.filter(creator=user).order_by("-created")
         privateVizs=userVizs.filter(published=False).order_by("-created")
-        publicVizs=userVizs.filter(published=True).order_by("-created")
+        publicVizs=userVizs.filter(vizType="L3D").filter(published=True).order_by("-created")
     else:
         privateVizs=None
         publicVizs=None
@@ -320,7 +320,7 @@ def jsgallery(request, filter="newestFirst", filterTerm=None):
     if(filter=='newestFirst'):
         if filterTerm:
             featuredViz = int(filterTerm)
-        vizs=Viz.objects.all().order_by("-pageViews", "-created").exclude(published=False)    
+        vizs=Viz.objects.filter(vizType="L3D").order_by("-pageViews", "-created").exclude(published=False)    
     elif(filter=='byCreator'):
         try:
             vizUser=CubeUser.objects.filter(nickname=filterTerm).first()
@@ -329,15 +329,15 @@ def jsgallery(request, filter="newestFirst", filterTerm=None):
         if(vizUser):        
             if(user):
                 if(vizUser.nickname!=user.nickname):
-                    vizs=Viz.objects.all().filter(creator=vizUser.id).order_by("-created").exclude(published=False)
+                    vizs=Viz.objects.filter(vizType="L3D").filter(creator=vizUser.id).order_by("-created").exclude(published=False)
                 else:
-                    vizs=Viz.objects.all().filter(creator=vizUser.id, published=True).order_by("-created")
+                    vizs=Viz.objects.filter(vizType="L3D").filter(creator=vizUser.id, published=True).order_by("-created")
             else:
-                vizs=Viz.objects.all().filter(creator=vizUser.id).order_by("-created").exclude(published=False)
+                vizs=Viz.objects.filter(vizType="L3D").filter(creator=vizUser.id).order_by("-created").exclude(published=False)
         else:
             vizs=None      
     else:
-        vizs=Viz.objects.all().order_by("created").exclude(published=False)      
+        vizs=Viz.objects.filter(vizType="L3D").order_by("created").exclude(published=False)      
     
     if featuredViz is None:
         featured=None
@@ -365,7 +365,7 @@ def jsgallery(request, filter="newestFirst", filterTerm=None):
 def index(request):
     log.debug("index")
 #    vizs=Viz.objects.all().order_by("-created").exclude(published=False)
-    vizs=Viz.objects.all().order_by("-created").filter(featured=True).exclude(published=False)
+    vizs=Viz.objects.filter(vizType="L3D").order_by("-created").filter(featured=True).exclude(published=False)
     totalObjects=vizs.count()
     if totalObjects<8:
         visualizations=vizs[:totalObjects]
@@ -530,11 +530,11 @@ def create(request):
 def scroll(request, page=1, filter="newestFirst", cardsPerPage=8):
     page=int(page)
     if filter=="newestFirst":
-        vizs=Viz.objects.all().exclude(published=False).order_by("-pageViews", "-created")[page*cardsPerPage:(page+1)*cardsPerPage]
+        vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).order_by("-pageViews", "-created")[page*cardsPerPage:(page+1)*cardsPerPage]
     elif filter=="all":
-        vizs=Viz.objects.all().exclude(published=False).order_by("-pageViews", "-created")
+        vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).order_by("-pageViews", "-created")
     else:
-        vizs=Viz.objects.all().exclude(published=False).order_by("-pageViews", "-created")[page*cardsPerPage:(page+1)*cardsPerPage]
+        vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).order_by("-pageViews", "-created")[page*cardsPerPage:(page+1)*cardsPerPage]
 
     if vizs is None:
         totalObjects=0
@@ -569,21 +569,21 @@ def search(request, page=1, filter=None, cardsPerPage=8):
     page=int(page)
     if filter:
         try:
-            vizUsers=CubeUser.objects.all().filter(nickname__icontains=filter)
+            vizUsers=CubeUser.objects.filter(vizType="L3D").filter(nickname__icontains=filter)
         except CubeUser.DoesNotExist:
             vizUsers=None
         
         vizs=Viz.objects.none()
         if vizUsers:
             for user in vizUsers: 
-                vizs=vizs | Viz.objects.all().filter(creator=user.id).exclude(published=False)
+                vizs=vizs | Viz.objects.filter(vizType="L3D").filter(creator=user.id).exclude(published=False)
         else:
             try:
-                titleQuery=Viz.objects.all().filter(name__icontains=filter).exclude(published=False).order_by("-pageViews", "-created")
+                titleQuery=Viz.objects.filter(vizType="L3D").filter(name__icontains=filter).exclude(published=False).order_by("-pageViews", "-created")
             except Viz.DoesNotExist:
                 titleQuery=None
             try:
-                descrQuery=Viz.objects.all().filter(description__icontains=filter).exclude(published=False).order_by("-pageViews", "-created")
+                descrQuery=Viz.objects.filter(vizType="L3D").filter(description__icontains=filter).exclude(published=False).order_by("-pageViews", "-created")
             except Viz.DoesNotExist:
                 descrQuery=None
             
@@ -592,7 +592,7 @@ def search(request, page=1, filter=None, cardsPerPage=8):
             if descrQuery:
                 vizs=vizs | descrQuery
     else: 
-        vizs=Viz.objects.all().exclude(published=False).order_by("-pageViews", "-created")[:page*cardsPerPage]
+        vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).order_by("-pageViews", "-created")[:page*cardsPerPage]
     
     if vizs is None:
         totalObjects=0
