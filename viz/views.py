@@ -569,7 +569,7 @@ def search(request, page=1, filter=None, cardsPerPage=8):
     page=int(page)
     if filter:
         try:
-            vizUsers=CubeUser.objects.filter(vizType="L3D").filter(nickname__icontains=filter)
+            vizUsers=CubeUser.objects.all().filter(nickname__icontains=filter)
         except CubeUser.DoesNotExist:
             vizUsers=None
         
