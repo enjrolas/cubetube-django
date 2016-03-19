@@ -566,48 +566,52 @@ def scroll(request, page=1, filter="newestFirst", cardsPerPage=8):
 
 def search(request, page=1, filter=None, cardsPerPage=8):
     page=int(page)
-    if filter:
+    '''if filter is None:'''
+    if filter == '*':
+        vizs=Viz.objects.all().order_by("-pageViews", "-created").exclude(published=False)
+        '''vizs=Viz.objects.all().exclude(published=False).order_by("-pageViews", "-created")[:page*cardsPerPage]'''
+    else:
+        vizs=Viz.objects.none()
+        
         try:
             vizUsers=CubeUser.objects.all().filter(nickname__icontains=filter)
         except CubeUser.DoesNotExist:
             vizUsers=None
         
-        vizs=Viz.objects.none()
         if vizUsers:
             for user in vizUsers: 
                 vizs=vizs | Viz.objects.all().filter(creator=user.id).exclude(published=False)
-        else:
-            try:
-                titleQuery=Viz.objects.all().filter(name__icontains=filter).exclude(published=False).order_by("-pageViews", "-created")
-            except Viz.DoesNotExist:
-                titleQuery=None
-            try:
-                descrQuery=Viz.objects.all().filter(description__icontains=filter).exclude(published=False).order_by("-pageViews", "-created")
-            except Viz.DoesNotExist:
-                descrQuery=None
-            
-            if titleQuery:
-                vizs=vizs | titleQuery
-            if descrQuery:
-                vizs=vizs | descrQuery
-    else: 
-        vizs=Viz.objects.all().exclude(published=False).order_by("-pageViews", "-created")[:page*cardsPerPage]
+        '''else:'''
+        try:
+            titleQuery=Viz.objects.all().filter(name__icontains=filter).exclude(published=False)
+        except Viz.DoesNotExist:
+            titleQuery=None
+        try:
+            descrQuery=Viz.objects.all().filter(description__icontains=filter).exclude(published=False)
+        except Viz.DoesNotExist:
+            descrQuery=None
+        
+        if titleQuery:
+            vizs=vizs | titleQuery
+        if descrQuery:
+            vizs=vizs | descrQuery
     
     if vizs is None:
         totalObjects=0
     else:
+        vizs.order_by("-pageViews", "-created")
         totalObjects=vizs.count()
         if filter:
             cardsPerPage=totalObjects+1
     
     if totalObjects==0:
-        return render(request, "viz/gallery-page.html", { 'visualizations' : None , 'nextPage' : False, 'filter':filter})
+        return render(request, "viz/gallery-page.html", {'visualizations' : None, 'nextPage' : None, 'totalObjects' : 0, 'filter' : filter})
     elif totalObjects < cardsPerPage:
         visualizations=vizs[:totalObjects]
-        return render(request, "viz/gallery-page.html", { 'visualizations' : visualizations , 'nextPage' : False, 'filter':filter})
+        return render(request, "viz/gallery-page.html", {'visualizations' : visualizations, 'nextPage' : None, 'totalObjects' : totalObjects, 'filter' : filter})
     else:
         visualizations=vizs[:cardsPerPage]
-        return render(request, "viz/gallery-page.html", { 'visualizations' : visualizations , 'nextPage' : page+1, 'filter':filter})
+        return render(request, "viz/gallery-page.html", {'visualizations' : visualizations, 'nextPage' : page+1, 'totalObjects' : totalObjects, 'filter' : filter})
 
 def edit(request, id):
     try:
