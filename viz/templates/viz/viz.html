@@ -28,7 +28,6 @@
 		if ($('#cubeName').length) $('#cubeName').focus();
 		else if ($('.comments-input').length) $('.comments-input').focus();
 		else window.focus();
-
 		$('a.viz-next').on('mouseover', function() {
 			clearTimeout(overflowTimer);
 			$('div.viz-wrapper').css('overflow-y', 'auto');
@@ -120,6 +119,17 @@
 			}
 		});		
 	});
+	
+	// Controls the expanding/collapsing the viz description text field
+	function expandDescription() {
+		clearTimeout(descTimer);
+		isMouseOut = false;
+		descTimer = setTimeout(function() { if(!isMouseOut) expandDesc(); }, 600);
+	}
+	function collapseDescription() {
+		isMouseOut = true;
+		descTimer = setTimeout(function() { collapseDesc(); clearTimeout(descTimer); }, 400);
+	}
 
 	function displayError(error, message) {
 	    if( message ) {
