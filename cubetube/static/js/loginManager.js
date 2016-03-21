@@ -186,8 +186,9 @@ function justSearch(searchTerm) {
 	clearTimeout();
 	$("#search-button").html("Wait<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>");
     $('#search-button').prop( "disabled", true );
-
-	var url="/search/1/" + searchTerm + "/8/" 
+    if(searchTerm.trim().length == 0)
+    	searchTerm = '*';
+	var url="/search/1/" + searchTerm.trim() + "/8/" 
     //console.log(url);
 	$.ajax({
 		type: 'get',
