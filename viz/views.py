@@ -565,13 +565,15 @@ def scroll(request, page=1, filter="newestFirst", cardsPerPage=8):
     return render(request, "viz/gallery-page.html", { 'visualizations' : vizs , 'nextPage' : page+1})    
     '''
 
-def search(request, page=1, filter=None, cardsPerPage=8):
+def search(request, page=1, filter='*', cardsPerPage=8):
     page=int(page)
+    cardsPerPage=int(cardsPerPage)
+    vizs=Viz.objects.none()
+    totalObjects=0
+    
     if filter == '*':
         vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).order_by("-pageViews", "-created")
-        '''vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).order_by("-pageViews", "-created")[:page*cardsPerPage]'''
     else:
-        vizs=Viz.objects.none()
         try:
             vizUsers=CubeUser.objects.all().filter(nickname__icontains=filter)
         except CubeUser.DoesNotExist:
@@ -595,12 +597,9 @@ def search(request, page=1, filter=None, cardsPerPage=8):
         if descrQuery:
             vizs=vizs | descrQuery
     
-    if vizs is None:
-        totalObjects=0
-    else:
-        totalObjects=vizs.count()
-        if filter:
-            cardsPerPage=totalObjects+1
+    totalObjects=vizs.count()
+    if filter != '*':
+        cardsPerPage=totalObjects+1
     
     if totalObjects==0:
         return render(request, "viz/gallery-page.html", { 'visualizations' : None , 'nextPage' : None, 'totalObjects' : 0, 'filter':filter})
