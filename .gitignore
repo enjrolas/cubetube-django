@@ -9,3 +9,7 @@ django.wsgi
 *~
 *.ino
 /cubetube-dev
+/conf/httpd-app.conf
+/conf/httpd-app.conf.bak
+/conf/httpd-prefix.conf
+/conf/httpd-prefix.conf.bak
