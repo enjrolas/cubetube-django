@@ -17,13 +17,18 @@ $(function(){
 	checkCookie();
 	// If user is logged in, check for cubes via spark.
 	//$cubeOptions = $( '.cube-options' );
-	if( $("select#cubeName").length ) {
+	if(typeof accessToken !== 'undefined' && accessToken !== null) {
+		$('select#cubeName').show();
 		listCubes();
-		cubeNamesUpdateInterval = setInterval('listCubes()', 1250);  //update the list of cubes every 1 second
+		cubeNamesUpdateInterval = setInterval('listCubes()', 5000);  //update the list of cubes every 5 seconds
 	}
-	else
+	else {
 	    console.log("no cube options");
-})
+	    $('select#cubeName').hide();
+	    if(typeof cubeNamesUpdateInterval !== 'undefined' && cubeNamesUpdateInterval !== null)
+	    	clearInterval(cubeNamesUpdateInterval);
+	}
+});
 
 function listCubes() {
     var devicesPr = spark.listDevices();

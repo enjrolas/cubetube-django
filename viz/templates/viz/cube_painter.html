@@ -21,18 +21,26 @@
 
 {% block content %}
 	<script type="text/javascript">
-		var accessToken=$.cookie("accessToken");
-		var coreID = $.cookie("coreID");
+		//var accessToken=$.cookie("accessToken");
+		//var coreID = $.cookie("coreID");
+		var isUserAlerted = false;
 		var currentMode = '';
 		var populateModesTimer = null;
 		var selectFromDropdownTimer = null;
 		var syncInterval = null;
 		var idxArr = 0;
-		//var actualWidth = $(window).width();
 		
-		if(typeof accessToken !== 'undefined' && accessToken !== null) {
-		    $(".cubePainter").show();
+		/*if(typeof accessToken !== 'undefined' && accessToken !== null) {
+			$('select#cubeName').show();
+			//listCubes();
+			//cubeNamesUpdateInterval = setInterval('listCubes()', 5000);  //update the list of cubes every 5 seconds
 		}
+		else {
+		    console.log("no cube options");
+		    $('select#cubeName').hide();
+		    if(typeof cubeNamesUpdateInterval !== 'undefined' && cubeNamesUpdateInterval !== null)
+		    	clearInterval(cubeNamesUpdateInterval);
+		}*/
 		
 		$(function() {
 		    $("div.round-button").css('padding-left', 'calc(100% / 2.2)');
@@ -44,7 +52,12 @@
 				return false;
 			});
 			
-			if(currentMode == '') populateInterval();
+			if(typeof accessToken !== 'undefined' && accessToken !== null)
+				if(currentMode == '') populateInterval();
+			else
+			    if(typeof populateModesTimer !== 'undefined' && populateModesTimer !== null)
+					clearInterval(populateModesTimer);
+					
 			
 			var $canvas = document.getElementById('cube_canvas');
 			var $colors = document.getElementById('colors_canvas');
@@ -78,7 +91,7 @@
 		function populateModes() {
 			var deviceID = (typeof coreID !== 'undefined' && coreID !== null) ? coreID : getDeviceID();
 			if(typeof deviceID !== 'undefined' && deviceID !== null) {
-				$("select#modes").fadeOut(100).empty();  //clear all the existing modes before appending new ones
+				$("select#modes").fadeOut(100);
 				$.get("https://api.particle.io/v1/devices/" + deviceID + "/mode/?access_token=" + accessToken, function(data) {
 					currentMode = data.result.trim();
 					$("span#mode").html(currentMode);
@@ -90,6 +103,7 @@
 					$("div#cubeAndModeText").fadeIn(300);
 					$("div#updateListDiv").fadeIn(300);
 					$("div#brightnessControl").fadeIn(300);
+					isUserAlerted = true;
 				}, "json")
 				.fail(function() {
 					var message = '';
@@ -100,13 +114,17 @@
 									+ '\") does not appear to be running the Spark Pixels viz.';
 							message += '\nPlease head to Cubetube, select this viz from the gallery and load it into your Cube.';
 							message += '\nIf your Cube is already running Spark Pixels, try resetting it. Make sure it connects (breathing cyan).';
-							alert(message);
+							if(!isUserAlerted) {
+							    alert(message);
+							    isUserAlerted = true;
+							}
 						}
 						return;
 					}
 				});
 				$.get("https://api.particle.io/v1/devices/"+deviceID+"/modeList/?access_token=" + accessToken, function(data) {
 					var modes=data.result.split(";");
+				    $("select#modes").empty();  //clear all the existing modes before appending new ones
 					for(var index=0; index<modes.length-1; index++) {
 						var mode=modes[index].trim();
 						$("select#modes").append("<option value=\"" + mode + "\">" + mode + "</option>");
