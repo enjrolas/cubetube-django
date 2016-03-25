@@ -17,7 +17,11 @@ $(function(){
 	checkCookie();
 	// If user is logged in, check for cubes via spark.
 	//$cubeOptions = $( '.cube-options' );
-	if(typeof accessToken !== 'undefined' && accessToken !== null) {
+	//console.log(window.location.href);
+	var isViz = window.location.href.indexOf("viz") >= 0;
+	var isCreate = window.location.href.indexOf("create") >= 0;
+	var isPainter = window.location.href.indexOf("cube_painter") >= 0;
+	if(typeof accessToken !== 'undefined' && accessToken !== null && (isViz || isCreate || isPainter)) {
 		$('select#cubeName').show();
 		listCubes();
 		cubeNamesUpdateInterval = setInterval('listCubes()', 5000);  //update the list of cubes every 5 seconds
