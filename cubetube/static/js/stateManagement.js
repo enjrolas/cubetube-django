@@ -20,8 +20,9 @@ $(function(){
 	//console.log(window.location.href);
 	var isViz = window.location.href.indexOf("viz") >= 0;
 	var isCreate = window.location.href.indexOf("create") >= 0;
+	var isEdit = window.location.href.indexOf("edit") >= 0;
 	var isPainter = window.location.href.indexOf("cube_painter") >= 0;
-	if(typeof accessToken !== 'undefined' && accessToken !== null && (isViz || isCreate || isPainter)) {
+	if(typeof accessToken !== 'undefined' && accessToken !== null && (isViz || isCreate || isEdit || isPainter)) {
 		$('select#cubeName').show();
 		listCubes();
 		cubeNamesUpdateInterval = setInterval('listCubes()', 5000);  //update the list of cubes every 5 seconds
