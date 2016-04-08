@@ -393,6 +393,8 @@ function newGame() {
     gNumPieces = gPieces.length;
     gSelectedPieceIndex = -1;
     gSelectedPieceArrayIndex = -1;
+	gPickedColorIndex = -1;
+	gSelectedColor = '#000000';
     gLayer = 7;
     gGameInProgress = false;
 	
