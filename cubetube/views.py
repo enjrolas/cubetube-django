@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse
 from cube.models import CubeUser
 from viz.models import Binary
@@ -91,4 +91,5 @@ def docs(request):
 
 
 def forum(request):
-    return render(request, "cubetube/forum.html")    
+    return redirect('http://forum.cubetube.org/')
+#    return render(request, "cubetube/forum.html")    
