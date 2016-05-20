@@ -112,11 +112,13 @@
 						if(typeof device !== 'undefined' && device !== null && device !== '') {
 							message += 'The selected Cube (\"' + device.substr(device.indexOf(')') + 2) 
 									+ '\") does not appear to be running the Spark Pixels viz.';
-							message += '\nPlease head to Cubetube, select this viz from the gallery and load it into your Cube.';
-							message += '\nIf your Cube is already running Spark Pixels, try resetting it. Make sure it connects (breathing cyan).';
+							message += '\nIf you would like to flash \"' + device.substr(device.indexOf(')') + 2) + '\" with ';
+							message += 'Spark Pixels now, just hit [OK];\nElse, click [Cancel] to return to where you were.';
+							//message += '\nPlease head to Cubetube, select this viz from the gallery and load it into your Cube.';
+							//message += '\nIf your Cube is already running Spark Pixels, try resetting it. Make sure it connects (breathing cyan).';
 							if(!isUserAlerted) {
-							    alert(message);
 							    isUserAlerted = true;
+							    if(confirm(message)) flashCube();
 							}
 						}
 						return;
@@ -131,6 +133,41 @@
 					}
 				}, "json");
 			}
+		}
+		
+		function flashCube(){
+			var output="";
+			var request=$.ajax({
+				type:"POST",
+				url:"{% url 'cloudFlash' %}", 
+				data: {"code": $(".code").val(), "accessToken":accessToken, "deviceID":$("#cubeName").val(), "vizName": "", "vizId":"1438" },
+				dataType:"text",
+				success: function(data){ 
+					console.log("success flashing");
+					JSONstring=data;
+					console.log(JSONstring);
+					var result = $.parseJSON(data);
+					var result = $.parseJSON(result);
+					compilerData=result;
+					console.log(compilerData);
+					output="";
+					if(result.ok) {
+						output+="compilation status: OK with status " + result.message + " - Flashing now, please wait.";
+					}
+					else {
+						var device = $("select#cubeName option[value = '" + deviceID + "']").text();
+						output += "compilation status: " + result.ok +"\nerrors:\n" + result.errors + "\n";
+						output += "\nPlease make sure " + device.substr(device.indexOf(')') + 2) + " is online and connected.";
+					}
+					alert(output);
+					//window.status = output;
+					//$("textarea.output").val(output);
+				},
+				error: function(data){
+					console.log("fail");
+					console.log(data);
+				}
+			});
 		}
 		
 		function cubeNameOnChange() {
@@ -242,7 +279,7 @@
 	{% if logged_in %}
 		<div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
 		<div id="updateListDiv">
-			<a id="updateListButton" href="#" onclick="cubeNameOnChange();" title="Click here to refresh the modes list!">Update List</a>
+			<a id="updateListButton" href="javascript:void(0);" onclick="cubeNameOnChange();" title="Click here to refresh the modes list!">Update List</a>
 	 		<select id="modes" onchange="setMode();"></select>
 	 	</div>
  		<div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
@@ -255,28 +292,33 @@
 	</div>
 	<!-- <div style="clear: both; height: 7px; background: #1C1521"></div> -->
 	<div id="canvas">
-		<div class="spacer"></div>
+		<!-- <div class="spacer"></div> -->
 		<div id="layerButtons" style="text-align: center; padding-bottom: 10px">
-			<a id="layerButtons" href="#" onclick="decreaseLayer();" title="Click to move back one layer (towards back of Cube)">[+] One Layer</a>
+			<a id="layerButtons" href="javascript:void(0);" onclick="decreaseLayer();" title="Click to move back one layer (towards back of Cube)">[+] One Layer</a>
 			<span id="currentLayer"></span>
-			<a id="layerButtons" href="#" onclick="increaseLayer();" title="Click to move forth one layer (towards front of Cube)">[-] One Layer</a>
+			<a id="layerButtons" href="javascript:void(0);" onclick="increaseLayer();" title="Click to move forth one layer (towards front of Cube)">[-] One Layer</a>
 		</div>
-		<div class="mobile-splitter"></div>
+		<!-- <div class="mobile-splitter"></div> -->
 		<div id="syncButton">
-			<a id="syncButton" href="#" onclick="syncVoxels();" title="Click to resync your drawing to the Cube!">Resync Cube!</a>
+			<a id="syncButton" href="javascript:void(0);" onclick="syncVoxels();" title="Click to resync your drawing to the Cube!">Resync Cube!</a>
 		</div>
 		<canvas height="401" width="401" id="cube_canvas">
 		    Your browser does not support the HTML5 canvas element.
 		</canvas>
-		<canvas style="padding-left: 15px" height="255" width="155" id="colors_canvas">
+		<!-- <canvas style="padding-left: 15px" height="255" width="155" id="colors_canvas">
 		    Your browser does not support the HTML5 canvas element.
 		</canvas>
-		<div class="spacer"></div>
+ 		<div class="spacer"></div> -->
 		<div id="clearButtons" style="text-align: center; padding-top: 10px">
-			<a id="clearButtons" href="#" onclick="clearVoxels(gLayer*kNumPieces, (gLayer*kNumPieces)+kNumPieces);" title="Click to clear the current layer">Clear Layer</a>
+			<a id="clearButtons" href="javascript:void(0);" onclick="clearVoxels(gLayer*kNumPieces, (gLayer*kNumPieces)+kNumPieces);" title="Click to clear the current layer">Clear Layer</a>
 			<span id="currentLayer"></span>
-			<a id="clearButtons" href="#" onclick="clearVoxels(0, 512);" title="Click to clear the whole Cube">Clear All</a>
+			<a id="clearButtons" href="javascript:void(0);" onclick="clearVoxels(0, 512);" title="Click to clear the whole Cube">Clear All</a>
 		</div>
+	</div>
+	<div style="padding-bottom: 15px;">
+		<canvas height="196" width="521" id="colors_canvas" >
+			Your browser does not support the HTML5 canvas element.
+		</canvas>
 	</div>
 </div>
 {% endblock %}

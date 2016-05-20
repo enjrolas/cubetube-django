@@ -1,4 +1,3 @@
-
 /**
  * Cubetube main styles
  * -- Its hip to be cube!
@@ -645,7 +644,8 @@ button {
 
 #cubeName {
 	max-width: 145px; 
-	margin-top: -2px;
+	/*margin-top: 13px !important;
+	margin-left: -205px;*/
 }
 .cubePainter {
 	min-width: 145px !important; 
@@ -659,14 +659,14 @@ button {
 	font-weight: bold;
 	color: #2bc6fb;
 	text-align: justify; 
-	margin-left: 34%;
+	margin-left: 30%;
 }
 #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
 	width: 275px; 
 	background: #ee0026; 
 	color: #fff; 
 	border-radius: 30px; 
-	padding: 6px 22px; 
+	padding: 6px 22px;
 	text-align: center; 
 	text-decoration: none;
 	line-height: 32px;
@@ -678,7 +678,7 @@ span#currentLayer {
 }
 #updateListDiv {
 	width: 310px; 
-	margin-left: 33%;
+	margin-left: 27%;
 	font-weight: bold;
 }
 a#updateListButton {
@@ -690,17 +690,17 @@ a#updateListButton {
 	margin-right: 2%;
 }
 #brightnessControl {
-	width: 440px;
+	width: 310px;
 	font-weight: bold;
 	background: #ee0026; 
 	color: #fff; 
 	border-radius: 30px; 
-	margin-left: 23%;
+	margin-left: 27%;
 	padding: 6px 22px; 
 	text-align: center;
 }
 #brightnessSlider {
-	width: 250px;
+	width: 130px;
 	height: 10px;
 }
 div#canvas {
@@ -712,7 +712,7 @@ div#canvas {
 div#syncButton {
 	text-align: center; 
 	padding-bottom: 10px; 
-	padding-right: 21%;
+	/*padding-right: 21%;*/
 }
 div.spacer {
 	display: block;
@@ -743,15 +743,56 @@ div.mobile-splitter {
 	}
 }
 @media screen and (max-width: 500px) {
+	#cubeName {
+		margin-left: 12% !important; /*48px;*/
+		margin-top: -39px !important;
+	}
+	span#currentLayer {
+		font-size: 15px;
+	}
+	#cube_canvas {
+		width: 311px;
+		height: 311px;
+	}
+	#colors_canvas {
+		width: 311px;
+		height: 117px;
+	}
+	#updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
+		width: 175px; 
+		background: #ee0026; 
+		color: #fff; 
+		border-radius: 30px; 
+		padding: 2px 12px;
+		text-align: center; 
+		text-decoration: none;
+		line-height: 22px;
+		font-size: 12px;
+	}
+	nav {
+		max-width: 500px !important;
+	}
+	.logo-box {
+		color: #1C1521;
+	}
+	nav.small ul, nav.small li, nav.always-small ul, nav.always-small li {
+	    width: 120px !important;
+	    height: 57px !important;
+	}
 	ul.items {
 		position: absolute;
-		margin-left: 48px;
-		margin-top: -9px;
+		margin-left: 54%; /*48px;*/
+		margin-top: -57px;
+	}
+	ul.items li a {
+		font-size: 12px;
+		padding: 2px 12px;
 	}
 	div.tagline {
-		width: 275px !important;
+		/*width: 275px !important;
 		margin-top: -60px !important;
-		margin-left: 80px !important;
+		margin-left: 80px !important;*/
+		display: none !important;
 	}
 	.cubePainter {
 		min-width: 145px !important; 
@@ -761,18 +802,16 @@ div.mobile-splitter {
 		display: none;	
 	}
 	#cubeAndModeText, #pleaseLogInText {
+		font-size: 15px !important;
+		font-weight: normal;
 		width: 350px; 
-		margin-left: -20px;
+		margin-left: -37px !important;
 	}
-	div#updateListDiv {
-		width: 300px;
-		margin-left: -40px;
+	div#updateListDiv, div#brightnessControl {
+		width: 250px;
+		margin-left: -45px;
 		margin-right: 0px;
-	}
-	div#brightnessControl {
-		width: 300px;
-		margin-left: -40px;
-		margin-right: 0px;
+		font-size: 12px;
 	}
 	#brightnessSlider {
 		width: 100px;
@@ -780,7 +819,7 @@ div.mobile-splitter {
 	}
 	div#canvas {
 		padding: 10px 0 40px;
-		height: 950px;
+		height: 440px;
 		max-width: 500px;
 	}
 	a#updateListButton {
@@ -1393,7 +1432,7 @@ footer {
     border-bottom: 5px solid #2bc6fb; }
     .docs-main .offline-image.baseboard {
       bottom: -70px; }
-    .docs-main .offline-image.particle {
+    .docs-main .offline-image.spark {
       bottom: -247px; }
     .docs-main .offline-image img {
       width: 100%; }
