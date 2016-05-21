@@ -176,17 +176,19 @@ def cloudFlash(request):
     log.debug(vizName);
     if vizName==None:
         vizName="undefined"
-    if code==None:
+    
+    if code=="":
         queryViz=Viz.objects.get(pk=vizId)
         if queryViz==None:
             log.debug("Viz %i not found!" % vizId)
             return
         else:
-            code=SourceCode.objects.filter(viz=queryViz)
+            vizName=queryViz.name
+            code=SourceCode.objects.get(viz=queryViz).code
         if code==None:
             log.debug("Code not found!" % vizId)
             return
-
+    
     code="%s\n%s" % (settings.SPARK_LIBRARY, code)
 
     lines=code.split('\n')

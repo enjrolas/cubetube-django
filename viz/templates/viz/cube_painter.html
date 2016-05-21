@@ -152,8 +152,8 @@
 					console.log(compilerData);
 					output="";
 					if(result.ok) {
-						output+="Compilation status: " + result.message;
-						output+="\nFlashing device now, please wait. Once your Cube has restarted, you can close this message.";
+						output+="Compilation status: " + result.message + " - Flashing device now, please wait.";
+						output+="\nOnce your Cube has restarted, you can close this message.";
 					}
 					else {
 						var device = $("select#cubeName option[value = '" + deviceID + "']").text();
@@ -162,8 +162,6 @@
 					}
 					alert(output);
 					window.location.reload();
-					//window.status = output;
-					//$("textarea.output").val(output);
 				},
 				error: function(data){
 					console.log("fail");
