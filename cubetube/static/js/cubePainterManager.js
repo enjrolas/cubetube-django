@@ -1,11 +1,11 @@
 var kBoardWidth = 8;
 var kBoardHeight= 8;
-var kPickerWidth = 3;
-var kPickerHeight= 8;
+var kPickerWidth = 8;
+var kPickerHeight= 3;
 var kNumPieces = 64;
 var kNumColors = 24;
-var kPieceWidth = 50;
-var kPieceHeight= 50;
+var kPieceWidth = $("#cube_canvas").width() / kBoardWidth;	//50;
+var kPieceHeight = $("#cube_canvas").height() / kBoardHeight;	//50;
 var kPixelWidth = 1 + (kBoardWidth * kPieceWidth);
 var kPixelHeight= 1 + (kBoardHeight * kPieceHeight);
 var kPickerWidth = 1 + (kPickerWidth * kPieceWidth);
@@ -322,7 +322,10 @@ function resumeGame() {
 		gPieces.push(new Cell(row, column, zIndex, fillColor, isFilled));
     }
 	
-    gColors = new Array(new Cell(0, 0, -1, "#660000", true),
+    /*
+     * Picker vertical ('portrait': 3px width x 8px height) orientation 
+     */
+	/*gColors = new Array(new Cell(0, 0, -1, "#660000", true),
 						new Cell(1, 0, -1, "#FF0000", true),
 						new Cell(2, 0, -1, "#FF6666", true),
 						new Cell(3, 0, -1, "#FF9999", true),
@@ -345,8 +348,35 @@ function resumeGame() {
 						new Cell(4, 2, -1, "#00FFFF", true),
 						new Cell(5, 2, -1, "#C20078", true),
 						new Cell(6, 2, -1, "#7E1E9C", true),
-						new Cell(7, 2, -1, "#FFFFFF", true));
-
+						new Cell(7, 2, -1, "#FFFFFF", true));*/
+     	/*
+     	 * Picker horizontal ('landscape': 8px width x 3px height) orientation
+     	 */
+		gColors = new Array(new Cell(0, 0, -1, "#660000", true),
+							new Cell(0, 1, -1, "#FF0000", true),
+							new Cell(0, 2, -1, "#FF6666", true),
+							new Cell(0, 3, -1, "#FF9999", true),
+							new Cell(0, 4, -1, "#FFB266", true),
+							new Cell(0, 5, -1, "#FF9933", true),
+							new Cell(0, 6, -1, "#FF8000", true),
+							new Cell(0, 7, -1, "#CC3300", true),
+							new Cell(1, 0, -1, "#006600", true),
+							new Cell(1, 1, -1, "#00FF00", true),
+							new Cell(1, 2, -1, "#99FF99", true),
+							new Cell(1, 3, -1, "#029386", true),
+							new Cell(1, 4, -1, "#FFFF99", true),
+							new Cell(1, 5, -1, "#FFFF14", true),
+							new Cell(1, 6, -1, "#666600", true),
+							new Cell(1, 7, -1, "#929591", true),
+							new Cell(2, 0, -1, "#000066", true),
+							new Cell(2, 1, -1, "#0000FF", true),
+							new Cell(2, 2, -1, "#0066CC", true),
+							new Cell(2, 3, -1, "#0080FF", true),
+							new Cell(2, 4, -1, "#00FFFF", true),
+							new Cell(2, 5, -1, "#C20078", true),
+							new Cell(2, 6, -1, "#7E1E9C", true),
+							new Cell(2, 7, -1, "#FFFFFF", true));
+	
     gLayer = parseInt(localStorage["cubetube.currentlayer"]);
     gSelectedPieceIndex = parseInt(localStorage["cubetube.selectedpiece"]);
     gSelectedPieceArrayIndex = parseInt(localStorage["cubetube.selectedarray"]);
@@ -365,7 +395,10 @@ function newGame() {
 			for (var c=0; c<kBoardWidth; c++)
 				gPieces.push(new Cell(r, c, -1, "#00000", false));
 
-    gColors = new Array(new Cell(0, 0, -1, "#660000", true),
+ 	/*
+ 	 * Picker vertical ('portrait': 3px width x 8px height) orientation
+ 	 */
+    /*gColors = new Array(new Cell(0, 0, -1, "#660000", true),
 						new Cell(1, 0, -1, "#FF0000", true),
 						new Cell(2, 0, -1, "#FF6666", true),
 						new Cell(3, 0, -1, "#FF9999", true),
@@ -388,7 +421,34 @@ function newGame() {
 						new Cell(4, 2, -1, "#00FFFF", true),
 						new Cell(5, 2, -1, "#C20078", true),
 						new Cell(6, 2, -1, "#7E1E9C", true),
-						new Cell(7, 2, -1, "#FFFFFF", true));
+						new Cell(7, 2, -1, "#FFFFFF", true));*/
+		/*
+		 * Picker horizontal ('landscape': 8px width x 3px height) orientation
+		 */
+		gColors = new Array(new Cell(0, 0, -1, "#660000", true),
+							new Cell(0, 1, -1, "#FF0000", true),
+							new Cell(0, 2, -1, "#FF6666", true),
+							new Cell(0, 3, -1, "#FF9999", true),
+							new Cell(0, 4, -1, "#FFB266", true),
+							new Cell(0, 5, -1, "#FF9933", true),
+							new Cell(0, 6, -1, "#FF8000", true),
+							new Cell(0, 7, -1, "#CC3300", true),
+							new Cell(1, 0, -1, "#006600", true),
+							new Cell(1, 1, -1, "#00FF00", true),
+							new Cell(1, 2, -1, "#99FF99", true),
+							new Cell(1, 3, -1, "#029386", true),
+							new Cell(1, 4, -1, "#FFFF99", true),
+							new Cell(1, 5, -1, "#FFFF14", true),
+							new Cell(1, 6, -1, "#666600", true),
+							new Cell(1, 7, -1, "#929591", true),
+							new Cell(2, 0, -1, "#000066", true),
+							new Cell(2, 1, -1, "#0000FF", true),
+							new Cell(2, 2, -1, "#0066CC", true),
+							new Cell(2, 3, -1, "#0080FF", true),
+							new Cell(2, 4, -1, "#00FFFF", true),
+							new Cell(2, 5, -1, "#C20078", true),
+							new Cell(2, 6, -1, "#7E1E9C", true),
+							new Cell(2, 7, -1, "#FFFFFF", true));
 
     gNumPieces = gPieces.length;
     gSelectedPieceIndex = -1;

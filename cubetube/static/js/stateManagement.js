@@ -26,6 +26,16 @@ $(function(){
 		$('select#cubeName').show();
 		listCubes();
 		cubeNamesUpdateInterval = setInterval('listCubes()', 5000);  //update the list of cubes every 5 seconds
+		if(isPainter) {
+			clearTimeout(taglineTimer);
+			$("div.tagline").hide();
+			$('.logo-box').off('mouseover');
+			$('.logo-box').off('mouseout');
+			$('select#cubeName').css('margin-left', '-134px');
+			$('select#cubeName').css('margin-top', '12px');
+			$('a.logo-box span.cubetube').text('L3D Cube Painter');
+			//$('select#cubeName').css('cssText', $('select#cubeName').attr('style')+'margin-top: 13px !IMPORTANT;');
+		}
 	}
 	else {
 	    console.log("no cube options");

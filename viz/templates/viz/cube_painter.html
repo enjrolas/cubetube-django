@@ -113,9 +113,9 @@
 							message += 'The selected Cube (\"' + device.substr(device.indexOf(')') + 2) 
 									+ '\") does not appear to be running the Spark Pixels viz.';
 							message += '\nIf you would like to flash \"' + device.substr(device.indexOf(')') + 2) + '\" with ';
-							message += 'Spark Pixels now, just hit [OK];\nElse, click [Cancel] to return to where you were.';
+							message += 'Spark Pixels now, just hit [OK].\nElse, click [Cancel] to return to where you were.';
 							//message += '\nPlease head to Cubetube, select this viz from the gallery and load it into your Cube.';
-							//message += '\nIf your Cube is already running Spark Pixels, try resetting it. Make sure it connects (breathing cyan).';
+							//message += '\nIf your Cube is already running Spark Pixels, try resetting it. Make sure it's online (breathing cyan).';
 							if(!isUserAlerted) {
 							    isUserAlerted = true;
 							    if(confirm(message)) flashCube();
@@ -140,7 +140,7 @@
 			var request=$.ajax({
 				type:"POST",
 				url:"{% url 'cloudFlash' %}", 
-				data: {"code": $(".code").val(), "accessToken":accessToken, "deviceID":$("#cubeName").val(), "vizName": "", "vizId":"1438" },
+				data: {"code":"", "accessToken":accessToken, "deviceID":$("#cubeName").val(), "vizName":"", "vizId":"40" },
 				dataType:"text",
 				success: function(data){ 
 					console.log("success flashing");
@@ -152,14 +152,16 @@
 					console.log(compilerData);
 					output="";
 					if(result.ok) {
-						output+="compilation status: OK with status " + result.message + " - Flashing now, please wait.";
+						output+="Compilation status: " + result.message;
+						output+="\nFlashing device now, please wait. Once your Cube has restarted, you can close this message.";
 					}
 					else {
 						var device = $("select#cubeName option[value = '" + deviceID + "']").text();
 						output += "compilation status: " + result.ok +"\nerrors:\n" + result.errors + "\n";
-						output += "\nPlease make sure " + device.substr(device.indexOf(')') + 2) + " is online and connected.";
+						output += "\nPlease make sure " + device.substr(device.indexOf(')') + 2) + " is online (breathing cyan).";
 					}
 					alert(output);
+					window.location.reload();
 					//window.status = output;
 					//$("textarea.output").val(output);
 				},

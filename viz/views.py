@@ -167,7 +167,6 @@ def cloudFlash(request):
     code=request.POST['code']
     accessToken=request.POST['accessToken']
 
-
     vizName=request.POST['vizName']
     vizId=request.POST['vizId']
     if vizId==None:
@@ -177,7 +176,16 @@ def cloudFlash(request):
     log.debug(vizName);
     if vizName==None:
         vizName="undefined"
-
+    if code==None:
+        queryViz=Viz.objects.get(pk=vizId)
+        if queryViz==None:
+            log.debug("Viz %i not found!" % vizId)
+            return
+        else:
+            code=SourceCode.objects.filter(viz=queryViz)
+        if code==None:
+            log.debug("Code not found!" % vizId)
+            return
 
     code="%s\n%s" % (settings.SPARK_LIBRARY, code)
 
