@@ -22,20 +22,22 @@ $(function(){
 	var isCreate = window.location.href.indexOf("create") >= 0;
 	var isEdit = window.location.href.indexOf("edit") >= 0;
 	var isPainter = window.location.href.indexOf("cube_painter") >= 0;
+        if(isPainter) {
+                clearTimeout(taglineTimer);
+                $("div.tagline").hide();
+                $('.logo-box').off('mouseover');
+                $('.logo-box').off('mouseout');
+                $('select#cubeName').css('margin-left', '-134px');
+                $('select#cubeName').css('margin-top', '12px');
+                $('a.logo-box span.cubetube').text('L3D Cube Painter');
+                $('#cube_canvas').height($('#cube_canvas').width());
+                $('#colors_canvas').height((($('#colors_canvas').width()/8)*3)+1);
+                //$('select#cubeName').css('cssText', $('select#cubeName').attr('style')+'margin-top: 13px !IMPORTANT;');
+        }
 	if(typeof accessToken !== 'undefined' && accessToken !== null && (isViz || isCreate || isEdit || isPainter)) {
 		$('select#cubeName').show();
 		listCubes();
 		cubeNamesUpdateInterval = setInterval('listCubes()', 5000);  //update the list of cubes every 5 seconds
-		if(isPainter) {
-			clearTimeout(taglineTimer);
-			$("div.tagline").hide();
-			$('.logo-box').off('mouseover');
-			$('.logo-box').off('mouseout');
-			$('select#cubeName').css('margin-left', '-134px');
-			$('select#cubeName').css('margin-top', '12px');
-			$('a.logo-box span.cubetube').text('L3D Cube Painter');
-			//$('select#cubeName').css('cssText', $('select#cubeName').attr('style')+'margin-top: 13px !IMPORTANT;');
-		}
 	}
 	else {
 	    console.log("no cube options");

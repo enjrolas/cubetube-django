@@ -186,15 +186,15 @@ button {
   z-index: 2;
   background: rgba(0, 0, 0, 0.8);
   cursor: pointer;
-  -webkit-animation-delay: 0;
+  -webkit-animation-delay: 0ms;
   -webkit-animation-duration: 200ms;
   -webkit-animation-name: fadein;
   -webkit-animation-fill-mode: forwards;
-  -moz-animation-delay: 0;
+  -moz-animation-delay: 0ms;
   -moz-animation-duration: 200ms;
   -moz-animation-name: fadein;
   -moz-animation-fill-mode: forwards;
-  animation-delay: 0;
+  animation-delay: 0ms;
   animation-duration: 200ms;
   animation-name: fadein;
   animation-fill-mode: forwards; }
@@ -204,11 +204,11 @@ button {
   -webkit-animation-duration: 200ms;
   -webkit-animation-name: fadeAndMove;
   -webkit-animation-fill-mode: forwards;
-  -moz-animation-delay: 0;
+  -moz-animation-delay: 0ms;
   -moz-animation-duration: 200ms;
   -moz-animation-name: fadeAndMove;
   -moz-animation-fill-mode: forwards;
-  animation-delay: 0;
+  animation-delay: 0ms;
   animation-duration: 200ms;
   animation-name: fadeAndMove;
   animation-fill-mode: forwards;
@@ -505,7 +505,7 @@ button {
     border: 0px;
     height: 100%;
     width: 690px;
-    //overflow: hidden;
+    /*overflow: hidden;*/
     z-index: 2; }
     .viz-wrapper .viz-code .CodeMirror {
       height: 100%; }
@@ -760,12 +760,12 @@ div.mobile-splitter {
 		margin-left: -40px !important;
 	}
 	#cube_canvas {
-		width: 311px;
-		height: 311px;
+		width: 90%; /*311px;*/
+		/*height: 311px;*/
 	}
 	#colors_canvas {
-		width: 311px;
-		height: 117px;
+		width: 90%; /*311px;*/
+		/*height: 117px;*/
 	}
 	#updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
 		width: 175px; 
@@ -794,7 +794,10 @@ div.mobile-splitter {
 		font-size: 12px;
 		padding: 2px 12px;
 	}
-	div.tagline {
+        ul.items li a.logout {
+              max-width: 100px;
+        }
+        div.tagline {
 		/*width: 275px !important;
 		margin-top: -60px !important;
 		margin-left: 80px !important;*/
