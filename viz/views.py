@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.utils.html import escape
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
-from django.http import Http404  
+from django.http import Http404
 import logging
 import datetime
 import subprocess
@@ -166,9 +166,9 @@ def cloudFlash(request):
     log.debug("compiling")
     code=request.POST['code']
     accessToken=request.POST['accessToken']
-
     vizName=request.POST['vizName']
     vizId=request.POST['vizId']
+    
     if vizId==None:
         vizId=-1
     else:
