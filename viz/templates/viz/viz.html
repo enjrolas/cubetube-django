@@ -17,109 +17,6 @@
 	var isMouseOut = false;
 	var loggedIn = false;
 	
-	$(document).ready(function() {
-		console.log('loggedIn: ' + loggedIn);
-		
-		// Enabling Esc key to close the viz
-		$(document).keydown(function(e) {
-			if (e.keyCode == 27) $('.close-button').click();	//Esc
-		});
-		// For the above to work straight out of loading, gotta focus on something
-		if ($('#cubeName').length) $('#cubeName').focus();
-		else if ($('.comments-input').length) $('.comments-input').focus();
-		else window.focus();
-		$('a.viz-next').on('mouseover', function() {
-			clearTimeout(overflowTimer);
-			$('div.viz-wrapper').css('overflow-y', 'auto');
-		}).on('mouseleave', function() {
-			overflowTimer = setTimeout(function() {
-				$('div.viz-wrapper').css('overflow-y', ''); 
-			}, 2400);
-		});
-		
-		/*var titleLength = $("div.title").text().length*6;
-		var createdLength = $("div.created").text().length*6;
-		var padding = Math.max(titleLength, createdLength);
-		console.log('titleLength:'+titleLength);
-		console.log('createdLength:'+createdLength);
-		console.log('padding:'+padding);
-		$("div#meterContainer").css({'float':'right', 'padding-right':'calc(100% - ' + padding + 'px)'});
-		$("div#meterContainer").css('float', 'right');
-		$(".industrial").css({'height':'calc(65px * 1)', 'animation':'dot 0s both', 'float':'right'}).industrial({});
-		var averageRating = parseInt('{{ viz.averageRating }}');
-		var pageViews = parseInt('{{ viz.pageViews }}');
-		console.log(pageViews/averageRating);
-		if(averageRating == 0) averageRating = 1;
-        $(".industrial.thermometer").each(function() {
-			$(this).industrial(pageViews/averageRating);
-        });*/
-		
-		$("span.rating").ratyli({
-			disable: !loggedIn,
-			unrateable: !loggedIn,
-			onRated:function(value,init) {
-				// rating callback
-				if(!init) {	// prevent run at init
-					clearError();
-					var votedFor = $.cookie("votedFor");
-					var hasVoted = false;
-				    if(!(votedFor === undefined || votedFor === null)) {
-				    	hasVoted = (votedFor.indexOf("{{ viz.pk }}") >= 0);
-				    }
-				    else votedFor = '';
-				    //console.log('votedFor: ' + votedFor);
-				    if(hasVoted) {
-				    	alert('Whoops! You\'ve already voted for this viz.');
-						/*$('span.error-area').css({'color':'red', 'line-height':'25px'});
-				    	displayError(null, 'Whoops! You\'ve already voted for this viz.');*/
-				    	return;
-				    }
-				    else {
-						var request=$.ajax({
-							type:"POST",
-							url:"{% url 'rate' %}", 
-							data: {"vizId":"{{ viz.pk }}", "rating":value },
-							dataType:"text",
-							success: function(data){
-								var result = $.parseJSON(data);
-								if (result.success) {
-									votedFor += "{{ viz.pk }};";
-									$.cookie("votedFor", votedFor, { expires: data.expires_in/86400 , path: '/'});
-									alert('You voted: ' + value + ' / New average: ' + result.newAverage);
-									/*$('span.error-area').css({'color':'blue', 'line-height':'25px'});
-									displayError(null, 'You voted: ' + value + ' / New average: ' + result.newAverage);*/
-								}
-								else {
-									$('span.error-area').css({'color':'red', 'line-height':'25px'});
-									if(result.error)
-										if(result.error.indexOf('already voted for Viz') >= 0) {
-											votedFor += "{{ viz.pk }};";
-											console.log('votedFor: ' + votedFor);
-											$.cookie("votedFor", votedFor, { expires: data.expires_in/86400 , path: '/'});
-											alert('Whoops! You\'ve already voted for this viz.');
-											//displayError(null, 'Whoops! You\'ve already voted for this viz.');
-										}
-										else alert('Whoa! This error just came in:\n\n' + result.error);
-											//displayError(null, result.error);
-									else alert('Whoops! Something unexpected happened.\nCouldn\'t compute your vote.');
-										//displayError(null, 'Whoops! Couldn\'t compute your vote.');
-								}
-							},
-							error: function(data){
-								var result = $.parseJSON(data);
-								$('span.error-area').css({'color':'red', 'line-height':'25px'});
-								if(result.error) alert('Whoa! This error just came in:\n\n' + result.error);
-									//displayError(null, result.error);
-								else alert('Whoops! Something unexpected happened.\nCouldn\'t compute your vote.');
-									//displayError(null, 'Whoops! Couldn\'t compute your vote.');
-							}
-						});
-				    }
-				}
-			}
-		});		
-	});
-	
 	// Controls the expanding/collapsing the viz description text field
 	function expandDescription() {
 		clearTimeout(descTimer);
@@ -169,7 +66,7 @@
 		var request=$.ajax({
 			type:"POST",
 			url:"{% url 'cloudFlash' %}", 
-			data: {"code": $(".code").val(), "accessToken":accessToken, "deviceID":$("#cubeName").val(), "vizName": "{{ viz.name }}", "vizId":"{{ viz.pk }}" },
+			data: {"code": $(".code").val(), "accessToken":accessToken, "deviceID":$("select#cubeName").val(), "vizName": "{{ viz.name }}", "vizId":"{{ viz.pk }}" },
 			dataType:"text",
 			success: function(data){ 
 				console.log("success flashing");
@@ -317,19 +214,136 @@
 		}
 	}
 	
-	function getDeviceID() {
-	    return $("select#cubeName").val();
-	}
+	$(document).ready(function() {
+		console.log('loggedIn: ' + loggedIn);
+
+                // Enabling Esc key to close the viz
+		$(document).keydown(function(e) {
+			if (e.keyCode == 27) $('.close-button').click();	//Esc
+		});
+		// For the above to work straight out of loading, gotta focus on something
+		if ($('select#cubeName').length) $('select#cubeName').focus();
+		else if ($('.comments-input').length) $('.comments-input').focus();
+		else window.focus();
+		$('a.viz-next').on('mouseover', function() {
+			clearTimeout(overflowTimer);
+			$('div.viz-wrapper').css('overflow-y', 'auto');
+		}).on('mouseleave', function() {
+			overflowTimer = setTimeout(function() {
+				$('div.viz-wrapper').css('overflow-y', ''); 
+			}, 2400);
+		});
+		
+		/*var titleLength = $("div.title").text().length*6;
+		var createdLength = $("div.created").text().length*6;
+		var padding = Math.max(titleLength, createdLength);
+		console.log('titleLength:'+titleLength);
+		console.log('createdLength:'+createdLength);
+		console.log('padding:'+padding);
+		$("div#meterContainer").css({'float':'right', 'padding-right':'calc(100% - ' + padding + 'px)'});
+		$("div#meterContainer").css('float', 'right');
+		$(".industrial").css({'height':'calc(65px * 1)', 'animation':'dot 0s both', 'float':'right'}).industrial({});
+		var averageRating = parseInt('{{ viz.averageRating }}');
+		var pageViews = parseInt('{{ viz.pageViews }}');
+		console.log(pageViews/averageRating);
+		if(averageRating == 0) averageRating = 1;
+        $(".industrial.thermometer").each(function() {
+			$(this).industrial(pageViews/averageRating);
+        });*/
+		
+		$("span.rating").ratyli({
+			disable: !loggedIn,
+			unrateable: !loggedIn,
+			onRated:function(value,init) {
+				// rating callback
+				if(!init) {	// prevent run at init
+					clearError();
+					var votedFor = $.cookie("votedFor");
+					var hasVoted = false;
+				    if(!(votedFor === undefined || votedFor === null)) {
+				    	hasVoted = (votedFor.indexOf("{{ viz.pk }}") >= 0);
+				    }
+				    else votedFor = '';
+				    //console.log('votedFor: ' + votedFor);
+				    if(hasVoted) {
+				    	alert('Whoops! You\'ve already voted for this viz.');
+						/*$('span.error-area').css({'color':'red', 'line-height':'25px'});
+				    	displayError(null, 'Whoops! You\'ve already voted for this viz.');*/
+				    	return;
+				    }
+				    else {
+						var request=$.ajax({
+							type:"POST",
+							url:"{% url 'rate' %}", 
+							data: {"vizId":"{{ viz.pk }}", "rating":value },
+							dataType:"text",
+							success: function(data){
+								var result = $.parseJSON(data);
+								if (result.success) {
+									votedFor += "{{ viz.pk }};";
+									$.cookie("votedFor", votedFor, { expires: data.expires_in/86400 , path: '/'});
+									alert('You voted: ' + value + ' / New average: ' + result.newAverage);
+									/*$('span.error-area').css({'color':'blue', 'line-height':'25px'});
+									displayError(null, 'You voted: ' + value + ' / New average: ' + result.newAverage);*/
+								}
+								else {
+									$('span.error-area').css({'color':'red', 'line-height':'25px'});
+									if(result.error)
+										if(result.error.indexOf('already voted for Viz') >= 0) {
+											votedFor += "{{ viz.pk }};";
+											console.log('votedFor: ' + votedFor);
+											$.cookie("votedFor", votedFor, { expires: data.expires_in/86400 , path: '/'});
+											alert('Whoops! You\'ve already voted for this viz.');
+											//displayError(null, 'Whoops! You\'ve already voted for this viz.');
+										}
+										else alert('Whoa! This error just came in:\n\n' + result.error);
+											//displayError(null, result.error);
+									else alert('Whoops! Something unexpected happened.\nCouldn\'t compute your vote.');
+										//displayError(null, 'Whoops! Couldn\'t compute your vote.');
+								}
+							},
+							error: function(data){
+								var result = $.parseJSON(data);
+								$('span.error-area').css({'color':'red', 'line-height':'25px'});
+								if(result.error) alert('Whoa! This error just came in:\n\n' + result.error);
+									//displayError(null, result.error);
+								else alert('Whoops! Something unexpected happened.\nCouldn\'t compute your vote.');
+									//displayError(null, 'Whoops! Couldn\'t compute your vote.');
+							}
+						});
+				    }
+				}
+			}
+		});		
+	});
+        
+        function getDeviceID() {
+            var ret = $("select#cubeName").val();
+            if(typeof ret !== 'undefined' && ret !== null && ret !== '-1')
+                return ret;
+            else 
+                return '';
+        }
 	
 	function cubeNameOnChange() {
-	    deviceID = getDeviceID();	// Reads currently 'selected' value from dropdown
-	    console.log('deviceID: ' + deviceID);
+            var deviceID = getDeviceID();	// Reads currently 'selected' value from dropdown
+            console.log('deviceID: ' + deviceID);
+            console.log('#cubeName options: ' + $("select#cubeName option").length);
+            console.log('#cubeName value: ' + $("select#cubeName").val());
 
-		$.removeCookie("coreID", { path: '/' });
-	   	coreID = deviceID;
-	   	var date = new Date();
-	   	$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});
-	}	
+            if(deviceID !== '') {
+                coreID = deviceID;
+                // Freshen the cookie with the currently selected device from the dropdown
+                $.removeCookie("coreID", {path: '/'});
+                var date = new Date();
+                $.cookie("coreID", coreID, {expires: date.getTime() + 86400, path: '/'});
+            }
+            else {
+                // We don't have a valid selected device so delete the cookie and hide the controls
+                $.removeCookie("coreID", {path: '/'});
+                coreID = null;
+            }
+        }
 </script>
 
 {% load utils %}

@@ -22,7 +22,8 @@ $(function () {
     var isCreate = window.location.href.indexOf("create") >= 0;
     var isEdit = window.location.href.indexOf("edit") >= 0;
     var isPainter = window.location.href.indexOf("cube_painter") >= 0;
-    
+
+    console.log("isPainter=" + isPainter);
     if (isPainter) {
         clearTimeout(taglineTimer);
         $("div.tagline").hide();
@@ -53,69 +54,74 @@ function listCubes() {
     var deviceInList = false;
     var deviceID = null;
     //var connectedCores = 0;
-    var accessToken = $.cookie("accessToken");
+    //var accessToken = $.cookie("accessToken");
 
     devicesPr.then(
         function (devices) {
             //console.log('Devices: ', devices);
-            if (devices.length == 0) {
-                $("select#cubeName").empty().append($("<option></option>").html('Add a photon to get started'));
+            if (devices.length === 0) {
+                $("select#cubeName").empty().append($("<option></option>").val('').text('Add a photon to get started'));
             }
             else {
                 devices.forEach(function (x, i, a) {
                     var device = devices[i];
                     /*if (typeof accessToken !== 'undefined' && accessToken !== null) {
-                        $.get("https://api.particle.io/v1/devices/" + device.id + "?access_token=" + accessToken, function (data) {
-                            //console.log(data.name + ': ' + (data.connected ? 'connected' : 'not connected'));
-                            if (data.connected) {*/
-                            if (device.connected) {
-                                //connectedCores++;
-                                $("select#cubeName option[value='-1']").remove();
-                                deviceType = (device.productId === '0' ? 'Core' : 'Photon');
-                                deviceInList = $("select#cubeName option[value = '" + device.id + "']").length;
-                                //if (typeof deviceID !== 'undefined' && deviceID !== null && deviceID != -1) {
-                                    deviceID = device.id;
-                                    console.log('deviceID = ' + deviceID);
-                                //}
+                     $.get("https://api.particle.io/v1/devices/" + device.id + "?access_token=" + accessToken, function (data) {
+                     //console.log(data.name + ': ' + (data.connected ? 'connected' : 'not connected'));
+                     if (data.connected) {*/
 
-                                //append the cube name and ID to the dropdown list
-                                if (!deviceInList) {
-                                    $("select#cubeName").append($("<option></option>")
-                                        .val(device.id)
-                                        .attr("processor", deviceType)
-                                        .html("(" + deviceType + ") " + device.name))
-                                        .sort();
-                                }
-                            }
-                            else {
-                                $("select#cubeName").find("option:contains('" + device.name + "')").remove();
-                            }
-                        /*});
-                    }*/
+                    // Is this device connected?
+                    if (device.connected) {
+                        //connectedCores++;
+                        deviceType = (device.productId === '0' ? 'Core' : 'Photon');
+                        deviceInList = $("select#cubeName option[value = '" + device.id + "']").length;
+
+                        // Is this the first device found connected?
+                        if (deviceID === null) {
+                            // Fill the deviceID variable
+                            deviceID = device.id;
+                            // Remove the 'No cores online :(' item from the dropdown list
+                            $("select#cubeName option[value='']").remove();
+                        }
+
+                        // Has this device not yet made it into the dropdown list?
+                        if (!deviceInList) {
+                            // Append the device name and ID to the dropdown list
+                            $("select#cubeName").append($("<option></option>")
+                                .val(device.id)
+                                .attr("processor", deviceType)
+                                .text("(" + deviceType + ") " + device.name))
+                                .sort();
+                        }
+                    }//if (device.connected)
+                    else {
+                        $("select#cubeName option[value='" + device.id + "']").remove();
+                        //$("select#cubeName").find("option:contains('" + device.name + "')").remove();
+                    }
+                    /*});
+                     }*/
                 });
 
-                //console.log('cubeName items count: ' + $("#cubeName option").length);
-                //console.log('connectedCores: ' + connectedCores);
                 if ($("select#cubeName option").length === 0) {
-                    $("select#cubeName").empty().append($("<option></option>").html('No cores online :('));
-                            /*.val('-1')*/
-                    if ($('select#cubeName').length)
+                    if($('select#cubeName').val() !== '') {
+                        $("select#cubeName").empty().append($("<option></option>").val('').text('No cores online :('));
                         $('select#cubeName').change();
+                    }
                 }
                 else {
                     coreID = $.cookie("coreID");
-                    if (typeof coreID !== 'undefined' && coreID !== null)
-                        $('select#cubeName').val(coreID);   //coreID = $('select#cubeName').val();
-                    /*if (typeof deviceID !== 'undefined' && deviceID !== null)
-                        deviceID = coreID;*/
-                    //console.log('coreID: ' + coreID);
-                    else
+                    var coreID_Before = coreID;
+                    //console.log('coreID before: ' + coreID);
+                    //console.log('deviceID: ' + deviceID);
+                    if (typeof coreID === 'undefined' || coreID === null)
                         coreID = deviceID;
-                    var valueChanged = ($('select#cubeName').val() !== coreID);
-                    if (valueChanged) {
-                        $('select#cubeName').val(coreID);
-                        if ($('select#cubeName').length)
-                            $('select#cubeName').change();
+                    //console.log('coreID after: ' + coreID);
+                    //console.log('#cubeName.value: ' + $('select#cubeName').val());
+                    deviceInList = $("select#cubeName option[value = '" + coreID_Before + "']").length;
+                    var onChange = (coreID_Before !== coreID || !deviceInList);
+                    console.log('onChange: ' + onChange);
+                    if (onChange) {
+                        $('select#cubeName').change();
                     }
                 }
             }

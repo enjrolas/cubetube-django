@@ -190,18 +190,32 @@
 		else window.focus();
 	});
 
-	function getDeviceID() {
-	    return $("select#cubeName").val();
-	}
+        function getDeviceID() {
+            var ret = $("select#cubeName").val();
+            if(typeof ret !== 'undefined' && ret !== null && ret !== '-1')
+                return ret;
+            else 
+                return '';
+        }
 	
 	function cubeNameOnChange() {
-	    deviceID = getDeviceID();	// Reads currently 'selected' value from dropdown
-	    console.log('deviceID: ' + deviceID);
+            var deviceID = getDeviceID();	// Reads currently 'selected' value from dropdown
+            console.log('deviceID: ' + deviceID);
+            console.log('#cubeName options: ' + $("select#cubeName option").length);
+            console.log('#cubeName value: ' + $("select#cubeName").val());
 
-		$.removeCookie("coreID", { path: '/' });
-	   	coreID = deviceID;
-	   	var date = new Date();
-	   	$.cookie("coreID", coreID, { expires: date.getTime()+86400 , path: '/'});
+            if(deviceID !== '') {
+                coreID = deviceID;
+                // Freshen the cookie with the currently selected device from the dropdown
+                $.removeCookie("coreID", {path: '/'});
+                var date = new Date();
+                $.cookie("coreID", coreID, {expires: date.getTime() + 86400, path: '/'});
+            }
+            else {
+                // We don't have a valid selected device so delete the cookie and hide the controls
+                $.removeCookie("coreID", {path: '/'});
+                coreID = null;
+            }
 	}	
 </script>
 
