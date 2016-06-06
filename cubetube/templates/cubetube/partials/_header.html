@@ -6,6 +6,20 @@
 {% endif %}
 <script type="text/javascript">
 	var clicks = 0;
+        
+        function getCountryRedirect() {
+            $.getJSON("http://ipinfo.io", function(response) {
+                /*for ( var prop in response ) {
+                    console.log( "response." + prop );
+                }*/
+                console.log("Country: " + response.country);
+                if(response.country !== "JP")
+                    window.location.replace(document.location.origin + "/docs");
+                else
+                    window.location.replace(document.location.origin + "/docs_jp");
+                    
+            }, "jsonp");
+    }
 </script>
 <nav class="small {{page}}" style="background: {% if not large %}#1C1521 none repeat scroll 0% 0%{% else %}transparent none repeat scroll 0% 0%{% endif %}">
     <div class="section">
@@ -44,7 +58,8 @@
                 <a href="/gallery">Gallery</a>
             </li>
             <li class="on-docs">
-                <a href="/docs">Getting Started</a>
+            <!-- <a href="/docs">Getting Started</a>-->
+                <a href="javascript:void(0);" onclick="getCountryRedirect();">Getting Started</a>
             </li>
             <li class="on-overview">
                 <a href="/">Overview</a>

@@ -89,6 +89,8 @@ def docs(request):
     return render(request, "cubetube/docs.html")    
 #    return render(request, "cubetube/hackpad-docs.html")    
 
+def docs_jp(request):
+    return render(request, "cubetube/docs_jp.html")
 
 def forum(request):
     return redirect('http://forum.cubetube.org/')
