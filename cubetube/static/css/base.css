@@ -1252,6 +1252,11 @@ header:after {
     padding-left: 8px;
     padding-right: 8px; }
 
+.painter .on-painter {
+    box-shadow: inset 0px 3px 0px #ee0026;
+    padding-left: 8px;
+    padding-right: 8px; }
+
 /**
  * Cubetube card styles
  * -- Used to represent cards in the grid view
