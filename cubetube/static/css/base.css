@@ -895,10 +895,10 @@ div.mobile-splitter {
 /* Portrait layout for small screen iOS devices (iPod) */
 @media screen and (max-width:320px) {
     #cubeName {
-            min-width: 145px; 
-            max-width: 265px; 
-            margin-top: 22px;
-            margin-left: calc(100% - 400px) !important;
+        min-width: 145px; 
+        max-width: 265px; 
+        margin-top: 22px;
+        margin-left: calc(100% - 400px) !important;
     }
     div#canvas {
         padding: 10px 0 40px;
@@ -927,11 +927,19 @@ div.mobile-splitter {
     }
     nav.small ul, nav.small li, nav.always-small ul, nav.always-small li {
         width: 120px !important;
+        height: 40px !important;
     }
     ul.items {
         position: absolute;
         margin-left: calc(100% - 150px);
-        margin-top: -60px;
+        margin-top: -58px;
+    }
+    ul.items li a {
+        font-size: 12px !important;
+        padding: 2px 12px !important;
+    }
+    ul.items li a.logout {
+        max-width: 120px !important;
     }
 }
 /* Landscape layout for medium screen iOS devices (iPhone 5s, 6+) */
