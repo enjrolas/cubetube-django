@@ -44,17 +44,29 @@
     }*/
     
     $(function () {
-        $("div.round-button").css('padding-left', 'calc(100% / 2.2)');
+        //$("div.round-button").css('padding-left', 'calc(100% / 2.2)');
         //$("select#colors").prop('disabled', 'disabled');
-
+        $(window).on("orientationchange", function(){ window.location.reload(); });
+        
+        clearTimeout(taglineTimer);
+        $("div.tagline").hide();
+        $('.logo-box').off('mouseover');
+        $('.logo-box').off('mouseout');
+        $('select#cubeName').css('margin-left', '-134px');
+        $('select#cubeName').css('margin-top', '12px');
+        $('a.logo-box span.cubetube').text('L3D Cube Painter');
+        $('a.logo-box span.cubetube').css('color', '#fff');
+        
         /*$("div.tagline").show();
          $('.logo-box').on('mouseleave', function() {
          clearTimeout(taglineTimer);
          return false;
          });*/
-
+        
+        checkCookie();
+        //console.log("accessToken: " + accessToken);
         if (typeof accessToken !== 'undefined' && accessToken !== null)
-            populateInterval();
+            cubeNameOnChange(); //populateInterval();
 
         var $canvas = document.getElementById('cube_canvas');
         var $colors = document.getElementById('colors_canvas');
@@ -146,38 +158,41 @@
     }
 
     function flashCube() {
-        var output;
-        var request = $.ajax({
-            type: "POST",
-            url: "{% url 'cloudFlash' %}",
-            data: {"code": "", "accessToken": accessToken, "deviceID": $("#cubeName").val(), "vizName": "", "vizId": "1438"},
-            dataType: "text",
-            success: function (data) {
-                console.log("success flashing");
-                JSONstring = data;
-                console.log(JSONstring);
-                var result = $.parseJSON(data);
-                var result = $.parseJSON(result);
-                compilerData = result;
-                console.log(compilerData);
-                output = "";
-                if (result.ok) {
-                    output += "Compilation status: " + result.message + " - Flashing device now, please wait.";
-                    output += "\nOnce your Cube has restarted, you can close this message.";
+        var deviceID = getDeviceID();
+        if (deviceID !== '') {
+            var output;
+            var request = $.ajax({
+                type: "POST",
+                url: "{% url 'cloudFlash' %}",
+                data: {"code": "", "accessToken": accessToken, "deviceID": deviceID, "vizName": "", "vizId": "1438"},
+                dataType: "text",
+                success: function (data) {
+                    console.log("success flashing");
+                    JSONstring = data;
+                    console.log(JSONstring);
+                    var result = $.parseJSON(data);
+                    var result = $.parseJSON(result);
+                    compilerData = result;
+                    console.log(compilerData);
+                    output = "";
+                    if (result.ok) {
+                        output += "Compilation status: " + result.message + " - Flashing device now, please wait.";
+                        output += "\nOnce your Cube has restarted, you can close this message.";
+                    }
+                    else {
+                        var device = $("select#cubeName option[value = '" + deviceID + "']").text();
+                        output += "Compilation status: " + result.ok + "\nerrors:\n" + result.errors + "\n";
+                        output += "\nPlease make sure " + device.substr(device.indexOf(')') + 2) + " is online (breathing cyan).";
+                    }
+                    alert(output);
+                    window.location.reload();
+                },
+                error: function (data) {
+                    console.log("fail");
+                    console.log(data);
                 }
-                else {
-                    var device = $("select#cubeName option[value = '" + deviceID + "']").text();
-                    output += "Compilation status: " + result.ok + "\nerrors:\n" + result.errors + "\n";
-                    output += "\nPlease make sure " + device.substr(device.indexOf(')') + 2) + " is online (breathing cyan).";
-                }
-                alert(output);
-                window.location.reload();
-            },
-            error: function (data) {
-                console.log("fail");
-                console.log(data);
-            }
-        });
+            });
+        }
     }
 
     function getDeviceID() {
@@ -357,7 +372,7 @@
             <a id="clearButtons" href="javascript:void(0);" onclick="clearVoxels(0, 512);" title="Click to clear the whole Cube">Clear All</a>
         </div>
     </div>
-    <div style="padding-bottom: 15px;">
+    <div id="colors" style="padding-bottom: 15px;">
         <canvas height="196" width="521" id="colors_canvas" >
             Your browser does not support the HTML5 canvas element.
         </canvas>
