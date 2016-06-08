@@ -47,6 +47,7 @@
         //$("div.round-button").css('padding-left', 'calc(100% / 2.2)');
         //$("select#colors").prop('disabled', 'disabled');
         $(window).on("orientationchange", function(){ window.location.reload(); });
+        $(window).on("resize", function(){ window.location.reload(); });
         
         clearTimeout(taglineTimer);
         $("div.tagline").hide();
