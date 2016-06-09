@@ -733,9 +733,9 @@ div.mobile-splitter {
     background: linear-gradient(to right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* Standard syntax (must be last) */
 }
 @media screen and (min-width: 1110px) and (max-width: 1300px) {
-    div#canvas {
+/*    div#canvas {
         padding: 10px 280px 40px;
-    }
+    }*/
 }
 
 /* Portrait layout for large screen iOS devices (iPad Air) */

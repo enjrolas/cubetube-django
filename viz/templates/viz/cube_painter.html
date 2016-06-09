@@ -46,7 +46,12 @@
     $(function () {
         //$("div.round-button").css('padding-left', 'calc(100% / 2.2)');
         //$("select#colors").prop('disabled', 'disabled');
-        $(window).on("orientationchange", function() { window.location.reload(); });
+        $(window).on("orientationchange", function() {
+            //window.location.reload(); 
+            $('#cube_canvas').height($('#cube_canvas').width());
+            $('#colors_canvas').height((($('#colors_canvas').width() / 8) * 3) + 1);
+            $('div#colors').css('cssText', $('div#colors').attr('style')+'calc(100% - ' + $('#cube_canvas').height() + ') !important;');
+        });
         $(window).on("resize", function() { 
             //window.location.reload(); 
             $('#cube_canvas').height($('#cube_canvas').width());
