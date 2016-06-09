@@ -120,6 +120,15 @@ $(document).ready(function () {
             clearError();
             sparkLogin(email, password);
         });
+        
+        $popover.on('keydown', function (e) {
+            if (e.keyCode === 13) {
+                if ($popover.hasClass('login'))
+                    $('.login-component .login').click();
+                else
+                    $('.signup-component .signup-button').click();
+            }
+        });
     }
 
     // Show login signup

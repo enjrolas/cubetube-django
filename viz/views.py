@@ -383,8 +383,6 @@ def index(request):
         visualizations=vizs[:8]
     return render(request, "viz/index.html", { 'visualizations' : visualizations, 'totalObjects' : totalObjects})
 
-
-
 @csrf_exempt
 def fork(request, vizId=None):
     accessToken = request.COOKIES['accessToken']

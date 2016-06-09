@@ -125,5 +125,5 @@ $('body').on('click', '.scroll', function(e) {
   				$('#viz-cards').animate({height: "+=" + (scrollHeight*.25)});
   			//setTimeout(function() { activatePreviews(); }, 1);
 		}
-	})
+	});
 });
