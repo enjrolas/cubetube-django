@@ -30,7 +30,7 @@
     //var selectFromDropdownTimer = null;
     var syncInterval = null;
     var idxArr = 0;
-    var isTouchDevice = function() { return 'ontouchstart' in window || 'onmsgesturechange' in window; };
+    //var isTouchDevice = function() { return 'ontouchstart' in window || 'onmsgesturechange' in window; };
     //var isDesktop = window.screenX !== 0 && !isTouchDevice() ? true : false;
 
     /*if (typeof accessToken !== 'undefined' && accessToken !== null) {
@@ -53,10 +53,10 @@
         $(window).on("orientationchange", function() {
             window.location.reload(); 
         });
-        $(window).on("resize", function() {
-            //console.log('isTouchDevice ' + isTouchDevice());
+        /*$(window).on("resize", function() {
+            console.log('width: ' + $(window).width());
             if(!isTouchDevice()) {window.location.reload();}
-        });
+        });*/
 
         clearTimeout(taglineTimer);
         $("div.tagline").hide();

@@ -728,20 +728,24 @@ div.mobile-splitter {
 }
 
 /* #### >=125% Zoom #### */
-@media screen and (max-width: 920px) {
+/*@media screen and (max-width: 920px) {
+    div#canvas {
+        padding: 10px 0 40px;
+        height: 90%;
+        max-width: 920px;
+    }
+}*/
+/* #### >=175% Zoom #### */
+@media screen and (max-width: 1024px) {
     div#canvas {
         padding: 10px 0 40px;
         height: 560px;
-        max-width: 920px;
+        max-width: 1024px;
     }
-    /*#cube_canvas {
-        width: 90%;
-        height: calc(100% - 70px);
-    }*/
 }
 
-/* #### Mobile Phones Portrait #### */
-/*@media screen and (max-device-width: 480px) and (orientation: portrait) {
+/* #### GALAXY S4/S5/S6/S7, Note 3/4 and Phablets Portrait #### */
+@media screen and (min-device-height: 640px) and (min-device-width: 360px) and (orientation: portrait) {
     #cubeName {
         margin-top: 15px !important;
     }
@@ -754,116 +758,7 @@ div.mobile-splitter {
         max-width: 640px;
     }
     div#colors {
-        margin-top: calc(100% - 360px) !important;
-    }
-    #cube_canvas {
-        width: 90%;
-        height: calc(100% - 70px);
-    }
-    #colors_canvas {
-        width: 90%;
-    }
-    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
-        width: 175px; 
-        background: #ee0026; 
-        color: #fff; 
-        border-radius: 30px; 
-        padding: 2px 12px;
-        text-align: center; 
-        text-decoration: none;
-        line-height: 22px;
-        font-size: 12px;
-    }
-    .logo-box {
-        color: #1C1521 !important;
-    }
-    nav.small ul, nav.small li, nav.always-small ul, nav.always-small li {
-        width: 120px !important;
-        height: 57px !important;
-    }
-    ul.items {
-        position: absolute;
-        margin-left: calc(100% - 150px);
-        margin-top: -57px;
-    }
-    ul.items li a {
-        font-size: 12px;
-        padding: 2px 12px;
-    }
-    ul.items li a.logout {
-        max-width: 100px;
-    }
-    div.tagline {
-        display: none !important;
-    }
-    .cubePainter {
-        min-width: 145px !important; 
-        max-width: 265px !important; 
-        margin-top: -25px !important;
-        margin-left: 29%;
-        display: none;	
-    }
-    #cubeAndModeText, #pleaseLogInText {
-        font-size: 12px !important;
-        width: 100%;
-        margin-left: -15px;
-    }
-    span#mode, span#device {
-        font-size: 12px !important;
-    }
-    div#updateListDiv, div#brightnessControl {
-        width: 250px;
-        margin-left: -20px;
-        margin-right: 0px;
-        font-size: 12px;
-    }
-    #brightnessSlider {
-        width: 100px;
-        height: 10px;
-    }
-    a#updateListButton {
-        width: 125px; 
-        margin-right: 0px;
-    }
-    div#syncButton {
-        padding-bottom: 10px; 
-        padding-left: 0px !important;
-        padding-right: 0px !important;
-    }
-    div.mobile-splitter {
-        display: block;
-        float: left; 
-        height: 32px; 
-        width: 1px; 
-        padding-top: 10px;
-    }
-    div.spacer {
-        display: none;
-    }
-    .gradient {
-        background: #1C1521;   
-        background: -webkit-linear-gradient(left, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));
-        background: -o-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));
-        background: -moz-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));
-        background: linear-gradient(to right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));
-    }
-}*/
-
-/* #### GALAXY S4/S5/S6/S7, Note 3/4, NEXUS 5 #### */
-@media (min-device-height: 640px) and (min-device-width: 360px) and (orientation: portrait) {
-    #cubeName {
-        margin-top: 15px !important;
-    }
-    span#currentLayer {
-        font-size: 14px !important;
-    }
-    div#canvas {
-        padding: 10px 0 40px;
-        height: 440px;
-        max-width: 640px;
-    }
-    div#colors {
-        margin-top: calc(100% - 360px) !important;
+        margin-top: /*calc(100% - 360px)*/ 1% !important;
     }
     #cube_canvas {
         width: 90%;
@@ -958,117 +853,8 @@ div.mobile-splitter {
     }    
 }
 
-/* #### Phablets Portrait #### */
-@media (max-device-height: 2560px) and (max-device-width: 1440px) and (orientation: portrait) {
-    #cubeName {
-        margin-top: 15px !important;
-    }
-    span#currentLayer {
-        font-size: 14px !important;
-    }
-    div#canvas {
-        padding: 10px 0 40px;
-        height: 440px;
-        max-width: 640px;
-    }
-    div#colors {
-        margin-top: calc(100% - 360px) !important;
-    }
-    #cube_canvas {
-        width: 90%;
-        height: calc(100% - 70px);
-    }
-    #colors_canvas {
-        width: 90%;
-    }
-    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
-        width: 175px; 
-        background: #ee0026; 
-        color: #fff; 
-        border-radius: 30px; 
-        padding: 2px 12px;
-        text-align: center; 
-        text-decoration: none;
-        line-height: 22px;
-        font-size: 12px;
-    }
-    .logo-box {
-        color: #1C1521 !important;
-    }
-    nav.small ul, nav.small li, nav.always-small ul, nav.always-small li {
-        width: 120px !important;
-        height: 57px !important;
-    }
-    ul.items {
-        position: absolute;
-        margin-left: calc(100% - 150px);
-        margin-top: -57px;
-    }
-    ul.items li a {
-        font-size: 12px;
-        padding: 2px 12px;
-    }
-    ul.items li a.logout {
-        max-width: 100px;
-    }
-    div.tagline {
-        display: none !important;
-    }
-    .cubePainter {
-        min-width: 145px !important; 
-        max-width: 265px !important; 
-        margin-top: -25px !important;
-        margin-left: 29%;
-        display: none;	
-    }
-    #cubeAndModeText, #pleaseLogInText {
-        font-size: 10px !important;
-        width: 100%;
-        margin-left: -28px;
-    }
-    span#mode, span#device {
-        font-size: 10px !important;
-    }
-    div#updateListDiv, div#brightnessControl {
-        width: 250px;
-        margin-left: -33px;
-        margin-right: 0px;
-        font-size: 12px;
-    }
-    #brightnessSlider {
-        width: 100px;
-        height: 10px;
-    }
-    a#updateListButton {
-        width: 125px; 
-        margin-right: 0px;
-    }
-    div#syncButton {
-        padding-bottom: 10px; 
-        padding-left: 0px !important;
-        padding-right: 0px !important;
-    }
-    div.mobile-splitter {
-        display: block;
-        float: left; 
-        height: 32px; 
-        width: 1px; 
-        padding-top: 10px;
-    }
-    div.spacer {
-        display: none;
-    }
-    .gradient {
-        background: #1C1521;	/* For browsers that do not support gradients */    
-        background: -webkit-linear-gradient(left, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));	/* For Safari 5.1 to 6.0 */
-        background: -o-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Opera 11.1 to 12.0 */
-        background: -moz-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Firefox 3.6 to 15 */
-        background: linear-gradient(to right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* Standard syntax (must be last) */
-    }    
-}
-
-/* #### iPhone 5 and 5s Portrait #### */
-@media (device-height: 568px) and (device-width: 320px) and (orientation: portrait) {
+/* #### iPhone 5/5s and iPod touch Portrait #### */
+@media screen and (device-height: 568px) and (device-width: 320px) and (orientation: portrait) {
     #cubeName {
         margin-top: 15px !important;
         margin-left: -140px !important;
@@ -1132,12 +918,12 @@ div.mobile-splitter {
         font-size: 12px;
     }
     #cubeAndModeText, #pleaseLogInText {
-        font-size: 9px !important;
+        font-size: 8px !important;
         width: 100% !important;
         margin-left: -35px !important;
     }
     span#mode, span#device {
-        font-size: 9px !important;
+        font-size: 8px !important;
     }
     div#updateListDiv, div#brightnessControl {
         width: 250px;
@@ -1178,7 +964,7 @@ div.mobile-splitter {
 }
 
 /* #### iPhone 6 and 6s Portrait #### */
-@media (min-device-height: 667px) and (min-device-width: 375px) and (orientation: portrait) {
+@media screen and (min-device-height: 667px) and (min-device-width: 375px) and (orientation: portrait) {
     #cubeName {
         margin-top: 15px !important;
     }
@@ -1287,7 +1073,7 @@ div.mobile-splitter {
 }
 
 /* #### iPhone 6 plus and 6s plus Portrait #### */
-@media (min-device-height: 736px) and (min-device-width: 414px) and (orientation: portrait) {
+@media screen and (min-device-height: 736px) and (min-device-width: 414px) and (orientation: portrait) {
     #cubeName {
         margin-top: 15px !important;
     }
@@ -1446,6 +1232,7 @@ div.mobile-splitter {
         margin-top: -60px;
     }
 }
+
 /* #### iOS Tablets Portrait #### */
 @media screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 2) {
     div#canvas {
@@ -1499,7 +1286,7 @@ div.mobile-splitter {
 }
 
 /* #### Android Tablets Landscape #### */
-@media screen and (min-device-width: 800px) and (max-device-width: 1280px) and (orientation: landscape) {
+@media screen and (min-device-width: 800px) and (max-device-width: 1280px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
     div#canvas {
         padding: 10px 0 40px;
         max-width: 1280px;
@@ -1601,8 +1388,8 @@ div.mobile-splitter {
     }
 }
 
-/* #### GALAXY S4/S5/S6/S7, Note 3/4, NEXUS 5 Landscape #### */
-@media (max-device-height: 360px) and (max-device-width: 640px) and (orientation: landscape) {
+/* #### GALAXY S4/S5/S6/S7, Note 3/4 and Phablets Landscape #### */
+@media screen and (max-device-height: 360px) and (max-device-width: 640px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
     #cubeName {
         margin-top: 15px !important;
     }
@@ -1611,15 +1398,15 @@ div.mobile-splitter {
     }
     div#canvas {
         padding: 10px 0 40px;
-        height: 440px;
+        height: 640px;
         max-width: 640px;
     }
     div#colors {
-        margin-top: calc(100% - 414px) !important;
+        margin-top: /*calc(100% - 550px)*/ 7% !important;
     }
     #cube_canvas {
         width: 90%;
-        height: 140%;
+        height: 95%;
     }
     #colors_canvas {
         width: 90%;
@@ -1710,126 +1497,54 @@ div.mobile-splitter {
     }    
 }
 
-/* #### Phablets Landscape #### */
-@media (min-device-height: 1440px) and (min-device-width: 2560px) and (orientation: landscape) {
-    #cubeName {
-        margin-top: 15px !important;
-    }
-    span#currentLayer {
-        font-size: 14px !important;
-    }
+/* #### iPhone 5/5s and iPod touch Landscape #### */
+@media screen and (device-height: 568px) and (device-width: 320px) and (orientation: landscape) {
     div#canvas {
         padding: 10px 0 40px;
-        height: 560px;
-        max-width: 2560px;
+        height: 568px;
+        max-width: 568px;
     }
     div#colors {
-        margin-top: calc(100% - 365px) !important;
+        margin-top: calc(100% - 495px) !important;
     }
     #cube_canvas {
         width: 90%;
-        height: 140%;
+        height: 95%;
     }
     #colors_canvas {
         width: 90%;
     }
-    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
-        width: 175px; 
-        background: #ee0026; 
-        color: #fff; 
-        border-radius: 30px; 
-        padding: 2px 12px;
-        text-align: center; 
-        text-decoration: none;
-        line-height: 22px;
-        font-size: 12px;
-    }
-    .logo-box {
-        color: #1C1521 !important;
-    }
-    nav.small ul, nav.small li, nav.always-small ul, nav.always-small li {
-        width: 120px !important;
-        height: 57px !important;
-    }
-    ul.items {
-        position: absolute;
-        margin-left: calc(100% - 150px);
-        margin-top: -57px;
-    }
-    ul.items li a {
-        font-size: 12px;
-        padding: 2px 12px;
-    }
-    ul.items li a.logout {
-        max-width: 100px;
-    }
-    div.tagline {
-        display: none !important;
-    }
-    .cubePainter {
-        min-width: 145px !important; 
-        max-width: 265px !important; 
-        margin-top: -25px !important;
-        margin-left: 29%;
-        display: none;	
+    div#updateListDiv, div#brightnessControl {
+        margin-left: calc(100% - 295px) !important;
     }
     #cubeAndModeText, #pleaseLogInText {
-        font-size: 11px !important;
+        font-size: 12px;
+        margin-left: calc(100% - 290px) !important;
         width: 100%;
-        margin-left: 38px;
     }
     span#mode, span#device {
-        font-size: 11px !important;
-    }
-    div#updateListDiv, div#brightnessControl {
-        width: 250px;
-        margin-left: 35px;
-        margin-right: 0px;
         font-size: 12px;
     }
-    #brightnessSlider {
-        width: 100px;
-        height: 10px;
-    }
-    a#updateListButton {
-        width: 125px; 
-        margin-right: 0px;
-    }
-    div#syncButton {
-        padding-bottom: 10px; 
-        padding-left: 0px !important;
-        padding-right: 0px !important;
-    }
-    div.mobile-splitter {
-        display: block;
-        float: left; 
-        height: 32px; 
-        width: 1px; 
-        padding-top: 10px;
-    }
-    div.spacer {
-        display: none;
-    }
-    .gradient {
-        background: #1C1521;
-        background: -webkit-linear-gradient(left, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));
-        background: -o-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));
-        background: -moz-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));
-        background: linear-gradient(to right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));
-    }    
 }
 
 /* #### iPhone 6 plus and 6s plus Landscape #### */
 /* Had to specify the pixel ratio to avoid interfering with desktop layout */
-@media (min-device-height: 736px) and (min-device-width: 414px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 3) {
+@media screen and (device-height: 736px) and (device-width: 414px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 3) {
     div#canvas {
         padding: 10px 0 40px;
-        height: 490px;
+        height: 736px;
         max-width: 736px;
     }
-    /*div#colors {
+    div#colors {
         margin-top: calc(100% - 670px) !important;
-    }*/
+    }
+    #cube_canvas {
+        width: 90%;
+        height: 95%;
+    }
+    #colors_canvas {
+        width: 90%;
+    }
     div#updateListDiv, div#brightnessControl {
         margin-left: calc(100% - 340px) !important;
     }
@@ -1841,10 +1556,22 @@ div.mobile-splitter {
 
 /* #### iPhone 6 and 6s Landscape #### */
 /* Had to specify the pixel ratio to avoid interfering with desktop layout */
-@media (min-device-height: 667px) and (min-device-width: 375px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 2) {
-    div#colors {
-        margin-top: calc(100% - 670px) !important;
+@media screen and (device-height: 667px) and (device-width: 375px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 2) {
+    div#canvas {
+        padding: 10px 0 40px;
+        height: 667px;
+        max-width: 667px;
     }
+    div#colors {
+        margin-top: calc(100% - 595px) !important;
+    }
+    #cube_canvas {
+        width: 90%;
+        height: 95%;
+    }
+    #colors_canvas {
+        width: 90%;
+    }    
     div#updateListDiv, div#brightnessControl {
         margin-left: calc(100% - 320px) !important;
     }
@@ -1853,32 +1580,6 @@ div.mobile-splitter {
         width: 100%;
     }
 }
-
-/* #### Mobile Phones Landscape #### */
-/*@media screen and (max-device-width: 640px) and (orientation: landscape) {
-    div#canvas {
-        padding: 10px 0 40px;
-        max-width: 640px;
-    }
-    div#colors {
-        margin-top: calc(100% - 460px) !important;
-    }
-    #cube_canvas {
-        width: 90%;
-    }
-    #colors_canvas {
-        width: 90%;
-    }
-    nav.small ul, nav.small li, nav.always-small ul, nav.always-small li {
-        width: 155px !important;
-        height: 57px !important;
-    }
-    ul.items {
-        position: absolute;
-        margin-left: calc(100% - 187px);
-        margin-top: -60px;
-    }
-}*/
 
 .fb-share-button {
     position: absolute !important;
