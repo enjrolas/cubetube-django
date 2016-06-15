@@ -24,12 +24,12 @@ $(function () {
     var isPainter = window.location.href.indexOf("cube_painter") >= 0;
 
     console.log("isPainter=" + isPainter);
-    if (isPainter) {
+    /*if (isPainter) {
         $('#cube_canvas').height($('#cube_canvas').width());
         $('#colors_canvas').height((($('#colors_canvas').width() / 8) * 3) + 1);
         $('div#colors').css('cssText', $('div#colors').attr('style')+'calc(100% - ' + $('#cube_canvas').height() + ') !important;');
         //$('div#colors').css('margin-top', 'calc(100% - ' + $('#cube_canvas').height() + ')');
-    }
+    }*/
     if (typeof accessToken !== 'undefined' && accessToken !== null && (isViz || isCreate || isEdit || isPainter)) {
         $('select#cubeName').show();
         listCubes();

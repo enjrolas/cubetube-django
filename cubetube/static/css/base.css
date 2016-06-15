@@ -676,10 +676,19 @@ span#currentLayer {
     font-weight: bold;
     color: #2bc6fb;
 }
-#updateListDiv {
+#updateListDiv, #brightnessControl {
+    padding: 6px 22px; 
     width: 310px; 
-    margin-left: 27%;
+    margin-left: 28%;
     font-weight: bold;
+    background: #ee0026; 
+    color: #fff; 
+    border-radius: 30px; 
+    text-align: center;
+}
+#brightnessSlider {
+    width: 120px;
+    height: 10px;
 }
 a#updateListButton {
     width: 175px !important; 
@@ -688,20 +697,6 @@ a#updateListButton {
     text-align: center; 
     text-decoration: none;
     margin-right: 2%;
-}
-#brightnessControl {
-    width: 310px;
-    font-weight: bold;
-    background: #ee0026; 
-    color: #fff; 
-    border-radius: 30px; 
-    margin-left: 27%;
-    padding: 6px 22px; 
-    text-align: center;
-}
-#brightnessSlider {
-    width: 120px;
-    height: 10px;
 }
 div#canvas {
     text-align: center;
@@ -712,7 +707,6 @@ div#canvas {
 div#syncButton {
     text-align: center; 
     padding-bottom: 10px; 
-    /*padding-right: 21%;*/
 }
 div.spacer {
     display: block;
@@ -732,59 +726,27 @@ div.mobile-splitter {
     background: -moz-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Firefox 3.6 to 15 */
     background: linear-gradient(to right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* Standard syntax (must be last) */
 }
-@media screen and (min-width: 1110px) and (max-width: 1300px) {
-/*    div#canvas {
-        padding: 10px 280px 40px;
+
+/* #### >=125% Zoom #### */
+@media screen and (max-width: 920px) {
+    div#canvas {
+        padding: 10px 0 40px;
+        height: 560px;
+        max-width: 920px;
+    }
+    /*#cube_canvas {
+        width: 90%;
+        height: calc(100% - 70px);
     }*/
 }
 
-/* Portrait layout for large screen iOS devices (iPad Air) */
-@media screen and (max-width: 1100px) {
-    /*div#canvas {
-        padding: 10px 170px 40px;
-    }*/
-    div#canvas {
-        padding: 10px 0 40px;
-        /*height: 440px;*/
-        max-width: 1100px;
-    }
-    div#colors {
-        margin-top: calc(100% - 485px);  /*285px;*/
-        margin-bottom: 10px;
-    }
-    #cube_canvas {
-        width: 90%;
-    }
-    #colors_canvas {
-        width: 90%;
-    }
-    div#updateListDiv, div#brightnessControl {
-        margin-left: calc(100% - 348px);    /*10%;*/
-    }
-    #cubeAndModeText, #pleaseLogInText {
-        margin-left: calc(100% - 338px);    /*12%;*/
-        width: 100%;
-    }
-    nav.small ul, nav.small li, nav.always-small ul, nav.always-small li {
-        width: 145px !important;
-        height: 57px !important;
-    }
-    ul.items {
-        position: absolute;
-        margin-left: calc(100% - 180px);    /*75%;*/
-        margin-top: -60px;
-    }
-}
-/* Portrait layout for medium screen iOS devices (iPhone 5s, 6+) */
-@media screen and (max-width: 640px) {
+/* #### Mobile Phones Portrait #### */
+/*@media screen and (max-device-width: 480px) and (orientation: portrait) {
     #cubeName {
         margin-top: 15px !important;
     }
     span#currentLayer {
         font-size: 14px !important;
-    }
-    span#mode, span#device {
-        font-size: 12px !important;
     }
     div#canvas {
         padding: 10px 0 40px;
@@ -792,15 +754,14 @@ div.mobile-splitter {
         max-width: 640px;
     }
     div#colors {
-        margin-top: calc(100% - 355px);   /*50px;*/
+        margin-top: calc(100% - 360px) !important;
     }
     #cube_canvas {
-        width: 90%; /*311px;*/
-        /*height: 311px;*/
+        width: 90%;
+        height: calc(100% - 70px);
     }
     #colors_canvas {
-        width: 90%; /*311px;*/
-        /*height: 117px;*/
+        width: 90%;
     }
     #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
         width: 175px; 
@@ -822,7 +783,7 @@ div.mobile-splitter {
     }
     ul.items {
         position: absolute;
-        margin-left: calc(100% - 150px); /*65px;*/
+        margin-left: calc(100% - 150px);
         margin-top: -57px;
     }
     ul.items li a {
@@ -833,9 +794,6 @@ div.mobile-splitter {
         max-width: 100px;
     }
     div.tagline {
-        /*width: 275px !important;
-        margin-top: -60px !important;
-        margin-left: 80px !important;*/
         display: none !important;
     }
     .cubePainter {
@@ -845,15 +803,559 @@ div.mobile-splitter {
         margin-left: 29%;
         display: none;	
     }
-    /*div.gradient, div#canvas {
-            padding-left: 0px !important;
-            padding-right: 0px !important;
-    }*/
     #cubeAndModeText, #pleaseLogInText {
         font-size: 12px !important;
-        /*font-weight: normal;*/
-        width: 100%; /*285px;*/ 
-        margin-left: -15px; /*-40px !important;*/
+        width: 100%;
+        margin-left: -15px;
+    }
+    span#mode, span#device {
+        font-size: 12px !important;
+    }
+    div#updateListDiv, div#brightnessControl {
+        width: 250px;
+        margin-left: -20px;
+        margin-right: 0px;
+        font-size: 12px;
+    }
+    #brightnessSlider {
+        width: 100px;
+        height: 10px;
+    }
+    a#updateListButton {
+        width: 125px; 
+        margin-right: 0px;
+    }
+    div#syncButton {
+        padding-bottom: 10px; 
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+    div.mobile-splitter {
+        display: block;
+        float: left; 
+        height: 32px; 
+        width: 1px; 
+        padding-top: 10px;
+    }
+    div.spacer {
+        display: none;
+    }
+    .gradient {
+        background: #1C1521;   
+        background: -webkit-linear-gradient(left, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));
+        background: -o-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));
+        background: -moz-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));
+        background: linear-gradient(to right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));
+    }
+}*/
+
+/* #### GALAXY S4/S5/S6/S7, Note 3/4, NEXUS 5 #### */
+@media (min-device-height: 640px) and (min-device-width: 360px) and (orientation: portrait) {
+    #cubeName {
+        margin-top: 15px !important;
+    }
+    span#currentLayer {
+        font-size: 14px !important;
+    }
+    div#canvas {
+        padding: 10px 0 40px;
+        height: 440px;
+        max-width: 640px;
+    }
+    div#colors {
+        margin-top: calc(100% - 360px) !important;
+    }
+    #cube_canvas {
+        width: 90%;
+        height: calc(100% - 70px);
+    }
+    #colors_canvas {
+        width: 90%;
+    }
+    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
+        width: 175px; 
+        background: #ee0026; 
+        color: #fff; 
+        border-radius: 30px; 
+        padding: 2px 12px;
+        text-align: center; 
+        text-decoration: none;
+        line-height: 22px;
+        font-size: 12px;
+    }
+    .logo-box {
+        color: #1C1521 !important;
+    }
+    nav.small ul, nav.small li, nav.always-small ul, nav.always-small li {
+        width: 120px !important;
+        height: 57px !important;
+    }
+    ul.items {
+        position: absolute;
+        margin-left: calc(100% - 150px);
+        margin-top: -57px;
+    }
+    ul.items li a {
+        font-size: 12px;
+        padding: 2px 12px;
+    }
+    ul.items li a.logout {
+        max-width: 100px;
+    }
+    div.tagline {
+        display: none !important;
+    }
+    .cubePainter {
+        min-width: 145px !important; 
+        max-width: 265px !important; 
+        margin-top: -25px !important;
+        margin-left: 29%;
+        display: none;	
+    }
+    #cubeAndModeText, #pleaseLogInText {
+        font-size: 10px !important;
+        width: 100%;
+        margin-left: -28px;
+    }
+    span#mode, span#device {
+        font-size: 10px !important;
+    }
+    div#updateListDiv, div#brightnessControl {
+        width: 250px;
+        margin-left: -33px;
+        margin-right: 0px;
+        font-size: 12px;
+    }
+    #brightnessSlider {
+        width: 100px;
+        height: 10px;
+    }
+    a#updateListButton {
+        width: 125px; 
+        margin-right: 0px;
+    }
+    div#syncButton {
+        padding-bottom: 10px; 
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+    div.mobile-splitter {
+        display: block;
+        float: left; 
+        height: 32px; 
+        width: 1px; 
+        padding-top: 10px;
+    }
+    div.spacer {
+        display: none;
+    }
+    .gradient {
+        background: #1C1521;	/* For browsers that do not support gradients */    
+        background: -webkit-linear-gradient(left, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));	/* For Safari 5.1 to 6.0 */
+        background: -o-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Opera 11.1 to 12.0 */
+        background: -moz-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Firefox 3.6 to 15 */
+        background: linear-gradient(to right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* Standard syntax (must be last) */
+    }    
+}
+
+/* #### Phablets Portrait #### */
+@media (max-device-height: 2560px) and (max-device-width: 1440px) and (orientation: portrait) {
+    #cubeName {
+        margin-top: 15px !important;
+    }
+    span#currentLayer {
+        font-size: 14px !important;
+    }
+    div#canvas {
+        padding: 10px 0 40px;
+        height: 440px;
+        max-width: 640px;
+    }
+    div#colors {
+        margin-top: calc(100% - 360px) !important;
+    }
+    #cube_canvas {
+        width: 90%;
+        height: calc(100% - 70px);
+    }
+    #colors_canvas {
+        width: 90%;
+    }
+    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
+        width: 175px; 
+        background: #ee0026; 
+        color: #fff; 
+        border-radius: 30px; 
+        padding: 2px 12px;
+        text-align: center; 
+        text-decoration: none;
+        line-height: 22px;
+        font-size: 12px;
+    }
+    .logo-box {
+        color: #1C1521 !important;
+    }
+    nav.small ul, nav.small li, nav.always-small ul, nav.always-small li {
+        width: 120px !important;
+        height: 57px !important;
+    }
+    ul.items {
+        position: absolute;
+        margin-left: calc(100% - 150px);
+        margin-top: -57px;
+    }
+    ul.items li a {
+        font-size: 12px;
+        padding: 2px 12px;
+    }
+    ul.items li a.logout {
+        max-width: 100px;
+    }
+    div.tagline {
+        display: none !important;
+    }
+    .cubePainter {
+        min-width: 145px !important; 
+        max-width: 265px !important; 
+        margin-top: -25px !important;
+        margin-left: 29%;
+        display: none;	
+    }
+    #cubeAndModeText, #pleaseLogInText {
+        font-size: 10px !important;
+        width: 100%;
+        margin-left: -28px;
+    }
+    span#mode, span#device {
+        font-size: 10px !important;
+    }
+    div#updateListDiv, div#brightnessControl {
+        width: 250px;
+        margin-left: -33px;
+        margin-right: 0px;
+        font-size: 12px;
+    }
+    #brightnessSlider {
+        width: 100px;
+        height: 10px;
+    }
+    a#updateListButton {
+        width: 125px; 
+        margin-right: 0px;
+    }
+    div#syncButton {
+        padding-bottom: 10px; 
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+    div.mobile-splitter {
+        display: block;
+        float: left; 
+        height: 32px; 
+        width: 1px; 
+        padding-top: 10px;
+    }
+    div.spacer {
+        display: none;
+    }
+    .gradient {
+        background: #1C1521;	/* For browsers that do not support gradients */    
+        background: -webkit-linear-gradient(left, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));	/* For Safari 5.1 to 6.0 */
+        background: -o-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Opera 11.1 to 12.0 */
+        background: -moz-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Firefox 3.6 to 15 */
+        background: linear-gradient(to right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* Standard syntax (must be last) */
+    }    
+}
+
+/* #### iPhone 5 and 5s Portrait #### */
+@media (device-height: 568px) and (device-width: 320px) and (orientation: portrait) {
+    #cubeName {
+        margin-top: 15px !important;
+        margin-left: -140px !important;
+    }
+    span#currentLayer {
+        font-size: 14px !important;
+    }
+    div#canvas {
+        padding: 10px 0 40px;
+        height: 440px;
+        max-width: 568px;
+    }
+    div#colors {
+        margin-top: calc(100% - 360px) !important;
+    }
+    #cube_canvas {
+        width: 90%;
+        height: calc(100% - 110px);
+    }
+    #colors_canvas {
+        width: 90%;
+    }
+    .logo-box {
+        color: #1C1521 !important;
+    }
+    nav.small ul, nav.small li, nav.always-small ul, nav.always-small li {
+        width: 120px !important;
+        height: 57px !important;
+    }
+    ul.items {
+        position: absolute;
+        margin-left: calc(100% - 150px);
+        margin-top: -57px;
+    }
+    ul.items li a {
+        font-size: 12px;
+        padding: 2px 12px;
+    }
+    ul.items li a.logout {
+        max-width: 100px;
+    }
+    div.tagline {
+        display: none !important;
+    }
+    .cubePainter {
+        min-width: 145px !important; 
+        max-width: 265px !important; 
+        margin-top: -25px !important;
+        margin-left: 29%;
+        display: none;	
+    }
+    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
+        width: 175px; 
+        background: #ee0026; 
+        color: #fff; 
+        border-radius: 30px; 
+        padding: 2px 12px;
+        text-align: center; 
+        text-decoration: none;
+        line-height: 22px;
+        font-size: 12px;
+    }
+    #cubeAndModeText, #pleaseLogInText {
+        font-size: 9px !important;
+        width: 100% !important;
+        margin-left: -35px !important;
+    }
+    span#mode, span#device {
+        font-size: 9px !important;
+    }
+    div#updateListDiv, div#brightnessControl {
+        width: 250px;
+        margin-left: -45px;
+        margin-right: 0px;
+        font-size: 12px;
+    }
+    #brightnessSlider {
+        width: 100px;
+        height: 10px;
+    }
+    a#updateListButton {
+        width: 125px; 
+        margin-right: 0px;
+    }
+    div#syncButton {
+        padding-bottom: 10px; 
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+    div.mobile-splitter {
+        display: block;
+        float: left; 
+        height: 32px; 
+        width: 1px; 
+        padding-top: 10px;
+    }
+    div.spacer {
+        display: none;
+    }
+    .gradient {
+        background: #1C1521;	/* For browsers that do not support gradients */    
+        background: -webkit-linear-gradient(left, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));	/* For Safari 5.1 to 6.0 */
+        background: -o-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Opera 11.1 to 12.0 */
+        background: -moz-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Firefox 3.6 to 15 */
+        background: linear-gradient(to right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* Standard syntax (must be last) */
+    }
+}
+
+/* #### iPhone 6 and 6s Portrait #### */
+@media (min-device-height: 667px) and (min-device-width: 375px) and (orientation: portrait) {
+    #cubeName {
+        margin-top: 15px !important;
+    }
+    span#currentLayer {
+        font-size: 14px !important;
+    }
+    div#canvas {
+        padding: 10px 0 40px;
+        height: 440px;
+        max-width: 640px;
+    }
+    div#colors {
+        margin-top: calc(100% - 355px) !important;
+    }
+    #cube_canvas {
+        width: 90%;
+        height: calc(100% - 50px);
+    }
+    #colors_canvas {
+        width: 90%;
+    }
+    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
+        width: 175px; 
+        background: #ee0026; 
+        color: #fff; 
+        border-radius: 30px; 
+        padding: 2px 12px;
+        text-align: center; 
+        text-decoration: none;
+        line-height: 22px;
+        font-size: 12px;
+    }
+    .logo-box {
+        color: #1C1521 !important;
+    }
+    nav.small ul, nav.small li, nav.always-small ul, nav.always-small li {
+        width: 120px !important;
+        height: 57px !important;
+    }
+    ul.items {
+        position: absolute;
+        margin-left: calc(100% - 150px);
+        margin-top: -57px;
+    }
+    ul.items li a {
+        font-size: 12px;
+        padding: 2px 12px;
+    }
+    ul.items li a.logout {
+        max-width: 100px;
+    }
+    div.tagline {
+        display: none !important;
+    }
+    .cubePainter {
+        min-width: 145px !important; 
+        max-width: 265px !important; 
+        margin-top: -25px !important;
+        margin-left: 29%;
+        display: none;	
+    }
+    #cubeAndModeText, #pleaseLogInText {
+        font-size: 10px !important;
+        width: 100% !important;
+        margin-left: -25px !important;
+    }
+    span#mode, span#device {
+        font-size: 10px !important;
+    }
+    div#updateListDiv, div#brightnessControl {
+        width: 250px;
+        margin-left: -30px;
+        margin-right: 0px;
+        font-size: 12px;
+    }
+    #brightnessSlider {
+        width: 100px;
+        height: 10px;
+    }
+    a#updateListButton {
+        width: 125px; 
+        margin-right: 0px;
+    }
+    div#syncButton {
+        padding-bottom: 10px; 
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+    div.mobile-splitter {
+        display: block;
+        float: left; 
+        height: 32px; 
+        width: 1px; 
+        padding-top: 10px;
+    }
+    div.spacer {
+        display: none;
+    }
+    .gradient {
+        background: #1C1521;	/* For browsers that do not support gradients */    
+        background: -webkit-linear-gradient(left, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));	/* For Safari 5.1 to 6.0 */
+        background: -o-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Opera 11.1 to 12.0 */
+        background: -moz-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Firefox 3.6 to 15 */
+        background: linear-gradient(to right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* Standard syntax (must be last) */
+    }
+}
+
+/* #### iPhone 6 plus and 6s plus Portrait #### */
+@media (min-device-height: 736px) and (min-device-width: 414px) and (orientation: portrait) {
+    #cubeName {
+        margin-top: 15px !important;
+    }
+    span#currentLayer {
+        font-size: 14px !important;
+    }
+    div#canvas {
+        padding: 10px 0 40px;
+        height: 440px;
+        max-width: 640px;
+    }
+    div#colors {
+        margin-top: calc(100% - 375px) !important;
+    }
+    #cube_canvas {
+        width: 90%;
+        height: calc(100% - 30px);
+    }
+    #colors_canvas {
+        width: 90%;
+    }
+    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
+        width: 175px; 
+        background: #ee0026; 
+        color: #fff; 
+        border-radius: 30px; 
+        padding: 2px 12px;
+        text-align: center; 
+        text-decoration: none;
+        line-height: 22px;
+        font-size: 12px;
+    }
+    .logo-box {
+        color: #1C1521 !important;
+    }
+    nav.small ul, nav.small li, nav.always-small ul, nav.always-small li {
+        width: 120px !important;
+        height: 57px !important;
+    }
+    ul.items {
+        position: absolute;
+        margin-left: calc(100% - 150px);
+        margin-top: -57px;
+    }
+    ul.items li a {
+        font-size: 12px;
+        padding: 2px 12px;
+    }
+    ul.items li a.logout {
+        max-width: 100px;
+    }
+    div.tagline {
+        display: none !important;
+    }
+    .cubePainter {
+        min-width: 145px !important; 
+        max-width: 265px !important; 
+        margin-top: -25px !important;
+        margin-left: 29%;
+        display: none;	
+    }
+    #cubeAndModeText, #pleaseLogInText {
+        font-size: 10px !important;
+        width: 100% !important;
+        margin-left: -15px !important;
+    }
+    span#mode, span#device {
+        font-size: 10px !important;
     }
     div#updateListDiv, div#brightnessControl {
         width: 250px;
@@ -892,88 +1394,492 @@ div.mobile-splitter {
         background: linear-gradient(to right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* Standard syntax (must be last) */
     }
 }
-/* Portrait layout for small screen iOS devices (iPod) */
-@media screen and (max-width:320px) {
+
+/* #### Android Tablets Portrait #### */
+@media screen and (min-device-width: 800px) and (max-device-width: 1280px) and (orientation: portrait) {
+    div#canvas {
+        padding: 10px 0 40px;
+        max-width: 1280px;
+    }
+    div#colors {
+        margin-top: calc(100% - 430px) !important;
+        margin-bottom: 10px;
+    }
+    #cube_canvas {
+        width: 90%;
+        height: 175%;
+    }
+    #colors_canvas {
+        width: 90%;
+    }
+    div#updateListDiv, div#brightnessControl {
+        margin-left: calc(100% - 362px);
+        font-size: 16px;
+        width: 325px;
+    }
+    #brightnessSlider {
+        width: 150px;
+        height: 10px;
+    }
+    #cubeAndModeText, #pleaseLogInText {
+        margin-left: calc(100% - 350px) !important;
+        width: 100%;
+        font-size: 16px !important;
+    }
+    span#mode, span#device {
+        font-size: 16px !important;
+    }
+    span#currentLayer {
+        font-size: 20px !important;
+    }
+    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
+        padding: 4px 14px;
+        font-size: 16px;
+    }
+    nav.small ul, nav.small li, nav.always-small ul, nav.always-small li {
+        width: 145px !important;
+        height: 57px !important;
+    }
+    ul.items {
+        position: absolute;
+        margin-left: calc(100% - 180px);
+        margin-top: -60px;
+    }
+}
+/* #### iOS Tablets Portrait #### */
+@media screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 2) {
+    div#canvas {
+        padding: 10px 0 40px;
+        max-width: 1024px;
+    }
+    div#colors {
+        margin-top: calc(100% - 400px) !important;
+        margin-bottom: 10px;
+    }
+    #cube_canvas {
+        width: 90%;
+        height: 175%;
+    }
+    #colors_canvas {
+        width: 90%;
+    }
+    div#updateListDiv, div#brightnessControl {
+        margin-left: calc(100% - 352px);
+        font-size: 16px;
+        width: 325px;
+    }
+    #brightnessSlider {
+        width: 150px;
+        height: 10px;
+    }
+    #cubeAndModeText, #pleaseLogInText {
+        margin-left: calc(100% - 350px) !important;
+        width: 100%;
+        font-size: 16px !important;
+    }
+    span#mode, span#device {
+        font-size: 16px !important;
+    }
+    span#currentLayer {
+        font-size: 20px !important;
+    }
+    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
+        padding: 4px 14px;
+        font-size: 16px;
+    }
+    nav.small ul, nav.small li, nav.always-small ul, nav.always-small li {
+        width: 145px !important;
+        height: 57px !important;
+    }
+    ul.items {
+        position: absolute;
+        margin-left: calc(100% - 180px);
+        margin-top: -60px;
+    }
+}
+
+/* #### Android Tablets Landscape #### */
+@media screen and (min-device-width: 800px) and (max-device-width: 1280px) and (orientation: landscape) {
+    div#canvas {
+        padding: 10px 0 40px;
+        max-width: 1280px;
+    }
+    div#colors {
+        margin-top: calc(100% - 560px);
+        margin-bottom: 10px;
+    }
+    #cube_canvas {
+        width: 90%;
+        height: 220%;
+    }
+    #colors_canvas {
+        width: 90%;
+    }
+    div#updateListDiv, div#brightnessControl {
+        margin-left: calc(100% - 480px) !important;
+        font-size: 16px;
+        width: 325px;
+    }
+    #brightnessSlider {
+        width: 150px;
+        height: 10px;
+    }
+    #cubeAndModeText, #pleaseLogInText {
+        margin-left: calc(100% - 470px) !important;
+        width: 100%;
+        font-size: 16px !important;
+    }
+    span#mode, span#device {
+        font-size: 16px !important;
+    }
+    span#currentLayer {
+        font-size: 20px !important;
+    }
+    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
+        padding: 4px 14px;
+        font-size: 16px;
+    }
+    nav.small ul, nav.small li, nav.always-small ul, nav.always-small li {
+        width: 145px !important;
+        height: 57px !important;
+    }
+    ul.items {
+        position: absolute;
+        margin-left: calc(100% - 180px);
+        margin-top: -60px;
+    }
+}
+
+/* #### iOS Tablets Landscape #### */
+@media screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 2) {
+    div#canvas {
+        padding: 10px 0 40px;
+        max-width: 1024px;
+    }
+    div#colors {
+        margin-top: calc(100% - 515px);
+    }
+    #cube_canvas {
+        width: 90%;
+        height: 180%;
+    }
+    #colors_canvas {
+        width: 90%;
+    }
+    div#updateListDiv, div#brightnessControl {
+        margin-left: calc(100% - 418px) !important;
+        font-size: 16px;
+        width: 325px;
+    }
+    #brightnessSlider {
+        width: 150px;
+        height: 10px;
+    }
+    #cubeAndModeText, #pleaseLogInText {
+        margin-left: calc(100% - 410px) !important;
+        width: 100%;
+        font-size: 16px !important;
+    }
+    span#mode, span#device {
+        font-size: 16px !important;
+    }
+    span#currentLayer {
+        font-size: 20px !important;
+    }
+    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
+        padding: 4px 14px;
+        font-size: 16px;
+    }
+    nav.small ul, nav.small li, nav.always-small ul, nav.always-small li {
+        width: 145px !important;
+        height: 57px !important;
+    }
+    ul.items {
+        position: absolute;
+        margin-left: calc(100% - 180px);
+        margin-top: -60px;
+    }
+}
+
+/* #### GALAXY S4/S5/S6/S7, Note 3/4, NEXUS 5 Landscape #### */
+@media (max-device-height: 360px) and (max-device-width: 640px) and (orientation: landscape) {
     #cubeName {
-        min-width: 145px; 
-        max-width: 265px; 
-        margin-top: 22px;
-        margin-left: calc(100% - 400px) !important;
+        margin-top: 15px !important;
+    }
+    span#currentLayer {
+        font-size: 14px !important;
     }
     div#canvas {
         padding: 10px 0 40px;
         height: 440px;
-        max-width: 320px;
+        max-width: 640px;
     }
     div#colors {
-        margin-top: calc(100% - 355px);
+        margin-top: calc(100% - 414px) !important;
     }
     #cube_canvas {
         width: 90%;
+        height: 140%;
     }
     #colors_canvas {
         width: 90%;
     }
-    div#updateListDiv, div#brightnessControl {
-        margin-left: calc(100% - 205px);
+    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
+        width: 175px; 
+        background: #ee0026; 
+        color: #fff; 
+        border-radius: 30px; 
+        padding: 2px 12px;
+        text-align: center; 
+        text-decoration: none;
+        line-height: 22px;
+        font-size: 12px;
     }
-    #cubeAndModeText, #pleaseLogInText {
-        font-size: 11px !important;
-        margin-left: calc(100% - 200px);
-        width: 280px !important;
-    }
-    span#device, span#mode {
-        font-size: 11px !important;
+    .logo-box {
+        color: #1C1521 !important;
     }
     nav.small ul, nav.small li, nav.always-small ul, nav.always-small li {
         width: 120px !important;
-        height: 40px !important;
+        height: 57px !important;
     }
     ul.items {
         position: absolute;
         margin-left: calc(100% - 150px);
-        margin-top: -58px;
+        margin-top: -57px;
     }
     ul.items li a {
-        font-size: 12px !important;
-        padding: 2px 12px !important;
+        font-size: 12px;
+        padding: 2px 12px;
     }
     ul.items li a.logout {
-        max-width: 120px !important;
+        max-width: 100px;
     }
+    div.tagline {
+        display: none !important;
+    }
+    .cubePainter {
+        min-width: 145px !important; 
+        max-width: 265px !important; 
+        margin-top: -25px !important;
+        margin-left: 29%;
+        display: none;	
+    }
+    #cubeAndModeText, #pleaseLogInText {
+        font-size: 11px !important;
+        width: 100%;
+        margin-left: 38px;
+    }
+    span#mode, span#device {
+        font-size: 11px !important;
+    }
+    div#updateListDiv, div#brightnessControl {
+        width: 250px;
+        margin-left: 35px;
+        margin-right: 0px;
+        font-size: 12px;
+    }
+    #brightnessSlider {
+        width: 100px;
+        height: 10px;
+    }
+    a#updateListButton {
+        width: 125px; 
+        margin-right: 0px;
+    }
+    div#syncButton {
+        padding-bottom: 10px; 
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+    div.mobile-splitter {
+        display: block;
+        float: left; 
+        height: 32px; 
+        width: 1px; 
+        padding-top: 10px;
+    }
+    div.spacer {
+        display: none;
+    }
+    .gradient {
+        background: #1C1521;	/* For browsers that do not support gradients */    
+        background: -webkit-linear-gradient(left, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));	/* For Safari 5.1 to 6.0 */
+        background: -o-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Opera 11.1 to 12.0 */
+        background: -moz-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Firefox 3.6 to 15 */
+        background: linear-gradient(to right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* Standard syntax (must be last) */
+    }    
 }
-/* Landscape layout for medium screen iOS devices (iPhone 5s, 6+) */
-@media screen and (orientation: landscape) and (max-width: 1100px) {
+
+/* #### Phablets Landscape #### */
+@media (min-device-height: 1440px) and (min-device-width: 2560px) and (orientation: landscape) {
+    #cubeName {
+        margin-top: 15px !important;
+    }
+    span#currentLayer {
+        font-size: 14px !important;
+    }
     div#canvas {
         padding: 10px 0 40px;
-        max-width: 1100px;
+        height: 560px;
+        max-width: 2560px;
+    }
+    div#colors {
+        margin-top: calc(100% - 365px) !important;
+    }
+    #cube_canvas {
+        width: 90%;
+        height: 140%;
+    }
+    #colors_canvas {
+        width: 90%;
+    }
+    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
+        width: 175px; 
+        background: #ee0026; 
+        color: #fff; 
+        border-radius: 30px; 
+        padding: 2px 12px;
+        text-align: center; 
+        text-decoration: none;
+        line-height: 22px;
+        font-size: 12px;
+    }
+    .logo-box {
+        color: #1C1521 !important;
+    }
+    nav.small ul, nav.small li, nav.always-small ul, nav.always-small li {
+        width: 120px !important;
+        height: 57px !important;
+    }
+    ul.items {
+        position: absolute;
+        margin-left: calc(100% - 150px);
+        margin-top: -57px;
+    }
+    ul.items li a {
+        font-size: 12px;
+        padding: 2px 12px;
+    }
+    ul.items li a.logout {
+        max-width: 100px;
+    }
+    div.tagline {
+        display: none !important;
+    }
+    .cubePainter {
+        min-width: 145px !important; 
+        max-width: 265px !important; 
+        margin-top: -25px !important;
+        margin-left: 29%;
+        display: none;	
+    }
+    #cubeAndModeText, #pleaseLogInText {
+        font-size: 11px !important;
+        width: 100%;
+        margin-left: 38px;
+    }
+    span#mode, span#device {
+        font-size: 11px !important;
+    }
+    div#updateListDiv, div#brightnessControl {
+        width: 250px;
+        margin-left: 35px;
+        margin-right: 0px;
+        font-size: 12px;
+    }
+    #brightnessSlider {
+        width: 100px;
+        height: 10px;
+    }
+    a#updateListButton {
+        width: 125px; 
+        margin-right: 0px;
+    }
+    div#syncButton {
+        padding-bottom: 10px; 
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+    div.mobile-splitter {
+        display: block;
+        float: left; 
+        height: 32px; 
+        width: 1px; 
+        padding-top: 10px;
+    }
+    div.spacer {
+        display: none;
+    }
+    .gradient {
+        background: #1C1521;
+        background: -webkit-linear-gradient(left, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));
+        background: -o-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));
+        background: -moz-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));
+        background: linear-gradient(to right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.7), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));
+    }    
+}
+
+/* #### iPhone 6 plus and 6s plus Landscape #### */
+/* Had to specify the pixel ratio to avoid interfering with desktop layout */
+@media (min-device-height: 736px) and (min-device-width: 414px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 3) {
+    div#canvas {
+        padding: 10px 0 40px;
+        height: 490px;
+        max-width: 736px;
     }
     /*div#colors {
-        margin-top: calc(100% - 300px); 250px;
+        margin-top: calc(100% - 670px) !important;
     }*/
+    div#updateListDiv, div#brightnessControl {
+        margin-left: calc(100% - 340px) !important;
+    }
+    #cubeAndModeText, #pleaseLogInText {
+        margin-left: calc(100% - 330px) !important;
+        width: 100%;
+    }
+}
+
+/* #### iPhone 6 and 6s Landscape #### */
+/* Had to specify the pixel ratio to avoid interfering with desktop layout */
+@media (min-device-height: 667px) and (min-device-width: 375px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 2) {
+    div#colors {
+        margin-top: calc(100% - 670px) !important;
+    }
+    div#updateListDiv, div#brightnessControl {
+        margin-left: calc(100% - 320px) !important;
+    }
+    #cubeAndModeText, #pleaseLogInText {
+        margin-left: calc(100% - 315px) !important;
+        width: 100%;
+    }
+}
+
+/* #### Mobile Phones Landscape #### */
+/*@media screen and (max-device-width: 640px) and (orientation: landscape) {
+    div#canvas {
+        padding: 10px 0 40px;
+        max-width: 640px;
+    }
+    div#colors {
+        margin-top: calc(100% - 460px) !important;
+    }
     #cube_canvas {
         width: 90%;
     }
     #colors_canvas {
         width: 90%;
     }
-    div#updateListDiv, div#brightnessControl {
-        margin-left: 8%;
-    }
-    #cubeAndModeText, #pleaseLogInText {
-        margin-left: 10%;
-        width: 100%;
-    }
-    /*nav.small ul, nav.small li, nav.always-small ul, nav.always-small li {
-        width: 115px !important;
+    nav.small ul, nav.small li, nav.always-small ul, nav.always-small li {
+        width: 155px !important;
         height: 57px !important;
-    }*/
+    }
     ul.items {
         position: absolute;
-        margin-left: calc(100% - 175px);    /*72%;*/
+        margin-left: calc(100% - 187px);
         margin-top: -60px;
     }
-}
+}*/
+
 .fb-share-button {
     position: absolute !important;
     top: 0px !important;
