@@ -26,6 +26,7 @@
     //var coreID = $.cookie("coreID");
     var isUserAlerted = false;
     var currentMode = '';
+    var brightness = 20;
     var populateModesTimer = null;
     //var selectFromDropdownTimer = null;
     var syncInterval = null;
@@ -75,6 +76,13 @@
         
         checkCookie();
         //console.log("accessToken: " + accessToken);
+        
+        if (supportsLocalStorage()) {
+            if (localStorage["cubetube.brightness"])
+                brightness = parseInt(localStorage["cubetube.brightness"]);
+        }
+        $("#brightnessSlider").val(brightness);
+        
         if (typeof accessToken !== 'undefined' && accessToken !== null)
             cubeNameOnChange(); //populateInterval();
 
@@ -268,9 +276,15 @@
         }
     }
 
+    function changeBrightness() {
+        brightness = $("#brightnessSlider").val();
+        setBrightness();
+        if (supportsLocalStorage())
+            localStorage["cubetube.brightness"] = brightness;
+    }
+    
     function setBrightness() {
-        var brightness = $("#brightnessSlider").val();
-        $("span#brightness").html(brightness);
+        $("span#brightness").text(brightness);
         if (typeof accessToken !== 'undefined' && accessToken !== null) {
             var deviceID = getDeviceID();
             if(deviceID !== '') {
@@ -348,7 +362,7 @@
         <div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
         <div id="brightnessControl">
             <div>Brightness:  <span style="margin-right: 10px" id="brightness"></span>
-                <input id="brightnessSlider" type="range" min="0" max="100" step="1" value="20" onchange="setBrightness();" />
+                <input id="brightnessSlider" type="range" min="0" max="100" step="1" value="20" onchange="changeBrightness();" />
             </div>
         </div>
         {% endif %}
