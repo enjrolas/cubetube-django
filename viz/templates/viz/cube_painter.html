@@ -9,398 +9,421 @@
 {% load staticfiles %}
 
 {% block headx %}
-<!-- to keep this view from reloading from the cache (especially nasty after deletions) -->
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="-1">
-<!--<meta http-equiv="Content-Security-Policy" content="font-src *; default-src *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; style-src  'self' 'unsafe-inline' *">-->
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- to keep this view from reloading from the cache (especially nasty after deletions) -->
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+    <!--<meta http-equiv="Content-Security-Policy" content="font-src *; default-src *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; style-src  'self' 'unsafe-inline' *">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 {% endblock %}
 
 {% block header %}
-{% include "cubetube/partials/_header.html" %}
+    {% include "cubetube/partials/_header.html" %}
 {% endblock %}
 
 {% block content %}
-<script type="text/javascript">
-    //var accessToken=$.cookie("accessToken");
-    //var coreID = $.cookie("coreID");
-    var isUserAlerted = false;
-    var currentMode = '';
-    var brightness = 20;
-    var populateModesTimer = null;
-    //var selectFromDropdownTimer = null;
-    var syncInterval = null;
-    var idxArr = 0;
-    //var isTouchDevice = function() { return 'ontouchstart' in window || 'onmsgesturechange' in window; };
-    //var isDesktop = window.screenX !== 0 && !isTouchDevice() ? true : false;
+    <script type="text/javascript">
+        //var accessToken=$.cookie("accessToken");
+        //var coreID = $.cookie("coreID");
+        var isUserAlerted = false;
+        var currentMode = '';
+        var brightness = 20;
+        var populateModesTimer = null;
+        //var selectFromDropdownTimer = null;
+        var syncInterval = null;
+        var idxArr = 0;
+        var supportsLocalStorage = function() { return ('localStorage' in window) && window['localStorage'] !== null; };
+        //var isTouchDevice = function() { return 'ontouchstart' in window || 'onmsgesturechange' in window; };
+        //var isDesktop = window.screenX !== 0 && !isTouchDevice() ? true : false;
 
-    /*if (typeof accessToken !== 'undefined' && accessToken !== null) {
-        $('select#cubeName').show();
-        listCubes();
-        cubeNamesUpdateInterval = setInterval('listCubes()', 5000);  //update the list of cubes every 5 seconds
-    }
-    else {
-        console.log("no cube options");
-        $('select#cubeName').hide();
-        if (typeof cubeNamesUpdateInterval !== 'undefined' && cubeNamesUpdateInterval !== null)
-            clearInterval(cubeNamesUpdateInterval);
-    }*/
-    
-    $(function () {
-        //$("div.round-button").css('padding-left', 'calc(100% / 2.2)');
-        //$("select#colors").prop('disabled', 'disabled');
-        var $canvas = document.getElementById('cube_canvas');
-        var $colors = document.getElementById('colors_canvas');
-        $(window).on("orientationchange", function() {
-            window.location.reload(); 
+        $(function () {
+            // Define the canvas as the element that will hold the js color picker
+            // This causes the color picker to appear always at the base of the canvas
+            $( "#cube_canvas" ).spectrum({
+                hideAfterPaletteSelect: true,
+                preferredFormat: "hex",
+                replacerClassName: 'colorPicker',
+                showInitial: true,
+                showInput: true,                
+                showPaletteOnly: true,
+                togglePaletteOnly: true,
+                chooseText: "Pick Color",
+                cancelText: "Cancel",
+                togglePaletteMoreText: 'More Colors',
+                togglePaletteLessText: 'Less Colors',
+                color: 'blanchedalmond',
+                change: function(color) {
+                    console.log('gSelectedPieceArrayIndex: ' + gSelectedPieceArrayIndex);
+                    //console.log('gPieces: ' + gPieces);
+                    gSelectedColor = color.toHexString();
+                    console.log('gSelectedColor: ' + gSelectedColor);
+                    gPieces[gSelectedPieceArrayIndex].fillColor = color.toHexString();
+                    setVoxel(gSelectedPieceIndex, gPieces[gSelectedPieceArrayIndex].fillColor);
+                    drawCube();                    
+                },
+                palette: [
+                    ["#000","#444","#666","#999","#ccc","#eee","#f3f3f3","#fff"],
+                    ["#f00","#f90","#ff0","#0f0","#0ff","#00f","#90f","#f0f"],
+                    ["#f4cccc","#fce5cd","#fff2cc","#d9ead3","#d0e0e3","#cfe2f3","#d9d2e9","#ead1dc"],
+                    ["#ea9999","#f9cb9c","#ffe599","#b6d7a8","#a2c4c9","#9fc5e8","#b4a7d6","#d5a6bd"],
+                    ["#e06666","#f6b26b","#ffd966","#93c47d","#76a5af","#6fa8dc","#8e7cc3","#c27ba0"],
+                    ["#c00","#e69138","#f1c232","#6aa84f","#45818e","#3d85c6","#674ea7","#a64d79"],
+                    ["#900","#b45f06","#bf9000","#38761d","#134f5c","#0b5394","#351c75","#741b47"],
+                    ["#600","#783f04","#7f6000","#274e13","#0c343d","#073763","#20124d","#4c1130"]
+                ]
+            });            
+            
+            var $canvas = document.getElementById('cube_canvas');
+            //var $colors = document.getElementById('colors_canvas');
+            $(window).on("orientationchange", function() {
+                window.location.reload(); 
+            });
+            /*$(window).on("resize", function() {
+                console.log('width: ' + $(window).width());
+                if(!isTouchDevice()) {window.location.reload();}
+            });*/
+
+            clearTimeout(taglineTimer);
+            $("div.tagline").hide();
+            $('.logo-box').off('mouseover');
+            $('.logo-box').off('mouseout');
+            $('select#cubeName').css('margin-left', '-134px');
+            $('select#cubeName').css('margin-top', '12px');
+            $('a.logo-box span.cubetube').text('L3D Cube Painter');
+            $('a.logo-box span.cubetube').css('color', '#fff');
+
+            checkCookie();
+            //console.log("accessToken: " + accessToken);
+
+            if (supportsLocalStorage()) {
+                if (localStorage["cubetube.brightness"])
+                    brightness = parseInt(localStorage["cubetube.brightness"]);
+            }
+            $("#brightnessSlider").val(brightness);
+
+            if (typeof accessToken !== 'undefined' && accessToken !== null)
+                cubeNameOnChange(); //populateInterval();
+
+            initGame($canvas);  //initGame($canvas, $colors);
         });
-        /*$(window).on("resize", function() {
-            console.log('width: ' + $(window).width());
-            if(!isTouchDevice()) {window.location.reload();}
-        });*/
 
-        clearTimeout(taglineTimer);
-        $("div.tagline").hide();
-        $('.logo-box').off('mouseover');
-        $('.logo-box').off('mouseout');
-        $('select#cubeName').css('margin-left', '-134px');
-        $('select#cubeName').css('margin-top', '12px');
-        $('a.logo-box span.cubetube').text('L3D Cube Painter');
-        $('a.logo-box span.cubetube').css('color', '#fff');
-        
-        /*$("div.tagline").show();
-         $('.logo-box').on('mouseleave', function() {
-         clearTimeout(taglineTimer);
-         return false;
-         });*/
-        
-        checkCookie();
-        //console.log("accessToken: " + accessToken);
-        
-        if (supportsLocalStorage()) {
-            if (localStorage["cubetube.brightness"])
-                brightness = parseInt(localStorage["cubetube.brightness"]);
-        }
-        $("#brightnessSlider").val(brightness);
-        
-        if (typeof accessToken !== 'undefined' && accessToken !== null)
-            cubeNameOnChange(); //populateInterval();
-
-        initGame($canvas, $colors);
-    });
-
-    function populateInterval() {
-        populateModesTimer = setInterval(function () {
-            if (currentMode === null || currentMode === '' || currentMode === 'None') {
-                $("a#updateListButton").text("Please Wait");
-                $("select#modes").fadeOut(100);
-                $("span#mode").text("Please Wait");
-                populateModes();
-            }
-            else {
-                $("a#updateListButton").text("Update List");
-                $("span#mode").text(currentMode);
-                $("select#modes").fadeIn(300);
-                $("div#cubeAndModeText").fadeIn(300);
-                $("div#updateListDiv").fadeIn(300);
-                $("div#brightnessControl").fadeIn(300);
-                isUserAlerted = true;
-                clearInterval(populateModesTimer);
-                // Set the selected mode in the modes dropdown
-                $("select#modes option").each(function () {
-                    if ($(this).val() === currentMode)
-                        $(this).prop('selected', true);
-                    else
-                        $(this).prop('selected', false);
-                });
-                // This can fail: $("select#modes").val(currentMode);
-            }
-        }, 1000);
-    }
-
-    function populateModes() {
-        var deviceID = getDeviceID();
-        if (deviceID !== '') {
-            // Retrieve the device's current mode from the cloud API
-            $.get("https://api.particle.io/v1/devices/" + deviceID + "/mode/?access_token=" + accessToken, function (data) {
-                //console.log(data.result);
-                currentMode = data.result.trim();
-                console.log('currentMode: ' + currentMode);
-            }, "json").fail(function (data) {   // API call failed to get the mode variable from the cloud;
-                    var message = '';           // device is likely not running Spark Pixels, or it hasn't
-                    if (deviceID !== '') {      // successfully published the 'mode' cloud variable.
-                        var device = $("select#cubeName option[value = '" + deviceID + "']").text();
-                        //if (typeof device !== 'undefined' && device !== null && device !== '') {
-                        /*for ( var prop in data ) {
-                            console.log( "data." + prop );
-                        }
-                        console.log("responseText: " + data.responseText);
-                        console.log("responseJSON: " + data.responseJSON);*/
-                        var responseText = data.responseText;
-                        if (responseText.indexOf("Variable not found") >= 0) {
-                            message += 'The selected Cube (\"' + device.substr(device.indexOf(')') + 2)
-                                + '\") does not appear to be running the Spark Pixels viz.';
-                            message += '\nIf you would like to flash \"' + device.substr(device.indexOf(')') + 2) + '\" with ';
-                            message += 'Spark Pixels now, just hit [OK].\nElse, click [Cancel] to return to where you were.';
-                            if (!isUserAlerted) {
-                                isUserAlerted = true;
-                                if (confirm(message))
-                                    flashCube();
-                            }
-                        }
-                        else {
-                            //message += data.error;
-                            if (!isUserAlerted) {
-                                isUserAlerted = true;
-                                alert(responseText);
-                            }
-                        }
-                        return;
-                    }
-                });
-            // Retrieve the device's modes list from the cloud API
-            $.get("https://api.particle.io/v1/devices/" + deviceID + "/modeList/?access_token=" + accessToken, function (data) {
-                var modes = data.result.split(";");
-                $("select#modes").empty();  //clear all the existing modes before appending new ones
-                for (var index = 0; index < modes.length - 1; index++) {
-                    var mode = modes[index].trim();
-                    $("select#modes").append("<option value=\"" + mode + "\">" + mode + "</option>");
+        function populateInterval() {
+            populateModesTimer = setInterval(function () {
+                if (currentMode === null || currentMode === '' || currentMode === 'None') {
+                    $("select#modes").fadeOut(100);
+                    $("a#updateListButton").text("Please Wait");
+                    $("span#mode").text("Please Wait");
+                    populateModes();
                 }
-                //console.log('currentMode: ' + currentMode);
-            }, "json");
-        }
-    }
-
-    function flashCube() {
-        var deviceID = getDeviceID();
-        if (deviceID !== '') {
-            var output;
-            var request = $.ajax({
-                type: "POST",
-                url: "{% url 'cloudFlash' %}",
-                data: {"code": "", "accessToken": accessToken, "deviceID": deviceID, "vizName": "", "vizId": "1438"},
-                dataType: "text",
-                success: function (data) {
-                    console.log("success flashing");
-                    JSONstring = data;
-                    console.log(JSONstring);
-                    var result = $.parseJSON(data);
-                    var result = $.parseJSON(result);
-                    compilerData = result;
-                    console.log(compilerData);
-                    output = "";
-                    if (result.ok) {
-                        output += "Compilation status: " + result.message + " - Flashing device now, please wait.";
-                        output += "\nOnce your Cube has restarted, you can close this message.";
+                else {
+                    if ($("select#modes option:selected").val() === currentMode) {
+                        clearInterval(populateModesTimer);
+                        isUserAlerted = true;
+                        $("a#updateListButton").text("Update List");
+                        $("span#mode").text(currentMode);
+                        $("select#modes").fadeIn(300);
+                        $("div#cubeAndModeText").fadeIn(300);
+                        $("div#updateListDiv").fadeIn(300);
+                        $("div#brightnessControl").fadeIn(300);
                     }
                     else {
-                        var device = $("select#cubeName option[value = '" + deviceID + "']").text();
-                        output += "Compilation status: " + result.ok + "\nerrors:\n" + result.errors + "\n";
-                        output += "\nPlease make sure " + device.substr(device.indexOf(')') + 2) + " is online (breathing cyan).";
-                    }
-                    alert(output);
-                    window.location.reload();
-                },
-                error: function (data) {
-                    console.log("fail");
-                    console.log(data);
+                        // Set the selected mode in the modes dropdown
+                        // This can fail: 
+                        // $("select#modes").val(currentMode);
+                        $.each($("select#modes option"), function (index, option) {
+                            //console.log('option: ' + option.value);
+                            if (option.value === currentMode) {
+                                option.selected = true;
+                                return false;
+                            }
+                        });
+                     }
                 }
-            });
+            }, 1000);
         }
-    }
 
-    function getDeviceID() {
-        var ret = $("select#cubeName").val();
-        if(typeof ret !== 'undefined' && ret !== null && ret !== '-1')
-            return ret;
-        else 
-            return '';
-    }
-
-    function cubeNameOnChange() {
-        currentMode = '';
-        isUserAlerted = false;
-        var deviceID = getDeviceID();	// Reads currently 'selected' value from dropdown
-        console.log('deviceID: ' + deviceID);
-        console.log('#cubeName options: ' + $("select#cubeName option").length);
-        console.log('#cubeName value: ' + $("select#cubeName").val());
-
-        if(deviceID !== '') {
-            // Retrieve the name of the selected device from the dropdown
-            $("select#cubeName option").each(function () {
-                if ($(this).val() === deviceID)
-                    $("span#device").text($(this).text());  // Place the name in the device span
-            });
-            
-            /*coreID = $.cookie("coreID");
-            if (typeof coreID === 'undefined' || coreID === null)*/
-            coreID = deviceID;
-            // Freshen the cookie with the currently selected device from the dropdown
-            $.removeCookie("coreID", {path: '/'});
-            var date = new Date();
-            $.cookie("coreID", coreID, {expires: date.getTime() + 86400, path: '/'});
-
-        //if (coreID !== '-1') {
-            // Show the modes list and brightness control
-            $("div#updateListDiv").fadeIn(300);
-            $("div#brightnessControl").fadeIn(300);
-            populateInterval();
-            setBrightness();
-        }
-        else {
-            // We don't have a valid selected device so delete the cookie and hide the controls
-            $.removeCookie("coreID", {path: '/'});
-            coreID = null;
-            $("span#mode").text('');
-            $("div#updateListDiv").fadeOut(100);
-            $("div#brightnessControl").fadeOut(100);
-            $("span#device").text($('select#cubeName').text());            
-            clearInterval(populateModesTimer);
-            //$('select#cubeName').val('-1');
-        }
-        /*setBrightness();
-        clearInterval(populateModesTimer);
-        populateInterval();*/
-    }
-
-    function setMode() {
-        if (typeof accessToken !== 'undefined' && accessToken !== null) {
+        function populateModes() {
             var deviceID = getDeviceID();
-            if(deviceID !== '') {
-                currentMode = $('#modes').find("option:selected").val();
-                var brightness = $("#brightnessSlider").val();
-                var commandString = 'M:' + currentMode + ',S:5,B:' + brightness + ',';
-                $("span#mode").html(currentMode);
-                $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: commandString});
-            }
-        }
-    }
-
-    function changeBrightness() {
-        brightness = $("#brightnessSlider").val();
-        setBrightness();
-        if (supportsLocalStorage())
-            localStorage["cubetube.brightness"] = brightness;
-    }
-    
-    function setBrightness() {
-        $("span#brightness").text(brightness);
-        if (typeof accessToken !== 'undefined' && accessToken !== null) {
-            var deviceID = getDeviceID();
-            if(deviceID !== '') {
-                var commandString = 'B:' + (brightness > 0 ? brightness : 1) + ',';
-                $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: commandString});
-            }
-        }
-    }
-
-    function setVoxel(index, color) {
-        if (typeof accessToken !== 'undefined' && accessToken !== null
-            && $("span#mode").html().trim().toUpperCase() === 'CUBE PAINTER') {
-            var deviceID = getDeviceID();
-            if(deviceID !== '') {
-                var commandString = 'I' + index + ',' + color + ',';
-                $.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", {access_token: accessToken, args: commandString});
-            }
-        }
-    }
-
-    function clearVoxels(startIdx, endIdx) {
-        if (typeof accessToken !== 'undefined' && accessToken !== null
-            && $("span#mode").html().trim().toUpperCase() === 'CUBE PAINTER') {
-            var deviceID = getDeviceID();
-            if(deviceID !== '') {
-                var commandString = 'C' + startIdx + ':' + endIdx + ',';
-                $.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", {access_token: accessToken, args: commandString});
-                clearPieces(startIdx, endIdx);
-            }
-        }
-    }
-
-    function syncVoxels() {
-        if (typeof accessToken !== 'undefined' && accessToken !== null
-            && $("span#mode").html().trim().toUpperCase() === 'CUBE PAINTER') {
-            var deviceID = getDeviceID();
-            if(deviceID !== '') {
-                var commandString = 'C0:' + gNumPieces + ',';
-                $.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", {access_token: accessToken, args: commandString});
-
-                var gDrawing = new Array();
-                for (var idxArrDr = 0; idxArrDr < gNumPieces; idxArrDr++)
-                    if (gPieces[idxArrDr].isFilled)
-                        gDrawing.push(new Cell(gPieces[idxArrDr].row, gPieces[idxArrDr].column, gPieces[idxArrDr].zIndex, gPieces[idxArrDr].fillColor, true));
-
-                idxArr = 0;
-                syncInterval = setInterval(function () {
-                    if (idxArr < gDrawing.length) {
-                        var voxelIndex = ((gDrawing[idxArr].zIndex * kNumPieces) + (gDrawing[idxArr].column * (kNumPieces / kBoardWidth)) + (kBoardHeight - gDrawing[idxArr].row)) - 1;
-                        //console.log('Setting voxel #' + voxelIndex);
-                        setVoxel(voxelIndex, gDrawing[idxArr].fillColor);
-                        idxArr++;
+            if (deviceID !== '') {
+                // Retrieve the device's current mode from the cloud API
+                $.get("https://api.particle.io/v1/devices/" + deviceID + "/mode/?access_token=" + accessToken, function (data) {
+                    //console.log(data.result);
+                    currentMode = data.result.trim();
+                    console.log('currentMode: ' + currentMode);
+                }, "json").fail(function (data) {   // API call failed to get the mode variable from the cloud;
+                        var message = '';           // device is likely not running Spark Pixels, or it hasn't
+                        if (deviceID !== '') {      // successfully published the 'mode' cloud variable.
+                            var device = $("select#cubeName option[value = '" + deviceID + "']").text();
+                            //if (typeof device !== 'undefined' && device !== null && device !== '') {
+                            /*for ( var prop in data ) {
+                                console.log( "data." + prop );
+                            }
+                            console.log("responseText: " + data.responseText);
+                            console.log("responseJSON: " + data.responseJSON);*/
+                            var responseText = data.responseText;
+                            if (responseText.indexOf("Variable not found") >= 0) {
+                                message += 'The selected Cube (\"' + device.substr(device.indexOf(')') + 2)
+                                    + '\") does not appear to be running the Spark Pixels viz.';
+                                message += '\nIf you would like to flash \"' + device.substr(device.indexOf(')') + 2) + '\" with ';
+                                message += 'Spark Pixels now, just hit [OK].\nElse, click [Cancel] to return to where you were.';
+                                if (!isUserAlerted) {
+                                    isUserAlerted = true;
+                                    if (confirm(message))
+                                        flashCube();
+                                }
+                            }
+                            else {
+                                //message += data.error;
+                                if (!isUserAlerted) {
+                                    isUserAlerted = true;
+                                    alert(responseText);
+                                }
+                            }
+                            return;
+                        }
+                    });
+                // Retrieve the device's modes list from the cloud API
+                $.get("https://api.particle.io/v1/devices/" + deviceID + "/modeList/?access_token=" + accessToken, function (data) {
+                    var modes = data.result.split(";");
+                    $("select#modes").empty();  //clear all the existing modes before appending new ones
+                    for (var index = 0; index < modes.length - 1; index++) {
+                        var mode = modes[index].trim();
+                        $("select#modes").append("<option value=\"" + mode + "\">" + mode + "</option>");
                     }
-                    else
-                        clearInterval(syncInterval);
-                }, 60);
+                    //console.log('currentMode: ' + currentMode);
+                }, "json");
             }
         }
-    }
-</script>
-{% load utils %}
-{% logged_in_status as logged_in %}
-<div id="gallery-wrapper" class="viz-cards" style="padding-top: 0px !important;">
-    <div class="gradient" style="margin-top: 60px; padding: 0px 25% 12px; text-align: center; border-radius: 0px 0px 30px 30px">
-        <div id="cubeAndModeText">
-            <div>Selected Cube:  <span id="device">Please Log In</span></div>
-            <div>Selected Mode:  <span id="mode"></span></div>
+
+        function flashCube() {
+            var deviceID = getDeviceID();
+            if (deviceID !== '') {
+                var output;
+                var request = $.ajax({
+                    type: "POST",
+                    url: "{% url 'cloudFlash' %}",
+                    data: {"code": "", "accessToken": accessToken, "deviceID": deviceID, "vizName": "", "vizId": "1438"},
+                    dataType: "text",
+                    success: function (data) {
+                        console.log("success flashing");
+                        JSONstring = data;
+                        console.log(JSONstring);
+                        var result = $.parseJSON(data);
+                        var result = $.parseJSON(result);
+                        compilerData = result;
+                        console.log(compilerData);
+                        output = "";
+                        if (result.ok) {
+                            output += "Compilation status: " + result.message + " - Flashing device now, please wait.";
+                            output += "\nOnce your Cube has restarted, you can close this message.";
+                        }
+                        else {
+                            var device = $("select#cubeName option[value = '" + deviceID + "']").text();
+                            output += "Compilation status: " + result.ok + "\nerrors:\n" + result.errors + "\n";
+                            output += "\nPlease make sure " + device.substr(device.indexOf(')') + 2) + " is online (breathing cyan).";
+                        }
+                        alert(output);
+                        window.location.reload();
+                    },
+                    error: function (data) {
+                        console.log("fail");
+                        console.log(data);
+                    }
+                });
+            }
+        }
+
+        function getDeviceID() {
+            var ret = $("select#cubeName").val();
+            if(typeof ret !== 'undefined' && ret !== null && ret !== '-1')
+                return ret;
+            else 
+                return '';
+        }
+
+        function cubeNameOnChange() {
+            currentMode = '';
+            isUserAlerted = false;
+            var deviceID = getDeviceID();	// Reads currently 'selected' value from dropdown
+            console.log('deviceID: ' + deviceID);
+            console.log('#cubeName options: ' + $("select#cubeName option").length);
+            console.log('#cubeName value: ' + $("select#cubeName").val());
+
+            if(deviceID !== '') {
+                // Retrieve the name of the selected device from the dropdown
+                $("select#cubeName option").each(function () {
+                    if ($(this).val() === deviceID)
+                        $("span#device").text($(this).text());  // Place the name in the device span
+                });
+
+                /*coreID = $.cookie("coreID");
+                if (typeof coreID === 'undefined' || coreID === null)*/
+                coreID = deviceID;
+                // Freshen the cookie with the currently selected device from the dropdown
+                $.removeCookie("coreID", {path: '/'});
+                var date = new Date();
+                $.cookie("coreID", coreID, {expires: date.getTime() + 86400, path: '/'});
+
+            //if (coreID !== '-1') {
+                // Show the modes list and brightness control
+                $("div#updateListDiv").fadeIn(300);
+                $("div#brightnessControl").fadeIn(300);
+                populateInterval();
+                setBrightness();
+            }
+            else {
+                // We don't have a valid selected device so delete the cookie and hide the controls
+                $.removeCookie("coreID", {path: '/'});
+                coreID = null;
+                $("span#mode").text('');
+                $("div#updateListDiv").fadeOut(100);
+                $("div#brightnessControl").fadeOut(100);
+                $("span#device").text($('select#cubeName').text());            
+                clearInterval(populateModesTimer);
+                //$('select#cubeName').val('-1');
+            }
+            /*setBrightness();
+            clearInterval(populateModesTimer);
+            populateInterval();*/
+        }
+
+        function setMode() {
+            if (typeof accessToken !== 'undefined' && accessToken !== null) {
+                var deviceID = getDeviceID();
+                if(deviceID !== '') {
+                    currentMode = $('#modes').find("option:selected").val();
+                    //var brightness = $("#brightnessSlider").val();
+                    var commandString = 'M:' + currentMode + ',S:5,B:' + brightness + ',';
+                    $("span#mode").html(currentMode);
+                    $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: commandString});
+                }
+            }
+        }
+
+        function changeBrightness() {
+            brightness = $("#brightnessSlider").val();
+            setBrightness();
+            if (supportsLocalStorage())
+                localStorage["cubetube.brightness"] = brightness;
+        }
+
+        function setBrightness() {
+            $("span#brightness").text(brightness);
+            if (typeof accessToken !== 'undefined' && accessToken !== null) {
+                var deviceID = getDeviceID();
+                if(deviceID !== '') {
+                    var commandString = 'B:' + (brightness > 0 ? brightness : 1) + ',';
+                    $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: commandString});
+                }
+            }
+        }
+
+        function setVoxel(index, color) {
+            if (typeof accessToken !== 'undefined' && accessToken !== null
+                && $("span#mode").html().trim().toUpperCase() === 'CUBE PAINTER') {
+                var deviceID = getDeviceID();
+                if(deviceID !== '') {
+                    var commandString = 'I' + index + ',' + color + ',';
+                    $.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", {access_token: accessToken, args: commandString});
+                }
+            }
+        }
+
+        function clearVoxels(startIdx, endIdx) {
+            if (typeof accessToken !== 'undefined' && accessToken !== null
+                && $("span#mode").html().trim().toUpperCase() === 'CUBE PAINTER') {
+                var deviceID = getDeviceID();
+                if(deviceID !== '') {
+                    var commandString = 'C' + startIdx + ':' + endIdx + ',';
+                    $.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", {access_token: accessToken, args: commandString});
+                    clearPieces(startIdx, endIdx);
+                }
+            }
+        }
+
+        function syncVoxels() {
+            if (typeof accessToken !== 'undefined' && accessToken !== null
+                && $("span#mode").html().trim().toUpperCase() === 'CUBE PAINTER') {
+                var deviceID = getDeviceID();
+                if(deviceID !== '') {
+                    var commandString = 'C0:' + gNumPieces + ',';
+                    $.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", {access_token: accessToken, args: commandString});
+
+                    var gDrawing = new Array();
+                    for (var idxArrDr = 0; idxArrDr < gNumPieces; idxArrDr++)
+                        if (gPieces[idxArrDr].isFilled)
+                            gDrawing.push(new Cell(gPieces[idxArrDr].row, gPieces[idxArrDr].column, gPieces[idxArrDr].zIndex, gPieces[idxArrDr].fillColor, true));
+
+                    idxArr = 0;
+                    syncInterval = setInterval(function () {
+                        if (idxArr < gDrawing.length) {
+                            var voxelIndex = ((gDrawing[idxArr].zIndex * kNumPieces) + (gDrawing[idxArr].column * (kNumPieces / kBoardWidth)) + (kBoardHeight - gDrawing[idxArr].row)) - 1;
+                            //console.log('Setting voxel #' + voxelIndex);
+                            setVoxel(voxelIndex, gDrawing[idxArr].fillColor);
+                            idxArr++;
+                        }
+                        else
+                            clearInterval(syncInterval);
+                    }, 60);
+                }
+            }
+        }
+    </script>
+    {% load utils %}
+    {% logged_in_status as logged_in %}
+    <div id="gallery-wrapper" class="viz-cards" style="padding-top: 0px !important;">
+        <div class="gradient" style="margin-top: 60px; padding: 0px 25% 12px; text-align: center; border-radius: 0px 0px 30px 30px">
+            <div id="cubeAndModeText">
+                <div>Selected Cube:  <span id="device">Please Log In</span></div>
+                <div>Selected Mode:  <span id="mode"></span></div>
+            </div>
+            {% if logged_in %}
+                <div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
+                <div id="updateListDiv">
+                    <a id="updateListButton" href="javascript:void(0);" onclick="currentMode = ''; populateInterval();" title="Click here to refresh the modes list!">Update List</a>
+                    <select id="modes" onchange="setMode();"></select>
+                </div>
+                <div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
+                <div id="brightnessControl">
+                    <div>Brightness:  <span style="margin-right: 10px" id="brightness"></span>
+                        <input id="brightnessSlider" type="range" min="0" max="100" step="1" value="20" onchange="changeBrightness();" />
+                    </div>
+                </div>
+            {% endif %}
         </div>
-        {% if logged_in %}
-        <div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
-        <div id="updateListDiv">
-            <a id="updateListButton" href="javascript:void(0);" onclick="currentMode = ''; populateInterval();" title="Click here to refresh the modes list!">Update List</a>
-            <select id="modes" onchange="setMode();"></select>
-        </div>
-        <div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
-        <div id="brightnessControl">
-            <div>Brightness:  <span style="margin-right: 10px" id="brightness"></span>
-                <input id="brightnessSlider" type="range" min="0" max="100" step="1" value="20" onchange="changeBrightness();" />
+        <!-- <div style="clear: both; height: 7px; background: #1C1521"></div> -->
+        <div id="canvas">
+            <!-- <div class="spacer"></div> -->
+            <div id="layerButtons" style="text-align: center; padding-bottom: 10px">
+                <a id="layerButtons" href="javascript:void(0);" onclick="decreaseLayer();" title="Click to move back one layer (towards back of Cube)">[+] One Layer</a>
+                <span id="currentLayer"></span>
+                <a id="layerButtons" href="javascript:void(0);" onclick="increaseLayer();" title="Click to move forth one layer (towards front of Cube)">[-] One Layer</a>
+            </div>
+            <!-- <div class="mobile-splitter"></div> -->
+            <div id="syncButton">
+                <a id="syncButton" href="javascript:void(0);" onclick="syncVoxels();" title="Click to resync your drawing to the Cube!">Resync Cube!</a>
+            </div>
+            <canvas height="401" width="401" id="cube_canvas">
+                Your browser does not support the HTML5 canvas element.
+            </canvas>
+            <!-- <canvas style="padding-left: 15px" height="255" width="155" id="colors_canvas">
+                Your browser does not support the HTML5 canvas element.
+            </canvas>
+            <div class="spacer"></div> -->
+            <div id="clearButtons" style="text-align: center; padding-top: 10px">
+                <a id="clearButtons" href="javascript:void(0);" onclick="clearVoxels(gLayer * kNumPieces, (gLayer * kNumPieces) + kNumPieces);" title="Click to clear the current layer">Clear Layer</a>
+                <span id="currentLayer"></span>
+                <a id="clearButtons" href="javascript:void(0);" onclick="clearVoxels(0, 512);" title="Click to clear the whole Cube">Clear All</a>
             </div>
         </div>
-        {% endif %}
+        <!--<div id="colors" style="padding-bottom: 15px;">
+            <canvas height="196" width="521" id="colors_canvas" >
+                Your browser does not support the HTML5 canvas element.
+            </canvas>
+        </div>-->
     </div>
-    <!-- <div style="clear: both; height: 7px; background: #1C1521"></div> -->
-    <div id="canvas">
-        <!-- <div class="spacer"></div> -->
-        <div id="layerButtons" style="text-align: center; padding-bottom: 10px">
-            <a id="layerButtons" href="javascript:void(0);" onclick="decreaseLayer();" title="Click to move back one layer (towards back of Cube)">[+] One Layer</a>
-            <span id="currentLayer"></span>
-            <a id="layerButtons" href="javascript:void(0);" onclick="increaseLayer();" title="Click to move forth one layer (towards front of Cube)">[-] One Layer</a>
-        </div>
-        <!-- <div class="mobile-splitter"></div> -->
-        <div id="syncButton">
-            <a id="syncButton" href="javascript:void(0);" onclick="syncVoxels();" title="Click to resync your drawing to the Cube!">Resync Cube!</a>
-        </div>
-        <canvas height="401" width="401" id="cube_canvas">
-            Your browser does not support the HTML5 canvas element.
-        </canvas>
-        <!-- <canvas style="padding-left: 15px" height="255" width="155" id="colors_canvas">
-            Your browser does not support the HTML5 canvas element.
-        </canvas>
-        <div class="spacer"></div> -->
-        <div id="clearButtons" style="text-align: center; padding-top: 10px">
-            <a id="clearButtons" href="javascript:void(0);" onclick="clearVoxels(gLayer * kNumPieces, (gLayer * kNumPieces) + kNumPieces);" title="Click to clear the current layer">Clear Layer</a>
-            <span id="currentLayer"></span>
-            <a id="clearButtons" href="javascript:void(0);" onclick="clearVoxels(0, 512);" title="Click to clear the whole Cube">Clear All</a>
-        </div>
-    </div>
-    <div id="colors" style="padding-bottom: 15px;">
-        <canvas height="196" width="521" id="colors_canvas" >
-            Your browser does not support the HTML5 canvas element.
-        </canvas>
-    </div>
-</div>
 {% endblock %}
 
 {% block footer %}
-<script src="{% static 'js/cubePainterManager.js' %}"></script>
-{% include "cubetube/partials/_footer.html" %}
+    <script src="{% static 'js/cubePainterManager.js' %}"></script>
+    {% include "cubetube/partials/_footer.html" %}
 {% endblock %}

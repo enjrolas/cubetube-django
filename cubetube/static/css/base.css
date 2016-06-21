@@ -654,6 +654,21 @@ button {
     margin-left: 27%;
     display: none;	
 }
+/**************************************
+ * These two classes belong to the    *
+ * color pickers in spark_pixels.html *
+ **************************************/
+.colorPicker {
+    border: 0 !important;
+    background: 0 !important;
+    padding: 0 !important;
+}
+/* We also want to hide the little dropdown
+ * arrow to the right of the color picker */
+div.sp-dd {
+    display: none;
+}
+/**************************************/
 #cubeAndModeText, #pleaseLogInText {
     width: 50%; 
     font-weight: bold;
@@ -661,7 +676,7 @@ button {
     text-align: justify; 
     margin-left: 30%;
 }
-#updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
+#updateListDiv, a#layerButtons, a#clearButtons, a#syncButton, a#setModeButton {
     width: 275px; 
     background: #ee0026; 
     color: #fff; 
@@ -676,7 +691,14 @@ span#currentLayer {
     font-weight: bold;
     color: #2bc6fb;
 }
-#updateListDiv, #brightnessControl {
+span#color1, span#color2, span#color3, 
+span#color4, span#color5, span#color6, 
+span#switch1, span#switch2, span#switch3, 
+span#switch4, span#text {
+    font-weight: bold;
+    color: #2bc6fb;
+}
+#updateListDiv, #brightnessControl, #speedControl {
     padding: 6px 22px; 
     width: 310px; 
     margin-left: 28%;
@@ -686,7 +708,7 @@ span#currentLayer {
     border-radius: 30px; 
     text-align: center;
 }
-#brightnessSlider {
+#brightnessSlider, #speedSlider {
     width: 120px;
     height: 10px;
 }
@@ -704,7 +726,7 @@ div#canvas {
     height: 560px;
     max-width: 1400px;
 }
-div#syncButton {
+div#syncButton, div#setModeButton {
     text-align: center; 
     padding-bottom: 10px; 
 }
@@ -767,7 +789,13 @@ div.mobile-splitter {
     #colors_canvas {
         width: 90%;
     }
-    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
+    span#color1, span#color2, span#color3, 
+    span#color4, span#color5, span#color6, 
+    span#switch1, span#switch2, span#switch3, 
+    span#switch4, span#text {
+        font-size: 12px;
+    }
+    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton, a#setModeButton {
         width: 175px; 
         background: #ee0026; 
         color: #fff; 
@@ -815,13 +843,19 @@ div.mobile-splitter {
     span#mode, span#device {
         font-size: 10px !important;
     }
-    div#updateListDiv, div#brightnessControl {
+    span#color1, span#color2, span#color3, 
+    span#color4, span#color5, span#color6, 
+    span#switch1, span#switch2, span#switch3, 
+    span#switch4, span#text {
+        font-size: 12px;
+    }
+    div#updateListDiv, div#brightnessControl, div#speedControl {
         width: 250px;
         margin-left: -33px;
         margin-right: 0px;
         font-size: 12px;
     }
-    #brightnessSlider {
+    #brightnessSlider, #speedSlider {
         width: 100px;
         height: 10px;
     }
@@ -829,7 +863,7 @@ div.mobile-splitter {
         width: 125px; 
         margin-right: 0px;
     }
-    div#syncButton {
+    div#syncButton, div#setModeButton {
         padding-bottom: 10px; 
         padding-left: 0px !important;
         padding-right: 0px !important;
@@ -906,7 +940,13 @@ div.mobile-splitter {
         margin-left: 29%;
         display: none;	
     }
-    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
+    span#color1, span#color2, span#color3, 
+    span#color4, span#color5, span#color6, 
+    span#switch1, span#switch2, span#switch3, 
+    span#switch4, span#text {
+        font-size: 12px;
+    }
+    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton, a#setModeButton {
         width: 175px; 
         background: #ee0026; 
         color: #fff; 
@@ -925,13 +965,19 @@ div.mobile-splitter {
     span#mode, span#device {
         font-size: 8px !important;
     }
-    div#updateListDiv, div#brightnessControl {
+    span#color1, span#color2, span#color3, 
+    span#color4, span#color5, span#color6, 
+    span#switch1, span#switch2, span#switch3, 
+    span#switch4, span#text {
+        font-size: 12px;
+    }
+    div#updateListDiv, div#brightnessControl, div#speedControl {
         width: 250px;
         margin-left: -45px;
         margin-right: 0px;
         font-size: 12px;
     }
-    #brightnessSlider {
+    #brightnessSlider, #speedSlider {
         width: 100px;
         height: 10px;
     }
@@ -939,7 +985,7 @@ div.mobile-splitter {
         width: 125px; 
         margin-right: 0px;
     }
-    div#syncButton {
+    div#syncButton, div#setModeButton {
         padding-bottom: 10px; 
         padding-left: 0px !important;
         padding-right: 0px !important;
@@ -986,7 +1032,13 @@ div.mobile-splitter {
     #colors_canvas {
         width: 90%;
     }
-    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
+    span#color1, span#color2, span#color3, 
+    span#color4, span#color5, span#color6, 
+    span#switch1, span#switch2, span#switch3, 
+    span#switch4, span#text {
+        font-size: 12px;
+    }
+    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton, a#setModeButton {
         width: 175px; 
         background: #ee0026; 
         color: #fff; 
@@ -1034,13 +1086,19 @@ div.mobile-splitter {
     span#mode, span#device {
         font-size: 10px !important;
     }
-    div#updateListDiv, div#brightnessControl {
+    span#color1, span#color2, span#color3, 
+    span#color4, span#color5, span#color6, 
+    span#switch1, span#switch2, span#switch3, 
+    span#switch4, span#text {
+        font-size: 12px;
+    }
+    div#updateListDiv, div#brightnessControl, div#speedControl {
         width: 250px;
         margin-left: -30px;
         margin-right: 0px;
         font-size: 12px;
     }
-    #brightnessSlider {
+    #brightnessSlider, #speedSlider {
         width: 100px;
         height: 10px;
     }
@@ -1048,7 +1106,7 @@ div.mobile-splitter {
         width: 125px; 
         margin-right: 0px;
     }
-    div#syncButton {
+    div#syncButton, div#setModeButton {
         padding-bottom: 10px; 
         padding-left: 0px !important;
         padding-right: 0px !important;
@@ -1095,7 +1153,13 @@ div.mobile-splitter {
     #colors_canvas {
         width: 90%;
     }
-    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
+    span#color1, span#color2, span#color3, 
+    span#color4, span#color5, span#color6, 
+    span#switch1, span#switch2, span#switch3, 
+    span#switch4, span#text {
+        font-size: 12px;
+    }
+    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton, a#setModeButton {
         width: 175px; 
         background: #ee0026; 
         color: #fff; 
@@ -1143,13 +1207,19 @@ div.mobile-splitter {
     span#mode, span#device {
         font-size: 10px !important;
     }
-    div#updateListDiv, div#brightnessControl {
+    span#color1, span#color2, span#color3, 
+    span#color4, span#color5, span#color6, 
+    span#switch1, span#switch2, span#switch3, 
+    span#switch4, span#text {
+        font-size: 12px;
+    }
+    div#updateListDiv, div#brightnessControl, div#speedControl {
         width: 250px;
         margin-left: -20px;
         margin-right: 0px;
         font-size: 12px;
     }
-    #brightnessSlider {
+    #brightnessSlider, #speedSlider {
         width: 100px;
         height: 10px;
     }
@@ -1157,7 +1227,7 @@ div.mobile-splitter {
         width: 125px; 
         margin-right: 0px;
     }
-    div#syncButton {
+    div#syncButton, div#setModeButton {
         padding-bottom: 10px; 
         padding-left: 0px !important;
         padding-right: 0px !important;
@@ -1198,12 +1268,18 @@ div.mobile-splitter {
     #colors_canvas {
         width: 90%;
     }
-    div#updateListDiv, div#brightnessControl {
+    span#color1, span#color2, span#color3, 
+    span#color4, span#color5, span#color6, 
+    span#switch1, span#switch2, span#switch3, 
+    span#switch4, span#text {
+        font-size: 16px;
+    }
+    div#updateListDiv, div#brightnessControl, div#speedControl {
         margin-left: calc(100% - 362px);
         font-size: 16px;
         width: 325px;
     }
-    #brightnessSlider {
+    #brightnessSlider, #speedSlider {
         width: 150px;
         height: 10px;
     }
@@ -1218,7 +1294,13 @@ div.mobile-splitter {
     span#currentLayer {
         font-size: 20px !important;
     }
-    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
+    span#color1, span#color2, span#color3, 
+    span#color4, span#color5, span#color6, 
+    span#switch1, span#switch2, span#switch3, 
+    span#switch4, span#text {
+        font-size: 16px;
+    }
+    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton, a#setModeButton {
         padding: 4px 14px;
         font-size: 16px;
     }
@@ -1250,12 +1332,18 @@ div.mobile-splitter {
     #colors_canvas {
         width: 90%;
     }
-    div#updateListDiv, div#brightnessControl {
+    span#color1, span#color2, span#color3, 
+    span#color4, span#color5, span#color6, 
+    span#switch1, span#switch2, span#switch3, 
+    span#switch4, span#text {
+        font-size: 16px;
+    }
+    div#updateListDiv, div#brightnessControl, div#speedControl {
         margin-left: calc(100% - 352px);
         font-size: 16px;
         width: 325px;
     }
-    #brightnessSlider {
+    #brightnessSlider, #speedSlider {
         width: 150px;
         height: 10px;
     }
@@ -1270,7 +1358,13 @@ div.mobile-splitter {
     span#currentLayer {
         font-size: 20px !important;
     }
-    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
+    span#color1, span#color2, span#color3, 
+    span#color4, span#color5, span#color6, 
+    span#switch1, span#switch2, span#switch3, 
+    span#switch4, span#text {
+        font-size: 16px;
+    }
+    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton, a#setModeButton {
         padding: 4px 14px;
         font-size: 16px;
     }
@@ -1302,12 +1396,18 @@ div.mobile-splitter {
     #colors_canvas {
         width: 90%;
     }
-    div#updateListDiv, div#brightnessControl {
+    span#color1, span#color2, span#color3, 
+    span#color4, span#color5, span#color6, 
+    span#switch1, span#switch2, span#switch3, 
+    span#switch4, span#text {
+        font-size: 16px;
+    }
+    div#updateListDiv, div#brightnessControl, div#speedControl {
         margin-left: calc(100% - 480px) !important;
         font-size: 16px;
         width: 325px;
     }
-    #brightnessSlider {
+    #brightnessSlider, #speedSlider {
         width: 150px;
         height: 10px;
     }
@@ -1322,7 +1422,13 @@ div.mobile-splitter {
     span#currentLayer {
         font-size: 20px !important;
     }
-    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
+    span#color1, span#color2, span#color3, 
+    span#color4, span#color5, span#color6, 
+    span#switch1, span#switch2, span#switch3, 
+    span#switch4, span#text {
+        font-size: 16px;
+    }
+    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton, a#setModeButton {
         padding: 4px 14px;
         font-size: 16px;
     }
@@ -1353,12 +1459,18 @@ div.mobile-splitter {
     #colors_canvas {
         width: 90%;
     }
-    div#updateListDiv, div#brightnessControl {
+    span#color1, span#color2, span#color3, 
+    span#color4, span#color5, span#color6, 
+    span#switch1, span#switch2, span#switch3, 
+    span#switch4, span#text {
+        font-size: 16px;
+    }
+    div#updateListDiv, div#brightnessControl, div#speedControl {
         margin-left: calc(100% - 418px) !important;
         font-size: 16px;
         width: 325px;
     }
-    #brightnessSlider {
+    #brightnessSlider, #speedSlider {
         width: 150px;
         height: 10px;
     }
@@ -1373,7 +1485,13 @@ div.mobile-splitter {
     span#currentLayer {
         font-size: 20px !important;
     }
-    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
+    span#color1, span#color2, span#color3, 
+    span#color4, span#color5, span#color6, 
+    span#switch1, span#switch2, span#switch3, 
+    span#switch4, span#text {
+        font-size: 16px;
+    }
+    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton, a#setModeButton {
         padding: 4px 14px;
         font-size: 16px;
     }
@@ -1411,7 +1529,13 @@ div.mobile-splitter {
     #colors_canvas {
         width: 90%;
     }
-    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton {
+    span#color1, span#color2, span#color3, 
+    span#color4, span#color5, span#color6, 
+    span#switch1, span#switch2, span#switch3, 
+    span#switch4, span#text {
+        font-size: 12px;
+    }
+    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton, a#setModeButton {
         width: 175px; 
         background: #ee0026; 
         color: #fff; 
@@ -1459,13 +1583,19 @@ div.mobile-splitter {
     span#mode, span#device {
         font-size: 11px !important;
     }
-    div#updateListDiv, div#brightnessControl {
+    span#color1, span#color2, span#color3, 
+    span#color4, span#color5, span#color6, 
+    span#switch1, span#switch2, span#switch3, 
+    span#switch4, span#text {
+        font-size: 12px;
+    }
+    div#updateListDiv, div#brightnessControl, div#speedControl {
         width: 250px;
         margin-left: 35px;
         margin-right: 0px;
         font-size: 12px;
     }
-    #brightnessSlider {
+    #brightnessSlider, #speedSlider {
         width: 100px;
         height: 10px;
     }
@@ -1473,7 +1603,7 @@ div.mobile-splitter {
         width: 125px; 
         margin-right: 0px;
     }
-    div#syncButton {
+    div#syncButton, div#setModeButton {
         padding-bottom: 10px; 
         padding-left: 0px !important;
         padding-right: 0px !important;
@@ -1514,7 +1644,7 @@ div.mobile-splitter {
     #colors_canvas {
         width: 90%;
     }
-    div#updateListDiv, div#brightnessControl {
+    div#updateListDiv, div#brightnessControl, div#speedControl {
         margin-left: calc(100% - 295px) !important;
     }
     #cubeAndModeText, #pleaseLogInText {
@@ -1523,6 +1653,12 @@ div.mobile-splitter {
         width: 100%;
     }
     span#mode, span#device {
+        font-size: 12px;
+    }
+    span#color1, span#color2, span#color3, 
+    span#color4, span#color5, span#color6, 
+    span#switch1, span#switch2, span#switch3, 
+    span#switch4, span#text {
         font-size: 12px;
     }
 }
@@ -1545,7 +1681,7 @@ div.mobile-splitter {
     #colors_canvas {
         width: 90%;
     }
-    div#updateListDiv, div#brightnessControl {
+    div#updateListDiv, div#brightnessControl, div#speedControl {
         margin-left: calc(100% - 340px) !important;
     }
     #cubeAndModeText, #pleaseLogInText {
@@ -1572,7 +1708,7 @@ div.mobile-splitter {
     #colors_canvas {
         width: 90%;
     }    
-    div#updateListDiv, div#brightnessControl {
+    div#updateListDiv, div#brightnessControl, div#speedControl {
         margin-left: calc(100% - 320px) !important;
     }
     #cubeAndModeText, #pleaseLogInText {

@@ -9,100 +9,590 @@
 {% load staticfiles %}
 
 {% block headx %}
-	<!-- to keep this view from reloading from the cache (especially nasty after deletions) -->
-	<meta http-equiv="Pragma" content="no-cache">
-	<meta http-equiv="Expires" content="-1">
+    <!-- to keep this view from reloading from the cache (especially nasty after deletions) -->
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 {% endblock %}
 
 {% block header %}
-	{% include "cubetube/partials/_header.html" %}
+    {% include "cubetube/partials/_header.html" %}
 {% endblock %}
 
 {% block content %}
-<script type="text/javascript">
-	var accessToken=$.cookie("accessToken");
-	var deviceID;
-	var currentMode = '';
-	var populateModesTimer = null;
-	var selectFromDropdownTimer = null;
-	
-	$(function(){
-		$("#cubeName").css({'margin-top':'58px', 'float':'left'});
-		$("div.viz-cards").css({'padding-top':'35px', 'padding-bottom':'30px'});
-		$("div.round-button").css('padding-left', 'calc(100% / 2.2)');
+    <script type="text/javascript">
+        //var accessToken=$.cookie("accessToken");
+        //var coreID = $.cookie("coreID");
+        var isUserAlerted = false;
+        var currentMode = '';
+        var brightness = 20;
+        var speed = 5;
+        var modeList;
+        var modeParmList;
+        var populateModesTimer = null;
+        var syncInterval = null;
+        var supportsLocalStorage = function() { return ('localStorage' in window) && window['localStorage'] !== null; };
 
-		if(currentMode == '') populateInterval();
-	});
-	
-	function populateInterval() {
-		currentMode = '';
-		populateModesTimer = setInterval(function() {
-			if(currentMode == '') {
-				populateModes();
-			}
-			else {
-				clearInterval(populateModesTimer);
-				selectFromDropdownTimer = setInterval(function() {
-					$("select#modes > option").each(function() {
-						if($(this).val() === currentMode) {
-							$(this).attr("selected", "selected");
-							clearInterval(selectFromDropdownTimer);
-						}
-					});
-				}, 100);
-			}
-		}, 1000);
-	}
-	
-	function populateModes(){
-		$("#modes").empty();  //clear all the existing modes before appending new ones
-		deviceID=getDeviceID();
-		if(deviceID.trim().length > 0) {
-			$.get("https://api.particle.io/v1/devices/"+deviceID+"/mode/?access_token=" + accessToken, function(data){
-				//console.log('data.result: [' + data.result.trim() + ']');
-				currentMode = data.result.trim();
-				$("span#mode").html(currentMode);
-				//console.log('currentMode: [' + currentMode + ']');
-			});
-			$.get("https://api.particle.io/v1/devices/"+deviceID+"/modeList/?access_token=" + accessToken, function(data){
-				//console.log(data.result);
-				var modes=data.result.split(";");
-				for(var index=0; index<modes.length-1; index++){
-					var mode=modes[index].trim();
-					//console.log('mode: [' + mode + ']');
-					$("select#modes").append("<option value=\"" + mode + "\">" + mode + "</option>");
-					//$("#modes").append("<button onclick=\"setMode('"+mode+"')\">"+mode+"</button><br/>");
-				}
-			});
-		}
-	}
-	
-	function getDeviceID() {
-		var deviceID = $("#cubeName > option:selected").val();
-		return deviceID === '-1' ? '' : deviceID;
-	}
-	
-	function setMode(){
-		currentMode = $('#modes').find(":selected").val();
-		var commandString = 'M:' + currentMode + ',S:5,B:20,';
-		$("span#mode").html(currentMode);
-		$.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", { access_token: accessToken, args: commandString });
-	}
-</script>
-	<div class="viz-cards">
-		<div class="cube-options">
-			<div class="round-button button-grey select-cube">
-				<select id="cubeName" onchange="clearInterval(populateModesTimer); populateInterval();"></select>
-			</div>
-		</div>
-		<div style="clear: both; height: 25px;"></div>
-		<div>Current Mode:  <span id="mode"></span></div>
-		<div id="possibleModes"></div>
-		<button onclick="clearInterval(populateModesTimer); populateInterval();">Get modes list!</button>
-		<select id="modes" onchange="setMode();"></select>
-	</div>
+        $(function () {
+            $(window).on("orientationchange", function() {
+                window.location.reload(); 
+            });
+            /*$(window).on("resize", function() {
+                console.log('width: ' + $(window).width());
+                if(!isTouchDevice()) {window.location.reload();}
+            });*/
+
+            clearTimeout(taglineTimer);
+            $("div.tagline").hide();
+            $('.logo-box').off('mouseover');
+            $('.logo-box').off('mouseout');
+            $('select#cubeName').css('margin-left', '-95px');
+            $('select#cubeName').css('margin-top', '12px');
+            $('a.logo-box span.cubetube').text('Spark Pixels');
+            $('a.logo-box span.cubetube').css('color', '#fff');
+
+            checkCookie();
+            //console.log("accessToken: " + accessToken);
+
+            if (supportsLocalStorage()) {
+                if (localStorage["spark_pixels.brightness"])
+                    brightness = parseInt(localStorage["spark_pixels.brightness"]);
+                if (localStorage["spark_pixels.speed"])
+                    speed = parseInt(localStorage["spark_pixels.speed"]);
+                for(var count = 1; count <= 6; count++) {
+                    if (localStorage["spark_pixels.color" + count]) {
+                        $( "input#color" + count ).spectrum("set", "#" + localStorage["spark_pixels.color" + count]);
+                    }
+                    if(count <= 4) {
+                        if (localStorage["spark_pixels.switch" + count]) {
+                            //console.log("spark_pixels.switch" + count + ': ' + localStorage["spark_pixels.switch" + count]);
+                            $("input#switch" + count).prop('checked', localStorage["spark_pixels.switch" + count] === 'true' ? true : false);
+                        }
+                    }
+                }
+            }
+            $("#brightnessSlider").val(brightness);
+            $("#speedSlider").val(speed);
+
+            if (typeof accessToken !== 'undefined' && accessToken !== null)
+                cubeNameOnChange(); //populateInterval();
+        });
+
+        function populateInterval() {
+            populateModesTimer = setInterval(function () {
+                if (currentMode === null || currentMode === '' || currentMode === 'None') {
+                    $("select#modes").fadeOut(100);
+                    $("a#updateListButton").text("Please Wait");
+                    $("span#mode").text("Please Wait");
+                    populateModes();
+                }
+                else {
+                    if ($("select#modes option:selected").val() === currentMode) {
+                        clearInterval(populateModesTimer);
+                        isUserAlerted = true;
+                        $("a#updateListButton").text("Update List");
+                        $("span#mode").text(currentMode);
+                        $("select#modes").fadeIn(300);
+                        $("div#cubeAndModeText").fadeIn(300);
+                        $("div#updateListDiv").fadeIn(300);
+                        $("div#brightnessControl").fadeIn(300);
+                        $("div#speedControl").fadeIn(300);
+                        //console.log('$("select#modes option:selected").val() = ' + $("select#modes option:selected").val());
+                        var idx = $("select#modes option:selected").index();
+                        if(modeParmList[idx] !== 'N') {
+                            clearModeOptions();
+                            parseModeOptions();
+                        }
+                    }
+                    else {
+                        // Set the selected mode in the modes dropdown
+                        // This can fail: 
+                        //$("select#modes").val(currentMode);
+                        $.each($("select#modes option"), function (index, option) {
+                            //console.log('option: ' + option.value);
+                            if (option.value === currentMode) {
+                                option.selected = true;
+                                return false;
+                            }
+                        });
+                    }
+                }
+            }, 1000);
+        }
+
+        function populateModes() {
+            var deviceID = getDeviceID();
+            if (deviceID !== '') {
+                // Retrieve the device's current mode from the cloud API
+                $.get("https://api.particle.io/v1/devices/" + deviceID + "/mode/?access_token=" + accessToken, function (data) {
+                    //console.log(data.result);
+                    currentMode = data.result.trim();
+                    console.log('currentMode: ' + currentMode);
+                }, "json").fail(function (data) {   // API call failed to get the mode variable from the cloud;
+                        var message = '';           // device is likely not running Spark Pixels, or it hasn't
+                        if (deviceID !== '') {      // successfully published the 'mode' cloud variable.
+                            var device = $("select#cubeName option[value = '" + deviceID + "']").text();
+                            //if (typeof device !== 'undefined' && device !== null && device !== '') {
+                            /*for ( var prop in data ) {
+                                console.log( "data." + prop );
+                            }
+                            console.log("responseText: " + data.responseText);
+                            console.log("responseJSON: " + data.responseJSON);*/
+                            var responseText = data.responseText;
+                            if (responseText.indexOf("Variable not found") >= 0) {
+                                message += 'The selected Cube (\"' + device.substr(device.indexOf(')') + 2)
+                                    + '\") does not appear to be running the Spark Pixels viz (it may be the Particle API acting up).';
+                                message += '\nIf you would like to flash \"' + device.substr(device.indexOf(')') + 2) + '\" with ';
+                                message += 'Spark Pixels now, just hit [OK].\nElse, click [Cancel] to return to where you were.';
+                                if (!isUserAlerted) {
+                                    isUserAlerted = true;
+                                    if (confirm(message))
+                                        flashCube();
+                                    else
+                                        clearInterval(populateModesTimer);
+                                }
+                            }
+                            else {
+                                //message += data.error;
+                                if (!isUserAlerted) {
+                                    isUserAlerted = true;
+                                    alert(responseText);
+                                }
+                            }
+                            return;
+                        }
+                    });
+                // Retrieve the device's modes list from the cloud API
+                $.get("https://api.particle.io/v1/devices/" + deviceID + "/modeList/?access_token=" + accessToken, function (data) {
+                    modeList = data.result.split(";");
+                    $("select#modes").empty();  //clear all the existing modes before appending new ones
+                    for (var index = 0; index < modeList.length - 1; index++) {
+                        var mode = modeList[index].trim();
+                        $("select#modes").append("<option value=\"" + mode + "\">" + mode + "</option>");
+                    }
+                    //console.log('currentMode: ' + currentMode);
+                }, "json").done(function(data) {
+                    modeList = data.result.split(";");
+                    $("select#modes").empty();  //clear all the existing modes before appending new ones
+                    for (var index = 0; index < modeList.length - 1; index++) {
+                        var mode = modeList[index].trim();
+                        $("select#modes").append("<option value=\"" + mode + "\">" + mode + "</option>");
+                    }
+                }).fail(function (data) {
+                    console.log('fail: ' + data.result);
+                    var message = '';
+                    if (!isUserAlerted) {
+                        isUserAlerted = true;
+                        message+="Oh-oh! I tried to get the list of MODES from the Particle cloud, but it would not retrieve it!";
+                        message+="\nThis could be due to a network error. If your cube is breathing cyan,\nit may be the Particle API acting up.";
+                        message+="\nClick [OK] to retry, [Cancel] to give it a rest for a while.";
+                        if (confirm(message))
+                            window.location.reload();
+                        else
+                            clearInterval(populateModesTimer);
+                    }
+                });
+                // Retrieve the device's parameters list from the cloud API
+                $.get("https://api.particle.io/v1/devices/" + deviceID + "/modeParmList/?access_token=" + accessToken, function (data) {
+                    console.log('success: ' + data.result);
+                    modeParmList = data.result.split(";");
+                }, "json").done(function(data) {
+                    console.log('done: ' + data.result);
+                    modeParmList = data.result.split(";");
+                }).fail(function (data) {
+                    console.log('fail: ' + data.result);
+                    var message = '';
+                    if (!isUserAlerted) {
+                        isUserAlerted = true;
+                        message+="Oh-oh! I tried to get the list of PARAMETERS from Particle cloud, but it would not retrieve it!";
+                        message+="\nThis could be due to a network error. If your cube is breathing cyan,\nit may be the Particle API acting up.";
+                        message+="\nClick [OK] to retry, [Cancel] to give it a rest for a while.";
+                        if (confirm(message))
+                            window.location.reload();
+                        else
+                            clearInterval(populateModesTimer);
+                    }
+                });
+            }
+        }
+
+        function flashCube() {
+            var deviceID = getDeviceID();
+            if (deviceID !== '') {
+                var output;
+                var request = $.ajax({
+                    type: "POST",
+                    url: "{% url 'cloudFlash' %}",
+                    data: {"code": "", "accessToken": accessToken, "deviceID": deviceID, "vizName": "", "vizId": "1438"},
+                    dataType: "text",
+                    success: function (data) {
+                        console.log("success flashing");
+                        JSONstring = data;
+                        console.log(JSONstring);
+                        var result = $.parseJSON(data);
+                        var result = $.parseJSON(result);
+                        compilerData = result;
+                        console.log(compilerData);
+                        output = "";
+                        if (result.ok) {
+                            output += "Compilation status: " + result.message + " - Flashing device now, please wait.";
+                            output += "\nOnce your Cube has restarted, you can close this message.";
+                        }
+                        else {
+                            var device = $("select#cubeName option[value = '" + deviceID + "']").text();
+                            output += "Compilation status: " + result.ok + "\nerrors:\n" + result.errors + "\n";
+                            output += "\nPlease make sure " + device.substr(device.indexOf(')') + 2) + " is online (breathing cyan).";
+                        }
+                        alert(output);
+                        window.location.reload();
+                    },
+                    error: function (data) {
+                        console.log("fail");
+                        console.log(data);
+                    }
+                });
+            }
+        }
+
+        function getDeviceID() {
+            var ret = $("select#cubeName").val();
+            if(typeof ret !== 'undefined' && ret !== null && ret !== '-1')
+                return ret;
+            else 
+                return '';
+        }
+
+        function cubeNameOnChange() {
+            currentMode = '';
+            isUserAlerted = false;
+            var deviceID = getDeviceID();	// Reads currently 'selected' value from dropdown
+            console.log('deviceID: ' + deviceID);
+            console.log('#cubeName options: ' + $("select#cubeName option").length);
+            console.log('#cubeName value: ' + $("select#cubeName").val());
+
+            if(deviceID !== '') {
+                // Retrieve the name of the selected device from the dropdown
+                $("select#cubeName option").each(function () {
+                    if ($(this).val() === deviceID)
+                        $("span#device").text($(this).text());  // Place the name in the device span
+                });
+
+                coreID = deviceID;
+                // Freshen the cookie with the currently selected device from the dropdown
+                $.removeCookie("coreID", {path: '/'});
+                var date = new Date();
+                $.cookie("coreID", coreID, {expires: date.getTime() + 86400, path: '/'});
+
+                // Show the modes list and brightness/speed controls
+                $("div#updateListDiv").fadeIn(300);
+                $("div#brightnessControl").fadeIn(300);
+                $("div#speedControl").fadeIn(300);
+                populateInterval();
+                setBrightness();
+                setSpeed();
+            }
+            else {
+                // We don't have a valid selected device so delete the cookie and hide the controls
+                $.removeCookie("coreID", {path: '/'});
+                coreID = null;
+                $("span#mode").text('');
+                $("div#updateListDiv").fadeOut(100);
+                $("div#brightnessControl").fadeOut(100);
+                $("div#speedControl").fadeOut(100);
+                $("span#device").text($('select#cubeName').text());            
+                clearInterval(populateModesTimer);
+            }
+        }
+        
+        function changeMode() {
+            currentMode = $('#modes').find("option:selected").val();
+            $("div#params").slideUp("100", "swing", clearModeOptions());
+            var idx = $("select#modes option:selected").index();
+            //console.log('$("select#modes option:selected").index(): ' + idx);
+            if(modeParmList[idx] === 'N')
+                setMode();
+            else
+                parseModeOptions();
+        }
+
+        function clearModeOptions() {
+            // Hide the colors and switches
+            for(var count = 1; count <= 6; count++) {
+                $("span#color" + count).hide();
+                if(count <= 4) { $("span#switch" + count).hide(); }
+            }
+            // Hide the text input field
+            $("div#text").hide();
+        }
+    
+        function parseModeOptions() {
+                var idx = $("select#modes option:selected").index();
+                var options = modeParmList[idx].split(',');
+                var numColors, numSwitches;
+                $.each(options, function(index, value) {
+                    //console.log("option " + index + ": " + value);
+                    switch(value[0]) {
+                        case 'C':
+                            numColors = Number(value[2]);
+                            for(var count = 1; count <= numColors; count++)
+                                $("span#color" + count).show();
+                            break;
+                        case 'S':
+                            numSwitches = Number(value[2]);
+                            for(var count = 1; count <= numSwitches; count++) {
+                                //console.log("switchLabels: " + options[index+1]);
+                                var switchLabels = options[index+1].replace(/\"\"/g, ";").split(';');
+                                $("span#switchLbl" + count).text(switchLabels[count-1].replace(/\"/g, ''));
+                                $("span#switch" + count).show();
+                            }
+                            break;
+                        case 'T':
+                            $("div#text").show();
+                            break;
+                        default:
+                            break;
+                    }
+                });
+                $("a#setModeButton").text("Start " + currentMode + " Mode!");
+                $("a#setModeButton").attr("title", "Click to set your Cube to " + currentMode + " mode with the chosen options");
+                $("div#params").slideDown("300", "swing");
+        }
+        
+        function parseRGBToHexString(r, g, b) {
+            var rHex = Number(r).toString(16);
+            var gHex = Number(g).toString(16);
+            var bHex = Number(b).toString(16);
+            rHex = rHex.length > 1 ? rHex : '0' + rHex;
+            gHex = gHex.length > 1 ? gHex : '0' + gHex;
+            bHex = bHex.length > 1 ? bHex : '0' + bHex;
+            
+            return (rHex + gHex + bHex).toUpperCase();
+        }
+        
+        function setMode() {
+            if (typeof accessToken !== 'undefined' && accessToken !== null) {
+                var deviceID = getDeviceID();
+                if(deviceID !== '') {
+                    var commandString = 'M:' + currentMode + ',';
+                    var colorsString = '', switchesString = '';
+                    for(var count = 1; count <= 6; count++) {
+                        if($("span#color" + count).css('display').indexOf('none') < 0) {
+                            var color = $("span#color" + count).find("div.sp-preview-inner").css("background-color");
+                            var rgbString = color.split("(")[1].split(")")[0].split(",");
+                            colorsString += 'C' + count + ':' + parseRGBToHexString(rgbString[0], rgbString[1], rgbString[2]) + ',';
+                            if (supportsLocalStorage()) {
+                                localStorage["spark_pixels.color" + count] = parseRGBToHexString(rgbString[0], rgbString[1], rgbString[2]);
+                            }
+                        }
+                        if(count <= 4)
+                            if($("span#switch" + count).css('display').indexOf('none') < 0) {
+                                var checked = $("input#switch" + count).prop('checked');
+                                switchesString += 'T' + count + ':' + (checked ? '1' : '0') + ',';
+                                if (supportsLocalStorage()) {
+                                    localStorage["spark_pixels.switch" + count] = checked.toString();
+                                }
+                            }
+                    }
+                    /*console.log('colorsString: ' + colorsString);
+                    console.log('switchesString: ' + switchesString);
+                    console.log('commandString: ' + commandString);*/
+                    
+                    $("span#mode").text(currentMode);
+                    if(currentMode.toLowerCase().indexOf('text') >= 0)
+                        if ($("input#text").val().trim().length > 0)
+                            $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetText", {access_token: accessToken, args: $("input#text").val().trim()});
+                    if(colorsString.length > 0)
+                        $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: colorsString + commandString})
+                            .done(function(data) {console.log('done colorsString: ' + data.return_value);})
+                            .fail(function (data) {console.log('fail colorsString: ' + data.return_value);});
+                    if(switchesString.length > 0)
+                        $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: switchesString + commandString})
+                            .done(function(data) {console.log('done switchesString: ' + data.return_value);})
+                            .fail(function (data) {console.log('fail switchesString: ' + data.return_value);});
+                    if((colorsString.length == 0) && (switchesString.length == 0))
+                        $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: commandString})
+                            .done(function(data) {console.log('done commandString: ' + data.return_value);})
+                            .fail(function (data) {console.log('fail commandString: ' + data.return_value);});
+                }
+            }
+        }
+
+        function changeSpeed() {
+            speed = $("#speedSlider").val();
+            setSpeed();
+            if (supportsLocalStorage())
+                localStorage["spark_pixels.speed"] = speed;
+        }
+        
+        function setSpeed() {
+            switch(Number(speed)) {
+                case 0:
+                    $("span#speed").text("Paint Drying");
+                    break;
+                case 1:
+                    $("span#speed").text("Turtle");
+                    break;
+                case 2:
+                    $("span#speed").text("Segway");
+                    break;
+                case 3:
+                    $("span#speed").text("Rabbit");
+                    break;
+                case 4:
+                    $("span#speed").text("Cheetah");
+                    break;
+                case 5:
+                    $("span#speed").text("Ricky Bobby");
+                    break;
+                case 6:
+                    $("span#speed").text("Jimmy Johns");
+                    break;
+                case 7:
+                    $("span#speed").text("My Bullet");
+                    break;
+                case 8:
+                    $("span#speed").text("Superman");
+                    break;
+                default:
+                    console.log('speed is ' + speed);
+                    break;
+            }
+            if (typeof accessToken !== 'undefined' && accessToken !== null) {
+                var deviceID = getDeviceID();
+                if(deviceID !== '') {
+                    var commandString = 'S:' + speed + ',';
+                    $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: commandString});
+                }
+            }
+        }
+
+        function changeBrightness() {
+            brightness = $("#brightnessSlider").val();
+            setBrightness();
+            if (supportsLocalStorage())
+                localStorage["spark_pixels.brightness"] = brightness;
+        }
+
+        function setBrightness() {
+            $("span#brightness").text(brightness);
+            if (typeof accessToken !== 'undefined' && accessToken !== null) {
+                var deviceID = getDeviceID();
+                if(deviceID !== '') {
+                    var commandString = 'B:' + (brightness > 0 ? brightness : 1) + ',';
+                    $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: commandString});
+                }
+            }
+        }
+    </script>
+    {% load utils %}
+    {% logged_in_status as logged_in %}
+    <div id="gallery-wrapper" class="viz-cards" style="padding-top: 0px !important;">
+        <div class="gradient" style="margin-top: 60px; padding: 0px 25% 12px; text-align: center; border-radius: 0px 0px 30px 30px">
+            <div id="cubeAndModeText">
+                <div>Selected Cube:  <span id="device">Please Log In</span></div>
+                <div>Selected Mode:  <span id="mode"></span></div>
+            </div>
+            {% if logged_in %}
+                <div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
+                <div id="updateListDiv">
+                    <a id="updateListButton" href="javascript:void(0);" onclick="currentMode = ''; populateInterval();" title="Click here to refresh the modes list!">Update List</a>
+                    <select id="modes" onchange="changeMode();"></select>
+                </div>
+                <div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
+                <div id="brightnessControl">
+                    <div>Brightness:  <span style="margin-right: 10px" id="brightness"></span>
+                        <input id="brightnessSlider" type="range" min="0" max="100" step="1" value="20" onchange="changeBrightness();" />
+                    </div>
+                </div>
+                <div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
+                <div id="speedControl">
+                    <div>Speed:  <span style="margin-right: 10px;" id="speed"></span><br>
+                        <input id="speedSlider" type="range" min="0" max="8" step="1" value="5" onchange="changeSpeed();" />
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <div id="params" class="gradient" style="display: none;">
+            <div style="clear: both; height: 10px; /*background: rgba(28, 21, 33, 0)*/"></div>
+            <div id="color" style="float: left; width: 50%; margin: 0 auto; text-align: right;">
+                <span id="color1" style="padding-right: 5px;">
+                    Color 1: <input type="text" id="color1" value="">
+                </span><br>
+                <span id="color2" style="padding-right: 5px;">
+                    Color 2: <input type="text" id="color2" value="">
+                </span><br>
+                <span id="color3" style="padding-right: 5px;">
+                    Color 3: <input type="text" id="color3" value="">
+                </span><br>
+                <span id="color4" style="padding-right: 5px;">
+                    Color 4: <input type="text" id="color4" value="">
+                </span><br>
+                <span id="color5" style="padding-right: 5px;">
+                    Color 5: <input type="text" id="color5" value="">
+                </span><br>
+                <span id="color6" style="padding-right: 5px;">
+                    Color 6: <input type="text" id="color6" value="">
+                </span>
+            </div>
+            <!--<div style="clear: both; height: 10px; /*background: rgba(28, 21, 33, 0)*/"></div>-->
+            <div id="switches" style="float: left; width: 40%; margin: 0 auto; text-align: justify;">
+                <span id="switch1" style="padding-right: 5px;">
+                    <input type="checkbox" id="switch1" style="vertical-align: middle;" value=""><span id="switchLbl1" style="padding-left: 2px;"></span>
+                </span><br>
+                <span id="switch2" style="padding-right: 5px;">
+                    <input type="checkbox" id="switch2" style="vertical-align: middle;" value=""><span id="switchLbl2" style="padding-left: 2px;"></span>
+                </span><br>
+                <span id="switch3" style="padding-right: 5px;">
+                    <input type="checkbox" id="switch3" style="vertical-align: middle;" value=""><span id="switchLbl3" style="padding-left: 2px;"></span>
+                </span><br>
+                <span id="switch4" style="padding-right: 5px;">
+                    <input type="checkbox" id="switch4" style="vertical-align: middle;" value=""><span id="switchLbl4" style="padding-left: 2px;"></span>
+                </span>
+            </div>
+            <div style="clear: both; height: 10px; /*background: rgba(28, 21, 33, 0)*/"></div>
+            <div id="text">
+                <span id="text">Enter Text Message (63 chars max):<br>
+                    <input type="text" id="text" maxlength="63" value="" style="width: 33%; margin: 0 auto; padding: 5px 5px; border-width: 5px; border-color: #2bc6fb; border-radius: 10px;">
+                </span>
+            </div>
+            <div style="clear: both; height: 10px; /*background: rgba(28, 21, 33, 0)*/"></div>
+            <div id="setModeButton">
+                <a id="setModeButton" href="javascript:void(0);" onclick="setMode();" title="">Start Mode!</a>
+            </div>
+        </div>
+        <!--<div id="colors" style="padding-bottom: 15px; display: none;">
+            <canvas height="196" width="521" id="colors_canvas" >
+                Your browser does not support the HTML5 canvas element.
+            </canvas>
+        </div>-->
+    </div>
 {% endblock %}
 
 {% block footer %}
+    <script type="text/javascript">
+        // Define the elements to be replaced with the js color picker
+        $( "input#color1, input#color2, input#color3, input#color4, input#color5, input#color6" ).spectrum({
+            hideAfterPaletteSelect:true,
+            preferredFormat: "hex",
+            replacerClassName: 'colorPicker',
+            showPaletteOnly: true,
+            togglePaletteOnly: true,
+            chooseText: "Pick Color",
+            cancelText: "Cancel",
+            togglePaletteMoreText: 'More Colors',
+            togglePaletteLessText: 'Less Colors',
+            color: 'blanchedalmond',
+            palette: [
+                ["#000","#444","#666","#999","#ccc","#eee","#f3f3f3","#fff"],
+                ["#f00","#f90","#ff0","#0f0","#0ff","#00f","#90f","#f0f"],
+                ["#f4cccc","#fce5cd","#fff2cc","#d9ead3","#d0e0e3","#cfe2f3","#d9d2e9","#ead1dc"],
+                ["#ea9999","#f9cb9c","#ffe599","#b6d7a8","#a2c4c9","#9fc5e8","#b4a7d6","#d5a6bd"],
+                ["#e06666","#f6b26b","#ffd966","#93c47d","#76a5af","#6fa8dc","#8e7cc3","#c27ba0"],
+                ["#c00","#e69138","#f1c232","#6aa84f","#45818e","#3d85c6","#674ea7","#a64d79"],
+                ["#900","#b45f06","#bf9000","#38761d","#134f5c","#0b5394","#351c75","#741b47"],
+                ["#600","#783f04","#7f6000","#274e13","#0c343d","#073763","#20124d","#4c1130"]
+            ]
+        });
+    </script>
     {% include "cubetube/partials/_footer.html" %}
 {% endblock %}
