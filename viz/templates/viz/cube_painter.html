@@ -36,43 +36,7 @@
         //var isDesktop = window.screenX !== 0 && !isTouchDevice() ? true : false;
 
         $(function () {
-            // Define the canvas as the element that will hold the js color picker
-            // This causes the color picker to appear always at the base of the canvas
-            $( "#cube_canvas" ).spectrum({
-                hideAfterPaletteSelect: true,
-                preferredFormat: "hex",
-                replacerClassName: 'colorPicker',
-                showInitial: true,
-                showInput: true,                
-                showPaletteOnly: true,
-                togglePaletteOnly: true,
-                chooseText: "Pick Color",
-                cancelText: "Cancel",
-                togglePaletteMoreText: 'More Colors',
-                togglePaletteLessText: 'Less Colors',
-                color: 'blanchedalmond',
-                change: function(color) {
-                    console.log('gSelectedPieceArrayIndex: ' + gSelectedPieceArrayIndex);
-                    //console.log('gPieces: ' + gPieces);
-                    gSelectedColor = color.toHexString();
-                    console.log('gSelectedColor: ' + gSelectedColor);
-                    gPieces[gSelectedPieceArrayIndex].fillColor = color.toHexString();
-                    setVoxel(gSelectedPieceIndex, gPieces[gSelectedPieceArrayIndex].fillColor);
-                    drawCube();                    
-                },
-                palette: [
-                    ["#000","#444","#666","#999","#ccc","#eee","#f3f3f3","#fff"],
-                    ["#f00","#f90","#ff0","#0f0","#0ff","#00f","#90f","#f0f"],
-                    ["#f4cccc","#fce5cd","#fff2cc","#d9ead3","#d0e0e3","#cfe2f3","#d9d2e9","#ead1dc"],
-                    ["#ea9999","#f9cb9c","#ffe599","#b6d7a8","#a2c4c9","#9fc5e8","#b4a7d6","#d5a6bd"],
-                    ["#e06666","#f6b26b","#ffd966","#93c47d","#76a5af","#6fa8dc","#8e7cc3","#c27ba0"],
-                    ["#c00","#e69138","#f1c232","#6aa84f","#45818e","#3d85c6","#674ea7","#a64d79"],
-                    ["#900","#b45f06","#bf9000","#38761d","#134f5c","#0b5394","#351c75","#741b47"],
-                    ["#600","#783f04","#7f6000","#274e13","#0c343d","#073763","#20124d","#4c1130"]
-                ]
-            });            
-            
-            var $canvas = document.getElementById('cube_canvas');
+            //var $canvas = document.getElementById('cube_canvas');
             //var $colors = document.getElementById('colors_canvas');
             $(window).on("orientationchange", function() {
                 window.location.reload(); 
@@ -329,6 +293,7 @@
         }
 
         function clearVoxels(startIdx, endIdx) {
+            $("div.sp-container").addClass('sp-hidden');    // Hide the palette
             if (typeof accessToken !== 'undefined' && accessToken !== null
                 && $("span#mode").html().trim().toUpperCase() === 'CUBE PAINTER') {
                 var deviceID = getDeviceID();
@@ -341,6 +306,7 @@
         }
 
         function syncVoxels() {
+            $("div.sp-container").addClass('sp-hidden');    // Hide the palette
             if (typeof accessToken !== 'undefined' && accessToken !== null
                 && $("span#mode").html().trim().toUpperCase() === 'CUBE PAINTER') {
                 var deviceID = getDeviceID();
@@ -402,6 +368,9 @@
             <div id="syncButton">
                 <a id="syncButton" href="javascript:void(0);" onclick="syncVoxels();" title="Click to resync your drawing to the Cube!">Resync Cube!</a>
             </div>
+            <div id="colorPicker" style="display: none;">
+                <input type="text" id="colorPicker" value="">
+            </div>
             <canvas height="401" width="401" id="cube_canvas">
                 Your browser does not support the HTML5 canvas element.
             </canvas>
@@ -415,15 +384,49 @@
                 <a id="clearButtons" href="javascript:void(0);" onclick="clearVoxels(0, 512);" title="Click to clear the whole Cube">Clear All</a>
             </div>
         </div>
-        <!--<div id="colors" style="padding-bottom: 15px;">
-            <canvas height="196" width="521" id="colors_canvas" >
+        <div id="colors" style="/*padding-bottom: 15px;*/">
+        <!--<canvas height="196" width="521" id="colors_canvas" >
                 Your browser does not support the HTML5 canvas element.
-            </canvas>
-        </div>-->
+            </canvas>-->
+        </div>
     </div>
 {% endblock %}
 
 {% block footer %}
     <script src="{% static 'js/cubePainterManager.js' %}"></script>
+    <script type="text/javascript">
+        var $canvas = document.getElementById('cube_canvas');
+        $canvas.addEventListener("click", cubeOnClick, false);
+        // Define the element that will hold the js color picker
+        $("input#colorPicker").spectrum({
+            hideAfterPaletteSelect: true,
+            preferredFormat: "hex",
+            replacerClassName: 'colorPicker',
+            showInitial: true,
+            showInput: true,
+            showPaletteOnly: true,
+            color: 'blanchedalmond',
+            change: function(color) {
+                $("div.sp-container").addClass('sp-hidden');
+                console.log('gSelectedPieceArrayIndex: ' + gSelectedPieceArrayIndex);
+                //console.log('gPieces: ' + gPieces);
+                gSelectedColor = color.toHexString();
+                console.log('gSelectedColor: ' + gSelectedColor);
+                gPieces[gSelectedPieceArrayIndex].fillColor = color.toHexString();
+                setVoxel(gSelectedPieceIndex, gPieces[gSelectedPieceArrayIndex].fillColor);
+                drawCube();                    
+            },
+            palette: [
+                ["#000","#444","#666","#999","#ccc","#eee","#f3f3f3","#fff"],
+                ["#f00","#f90","#ff0","#0f0","#0ff","#00f","#90f","#f0f"],
+                ["#f4cccc","#fce5cd","#fff2cc","#d9ead3","#d0e0e3","#cfe2f3","#d9d2e9","#ead1dc"],
+                ["#ea9999","#f9cb9c","#ffe599","#b6d7a8","#a2c4c9","#9fc5e8","#b4a7d6","#d5a6bd"],
+                ["#e06666","#f6b26b","#ffd966","#93c47d","#76a5af","#6fa8dc","#8e7cc3","#c27ba0"],
+                ["#c00","#e69138","#f1c232","#6aa84f","#45818e","#3d85c6","#674ea7","#a64d79"],
+                ["#900","#b45f06","#bf9000","#38761d","#134f5c","#0b5394","#351c75","#741b47"],
+                ["#600","#783f04","#7f6000","#274e13","#0c343d","#073763","#20124d","#4c1130"]
+            ]
+        });
+    </script>
     {% include "cubetube/partials/_footer.html" %}
 {% endblock %}

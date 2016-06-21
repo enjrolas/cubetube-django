@@ -107,7 +107,6 @@ function updateLayerCountElem() {
 }
 
 function cubeOnClick(e) {
-    $( "#cube_canvas" ).spectrum("hide");
     console.log('cubeOnClick(e)!');
     var cell = getCursorPosition(e, gCanvasElement, gPieces);
     var i = gLayer*kNumPieces;
@@ -145,9 +144,31 @@ function clickOnPiece(pieceIndex, cellArray) {
     //console.log('Piece index: ' + gSelectedPieceIndex);
     
     if(cellArray.length > kNumColors) {
-        if(!cellArray[pieceIndex].isFilled)
-            $( "#cube_canvas" ).spectrum("show");
-    	cellArray[pieceIndex].zIndex = gLayer;
+        if(!cellArray[pieceIndex].isFilled) {
+            var left, top;
+            var position = $("canvas#cube_canvas").position();
+            
+            // Let's make the color picker visible
+            $("div.sp-container").removeClass('sp-hidden'); //$("input#colorPicker").spectrum("show");
+            
+            // Determine where the color picker will be positioned by calculating the position of the clicked piece
+            if(cellArray[pieceIndex].row < 4)
+                top = position.top + (kPieceHeight * (cellArray[pieceIndex].row + 1));
+            else
+                top = position.top + ((kPieceHeight * (cellArray[pieceIndex].row)) - $("div.sp-container").height());
+            
+            if(cellArray[pieceIndex].column < 4)
+                left = position.left + (kPieceWidth * (cellArray[pieceIndex].column + 1));
+            else
+                left = position.left + ((kPieceWidth * (cellArray[pieceIndex].column)) - $("div.sp-container").width());
+
+            // Place the color picker below the clicked piece
+            $("div.sp-container").css({'top' : top, 'left' : left});
+        }
+        else    // If we have clicked in a colored piece, then hide the color picker
+            $("div.sp-container").addClass('sp-hidden');    //$("input#colorPicker").spectrum("hide");
+
+        cellArray[pieceIndex].zIndex = gLayer;
     	cellArray[pieceIndex].isFilled = !cellArray[pieceIndex].isFilled; 
         cellArray[pieceIndex].fillColor = cellArray[pieceIndex].isFilled ? gSelectedColor : '#000000';
         setVoxel(gSelectedPieceIndex, cellArray[pieceIndex].fillColor);
@@ -356,8 +377,7 @@ function resumeGame() {
     gSelectedPieceArrayIndex = parseInt(localStorage["cubetube.selectedarray"]);
     //gPickedColorIndex = parseInt(localStorage["cubetube.selectedcolorindex"]);
     gSelectedColor = localStorage["cubetube.selectedcolor"];
-    $("#cube_canvas").spectrum("set", gSelectedColor);
-
+    $("input#colorPicker").spectrum("set", gSelectedColor);
     drawCube();
     //drawPicker();
     return true;

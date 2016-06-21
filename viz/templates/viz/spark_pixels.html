@@ -306,6 +306,15 @@
         
         function changeMode() {
             currentMode = $('#modes').find("option:selected").val();
+            if (currentMode.toUpperCase().indexOf("PAINTER") >= 0) {
+                var message = '';
+                message += "You have selected the CUBE PAINTER mode; to enjoy this mode you";
+                message += "\nneed to go to the Cube Painter area. If you would like to be taken";
+                message += "\nthere now, just hit [OK].\nElse, click [Cancel] to return to where you were.";
+                if (confirm(message))
+                    window.location.replace(document.location.origin + "/cube_painter");
+            }
+            
             $("div#params").slideUp("100", "swing", clearModeOptions());
             var idx = $("select#modes option:selected").index();
             //console.log('$("select#modes option:selected").index(): ' + idx);
@@ -409,7 +418,7 @@
                         $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: switchesString + commandString})
                             .done(function(data) {console.log('done switchesString: ' + data.return_value);})
                             .fail(function (data) {console.log('fail switchesString: ' + data.return_value);});
-                    if((colorsString.length == 0) && (switchesString.length == 0))
+                    if((colorsString.length === 0) && (switchesString.length === 0))
                         $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: commandString})
                             .done(function(data) {console.log('done commandString: ' + data.return_value);})
                             .fail(function (data) {console.log('fail commandString: ' + data.return_value);});
@@ -512,7 +521,7 @@
                 </div>
             {% endif %}
         </div>
-        <div id="params" class="gradient" style="display: none;">
+        <div id="params" class="gradient">
             <div style="clear: both; height: 10px; /*background: rgba(28, 21, 33, 0)*/"></div>
             <div id="color" style="float: left; width: 50%; margin: 0 auto; text-align: right;">
                 <span id="color1" style="padding-right: 5px;">
@@ -572,15 +581,12 @@
     <script type="text/javascript">
         // Define the elements to be replaced with the js color picker
         $( "input#color1, input#color2, input#color3, input#color4, input#color5, input#color6" ).spectrum({
-            hideAfterPaletteSelect:true,
+            hideAfterPaletteSelect: true,
             preferredFormat: "hex",
             replacerClassName: 'colorPicker',
+            showInitial: true,
+            showInput: true,                
             showPaletteOnly: true,
-            togglePaletteOnly: true,
-            chooseText: "Pick Color",
-            cancelText: "Cancel",
-            togglePaletteMoreText: 'More Colors',
-            togglePaletteLessText: 'Less Colors',
             color: 'blanchedalmond',
             palette: [
                 ["#000","#444","#666","#999","#ccc","#eee","#f3f3f3","#fff"],

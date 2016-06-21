@@ -668,7 +668,20 @@ button {
 div.sp-dd {
     display: none;
 }
+/* We also want to demote the z-index of the
+ * color picker so it doesn't overflow the nav */
+div.sp-container {
+    z-index: 2;
+}
 /**************************************/
+div#params {
+    display: none; 
+    opacity: 0.8;
+    border-radius: 25px; 
+    border-width: 5px; 
+    border-style: ridge ridge none ridge; 
+    border-color: #1C1521;    
+}
 #cubeAndModeText, #pleaseLogInText {
     width: 50%; 
     font-weight: bold;
