@@ -674,9 +674,10 @@ div.sp-container {
     z-index: 2;
     opacity: 0.8;
 }
-/* Custom close button for the palette */
-div.myCloseButton {
-    float: right;
+/* Custom close button container for the palette */
+div.sp-palette-row-selection {
+    padding-bottom: 5px;
+    padding-top: 5px;
 }
 /**************************************/
 div#params {

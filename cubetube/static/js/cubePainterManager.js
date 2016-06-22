@@ -107,7 +107,7 @@ function updateLayerCountElem() {
 }
 
 function cubeOnClick(e) {
-    console.log('cubeOnClick(e)!');
+    //console.log('cubeOnClick(e)!');
     var cell = getCursorPosition(e, gCanvasElement, gPieces);
     var i = gLayer*kNumPieces;
     for (var idx=i; idx < (i+kNumPieces); idx++) {
@@ -140,21 +140,12 @@ function clickOnPiece(pieceIndex, cellArray) {
         gSelectedPieceIndex = pieceIndex;
         gPickedColorIndex = pieceIndex;
     }
-		
     //console.log('Piece index: ' + gSelectedPieceIndex);
     
     if(cellArray.length > kNumColors) {
-        var cancelButton = $("div.sp-palette-row-selection").find("div.myCloseButton");
-        if(typeof cancelButton !== 'undefined' && cancelButton !== null)
-            cancelButton.remove();
-        
-        cancelButton = $("<div class=\"myCloseButton\"><button type=\"button\">Close</button></div>");
-        cancelButton.on("click", function(e) {
-            e.stopPropagation();
-            e.preventDefault();
-            $("div.sp-container").addClass('sp-hidden');
-        });
-        $("div.sp-palette-row-selection").append(cancelButton);
+        var cancelButton;
+        var container = $("<div class=\"sp-cf sp-palette-row sp-palette-row-selection\"></div>");
+        $("div.sp-palette").find("div.sp-palette-row-selection").remove();
             
         if(!cellArray[pieceIndex].isFilled) {
             var left, top;
@@ -164,20 +155,39 @@ function clickOnPiece(pieceIndex, cellArray) {
             $("div.sp-container").removeClass('sp-hidden'); //$("input#colorPicker").spectrum("show");
             
             // Determine where the color picker will be positioned by calculating the position of the clicked piece
-            if(cellArray[pieceIndex].row < 4)
-                top = position.top + (kPieceHeight * (cellArray[pieceIndex].row + 1));
-            else
-                top = position.top + ((kPieceHeight * (cellArray[pieceIndex].row)) - $("div.sp-container").height());
-            
-            if(cellArray[pieceIndex].column < 4)
+            if(cellArray[pieceIndex].column < 4) {
+                // Create a left-aligned 'Close' button
+                cancelButton = $("<div style=\"float: left;\"><button type=\"button\">Close</button></div>");
                 left = position.left + (kPieceWidth * (cellArray[pieceIndex].column));
-            else
+            }
+            else {
+                // Create a right-aligned 'Close' button
+                cancelButton = $("<div style=\"float: right;\"><button type=\"button\">Close</button></div>");
                 left = position.left + ((kPieceWidth * (cellArray[pieceIndex].column + 1)) - $("div.sp-container").width());
+            }
+            
+            if(cellArray[pieceIndex].row < 4) {
+                $("div.sp-palette").prepend(container); // We place the 'Close' button at the top of the color picker
+                top = position.top + (kPieceHeight * (cellArray[pieceIndex].row + 1));
+            }
+            else {
+                $("div.sp-palette").append(container); // We place the 'Close' button at the bottom of the color picker
+                top = position.top + ((kPieceHeight * (cellArray[pieceIndex].row)) - $("div.sp-container").height() - (kPieceHeight/2));
+            }
 
-            // Place the color picker below the clicked piece
+            // Add a click handler to the 'Close' button
+            cancelButton.on("click", function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                $("div.sp-container").addClass('sp-hidden');
+            });
+            // Add the 'Close' button to the color palette
+            $("div.sp-palette-row-selection").append(cancelButton);
+            
+            // Place the color picker next to the clicked piece
             $("div.sp-container").css({'top' : top, 'left' : left});
         }
-        else    // If we have clicked in a colored piece, then hide the color picker
+        else  // If we have clicked in a colored piece, then hide the color picker
             $("div.sp-container").addClass('sp-hidden');    //$("input#colorPicker").spectrum("hide");
 
         cellArray[pieceIndex].zIndex = gLayer;
