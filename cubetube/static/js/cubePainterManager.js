@@ -144,6 +144,18 @@ function clickOnPiece(pieceIndex, cellArray) {
     //console.log('Piece index: ' + gSelectedPieceIndex);
     
     if(cellArray.length > kNumColors) {
+        var cancelButton = $("div.sp-palette-row-selection").find("div.myCloseButton");
+        if(typeof cancelButton !== 'undefined' && cancelButton !== null)
+            cancelButton.remove();
+        
+        cancelButton = $("<div class=\"myCloseButton\"><button type=\"button\">Close</button></div>");
+        cancelButton.on("click", function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            $("div.sp-container").addClass('sp-hidden');
+        });
+        $("div.sp-palette-row-selection").append(cancelButton);
+            
         if(!cellArray[pieceIndex].isFilled) {
             var left, top;
             var position = $("canvas#cube_canvas").position();
@@ -158,9 +170,9 @@ function clickOnPiece(pieceIndex, cellArray) {
                 top = position.top + ((kPieceHeight * (cellArray[pieceIndex].row)) - $("div.sp-container").height());
             
             if(cellArray[pieceIndex].column < 4)
-                left = position.left + (kPieceWidth * (cellArray[pieceIndex].column + 1));
+                left = position.left + (kPieceWidth * (cellArray[pieceIndex].column));
             else
-                left = position.left + ((kPieceWidth * (cellArray[pieceIndex].column)) - $("div.sp-container").width());
+                left = position.left + ((kPieceWidth * (cellArray[pieceIndex].column + 1)) - $("div.sp-container").width());
 
             // Place the color picker below the clicked piece
             $("div.sp-container").css({'top' : top, 'left' : left});

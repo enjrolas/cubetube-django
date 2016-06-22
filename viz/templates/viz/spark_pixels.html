@@ -402,9 +402,6 @@
                                 }
                             }
                     }
-                    /*console.log('colorsString: ' + colorsString);
-                    console.log('switchesString: ' + switchesString);
-                    console.log('commandString: ' + commandString);*/
                     
                     $("span#mode").text(currentMode);
                     if(currentMode.toLowerCase().indexOf('text') >= 0)
@@ -581,7 +578,7 @@
     <script type="text/javascript">
         // Define the elements to be replaced with the js color picker
         $( "input#color1, input#color2, input#color3, input#color4, input#color5, input#color6" ).spectrum({
-            hideAfterPaletteSelect: true,
+            //hideAfterPaletteSelect: false,
             preferredFormat: "hex",
             replacerClassName: 'colorPicker',
             showInitial: true,

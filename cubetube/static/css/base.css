@@ -672,6 +672,11 @@ div.sp-dd {
  * color picker so it doesn't overflow the nav */
 div.sp-container {
     z-index: 2;
+    opacity: 0.8;
+}
+/* Custom close button for the palette */
+div.myCloseButton {
+    float: right;
 }
 /**************************************/
 div#params {

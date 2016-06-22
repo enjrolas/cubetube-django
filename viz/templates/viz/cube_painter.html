@@ -408,10 +408,7 @@
             color: 'blanchedalmond',
             change: function(color) {
                 $("div.sp-container").addClass('sp-hidden');
-                console.log('gSelectedPieceArrayIndex: ' + gSelectedPieceArrayIndex);
-                //console.log('gPieces: ' + gPieces);
                 gSelectedColor = color.toHexString();
-                console.log('gSelectedColor: ' + gSelectedColor);
                 gPieces[gSelectedPieceArrayIndex].fillColor = color.toHexString();
                 setVoxel(gSelectedPieceIndex, gPieces[gSelectedPieceArrayIndex].fillColor);
                 drawCube();                    
