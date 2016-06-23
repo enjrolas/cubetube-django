@@ -40,6 +40,7 @@ $(document).ready(function () {
     $('.on-forum').hide();
     $('.on-gallery').hide();
     $('.on-painter').hide();
+    $('.on-pixels').hide();
     $('.on-docs').hide();
     $('.on-overview').hide();
     $('.on-create').hide();

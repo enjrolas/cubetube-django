@@ -82,16 +82,16 @@
             populateModesTimer = setInterval(function () {
                 if (currentMode === null || currentMode === '' || currentMode === 'None') {
                     $("select#modes").fadeOut(100);
-                    $("a#updateListButton").text("Please Wait");
-                    $("span#mode").text("Please Wait");
+                    $("a#updateListButton").html("Please Wait<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>");
+                    $("span#mode").html("Please Wait<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>");
                     populateModes();
                 }
                 else {
                     if ($("select#modes option:selected").val() === currentMode) {
                         clearInterval(populateModesTimer);
                         isUserAlerted = true;
-                        $("a#updateListButton").text("Update List");
-                        $("span#mode").text(currentMode);
+                        $("a#updateListButton").html("Update List");
+                        $("span#mode").html(currentMode);
                         $("select#modes").fadeIn(300);
                         $("div#cubeAndModeText").fadeIn(300);
                         $("div#updateListDiv").fadeIn(300);

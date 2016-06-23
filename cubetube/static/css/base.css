@@ -679,14 +679,20 @@ div.sp-palette-row-selection {
     padding-bottom: 5px;
     padding-top: 5px;
 }
+img.logo-menu {
+    width: 10%; /*30px;*/
+    margin-right: 5px; 
+    vertical-align: middle;
+}
 /**************************************/
 div#params {
     display: none; 
     opacity: 0.8;
     border-radius: 25px; 
     border-width: 5px; 
-    border-style: ridge ridge none ridge; 
-    border-color: #1C1521;    
+    /*border-style: ridge ridge none ridge;*/
+    /*border-color: #1C1521;*/
+    box-shadow: inset 3px 4px 10px #1C1521;
 }
 #cubeAndModeText, #pleaseLogInText {
     width: 50%; 
@@ -789,6 +795,7 @@ div.mobile-splitter {
 @media screen and (min-device-height: 640px) and (min-device-width: 360px) and (orientation: portrait) {
     #cubeName {
         margin-top: 15px !important;
+        margin-left: -100px !important;
     }
     span#currentLayer {
         font-size: 14px !important;
@@ -910,7 +917,7 @@ div.mobile-splitter {
 @media screen and (device-height: 568px) and (device-width: 320px) and (orientation: portrait) {
     #cubeName {
         margin-top: 15px !important;
-        margin-left: -140px !important;
+        margin-left: -102px !important;
     }
     span#currentLayer {
         font-size: 14px !important;
@@ -1032,6 +1039,7 @@ div.mobile-splitter {
 @media screen and (min-device-height: 667px) and (min-device-width: 375px) and (orientation: portrait) {
     #cubeName {
         margin-top: 15px !important;
+        margin-left: -100px !important;
     }
     span#currentLayer {
         font-size: 14px !important;
@@ -1153,6 +1161,7 @@ div.mobile-splitter {
 @media screen and (min-device-height: 736px) and (min-device-width: 414px) and (orientation: portrait) {
     #cubeName {
         margin-top: 15px !important;
+        margin-left: -100px !important;
     }
     span#currentLayer {
         font-size: 14px !important;
@@ -1272,6 +1281,10 @@ div.mobile-splitter {
 
 /* #### Android Tablets Portrait #### */
 @media screen and (min-device-width: 800px) and (max-device-width: 1280px) and (orientation: portrait) {
+    #cubeName {
+        margin-top: 15px !important;
+        margin-left: -100px !important;
+    }
     div#canvas {
         padding: 10px 0 40px;
         max-width: 1280px;
@@ -1313,12 +1326,6 @@ div.mobile-splitter {
     span#currentLayer {
         font-size: 20px !important;
     }
-    span#color1, span#color2, span#color3, 
-    span#color4, span#color5, span#color6, 
-    span#switch1, span#switch2, span#switch3, 
-    span#switch4, span#text {
-        font-size: 16px;
-    }
     #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton, a#setModeButton {
         padding: 4px 14px;
         font-size: 16px;
@@ -1336,6 +1343,10 @@ div.mobile-splitter {
 
 /* #### iOS Tablets Portrait #### */
 @media screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 2) {
+    #cubeName {
+        margin-top: 15px !important;
+        margin-left: -100px !important;
+    }
     div#canvas {
         padding: 10px 0 40px;
         max-width: 1024px;
@@ -1400,6 +1411,9 @@ div.mobile-splitter {
 
 /* #### Android Tablets Landscape #### */
 @media screen and (min-device-width: 800px) and (max-device-width: 1280px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
+    #cubeName {
+        margin-left: -100px !important;
+    }
     div#canvas {
         padding: 10px 0 40px;
         max-width: 1280px;
@@ -1440,12 +1454,6 @@ div.mobile-splitter {
     }
     span#currentLayer {
         font-size: 20px !important;
-    }
-    span#color1, span#color2, span#color3, 
-    span#color4, span#color5, span#color6, 
-    span#switch1, span#switch2, span#switch3, 
-    span#switch4, span#text {
-        font-size: 16px;
     }
     #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton, a#setModeButton {
         padding: 4px 14px;
@@ -1529,6 +1537,7 @@ div.mobile-splitter {
 @media screen and (max-device-height: 360px) and (max-device-width: 640px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
     #cubeName {
         margin-top: 15px !important;
+        margin-left: -100px !important;
     }
     span#currentLayer {
         font-size: 14px !important;
@@ -1648,6 +1657,10 @@ div.mobile-splitter {
 
 /* #### iPhone 5/5s and iPod touch Landscape #### */
 @media screen and (device-height: 568px) and (device-width: 320px) and (orientation: landscape) {
+    #cubeName {
+        /*margin-top: 15px !important;*/
+        margin-left: -103px !important;
+    }
     div#canvas {
         padding: 10px 0 40px;
         height: 568px;
@@ -1685,6 +1698,9 @@ div.mobile-splitter {
 /* #### iPhone 6 plus and 6s plus Landscape #### */
 /* Had to specify the pixel ratio to avoid interfering with desktop layout */
 @media screen and (device-height: 736px) and (device-width: 414px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 3) {
+    #cubeName {
+        margin-left: -100px !important;
+    }
     div#canvas {
         padding: 10px 0 40px;
         height: 736px;
@@ -1712,6 +1728,9 @@ div.mobile-splitter {
 /* #### iPhone 6 and 6s Landscape #### */
 /* Had to specify the pixel ratio to avoid interfering with desktop layout */
 @media screen and (device-height: 667px) and (device-width: 375px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 2) {
+    #cubeName {
+        margin-left: -100px !important;
+    }
     div#canvas {
         padding: 10px 0 40px;
         height: 667px;
@@ -2015,6 +2034,11 @@ header:after {
     padding-right: 8px; }
 
 .painter .on-painter {
+    box-shadow: inset 0px 3px 0px #ee0026;
+    padding-left: 8px;
+    padding-right: 8px; }
+
+.pixels .on-pixels {
     box-shadow: inset 0px 3px 0px #ee0026;
     padding-left: 8px;
     padding-right: 8px; }
