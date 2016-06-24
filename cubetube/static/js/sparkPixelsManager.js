@@ -42,6 +42,10 @@ function populateInterval() {
                     clearModeOptions();
                     parseModeOptions();
                 }
+                setSpeed();
+                setColors();
+                setSwitches();
+                setBrightness();
             }
             else {
                 // Set the selected mode in the modes dropdown
