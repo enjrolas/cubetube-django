@@ -29,6 +29,7 @@
         var speed = 5;
         var modeList;
         var modeParmList;
+        var auxSwtchList;
         var populateModesTimer = null;
         var syncInterval = null;
         var supportsLocalStorage = function() { return ('localStorage' in window) && window['localStorage'] !== null; };
@@ -78,6 +79,14 @@
                 cubeNameOnChange(); //populateInterval();
         });
 
+        function AuxSwitch(id, description, onLabel, offLabel, value) {
+            this.id = id;
+            this.description = description;
+            this.onLabel = onLabel;
+            this.offLabel = offLabel;
+            this.value = value;
+        }        
+    
         function populateInterval() {
             populateModesTimer = setInterval(function () {
                 if (currentMode === null || currentMode === '' || currentMode === 'None') {
@@ -153,17 +162,36 @@
                                 }
                             }
                             else {
-                                //message += data.error;
                                 if (!isUserAlerted) {
                                     isUserAlerted = true;
-                                    alert(responseText);
+                                    message = '';
+                                    message+="Oh-oh! I tried to get the cube's current MODE from the Particle cloud, but it would not retrieve it!";
+                                    message+="\nThis could be due to a network error. If your cube is breathing cyan,\nit may be the Particle API acting up.";
+                                    message+="\nClick [OK] to retry, [Cancel] to give it a rest for a while.";
+                                    if (confirm(message))
+                                        window.location.reload();
+                                    else
+                                        clearInterval(populateModesTimer);
                                 }
                             }
-                            return;
+                        }
+                        else {
+                            if (!isUserAlerted) {
+                                isUserAlerted = true;
+                                message = '';
+                                message+="Oh-oh! I tried to get the cube's DEVICE ID, but the Particle cloud reported it as OFFLINE!";
+                                message+="\nThis could be due to a network error. If your cube is breathing cyan,\nit may be the Particle API acting up.";
+                                message+="\nClick [OK] to retry, [Cancel] to give it a rest for a while. You may try resetting your cube prior to this.";
+                                if (confirm(message))
+                                    window.location.reload();
+                                else
+                                    clearInterval(populateModesTimer);
+                            }
                         }
                     });
                 // Retrieve the device's modes list from the cloud API
                 $.get("https://api.particle.io/v1/devices/" + deviceID + "/modeList/?access_token=" + accessToken, function (data) {
+                    console.log('success: ' + data.result.slice(0, data.result.lastIndexOf(';')));
                     modeList = data.result.split(";");
                     $("select#modes").empty();  //clear all the existing modes before appending new ones
                     for (var index = 0; index < modeList.length - 1; index++) {
@@ -171,46 +199,112 @@
                         $("select#modes").append("<option value=\"" + mode + "\">" + mode + "</option>");
                     }
                     //console.log('currentMode: ' + currentMode);
-                }, "json").done(function(data) {
-                    modeList = data.result.split(";");
-                    $("select#modes").empty();  //clear all the existing modes before appending new ones
-                    for (var index = 0; index < modeList.length - 1; index++) {
-                        var mode = modeList[index].trim();
-                        $("select#modes").append("<option value=\"" + mode + "\">" + mode + "</option>");
-                    }
-                }).fail(function (data) {
+                }, "json").fail(function (data) {
                     console.log('fail: ' + data.result);
                     var message = '';
-                    if (!isUserAlerted) {
-                        isUserAlerted = true;
-                        message+="Oh-oh! I tried to get the list of MODES from the Particle cloud, but it would not retrieve it!";
-                        message+="\nThis could be due to a network error. If your cube is breathing cyan,\nit may be the Particle API acting up.";
-                        message+="\nClick [OK] to retry, [Cancel] to give it a rest for a while.";
-                        if (confirm(message))
-                            window.location.reload();
-                        else
-                            clearInterval(populateModesTimer);
+                    var responseText = data.responseText;
+                    if (responseText.indexOf("Variable not found") >= 0) {
+                        message += 'The selected Cube (\"' + device.substr(device.indexOf(')') + 2)
+                            + '\") does not appear to be running the Spark Pixels viz (it may be the Particle API acting up).';
+                        message += '\nIf you would like to flash \"' + device.substr(device.indexOf(')') + 2) + '\" with ';
+                        message += 'Spark Pixels now, just hit [OK].\nElse, click [Cancel] to return to where you were.';
+                        if (!isUserAlerted) {
+                            isUserAlerted = true;
+                            if (confirm(message))
+                                flashCube();
+                            else
+                                clearInterval(populateModesTimer);
+                        }
+                    }
+                    else {
+                        if (!isUserAlerted) {
+                            isUserAlerted = true;
+                            message = '';
+                            message+="Oh-oh! I tried to get the list of MODES from the Particle cloud, but it would not retrieve it!";
+                            message+="\nThis could be due to a network error. If your cube is breathing cyan,\nit may be the Particle API acting up.";
+                            message+="\nClick [OK] to retry, [Cancel] to give it a rest for a while.";
+                            if (confirm(message))
+                                window.location.reload();
+                            else
+                                clearInterval(populateModesTimer);
+                        }
                     }
                 });
                 // Retrieve the device's parameters list from the cloud API
                 $.get("https://api.particle.io/v1/devices/" + deviceID + "/modeParmList/?access_token=" + accessToken, function (data) {
-                    console.log('success: ' + data.result);
+                    console.log('success: ' + data.result.slice(0, data.result.lastIndexOf(';')));
                     modeParmList = data.result.split(";");
-                }, "json").done(function(data) {
-                    console.log('done: ' + data.result);
-                    modeParmList = data.result.split(";");
-                }).fail(function (data) {
+                }, "json").fail(function (data) {
                     console.log('fail: ' + data.result);
                     var message = '';
-                    if (!isUserAlerted) {
-                        isUserAlerted = true;
-                        message+="Oh-oh! I tried to get the list of PARAMETERS from Particle cloud, but it would not retrieve it!";
-                        message+="\nThis could be due to a network error. If your cube is breathing cyan,\nit may be the Particle API acting up.";
-                        message+="\nClick [OK] to retry, [Cancel] to give it a rest for a while.";
-                        if (confirm(message))
-                            window.location.reload();
-                        else
-                            clearInterval(populateModesTimer);
+                    var responseText = data.responseText;
+                    if (responseText.indexOf("Variable not found") >= 0) {
+                        message += 'The selected Cube (\"' + device.substr(device.indexOf(')') + 2)
+                            + '\") does not appear to be running the Spark Pixels viz (it may be the Particle API acting up).';
+                        message += '\nIf you would like to flash \"' + device.substr(device.indexOf(')') + 2) + '\" with ';
+                        message += 'Spark Pixels now, just hit [OK].\nElse, click [Cancel] to return to where you were.';
+                        if (!isUserAlerted) {
+                            isUserAlerted = true;
+                            if (confirm(message))
+                                flashCube();
+                            else
+                                clearInterval(populateModesTimer);
+                        }
+                    }
+                    else {
+                        if (!isUserAlerted) {
+                            isUserAlerted = true;
+                            message = '';
+                            message+="Oh-oh! I tried to get the list of PARAMETERS from Particle cloud, but it would not retrieve it!";
+                            message+="\nThis could be due to a network error. If your cube is breathing cyan,\nit may be the Particle API acting up.";
+                            message+="\nClick [OK] to retry, [Cancel] to give it a rest for a while.";
+                            if (confirm(message))
+                                window.location.reload();
+                            else
+                                clearInterval(populateModesTimer);
+                        }
+                    }
+                });
+                // Retrieve the device's aux switches list from the cloud API
+                $.get("https://api.particle.io/v1/devices/" + deviceID + "/auxSwtchList/?access_token=" + accessToken, function (data) {
+                    console.log('success: ' + data.result.slice(0, data.result.lastIndexOf(';')));
+                    var tmpAuxSwtch = data.result.slice(0, data.result.lastIndexOf(';')).split(';');
+                    if(tmpAuxSwtch.length > 0) {
+                        auxSwtchList = new Array();
+                        tmpAuxSwtch.forEach( function(item, index) { 
+                            var args = item.split(',');
+                            auxSwtchList.push(new AuxSwitch(args[0], args[1], args[2], args[3], args[4]));
+                        });
+                    }
+                }, "json").fail(function (data) {
+                    console.log('fail: ' + data.result);
+                    var message = '';
+                    var responseText = data.responseText;
+                    if (responseText.indexOf("Variable not found") >= 0) {
+                        message += 'The selected Cube (\"' + device.substr(device.indexOf(')') + 2)
+                            + '\") does not appear to be running the Spark Pixels viz (it may be the Particle API acting up).';
+                        message += '\nIf you would like to flash \"' + device.substr(device.indexOf(')') + 2) + '\" with ';
+                        message += 'Spark Pixels now, just hit [OK].\nElse, click [Cancel] to return to where you were.';
+                        if (!isUserAlerted) {
+                            isUserAlerted = true;
+                            if (confirm(message))
+                                flashCube();
+                            else
+                                clearInterval(populateModesTimer);
+                        }
+                    }
+                    else {
+                        if (!isUserAlerted) {
+                            isUserAlerted = true;
+                            message = '';
+                            message+="Oh-oh! I tried to get the list of AUX SWITCHES from Particle cloud, but it would not retrieve it!";
+                            message+="\nThis could be due to a network error. If your cube is breathing cyan,\nit may be the Particle API acting up.";
+                            message+="\nClick [OK] to retry, [Cancel] to give it a rest for a while.";
+                            if (confirm(message))
+                                window.location.reload();
+                            else
+                                clearInterval(populateModesTimer);
+                        }
                     }
                 });
             }
@@ -378,47 +472,94 @@
             return (rHex + gHex + bHex).toUpperCase();
         }
         
+        function setColors() {
+            var colorsString = '';
+            for(var count = 1; count <= 6; count++) {
+                if($("span#color" + count).css('display').indexOf('none') < 0) {
+                    var color = $("span#color" + count).find("div.sp-preview-inner").css("background-color");
+                    var rgbString = color.split("(")[1].split(")")[0].split(",");
+                    colorsString += 'C' + count + ':' + parseRGBToHexString(rgbString[0], rgbString[1], rgbString[2]) + ',';
+                    if (supportsLocalStorage()) {
+                        localStorage["spark_pixels.color" + count] = parseRGBToHexString(rgbString[0], rgbString[1], rgbString[2]);
+                    }
+                }
+            }
+            if(colorsString.length > 0) {
+                var deviceID = getDeviceID();
+                if(deviceID !== '') {
+                    $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: colorsString})
+                        .done(function(data) {console.log('done setColors(): ' + data.return_value);})
+                        .fail(function (data) {console.log('fail setColors(): ' + data.return_value);});
+                }
+            }
+        }
+        
+        function setSwitches() {
+            var switchesString = '';
+            for(var count = 1; count <= 4; count++) {
+                if($("span#switch" + count).css('display').indexOf('none') < 0) {
+                    var checked = $("input#switch" + count).prop('checked');
+                    switchesString += 'T' + count + ':' + (checked ? '1' : '0') + ',';
+                    if (supportsLocalStorage()) {
+                        localStorage["spark_pixels.switch" + count] = checked.toString();
+                    }
+                }
+            }
+            if(switchesString.length > 0) {
+                var deviceID = getDeviceID();
+                if(deviceID !== '') {
+                    $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: switchesString})
+                        .done(function(data) {console.log('done setSwitches(): ' + data.return_value);})
+                        .fail(function (data) {console.log('fail setSwitches(): ' + data.return_value);});
+                }
+            }
+        }
+        
+        function setText() {
+            if ($("input#text").val().trim().length > 0) {
+                var deviceID = getDeviceID();
+                if(deviceID !== '') {
+                    $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetText", {access_token: accessToken, args: $("input#text").val().trim()})
+                        .done(function(data) {console.log('done setText(): ' + data.return_value);})
+                        .fail(function (data) {console.log('fail setText(): ' + data.return_value);});
+                }
+            }
+        }
+        
         function setMode() {
             if (typeof accessToken !== 'undefined' && accessToken !== null) {
                 var deviceID = getDeviceID();
                 if(deviceID !== '') {
                     var commandString = 'M:' + currentMode + ',';
-                    var colorsString = '', switchesString = '';
-                    for(var count = 1; count <= 6; count++) {
-                        if($("span#color" + count).css('display').indexOf('none') < 0) {
-                            var color = $("span#color" + count).find("div.sp-preview-inner").css("background-color");
-                            var rgbString = color.split("(")[1].split(")")[0].split(",");
-                            colorsString += 'C' + count + ':' + parseRGBToHexString(rgbString[0], rgbString[1], rgbString[2]) + ',';
-                            if (supportsLocalStorage()) {
-                                localStorage["spark_pixels.color" + count] = parseRGBToHexString(rgbString[0], rgbString[1], rgbString[2]);
-                            }
-                        }
-                        if(count <= 4)
-                            if($("span#switch" + count).css('display').indexOf('none') < 0) {
-                                var checked = $("input#switch" + count).prop('checked');
-                                switchesString += 'T' + count + ':' + (checked ? '1' : '0') + ',';
-                                if (supportsLocalStorage()) {
-                                    localStorage["spark_pixels.switch" + count] = checked.toString();
-                                }
-                            }
-                    }
                     
                     $("span#mode").text(currentMode);
                     if(currentMode.toLowerCase().indexOf('text') >= 0)
-                        if ($("input#text").val().trim().length > 0)
-                            $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetText", {access_token: accessToken, args: $("input#text").val().trim()});
-                    if(colorsString.length > 0)
-                        $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: colorsString + commandString})
-                            .done(function(data) {console.log('done colorsString: ' + data.return_value);})
-                            .fail(function (data) {console.log('fail colorsString: ' + data.return_value);});
-                    if(switchesString.length > 0)
-                        $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: switchesString + commandString})
-                            .done(function(data) {console.log('done switchesString: ' + data.return_value);})
-                            .fail(function (data) {console.log('fail switchesString: ' + data.return_value);});
-                    if((colorsString.length === 0) && (switchesString.length === 0))
-                        $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: commandString})
-                            .done(function(data) {console.log('done commandString: ' + data.return_value);})
-                            .fail(function (data) {console.log('fail commandString: ' + data.return_value);});
+                        setText();
+
+                    setColors();
+                    setSwitches();
+                    
+                    $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: commandString})
+                        .done(function(data) {console.log('done setMode(): ' + data.return_value);})
+                        .fail(function (data) {console.log('fail setMode(): ' + data.return_value);});
+                }
+            }
+        }
+
+        function changeBrightness() {
+            brightness = $("#brightnessSlider").val();
+            setBrightness();
+            if (supportsLocalStorage())
+                localStorage["spark_pixels.brightness"] = brightness;
+        }
+
+        function setBrightness() {
+            $("span#brightness").text(brightness);
+            if (typeof accessToken !== 'undefined' && accessToken !== null) {
+                var deviceID = getDeviceID();
+                if(deviceID !== '') {
+                    var commandString = 'B:' + (brightness > 0 ? brightness : 1) + ',';
+                    $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: commandString});
                 }
             }
         }
@@ -467,24 +608,6 @@
                 var deviceID = getDeviceID();
                 if(deviceID !== '') {
                     var commandString = 'S:' + speed + ',';
-                    $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: commandString});
-                }
-            }
-        }
-
-        function changeBrightness() {
-            brightness = $("#brightnessSlider").val();
-            setBrightness();
-            if (supportsLocalStorage())
-                localStorage["spark_pixels.brightness"] = brightness;
-        }
-
-        function setBrightness() {
-            $("span#brightness").text(brightness);
-            if (typeof accessToken !== 'undefined' && accessToken !== null) {
-                var deviceID = getDeviceID();
-                if(deviceID !== '') {
-                    var commandString = 'B:' + (brightness > 0 ? brightness : 1) + ',';
                     $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: commandString});
                 }
             }
@@ -543,16 +666,16 @@
             <!--<div style="clear: both; height: 10px; /*background: rgba(28, 21, 33, 0)*/"></div>-->
             <div id="switches" style="float: left; width: 40%; margin: 0 auto; text-align: justify;">
                 <span id="switch1" style="padding-right: 5px;">
-                    <input type="checkbox" id="switch1" style="vertical-align: middle;" value=""><span id="switchLbl1" style="padding-left: 2px;"></span>
+                    <input type="checkbox" id="switch1" onchange="setSwitches();" style="vertical-align: middle;" value=""><span id="switchLbl1" style="padding-left: 2px;"></span>
                 </span><br>
                 <span id="switch2" style="padding-right: 5px;">
-                    <input type="checkbox" id="switch2" style="vertical-align: middle;" value=""><span id="switchLbl2" style="padding-left: 2px;"></span>
+                    <input type="checkbox" id="switch2" onchange="setSwitches();" style="vertical-align: middle;" value=""><span id="switchLbl2" style="padding-left: 2px;"></span>
                 </span><br>
                 <span id="switch3" style="padding-right: 5px;">
-                    <input type="checkbox" id="switch3" style="vertical-align: middle;" value=""><span id="switchLbl3" style="padding-left: 2px;"></span>
+                    <input type="checkbox" id="switch3" onchange="setSwitches();" style="vertical-align: middle;" value=""><span id="switchLbl3" style="padding-left: 2px;"></span>
                 </span><br>
                 <span id="switch4" style="padding-right: 5px;">
-                    <input type="checkbox" id="switch4" style="vertical-align: middle;" value=""><span id="switchLbl4" style="padding-left: 2px;"></span>
+                    <input type="checkbox" id="switch4" onchange="setSwitches();" style="vertical-align: middle;" value=""><span id="switchLbl4" style="padding-left: 2px;"></span>
                 </span>
             </div>
             <div style="clear: both; height: 10px; /*background: rgba(28, 21, 33, 0)*/"></div>
@@ -585,6 +708,7 @@
             showInput: true,                
             showPaletteOnly: true,
             color: 'blanchedalmond',
+            change: function() { setColors(); },
             palette: [
                 ["#000","#444","#666","#999","#ccc","#eee","#f3f3f3","#fff"],
                 ["#f00","#f90","#ff0","#0f0","#0ff","#00f","#90f","#f0f"],
