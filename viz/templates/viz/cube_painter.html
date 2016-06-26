@@ -36,10 +36,15 @@
         //var isDesktop = window.screenX !== 0 && !isTouchDevice() ? true : false;
 
         $(function () {
-            //var $canvas = document.getElementById('cube_canvas');
-            //var $colors = document.getElementById('colors_canvas');
             $(window).on("orientationchange", function() {
                 window.location.reload(); 
+                // Below code only works well in iOS devices
+                /*$canvas = document.getElementById('cube_canvas');
+                kPieceWidth = $("#cube_canvas").width() / kBoardWidth;	//50;
+                kPieceHeight = $("#cube_canvas").height() / kBoardHeight;	//50;
+                kPixelWidth = 1 + (kBoardWidth * kPieceWidth);
+                kPixelHeight= 1 + (kBoardHeight * kPieceHeight);
+                initGame($canvas);*/
             });
             /*$(window).on("resize", function() {
                 console.log('width: ' + $(window).width());
@@ -384,11 +389,11 @@
                 <a id="clearButtons" href="javascript:void(0);" onclick="clearVoxels(0, 512);" title="Click to clear the whole Cube">Clear All</a>
             </div>
         </div>
-        <div id="colors" style="/*padding-bottom: 15px;*/">
-        <!--<canvas height="196" width="521" id="colors_canvas" >
+        <!--<div id="colors" style="/*padding-bottom: 15px;*/">
+            <canvas height="196" width="521" id="colors_canvas" >
                 Your browser does not support the HTML5 canvas element.
-            </canvas>-->
-        </div>
+            </canvas>
+        </div>-->
     </div>
 {% endblock %}
 

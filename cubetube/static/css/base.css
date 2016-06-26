@@ -748,7 +748,7 @@ a#updateListButton {
 div#canvas {
     text-align: center;
     padding: 10px 340px 40px;
-    height: 560px;
+    height: auto;   /*560px;*/
     max-width: 1400px;
 }
 div#syncButton, div#setModeButton {
@@ -774,20 +774,37 @@ div.mobile-splitter {
     background: linear-gradient(to right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* Standard syntax (must be last) */
 }
 
-/* #### >=125% Zoom #### */
-/*@media screen and (max-width: 920px) {
+/* #### 150%-175% Zoom on desktop #### */
+/* The min-resolution and -webkit-max-device-pixel-ratio were used to enforce these rules are picked up only on desktop screens */
+@media screen and (max-width: 1152px) and (-webkit-max-device-pixel-ratio: 2.5) and (min-resolution: 100dpi) and (min-aspect-ratio: 1/1) {
     div#canvas {
         padding: 10px 0 40px;
-        height: 90%;
-        max-width: 920px;
+        max-width: 1152px;
     }
-}*/
-/* #### >=175% Zoom #### */
-@media screen and (max-width: 1024px) {
+    div.gradient {
+        padding: 0px 15% 12px !important;
+    }
+}
+/* #### 200% Zoom on desktop #### */
+/* The min-resolution and -webkit-max-device-pixel-ratio were used to enforce these rules are picked up only on desktop screens */
+@media screen and (max-width: 896px) and (-webkit-max-device-pixel-ratio: 2.5) and (min-resolution: 100dpi) and (min-aspect-ratio: 1/1) {
     div#canvas {
         padding: 10px 0 40px;
-        height: 560px;
-        max-width: 1024px;
+        max-width: 896px;
+    }
+    div.gradient {
+        padding: 0px 10% 12px !important;
+    }
+}
+/* #### >=250% Zoom on desktop #### */
+/* The min-resolution and -webkit-max-device-pixel-ratio were used to enforce these rules are picked up only on desktop screens */
+@media screen and (max-width: 640px) and (-webkit-max-device-pixel-ratio: 2.5) and (min-resolution: 100dpi) and (min-aspect-ratio: 1/1) {
+    div#canvas {
+        padding: 10px 0 40px;
+        max-width: 640px;
+    }
+    div.gradient {
+        padding: 0px 0px 12px !important;
     }
 }
 
@@ -802,15 +819,15 @@ div.mobile-splitter {
     }
     div#canvas {
         padding: 10px 0 40px;
-        height: 440px;
+        /*height: 440px;*/
         max-width: 640px;
-    }
-    div#colors {
-        margin-top: /*calc(100% - 360px)*/ 1% !important;
     }
     #cube_canvas {
         width: 90%;
-        height: calc(100% - 70px);
+        height: auto;
+    }
+    div#colors {
+        margin-top: /*calc(100% - 360px)*/ 1% !important;
     }
     #colors_canvas {
         width: 90%;
@@ -924,15 +941,15 @@ div.mobile-splitter {
     }
     div#canvas {
         padding: 10px 0 40px;
-        height: 440px;
+        /*height: 440px;*/
         max-width: 568px;
-    }
-    div#colors {
-        margin-top: calc(100% - 360px) !important;
     }
     #cube_canvas {
         width: 90%;
-        height: calc(100% - 110px);
+        height: auto;
+    }
+    div#colors {
+        margin-top: calc(100% - 360px) !important;
     }
     #colors_canvas {
         width: 90%;
@@ -1046,15 +1063,15 @@ div.mobile-splitter {
     }
     div#canvas {
         padding: 10px 0 40px;
-        height: 440px;
+        /*height: 440px;*/
         max-width: 640px;
-    }
-    div#colors {
-        margin-top: calc(100% - 355px) !important;
     }
     #cube_canvas {
         width: 90%;
-        height: calc(100% - 50px);
+        height: auto;
+    }
+    div#colors {
+        margin-top: calc(100% - 355px) !important;
     }
     #colors_canvas {
         width: 90%;
@@ -1168,15 +1185,15 @@ div.mobile-splitter {
     }
     div#canvas {
         padding: 10px 0 40px;
-        height: 440px;
+        /*height: 440px;*/
         max-width: 640px;
-    }
-    div#colors {
-        margin-top: calc(100% - 375px) !important;
     }
     #cube_canvas {
         width: 90%;
-        height: calc(100% - 30px);
+        height: auto;
+    }
+    div#colors {
+        margin-top: calc(100% - 375px) !important;
     }
     #colors_canvas {
         width: 90%;
@@ -1289,13 +1306,13 @@ div.mobile-splitter {
         padding: 10px 0 40px;
         max-width: 1280px;
     }
+    #cube_canvas {
+        width: 90%;
+        height: auto;
+    }
     div#colors {
         margin-top: calc(100% - 430px) !important;
         margin-bottom: 10px;
-    }
-    #cube_canvas {
-        width: 90%;
-        height: 175%;
     }
     #colors_canvas {
         width: 90%;
@@ -1351,13 +1368,13 @@ div.mobile-splitter {
         padding: 10px 0 40px;
         max-width: 1024px;
     }
+    #cube_canvas {
+        width: 90%;
+        height: auto;
+    }
     div#colors {
         margin-top: calc(100% - 400px) !important;
         margin-bottom: 10px;
-    }
-    #cube_canvas {
-        width: 90%;
-        height: 175%;
     }
     #colors_canvas {
         width: 90%;
@@ -1418,13 +1435,13 @@ div.mobile-splitter {
         padding: 10px 0 40px;
         max-width: 1280px;
     }
+    #cube_canvas {
+        width: 90%;
+        height: auto;
+    }
     div#colors {
         margin-top: calc(100% - 560px);
         margin-bottom: 10px;
-    }
-    #cube_canvas {
-        width: 90%;
-        height: 220%;
     }
     #colors_canvas {
         width: 90%;
@@ -1476,12 +1493,12 @@ div.mobile-splitter {
         padding: 10px 0 40px;
         max-width: 1024px;
     }
-    div#colors {
-        margin-top: calc(100% - 515px);
-    }
     #cube_canvas {
         width: 90%;
-        height: 180%;
+        height: auto;
+    }
+    div#colors {
+        margin-top: calc(100% - 515px);
     }
     #colors_canvas {
         width: 90%;
@@ -1544,15 +1561,15 @@ div.mobile-splitter {
     }
     div#canvas {
         padding: 10px 0 40px;
-        height: 640px;
+        /*height: 640px;*/
         max-width: 640px;
-    }
-    div#colors {
-        margin-top: /*calc(100% - 550px)*/ 7% !important;
     }
     #cube_canvas {
         width: 90%;
-        height: 95%;
+        height: auto;
+    }
+    div#colors {
+        margin-top: /*calc(100% - 550px)*/ 7% !important;
     }
     #colors_canvas {
         width: 90%;
@@ -1663,15 +1680,15 @@ div.mobile-splitter {
     }
     div#canvas {
         padding: 10px 0 40px;
-        height: 568px;
+        /*height: 568px;*/
         max-width: 568px;
-    }
-    div#colors {
-        margin-top: calc(100% - 495px) !important;
     }
     #cube_canvas {
         width: 90%;
-        height: 95%;
+        height: auto;
+    }
+    div#colors {
+        margin-top: calc(100% - 495px) !important;
     }
     #colors_canvas {
         width: 90%;
@@ -1703,15 +1720,15 @@ div.mobile-splitter {
     }
     div#canvas {
         padding: 10px 0 40px;
-        height: 736px;
+        /*height: 736px;*/
         max-width: 736px;
-    }
-    div#colors {
-        margin-top: calc(100% - 670px) !important;
     }
     #cube_canvas {
         width: 90%;
-        height: 95%;
+        height: auto;
+    }
+    div#colors {
+        margin-top: calc(100% - 670px) !important;
     }
     #colors_canvas {
         width: 90%;
@@ -1733,15 +1750,15 @@ div.mobile-splitter {
     }
     div#canvas {
         padding: 10px 0 40px;
-        height: 667px;
+        /*height: 667px;*/
         max-width: 667px;
-    }
-    div#colors {
-        margin-top: calc(100% - 595px) !important;
     }
     #cube_canvas {
         width: 90%;
-        height: 95%;
+        height: auto;
+    }
+    div#colors {
+        margin-top: calc(100% - 595px) !important;
     }
     #colors_canvas {
         width: 90%;
