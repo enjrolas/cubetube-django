@@ -22,14 +22,6 @@
 {% block content %}
     <script type="text/javascript">
         $(function () {
-            $(window).on("orientationchange", function() {
-                window.location.reload(); 
-            });
-            /*$(window).on("resize", function() {
-                console.log('width: ' + $(window).width());
-                if(!isTouchDevice()) {window.location.reload();}
-            });*/
-
             clearTimeout(taglineTimer);
             $("div.tagline").hide();
             $('.logo-box').off('mouseover');
@@ -150,6 +142,14 @@
     </script>
     {% load utils %}
     {% logged_in_status as logged_in %}
+    <div class="aux-panel-popover" style="background-color: whitesmoke; padding: 5px 15px;">
+        <a onclick="$( '.aux-panel-popover' ).slideUp(300, 'linear');" href="javascript:void(0);" style="">Close</a><br>
+        <h2>Aux Switch Panel</h2>
+        <!--<div class="input-areas">-->
+            <div class="inputs"></div>
+            <div class="error-area"></div>
+        <!--</div>-->    
+    </div>
     <div id="gallery-wrapper" class="viz-cards" style="padding-top: 0px !important;">
         <div class="gradient" style="margin-top: 60px; padding: 0px 25% 12px; text-align: center; border-radius: 0px 0px 30px 30px">
             <div id="cubeAndModeText">
@@ -161,6 +161,7 @@
                 <div id="updateListDiv">
                     <a id="updateListButton" href="javascript:void(0);" onclick="currentMode = ''; populateInterval();" title="Click here to refresh the modes list!">Update List</a>
                     <select id="modes" onchange="changeMode();"></select>
+                <a onclick="showHideAuxSwitchPanel();" title="Click to toggle the Aux Switch Panel!" href="javascript:void(0);" style="float: right; width: 10%; text-decoration:none;"><img id="auxSwIcon" class="icon-switches" /></a>
                 </div>
                 <div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
                 <div id="brightnessControl">
@@ -170,7 +171,7 @@
                 </div>
                 <div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
                 <div id="speedControl">
-                    <div>Speed:  <span style="margin-right: 10px;" id="speed"></span><br>
+                    <div>Speed:  <span style="margin-right: 10px;" id="speed"></span><!--<br>-->
                         <input id="speedSlider" type="range" min="0" max="8" step="1" value="5" onchange="changeSpeed();" />
                     </div>
                 </div>
@@ -216,7 +217,7 @@
             <div style="clear: both; height: 10px; /*background: rgba(28, 21, 33, 0)*/"></div>
             <div id="text">
                 <span id="text">Enter Text Message (63 chars max):<br>
-                    <input type="text" id="text" maxlength="63" value="" style="width: 33%; margin: 0 auto; padding: 5px 5px; border-width: 5px; border-color: #2bc6fb; border-radius: 10px;">
+                    <input type="text" id="text" maxlength="63" value="">
                 </span>
             </div>
             <div style="clear: both; height: 10px; /*background: rgba(28, 21, 33, 0)*/"></div>

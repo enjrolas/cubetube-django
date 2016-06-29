@@ -4,7 +4,7 @@ var brightness = 20;
 var speed = 5;
 var modeList;
 var modeParmList;
-var auxSwtchList;
+var auxSwtchList = new Array();
 var populateModesTimer = null;
 var syncInterval = null;
 var supportsLocalStorage = function() { return ('localStorage' in window) && window['localStorage'] !== null; };
@@ -16,6 +16,85 @@ function AuxSwitch(id, description, onLabel, offLabel, value) {
     this.offLabel = offLabel;
     this.value = value;
 }        
+
+function showHideAuxSwitchPanel() {
+    if($('div.aux-panel-popover').css('display') !== 'none') {
+        $("img#auxSwIcon").removeClass("icon-wait");
+        $("img#auxSwIcon").addClass("icon-switches");
+        $('div.aux-panel-popover').slideUp(300, 'linear');
+    }
+    else {
+        if (typeof accessToken !== 'undefined' && accessToken !== null)
+            $("img#auxSwIcon").removeClass("icon-switches");
+            $("img#auxSwIcon").addClass("icon-wait");
+            getAuxSwitches();
+    }
+}
+
+function updateAuxSwitchPanel() {
+    $("div.inputs").html('');
+    $('div.error-area').text('');
+    for(var idx = 0; idx < auxSwtchList.length; idx++) {
+        var auxSwitch = $("<span style=\"padding-right: 5px;\"><input type=\"checkbox\" onchange=\"setAuxSwitches('" + auxSwtchList[idx].id + "', this.checked);\" style=\"vertical-align: middle;\" " + (auxSwtchList[idx].value === '1' ? "checked" : '') + " ><span style=\"padding-left: 2px;\" >" + auxSwtchList[idx].description + "</span></span><br>");
+        $("div.inputs").append(auxSwitch);
+    }
+}
+
+function setAuxSwitches(id, checked) {
+    if (typeof accessToken !== 'undefined' && accessToken !== null) {
+        var deviceID = getDeviceID();
+        var commandString = 'SETAUXSWITCH:' + id + ',' + (checked ? '1' : '0') + ';';
+        $.post("https://api.particle.io/v1/devices/" + deviceID + "/Function", {access_token: accessToken, args: commandString});
+        console.log('commandString: ' + commandString);
+        //updateAuxSwitchPanel();
+    }
+}
+
+function getAuxSwitches() {
+    var deviceID = getDeviceID();
+
+    // Retrieve the device's aux switches list from the cloud API and update array variable
+    $.get("https://api.particle.io/v1/devices/" + deviceID + "/auxSwtchList/?access_token=" + accessToken, function (data) {
+        console.log('success: ' + data.result);
+        var tmpAuxSwtch = data.result.slice(0, data.result.lastIndexOf(';')).split(';');
+        if(tmpAuxSwtch.length > 0) {
+            auxSwtchList = new Array();
+            tmpAuxSwtch.forEach( function(item, index) { 
+                var args = item.split(',');
+                auxSwtchList.push(new AuxSwitch(args[0], args[1], args[2], args[3], args[4]));
+            });
+            $("img#auxSwIcon").removeClass("icon-wait");
+            $("img#auxSwIcon").addClass("icon-switches");
+            if(auxSwtchList.length > 0) {
+                updateAuxSwitchPanel();
+                $('div.aux-panel-popover').slideDown(300, 'linear');
+            }
+        }
+    }).fail(function (data) {
+            $("img#auxSwIcon").removeClass("icon-wait");
+            $("img#auxSwIcon").addClass("icon-switches");
+            console.log('fail: ' + data.result);
+            var message = '';
+            var responseText = data.responseText;
+            if (responseText.indexOf("Variable not found") >= 0) {
+                message += 'The selected Cube (\"' + device.substr(device.indexOf(')') + 2)
+                    + '\") does not appear to be running the Spark Pixels viz (it may be the Particle API acting up).';
+                message += '\nIf you would like to flash \"' + device.substr(device.indexOf(')') + 2) + '\" with ';
+                message += 'Spark Pixels now, just hit [OK].\nElse, click [Cancel] to return to where you were.';
+                if (!isUserAlerted) {
+                    isUserAlerted = true;
+                    if (confirm(message))
+                        flashCube();
+                    else
+                        clearInterval(populateModesTimer);
+                }
+            }
+            else {
+                $('div.error-area').text("Oh-oh! Could not retrieve Aux Switches' states from cloud.");
+                $('div.aux-panel-popover').slideDown(300, 'linear');
+            }
+        });
+}
 
 function populateInterval() {
     populateModesTimer = setInterval(function () {
@@ -190,48 +269,6 @@ function populateModes() {
                     isUserAlerted = true;
                     message = '';
                     message+="Oh-oh! I tried to get the list of PARAMETERS from Particle cloud, but it would not retrieve it!";
-                    message+="\nThis could be due to a network error. If your cube is breathing cyan,\nit may be the Particle API acting up.";
-                    message+="\nClick [OK] to retry, [Cancel] to give it a rest for a while.";
-                    if (confirm(message))
-                        window.location.reload();
-                    else
-                        clearInterval(populateModesTimer);
-                }
-            }
-        });
-        // Retrieve the device's aux switches list from the cloud API
-        $.get("https://api.particle.io/v1/devices/" + deviceID + "/auxSwtchList/?access_token=" + accessToken, function (data) {
-            console.log('success: ' + data.result.slice(0, data.result.lastIndexOf(';')));
-            var tmpAuxSwtch = data.result.slice(0, data.result.lastIndexOf(';')).split(';');
-            if(tmpAuxSwtch.length > 0) {
-                auxSwtchList = new Array();
-                tmpAuxSwtch.forEach( function(item, index) { 
-                    var args = item.split(',');
-                    auxSwtchList.push(new AuxSwitch(args[0], args[1], args[2], args[3], args[4]));
-                });
-            }
-        }, "json").fail(function (data) {
-            console.log('fail: ' + data.result);
-            var message = '';
-            var responseText = data.responseText;
-            if (responseText.indexOf("Variable not found") >= 0) {
-                message += 'The selected Cube (\"' + device.substr(device.indexOf(')') + 2)
-                    + '\") does not appear to be running the Spark Pixels viz (it may be the Particle API acting up).';
-                message += '\nIf you would like to flash \"' + device.substr(device.indexOf(')') + 2) + '\" with ';
-                message += 'Spark Pixels now, just hit [OK].\nElse, click [Cancel] to return to where you were.';
-                if (!isUserAlerted) {
-                    isUserAlerted = true;
-                    if (confirm(message))
-                        flashCube();
-                    else
-                        clearInterval(populateModesTimer);
-                }
-            }
-            else {
-                if (!isUserAlerted) {
-                    isUserAlerted = true;
-                    message = '';
-                    message+="Oh-oh! I tried to get the list of AUX SWITCHES from Particle cloud, but it would not retrieve it!";
                     message+="\nThis could be due to a network error. If your cube is breathing cyan,\nit may be the Particle API acting up.";
                     message+="\nClick [OK] to retry, [Cancel] to give it a rest for a while.";
                     if (confirm(message))

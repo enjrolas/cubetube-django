@@ -199,7 +199,7 @@ button {
     animation-name: fadein;
     animation-fill-mode: forwards; }
 
-.login-signup-popover {
+.login-signup-popover, .aux-panel-popover {
     -webkit-animation-delay: 0;
     -webkit-animation-duration: 200ms;
     -webkit-animation-name: fadeAndMove;
@@ -685,14 +685,72 @@ img.logo-menu {
     vertical-align: middle;
 }
 /**************************************/
+.icon-switches {
+    width: 100%;
+    content: url("/static/images/icon-switches.png");
+    vertical-align: middle;
+}
+.icon-wait {
+    width: 100%;
+    content: url("/static/images/icon-loading.gif");
+    vertical-align: middle;
+}
+.aux-panel-popover {
+    top: 200px; 
+    left: 50%; 
+    box-shadow: 3px 4px 10px #1C1521;
+    width: 27%;
+    /*Replicate gradient background*/
+    background: -webkit-linear-gradient(left, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));	/* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* For Firefox 3.6 to 15 */
+    background: linear-gradient(to right, rgba(28, 21, 33, 0), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 1), rgba(28, 21, 33, 1), rgba(28, 21, 33, 0.9), rgba(28, 21, 33, 0.8), rgba(28, 21, 33, 0.1), rgba(28, 21, 33, 0));		/* Standard syntax (must be last) */
+    /*padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;*/
+}
+.aux-panel-popover a {
+    text-decoration:none; 
+    color: red; 
+    float: right; 
+    width: 10%;
+    font-weight: bold;
+    font-size: 12px;
+}
+.aux-panel-popover h2 {
+    color: #2bc6fb;
+    margin-bottom: 15px; 
+    margin-top: auto;
+    font-weight: bold;
+}
+.aux-panel-popover span {
+    font-weight: bold;
+    color: #2bc6fb;
+}
+.aux-panel-popover .inputs {
+    width: 80%;
+    text-align: left;
+    margin-left: auto;
+}
+
 div#params {
     display: none; 
     opacity: 0.8;
+    width: 35%;
+    margin: 0 auto;
     border-radius: 25px; 
     border-width: 5px; 
     /*border-style: ridge ridge none ridge;*/
     /*border-color: #1C1521;*/
     box-shadow: inset 3px 4px 10px #1C1521;
+}
+input#text {
+    width: 55%; 
+    margin: 0 auto; 
+    padding: 5px 5px; 
+    border-width: 5px; 
+    border-color: #2bc6fb; 
+    border-radius: 10px;
 }
 #cubeAndModeText, #pleaseLogInText {
     width: 50%; 
@@ -701,7 +759,8 @@ div#params {
     text-align: justify; 
     margin-left: 30%;
 }
-#updateListDiv, a#layerButtons, a#clearButtons, a#syncButton, a#setModeButton {
+#updateListDiv, a#layerButtons, 
+a#clearButtons, a#syncButton, a#setModeButton {
     width: 275px; 
     background: #ee0026; 
     color: #fff; 
@@ -725,8 +784,9 @@ span#switch4, span#text {
 }
 #updateListDiv, #brightnessControl, #speedControl {
     padding: 6px 22px; 
-    width: 310px; 
-    margin-left: 28%;
+    width: 350px; /*310px; */
+    /*margin-left: 25%;*/
+    margin: 0 auto;
     font-weight: bold;
     background: #ee0026; 
     color: #fff; 
@@ -784,6 +844,13 @@ div.mobile-splitter {
     div.gradient {
         padding: 0px 15% 12px !important;
     }
+    div#params {
+        width: 75%;
+    }
+    .aux-panel-popover {
+        left: 50%;
+        width: 35%;
+    }
 }
 /* #### 200% Zoom on desktop #### */
 /* The min-resolution and -webkit-max-device-pixel-ratio were used to enforce these rules are picked up only on desktop screens */
@@ -794,6 +861,13 @@ div.mobile-splitter {
     }
     div.gradient {
         padding: 0px 10% 12px !important;
+    }
+    div#params {
+        width: 75%;
+    }
+    .aux-panel-popover {
+        left: 50%;
+        width: 35%;
     }
 }
 /* #### >=250% Zoom on desktop #### */
@@ -806,16 +880,37 @@ div.mobile-splitter {
     div.gradient {
         padding: 0px 0px 12px !important;
     }
+    div#params {
+        width: 75%;
+    }
+    .aux-panel-popover {
+        left: 50%;
+        width: 35%;
+    }
+    .aux-panel-popover a {
+        left: 50%;
+        width: 10%;
+        font-size: 10px;
+    }
 }
 
 /* #### GALAXY S4/S5/S6/S7, Note 3/4 and Phablets Portrait #### */
 @media screen and (min-device-height: 640px) and (min-device-width: 360px) and (orientation: portrait) {
+    .aux-panel-popover {
+        width: 96%;
+    }
     #cubeName {
         margin-top: 15px !important;
         margin-left: -100px !important;
     }
     span#currentLayer {
         font-size: 14px !important;
+    }
+    div#params {
+        width: 100%;
+    }
+    input#text {
+        width: 60%;
     }
     div#canvas {
         padding: 10px 0 40px;
@@ -893,8 +988,9 @@ div.mobile-splitter {
         font-size: 12px;
     }
     div#updateListDiv, div#brightnessControl, div#speedControl {
-        width: 250px;
-        margin-left: -33px;
+        width: 270px;
+        height: 30px;
+        margin-left: -45px;
         margin-right: 0px;
         font-size: 12px;
     }
@@ -932,12 +1028,21 @@ div.mobile-splitter {
 
 /* #### iPhone 5/5s and iPod touch Portrait #### */
 @media screen and (device-height: 568px) and (device-width: 320px) and (orientation: portrait) {
+    .aux-panel-popover {
+        width: 96%;
+    }
     #cubeName {
         margin-top: 15px !important;
         margin-left: -102px !important;
     }
     span#currentLayer {
         font-size: 14px !important;
+    }
+    div#params {
+        width: 100%;
+    }
+    input#text {
+        width: 65%;
     }
     div#canvas {
         padding: 10px 0 40px;
@@ -1015,8 +1120,8 @@ div.mobile-splitter {
         font-size: 12px;
     }
     div#updateListDiv, div#brightnessControl, div#speedControl {
-        width: 250px;
-        margin-left: -45px;
+        width: 270px;
+        margin-left: -55px;
         margin-right: 0px;
         font-size: 12px;
     }
@@ -1054,12 +1159,21 @@ div.mobile-splitter {
 
 /* #### iPhone 6 and 6s Portrait #### */
 @media screen and (min-device-height: 667px) and (min-device-width: 375px) and (orientation: portrait) {
+    .aux-panel-popover {
+        width: 96%;
+    }
     #cubeName {
         margin-top: 15px !important;
         margin-left: -100px !important;
     }
     span#currentLayer {
         font-size: 14px !important;
+    }
+    div#params {
+        width: 100%;
+    }
+    input#text {
+        width: 55%;
     }
     div#canvas {
         padding: 10px 0 40px;
@@ -1137,8 +1251,8 @@ div.mobile-splitter {
         font-size: 12px;
     }
     div#updateListDiv, div#brightnessControl, div#speedControl {
-        width: 250px;
-        margin-left: -30px;
+        width: 270px;
+        margin-left: -42px;
         margin-right: 0px;
         font-size: 12px;
     }
@@ -1176,12 +1290,21 @@ div.mobile-splitter {
 
 /* #### iPhone 6 plus and 6s plus Portrait #### */
 @media screen and (min-device-height: 736px) and (min-device-width: 414px) and (orientation: portrait) {
+    .aux-panel-popover {
+        width: 96%;
+    }
     #cubeName {
         margin-top: 15px !important;
         margin-left: -100px !important;
     }
     span#currentLayer {
         font-size: 14px !important;
+    }
+    div#params {
+        width: 100%;
+    }
+    input#text {
+        width: 65%;
     }
     div#canvas {
         padding: 10px 0 40px;
@@ -1259,8 +1382,8 @@ div.mobile-splitter {
         font-size: 12px;
     }
     div#updateListDiv, div#brightnessControl, div#speedControl {
-        width: 250px;
-        margin-left: -20px;
+        width: 270px;
+        margin-left: -32px;
         margin-right: 0px;
         font-size: 12px;
     }
@@ -1298,9 +1421,15 @@ div.mobile-splitter {
 
 /* #### Android Tablets Portrait #### */
 @media screen and (min-device-width: 800px) and (max-device-width: 1280px) and (orientation: portrait) {
+    .aux-panel-popover {
+        width: 55%;
+    }
     #cubeName {
         margin-top: 15px !important;
         margin-left: -100px !important;
+    }
+    div#params {
+        width: 55%;
     }
     div#canvas {
         padding: 10px 0 40px;
@@ -1324,9 +1453,10 @@ div.mobile-splitter {
         font-size: 16px;
     }
     div#updateListDiv, div#brightnessControl, div#speedControl {
-        margin-left: calc(100% - 362px);
+        margin-left: calc(100% - 385px);
         font-size: 16px;
-        width: 325px;
+        width: 370px;
+        height: 40px;
     }
     #brightnessSlider, #speedSlider {
         width: 150px;
@@ -1359,10 +1489,20 @@ div.mobile-splitter {
 }
 
 /* #### iOS Tablets Portrait #### */
+/* Had to specify the pixel ratio to avoid interfering with desktop layout */
 @media screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 2) {
+    .aux-panel-popover {
+        width: 55%;
+    }
     #cubeName {
         margin-top: 15px !important;
         margin-left: -100px !important;
+    }
+    div#params {
+        width: 55%;
+    }
+    input#text {
+        width: 65%;
     }
     div#canvas {
         padding: 10px 0 40px;
@@ -1386,9 +1526,10 @@ div.mobile-splitter {
         font-size: 16px;
     }
     div#updateListDiv, div#brightnessControl, div#speedControl {
-        margin-left: calc(100% - 352px);
+        margin-left: calc(100% - 368px);
         font-size: 16px;
-        width: 325px;
+        width: 360px;
+        height: 40px;
     }
     #brightnessSlider, #speedSlider {
         width: 150px;
@@ -1427,9 +1568,19 @@ div.mobile-splitter {
 }
 
 /* #### Android Tablets Landscape #### */
+/* Had to specify the pixel ratio to avoid interfering with desktop layout */
 @media screen and (min-device-width: 800px) and (max-device-width: 1280px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
+    .aux-panel-popover {
+        width: 45%;
+    }
     #cubeName {
         margin-left: -100px !important;
+    }
+    div#params {
+        width: 45%;
+    }
+    input#text {
+        width: 50%;
     }
     div#canvas {
         padding: 10px 0 40px;
@@ -1453,7 +1604,7 @@ div.mobile-splitter {
         font-size: 16px;
     }
     div#updateListDiv, div#brightnessControl, div#speedControl {
-        margin-left: calc(100% - 480px) !important;
+        /*margin-left: calc(100% - 480px) !important;*/
         font-size: 16px;
         width: 325px;
     }
@@ -1488,7 +1639,17 @@ div.mobile-splitter {
 }
 
 /* #### iOS Tablets Landscape #### */
+/* Had to specify the pixel ratio to avoid interfering with desktop layout */
 @media screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 2) {
+    .aux-panel-popover {
+        width: 55%;
+    }
+    div#params {
+        width: 55%;
+    }
+    input#text {
+        width: 50%;
+    }
     div#canvas {
         padding: 10px 0 40px;
         max-width: 1024px;
@@ -1510,9 +1671,9 @@ div.mobile-splitter {
         font-size: 16px;
     }
     div#updateListDiv, div#brightnessControl, div#speedControl {
-        margin-left: calc(100% - 418px) !important;
+        margin-left: calc(100% - 436px) !important;
         font-size: 16px;
-        width: 325px;
+        width: 360px;
     }
     #brightnessSlider, #speedSlider {
         width: 150px;
@@ -1551,13 +1712,23 @@ div.mobile-splitter {
 }
 
 /* #### GALAXY S4/S5/S6/S7, Note 3/4 and Phablets Landscape #### */
+/* Had to specify the pixel ratio to avoid interfering with desktop layout */
 @media screen and (max-device-height: 360px) and (max-device-width: 640px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
+    .aux-panel-popover {
+        width: 96%;
+    }
     #cubeName {
         margin-top: 15px !important;
         margin-left: -100px !important;
     }
     span#currentLayer {
         font-size: 14px !important;
+    }
+    div#params {
+        width: 100%;
+    }
+    input#text {
+        width: 35%;
     }
     div#canvas {
         padding: 10px 0 40px;
@@ -1635,9 +1806,10 @@ div.mobile-splitter {
         font-size: 12px;
     }
     div#updateListDiv, div#brightnessControl, div#speedControl {
-        width: 250px;
-        margin-left: 35px;
-        margin-right: 0px;
+        height: 30px;
+        width: 270px;
+        /*margin-left: 35px;
+        margin-right: 0px;*/
         font-size: 12px;
     }
     #brightnessSlider, #speedSlider {
@@ -1674,9 +1846,18 @@ div.mobile-splitter {
 
 /* #### iPhone 5/5s and iPod touch Landscape #### */
 @media screen and (device-height: 568px) and (device-width: 320px) and (orientation: landscape) {
+    .aux-panel-popover {
+        width: 96%;
+    }
     #cubeName {
         /*margin-top: 15px !important;*/
         margin-left: -103px !important;
+    }
+    div#params {
+        width: 100%;
+    }
+    input#text {
+        width: 37%;
     }
     div#canvas {
         padding: 10px 0 40px;
@@ -1694,7 +1875,7 @@ div.mobile-splitter {
         width: 90%;
     }
     div#updateListDiv, div#brightnessControl, div#speedControl {
-        margin-left: calc(100% - 295px) !important;
+        margin-left: calc(100% - 318px) !important;
     }
     #cubeAndModeText, #pleaseLogInText {
         font-size: 12px;
@@ -1715,8 +1896,17 @@ div.mobile-splitter {
 /* #### iPhone 6 plus and 6s plus Landscape #### */
 /* Had to specify the pixel ratio to avoid interfering with desktop layout */
 @media screen and (device-height: 736px) and (device-width: 414px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 3) {
+    .aux-panel-popover {
+        width: 96%;
+    }
     #cubeName {
         margin-left: -100px !important;
+    }
+    div#params {
+        width: 100%;
+    }
+    input#text {
+        width: 40%;
     }
     div#canvas {
         padding: 10px 0 40px;
@@ -1734,7 +1924,7 @@ div.mobile-splitter {
         width: 90%;
     }
     div#updateListDiv, div#brightnessControl, div#speedControl {
-        margin-left: calc(100% - 340px) !important;
+        /*margin-left: calc(100% - 340px) !important;*/
     }
     #cubeAndModeText, #pleaseLogInText {
         margin-left: calc(100% - 330px) !important;
@@ -1745,8 +1935,17 @@ div.mobile-splitter {
 /* #### iPhone 6 and 6s Landscape #### */
 /* Had to specify the pixel ratio to avoid interfering with desktop layout */
 @media screen and (device-height: 667px) and (device-width: 375px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 2) {
+    .aux-panel-popover {
+        width: 96%;
+    }
     #cubeName {
         margin-left: -100px !important;
+    }
+    div#params {
+        width: 100%;
+    }
+    input#text {
+        width: 40%;
     }
     div#canvas {
         padding: 10px 0 40px;
@@ -1764,7 +1963,7 @@ div.mobile-splitter {
         width: 90%;
     }    
     div#updateListDiv, div#brightnessControl, div#speedControl {
-        margin-left: calc(100% - 320px) !important;
+        /*margin-left: calc(100% - 320px) !important;*/
     }
     #cubeAndModeText, #pleaseLogInText {
         margin-left: calc(100% - 315px) !important;
