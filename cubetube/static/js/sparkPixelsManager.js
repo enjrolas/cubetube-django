@@ -215,6 +215,7 @@ function populateModes() {
         }, "json").fail(function (data) {
             console.log('fail: ' + data.result);
             var message = '';
+            var device = $("select#cubeName option[value = '" + deviceID + "']").text();
             var responseText = data.responseText;
             if (responseText.indexOf("Variable not found") >= 0) {
                 message += 'The selected Cube (\"' + device.substr(device.indexOf(')') + 2)
@@ -249,6 +250,7 @@ function populateModes() {
             modeParmList = data.result.split(";");
         }, "json").fail(function (data) {
             console.log('fail: ' + data.result);
+            var device = $("select#cubeName option[value = '" + deviceID + "']").text();
             var message = '';
             var responseText = data.responseText;
             if (responseText.indexOf("Variable not found") >= 0) {
