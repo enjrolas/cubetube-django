@@ -289,7 +289,7 @@ function flashCube() {
         var output;
         var request = $.ajax({
             type: "POST",
-            url: "{% url 'cloudFlash' %}",
+            url: "/cloudFlash/", /*"{% url 'cloudFlash' %}",*/
             data: {"code": "", "accessToken": accessToken, "deviceID": deviceID, "vizName": "", "vizId": "1438"},
             dataType: "text",
             success: function (data) {
