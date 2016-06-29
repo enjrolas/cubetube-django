@@ -895,7 +895,8 @@ div.mobile-splitter {
 }
 
 /* #### GALAXY S4/S5/S6/S7, Note 3/4 and Phablets Portrait #### */
-@media screen and (min-device-height: 640px) and (min-device-width: 360px) and (orientation: portrait) {
+/* Had to specify the pixel ratio to avoid interfering with desktop layout */
+@media screen and (min-device-height: 640px) and (min-device-width: 360px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 2) {
     .aux-panel-popover {
         width: 96%;
     }
@@ -1158,7 +1159,8 @@ div.mobile-splitter {
 }
 
 /* #### iPhone 6 and 6s Portrait #### */
-@media screen and (min-device-height: 667px) and (min-device-width: 375px) and (orientation: portrait) {
+/* Had to specify the pixel ratio to avoid interfering with desktop layout */
+@media screen and (min-device-height: 667px) and (min-device-width: 375px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 2) {
     .aux-panel-popover {
         width: 96%;
     }
@@ -1289,7 +1291,8 @@ div.mobile-splitter {
 }
 
 /* #### iPhone 6 plus and 6s plus Portrait #### */
-@media screen and (min-device-height: 736px) and (min-device-width: 414px) and (orientation: portrait) {
+/* Had to specify the pixel ratio to avoid interfering with desktop layout */
+@media screen and (min-device-height: 736px) and (min-device-width: 414px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 2) {
     .aux-panel-popover {
         width: 96%;
     }
