@@ -35,6 +35,7 @@ function Cell(row, column, zIndex, fillColor, isFilled) {
     this.zIndex = zIndex;
     this.fillColor = fillColor;
     this.isFilled = isFilled;
+    this.clicks = 0;
 }
 
 function getCursorPosition(e, canvasElement, cellArray) {
@@ -147,55 +148,75 @@ function clickOnPiece(pieceIndex, cellArray) {
         var container = $("<div class=\"sp-cf sp-palette-row sp-palette-row-selection\"></div>");
         $("div.sp-palette").find("div.sp-palette-row-selection").remove();
             
-        if(!cellArray[pieceIndex].isFilled) {
+        //console.log('cellArray[pieceIndex].clicks = ' + cellArray[pieceIndex].clicks);
+        //if(cellArray[pieceIndex].isFilled) {
             var left, top;
             var position = $("canvas#cube_canvas").position();
             
-            // Let's make the color picker visible
-            $("div.sp-container").removeClass('sp-hidden'); //$("input#colorPicker").spectrum("show");
-            
-            // Determine where the button container and color picker will be
-            // positioned horizontally based on the location of the clicked piece
-            if(cellArray[pieceIndex].column < 4) {
-                // Create a left-aligned 'Close' button
-                cancelButton = $("<div style=\"float: left;\"><button type=\"button\">Close</button></div>");
-                left = position.left + (kPieceWidth * (cellArray[pieceIndex].column));
-            }
-            else {
-                // Create a right-aligned 'Close' button
-                cancelButton = $("<div style=\"float: right;\"><button type=\"button\">Close</button></div>");
-                left = position.left + ((kPieceWidth * (cellArray[pieceIndex].column + 1)) - $("div.sp-container").width());
-            }
+            switch(cellArray[pieceIndex].clicks) {
+                case 0:
+                default:
+                    $("div.sp-container").addClass('sp-hidden');    //$("input#colorPicker").spectrum("hide");
+                    cellArray[pieceIndex].isFilled = true;
+                    cellArray[pieceIndex].clicks++;
+                    break;
+                
+                case 1:
+                    // Let's make the color picker visible
+                    $("div.sp-container").removeClass('sp-hidden'); //$("input#colorPicker").spectrum("show");
 
-            // Add a click handler to the 'Close' button
-            cancelButton.on("click", function(e) {
-                e.stopPropagation();
-                e.preventDefault();
-                $("div.sp-container").addClass('sp-hidden');
-            });
-            // After we've determined where the 'Close' button will
-            // be located, we append it to the button container
-            container.append(cancelButton);
-            
-            // Determine where the button container and color picker will be
-            // positioned vertically based on the location of the clicked piece
-            if(cellArray[pieceIndex].row < 4) {
-                $("div.sp-palette").prepend(container); // We place the 'Close' button at the top of the color picker
-                top = position.top + (kPieceHeight * (cellArray[pieceIndex].row + 1));
+                    // Determine where the button container and color picker will be
+                    // positioned horizontally based on the location of the clicked piece
+                    if(cellArray[pieceIndex].column < 4) {
+                        // Create a left-aligned 'Close' button
+                        cancelButton = $("<div style=\"float: left;\"><button type=\"button\">Close</button></div>");
+                        left = position.left + (kPieceWidth * (cellArray[pieceIndex].column));
+                    }
+                    else {
+                        // Create a right-aligned 'Close' button
+                        cancelButton = $("<div style=\"float: right;\"><button type=\"button\">Close</button></div>");
+                        left = position.left + ((kPieceWidth * (cellArray[pieceIndex].column + 1)) - $("div.sp-container").width());
+                    }
+
+                    // Add a click handler to the 'Close' button
+                    cancelButton.on("click", function(e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        $("div.sp-container").addClass('sp-hidden');
+                    });
+                    // After we've determined where the 'Close' button will
+                    // be located, we append it to the button container
+                    container.append(cancelButton);
+
+                    // Determine where the button container and color picker will be
+                    // positioned vertically based on the location of the clicked piece
+                    if(cellArray[pieceIndex].row < 4) {
+                        $("div.sp-palette").prepend(container); // We place the 'Close' button at the top of the color picker
+                        top = position.top + (kPieceHeight * (cellArray[pieceIndex].row + 1));
+                    }
+                    else {
+                        $("div.sp-palette").append(container); // We place the 'Close' button at the bottom of the color picker
+                        top = position.top + ((kPieceHeight * (cellArray[pieceIndex].row)) - $("div.sp-container").height());
+                    }
+
+                    // Place the color picker next to the clicked piece
+                    $("div.sp-container").css({'top' : top, 'left' : left});
+                    cellArray[pieceIndex].isFilled = true;
+                    cellArray[pieceIndex].clicks++;
+                    break;
+                
+                case 2:
+                    $("div.sp-container").addClass('sp-hidden');    //$("input#colorPicker").spectrum("hide");
+                    cellArray[pieceIndex].isFilled = false;
+                    cellArray[pieceIndex].clicks = 0;
+                    break;
             }
-            else {
-                $("div.sp-palette").append(container); // We place the 'Close' button at the bottom of the color picker
-                top = position.top + ((kPieceHeight * (cellArray[pieceIndex].row)) - $("div.sp-container").height());
-            }
-            
-            // Place the color picker next to the clicked piece
-            $("div.sp-container").css({'top' : top, 'left' : left});
-        }
+        /*}
         else  // If we have clicked in a colored piece, then hide the color picker
-            $("div.sp-container").addClass('sp-hidden');    //$("input#colorPicker").spectrum("hide");
+            $("div.sp-container").addClass('sp-hidden');    //$("input#colorPicker").spectrum("hide");*/
 
         cellArray[pieceIndex].zIndex = gLayer;
-    	cellArray[pieceIndex].isFilled = !cellArray[pieceIndex].isFilled; 
+    	//cellArray[pieceIndex].isFilled = !cellArray[pieceIndex].isFilled; 
         cellArray[pieceIndex].fillColor = cellArray[pieceIndex].isFilled ? gSelectedColor : '#000000';
         setVoxel(gSelectedPieceIndex, cellArray[pieceIndex].fillColor);
         drawCube();

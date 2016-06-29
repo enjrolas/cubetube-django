@@ -411,9 +411,17 @@
             showPaletteOnly: true,
             color: 'blanchedalmond',
             change: function(color) {
+                //console.log('color: ' + color);
                 $("div.sp-container").addClass('sp-hidden');
-                gSelectedColor = color.toHexString();
-                gPieces[gSelectedPieceArrayIndex].fillColor = color.toHexString();
+                gPieces[gSelectedPieceArrayIndex].fillColor = color;    //.toHexString();
+                if(color != '#000000') {
+                    gSelectedColor = color; //.toHexString();
+                    gPieces[gSelectedPieceArrayIndex].clicks--;
+                }
+                else {
+                    gPieces[gSelectedPieceArrayIndex].isFilled = false;
+                    gPieces[gSelectedPieceArrayIndex].clicks = 0;
+                }
                 setVoxel(gSelectedPieceIndex, gPieces[gSelectedPieceArrayIndex].fillColor);
                 drawCube();                    
             },
