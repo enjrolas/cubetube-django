@@ -411,16 +411,19 @@
             showPaletteOnly: true,
             color: 'blanchedalmond',
             change: function(color) {
-                //console.log('color: ' + color);
                 $("div.sp-container").addClass('sp-hidden');
                 gPieces[gSelectedPieceArrayIndex].fillColor = color;    //.toHexString();
                 if(color != '#000000') {
-                    gSelectedColor = color; //.toHexString();
+                    gSelectedColor = color;     //.toHexString();
                     gPieces[gSelectedPieceArrayIndex].clicks--;
                 }
                 else {
                     gPieces[gSelectedPieceArrayIndex].isFilled = false;
                     gPieces[gSelectedPieceArrayIndex].clicks = 0;
+                    // Remove the checkmark from the black color in the palette
+                    $('div.sp-palette-container').find('span[title=#000000]').removeClass('sp-thumb-active');
+                    // Reset the checkmark to the last selected color in the palette
+                    $('div.sp-palette-container').find('span[title=' + gSelectedColor + ']').addClass('sp-thumb-active');
                 }
                 setVoxel(gSelectedPieceIndex, gPieces[gSelectedPieceArrayIndex].fillColor);
                 drawCube();                    
