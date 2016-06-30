@@ -101,7 +101,7 @@ function populateInterval() {
         if (currentMode === null || currentMode === '' || currentMode === 'None') {
             $("select#modes").fadeOut(100);
             $("a#updateListButton").html("Please Wait<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>");
-            $("span#mode").html("Please Wait<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>");
+            //$("span#mode").html("Please Wait<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>");
             populateModes();
         }
         else {
@@ -109,9 +109,9 @@ function populateInterval() {
                 clearInterval(populateModesTimer);
                 isUserAlerted = true;
                 $("a#updateListButton").html("Update List");
-                $("span#mode").html(currentMode);
+                //$("span#mode").html(currentMode);
                 $("select#modes").fadeIn(300);
-                $("div#cubeAndModeText").fadeIn(300);
+                $("div#cubeAndModeText").fadeOut(); //fadeIn(300);
                 $("div#updateListDiv").fadeIn(300);
                 $("div#brightnessControl").fadeIn(300);
                 $("div#speedControl").fadeIn(300);
@@ -435,7 +435,7 @@ function setMode() {
         if(deviceID !== '') {
             var commandString = 'M:' + currentMode + ',';
 
-            $("span#mode").text(currentMode);
+            //$("span#mode").text(currentMode);
             if(currentMode.toLowerCase().indexOf('text') >= 0)
                 setText();
 

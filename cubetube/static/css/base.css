@@ -735,14 +735,14 @@ img.logo-menu {
 
 div#params {
     display: none; 
-    opacity: 0.8;
+    /*opacity: 0.9;*/
     width: 35%;
     margin: 0 auto;
     border-radius: 25px; 
     border-width: 5px; 
     /*border-style: ridge ridge none ridge;*/
     /*border-color: #1C1521;*/
-    box-shadow: inset 3px 4px 10px #1C1521;
+    box-shadow: 3px 4px 10px #1C1521;
 }
 input#text {
     width: 55%; 
@@ -769,6 +769,24 @@ a#clearButtons, a#syncButton, a#setModeButton {
     text-align: center; 
     text-decoration: none;
     line-height: 32px;
+    box-shadow: 3px 4px 10px #770000;
+}
+a#updateListButton:hover {
+    text-shadow: 2px 3px #440000;
+}
+a#updateListButton:active {
+    color: #999999;
+    text-shadow: 1px 1px 0 rgba(140,140,140,0.6) , -1px -1px 1px rgba(0,0,0,0.67);  /*-2px -3px 4px #440000;*/
+}
+a#layerButtons:hover, a#clearButtons:hover, 
+a#syncButton:hover, a#setModeButton:hover {
+    background: #cc0026;
+}
+a#layerButtons:active, a#clearButtons:active, 
+a#syncButton:active, a#setModeButton:active {
+    background: #ee0026;
+    color: #ee9999;
+    box-shadow: 3px 4px 10px #770000 inset;
 }
 span#currentLayer {
     font-size:18px;
@@ -792,6 +810,7 @@ span#switch4, span#text {
     color: #fff; 
     border-radius: 30px; 
     text-align: center;
+    box-shadow: 3px 4px 10px #770000;
 }
 #brightnessSlider, #speedSlider {
     width: 120px;

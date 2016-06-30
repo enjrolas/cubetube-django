@@ -142,7 +142,7 @@
     </script>
     {% load utils %}
     {% logged_in_status as logged_in %}
-    <div class="aux-panel-popover" style="background-color: whitesmoke; padding: 5px 15px;">
+    <div class="aux-panel-popover" style="background-color: rgba(245, 245, 245, 0.7); padding: 5px 15px;">
         <a onclick="$( '.aux-panel-popover' ).slideUp(300, 'linear');" href="javascript:void(0);" style="">Close</a><br>
         <h2>Aux Switch Panel</h2>
         <!--<div class="input-areas">-->
@@ -154,7 +154,7 @@
         <div class="gradient" style="margin-top: 60px; padding: 0px 25% 12px; text-align: center; border-radius: 0px 0px 30px 30px">
             <div id="cubeAndModeText">
                 <div>Selected Cube:  <span id="device">Please Log In</span></div>
-                <div>Selected Mode:  <span id="mode"></span></div>
+                <!--<div>Selected Mode:  <span id="mode"></span></div>-->
             </div>
             {% if logged_in %}
                 <div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
