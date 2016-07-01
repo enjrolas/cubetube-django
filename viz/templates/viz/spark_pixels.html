@@ -78,7 +78,7 @@
                 // Retrieve the name of the selected device from the dropdown
                 $("select#cubeName option").each(function () {
                     if ($(this).val() === deviceID)
-                        $("span#device").text($(this).text());  // Place the name in the device span
+                        $("span#device").text($(this).text() + " Selected");  // Place the name in the device span
                 });
 
                 coreID = deviceID;
@@ -101,7 +101,7 @@
                 $("div#updateListDiv").fadeOut(100);
                 $("div#brightnessControl").fadeOut(100);
                 $("div#speedControl").fadeOut(100);
-                $("span#device").text($('select#cubeName').text());            
+                $("span#device").text($('select#cubeName').text() + " Selected");
                 clearInterval(populateModesTimer);
             }
         }
@@ -153,7 +153,7 @@
     <div id="gallery-wrapper" class="viz-cards" style="padding-top: 0px !important;">
         <div class="gradient" style="margin-top: 60px; padding: 0px 25% 12px; text-align: center; border-radius: 0px 0px 30px 30px">
             <div id="cubeAndModeText">
-                <div>Selected Cube:  <span id="device">Please Log In</span></div>
+                <div><span id="device">Please Log In</span></div>
                 <!--<div>Selected Mode:  <span id="mode"></span></div>-->
             </div>
             {% if logged_in %}
