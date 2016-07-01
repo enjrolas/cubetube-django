@@ -814,7 +814,8 @@ span#switch4, span#text {
 }
 #brightnessSlider, #speedSlider {
     width: 120px;
-    height: 10px;
+    height: 15px;
+    float: right;
 }
 a#updateListButton {
     width: 175px !important; 
@@ -1016,7 +1017,8 @@ div.mobile-splitter {
     }
     #brightnessSlider, #speedSlider {
         width: 100px;
-        height: 10px;
+        height: 15px;
+        float: right;
     }
     a#updateListButton {
         width: 125px; 
@@ -1147,7 +1149,8 @@ div.mobile-splitter {
     }
     #brightnessSlider, #speedSlider {
         width: 100px;
-        height: 10px;
+        height: 15px;
+        float: right;
     }
     a#updateListButton {
         width: 125px; 
@@ -1279,7 +1282,8 @@ div.mobile-splitter {
     }
     #brightnessSlider, #speedSlider {
         width: 100px;
-        height: 10px;
+        height: 15px;
+        float: right;
     }
     a#updateListButton {
         width: 125px; 
@@ -1395,7 +1399,7 @@ div.mobile-splitter {
         margin-left: -15px !important;*/
     }
     span#mode, span#device {
-        font-size: 10px !important;
+        font-size: 9px !important;
     }
     span#color1, span#color2, span#color3, 
     span#color4, span#color5, span#color6, 
@@ -1411,7 +1415,8 @@ div.mobile-splitter {
     }
     #brightnessSlider, #speedSlider {
         width: 100px;
-        height: 10px;
+        height: 15px;
+        float: right;
     }
     a#updateListButton {
         width: 125px; 
@@ -1482,7 +1487,8 @@ div.mobile-splitter {
     }
     #brightnessSlider, #speedSlider {
         width: 150px;
-        height: 10px;
+        height: 15px;
+        float: right;
     }
     #cubeAndModeText, #pleaseLogInText {
         /*margin-left: calc(100% - 350px) !important;
@@ -1555,7 +1561,8 @@ div.mobile-splitter {
     }
     #brightnessSlider, #speedSlider {
         width: 150px;
-        height: 10px;
+        height: 15px;
+        float: right;
     }
     #cubeAndModeText, #pleaseLogInText {
         /*margin-left: calc(100% - 350px) !important;
@@ -1632,7 +1639,8 @@ div.mobile-splitter {
     }
     #brightnessSlider, #speedSlider {
         width: 150px;
-        height: 10px;
+        height: 15px;
+        float: right;
     }
     #cubeAndModeText, #pleaseLogInText {
         /*margin-left: calc(100% - 470px) !important;
@@ -1702,7 +1710,8 @@ div.mobile-splitter {
     }
     #brightnessSlider, #speedSlider {
         width: 150px;
-        height: 10px;
+        height: 15px;
+        float: right;
     }
     #cubeAndModeText, #pleaseLogInText {
         /*margin-left: calc(100% - 410px) !important;
@@ -1839,7 +1848,8 @@ div.mobile-splitter {
     }
     #brightnessSlider, #speedSlider {
         width: 100px;
-        height: 10px;
+        height: 15px;
+        float: right;
     }
     a#updateListButton {
         width: 125px; 
@@ -1956,7 +1966,7 @@ div.mobile-splitter {
         width: 100%;*/
     }
     span#mode, span#device {
-        font-size: 11px !important;
+        font-size: 9px !important;
     }    
 }
 
@@ -1998,7 +2008,7 @@ div.mobile-splitter {
         width: 100%;*/
     }
     span#mode, span#device {
-        font-size: 9px;
+        font-size: 8px;
     }
 }
 
