@@ -66,14 +66,18 @@ function populateInterval() {
                 $("a#updateListButton").html("Update List");
                 //$("span#mode").text(currentMode);
                 $("select#modes").fadeIn(300);
-                $("div#cubeAndModeText").fadeOut(); //.fadeIn(300);
+                $("div#cubeAndModeText").hide('slide', {direction: 'right'}, 600); //.fadeIn(300);
                 $("div#updateListDiv").fadeIn(300);
                 $("div#brightnessControl").fadeIn(300);
+                setBrightness();
             }
             else {
                 // Set the selected mode in the modes dropdown
                 // This can fail: 
                 // $("select#modes").val(currentMode);
+                $.each($("select#modes option"), function (index, option) {
+                    option.selected = false;
+                });
                 $.each($("select#modes option"), function (index, option) {
                     //console.log('option: ' + option.value);
                     if (option.value === currentMode) {

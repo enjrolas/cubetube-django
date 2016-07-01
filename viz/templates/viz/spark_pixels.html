@@ -56,6 +56,8 @@
 
             if (typeof accessToken !== 'undefined' && accessToken !== null)
                 cubeNameOnChange(); //populateInterval();
+            else
+                $('select#cubeName').fadeOut(100);
         });
         
         function getDeviceID() {
@@ -91,6 +93,7 @@
                 $("div#updateListDiv").fadeIn(300);
                 $("div#brightnessControl").fadeIn(300);
                 $("div#speedControl").fadeIn(300);
+                $('select#cubeName').fadeIn(300);
                 populateInterval();
             }
             else {
@@ -98,10 +101,10 @@
                 $.removeCookie("coreID", {path: '/'});
                 coreID = null;
                 $("span#mode").text('');
+                $("span#device").text($('select#cubeName').text());
                 $("div#updateListDiv").fadeOut(100);
                 $("div#brightnessControl").fadeOut(100);
                 $("div#speedControl").fadeOut(100);
-                $("span#device").text($('select#cubeName').text() + " Selected");
                 clearInterval(populateModesTimer);
             }
         }
@@ -147,10 +150,10 @@
         <h2>Aux Switch Panel</h2>
         <!--<div class="input-areas">-->
             <div class="inputs"></div>
-            <div class="error-area"></div>
+            <div class="error-area" style="height: 30px;"></div>
         <!--</div>-->    
     </div>
-    <div id="gallery-wrapper" class="viz-cards" style="padding-top: 0px !important;">
+    <div id="gallery-wrapper" class="viz-cards" style="padding-top: 0px !important; background: url(/static/images/icon-loading.gif) no-repeat -9999px -9999px;">
         <div class="gradient" style="margin-top: 60px; padding: 0px 25% 12px; text-align: center; border-radius: 0px 0px 30px 30px">
             <div id="cubeAndModeText">
                 <div><span id="device">Please Log In</span></div>

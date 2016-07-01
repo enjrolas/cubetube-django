@@ -753,11 +753,11 @@ input#text {
     border-radius: 10px;
 }
 #cubeAndModeText, #pleaseLogInText {
-    width: 50%; 
+    width: 35%; 
     font-weight: bold;
     color: #2bc6fb;
     text-align: justify; 
-    margin-left: 30%;
+    margin: 0 auto; /*margin-left: 30%;*/
 }
 #updateListDiv, a#layerButtons, 
 a#clearButtons, a#syncButton, a#setModeButton {
@@ -995,11 +995,11 @@ div.mobile-splitter {
     }
     #cubeAndModeText, #pleaseLogInText {
         font-size: 10px !important;
-        width: 100%;
-        margin-left: -28px;
+        width: 65%;
+        /*margin-left: -28px;*/
     }
     span#mode, span#device {
-        font-size: 10px !important;
+        font-size: 8px !important;
     }
     span#color1, span#color2, span#color3, 
     span#color4, span#color5, span#color6, 
@@ -1127,11 +1127,11 @@ div.mobile-splitter {
     }
     #cubeAndModeText, #pleaseLogInText {
         font-size: 8px !important;
-        width: 100% !important;
-        margin-left: -35px !important;
+        width: 65% !important;
+        /*margin-left: -35px !important;*/
     }
     span#mode, span#device {
-        font-size: 8px !important;
+        font-size: 7px !important;
     }
     span#color1, span#color2, span#color3, 
     span#color4, span#color5, span#color6, 
@@ -1259,11 +1259,11 @@ div.mobile-splitter {
     }
     #cubeAndModeText, #pleaseLogInText {
         font-size: 10px !important;
-        width: 100% !important;
-        margin-left: -25px !important;
+        /*width: 100% !important;
+        margin-left: -25px !important;*/
     }
     span#mode, span#device {
-        font-size: 10px !important;
+        font-size: 8px !important;
     }
     span#color1, span#color2, span#color3, 
     span#color4, span#color5, span#color6, 
@@ -1391,8 +1391,8 @@ div.mobile-splitter {
     }
     #cubeAndModeText, #pleaseLogInText {
         font-size: 10px !important;
-        width: 100% !important;
-        margin-left: -15px !important;
+        /*width: 100% !important;
+        margin-left: -15px !important;*/
     }
     span#mode, span#device {
         font-size: 10px !important;
@@ -1485,12 +1485,12 @@ div.mobile-splitter {
         height: 10px;
     }
     #cubeAndModeText, #pleaseLogInText {
-        margin-left: calc(100% - 350px) !important;
-        width: 100%;
+        /*margin-left: calc(100% - 350px) !important;
+        width: 100%;*/
         font-size: 16px !important;
     }
     span#mode, span#device {
-        font-size: 16px !important;
+        font-size: 11px !important;
     }
     span#currentLayer {
         font-size: 20px !important;
@@ -1558,8 +1558,8 @@ div.mobile-splitter {
         height: 10px;
     }
     #cubeAndModeText, #pleaseLogInText {
-        margin-left: calc(100% - 350px) !important;
-        width: 100%;
+        /*margin-left: calc(100% - 350px) !important;
+        width: 100%;*/
         font-size: 16px !important;
     }
     span#mode, span#device {
@@ -1635,8 +1635,8 @@ div.mobile-splitter {
         height: 10px;
     }
     #cubeAndModeText, #pleaseLogInText {
-        margin-left: calc(100% - 470px) !important;
-        width: 100%;
+        /*margin-left: calc(100% - 470px) !important;
+        width: 100%;*/
         font-size: 16px !important;
     }
     span#mode, span#device {
@@ -1668,6 +1668,9 @@ div.mobile-splitter {
     }
     div#params {
         width: 55%;
+    }
+    #cubeName {
+        margin-left: -100px !important;
     }
     input#text {
         width: 50%;
@@ -1702,12 +1705,12 @@ div.mobile-splitter {
         height: 10px;
     }
     #cubeAndModeText, #pleaseLogInText {
-        margin-left: calc(100% - 410px) !important;
-        width: 100%;
+        /*margin-left: calc(100% - 410px) !important;
+        width: 100%;*/
         font-size: 16px !important;
     }
     span#mode, span#device {
-        font-size: 16px !important;
+        font-size: 15px !important;
     }
     span#currentLayer {
         font-size: 20px !important;
@@ -1815,11 +1818,11 @@ div.mobile-splitter {
     }
     #cubeAndModeText, #pleaseLogInText {
         font-size: 11px !important;
-        width: 100%;
-        margin-left: 38px;
+        width: 50%;
+        /*margin-left: 38px;*/
     }
     span#mode, span#device {
-        font-size: 11px !important;
+        font-size: 9px !important;
     }
     span#color1, span#color2, span#color3, 
     span#color4, span#color5, span#color6, 
@@ -1901,11 +1904,11 @@ div.mobile-splitter {
     }
     #cubeAndModeText, #pleaseLogInText {
         font-size: 12px;
-        margin-left: calc(100% - 290px) !important;
-        width: 100%;
+        /*margin-left: calc(100% - 290px) !important;*/
+        width: 50%;
     }
     span#mode, span#device {
-        font-size: 12px;
+        font-size: 10px;
     }
     span#color1, span#color2, span#color3, 
     span#color4, span#color5, span#color6, 
@@ -1949,9 +1952,12 @@ div.mobile-splitter {
         /*margin-left: calc(100% - 340px) !important;*/
     }
     #cubeAndModeText, #pleaseLogInText {
-        margin-left: calc(100% - 330px) !important;
-        width: 100%;
+        /*margin-left: calc(100% - 330px) !important;
+        width: 100%;*/
     }
+    span#mode, span#device {
+        font-size: 11px !important;
+    }    
 }
 
 /* #### iPhone 6 and 6s Landscape #### */
@@ -1988,8 +1994,11 @@ div.mobile-splitter {
         /*margin-left: calc(100% - 320px) !important;*/
     }
     #cubeAndModeText, #pleaseLogInText {
-        margin-left: calc(100% - 315px) !important;
-        width: 100%;
+        /*margin-left: calc(100% - 315px) !important;
+        width: 100%;*/
+    }
+    span#mode, span#device {
+        font-size: 9px;
     }
 }
 

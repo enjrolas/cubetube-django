@@ -40,11 +40,40 @@ function updateAuxSwitchPanel() {
     }
 }
 
+function setTimeZoneOffset() {
+    var d = new Date()
+    var n = d.getTimezoneOffset();
+    var localOffset = -(n/60);
+    //console.log('getTimezoneOffset(): ' + n);
+    //console.log('localOffset: ' + localOffset);
+    if (typeof accessToken !== 'undefined' && accessToken !== null) {
+        var deviceID = getDeviceID();
+        var commandString = 'SETTIMEZONE:' + localOffset;
+        $.post("https://api.particle.io/v1/devices/" + deviceID + "/Function", {
+                access_token: accessToken, args: commandString
+        }).success(function (data) {
+            //console.log('success! localOffset: ' + data.return_value);
+            $("span#device").text('Timezone offset updated to ' + data.return_value);
+            $("div#cubeAndModeText").show('slide', {direction: 'left'}, 600).delay(1200).hide('slide', {direction: 'right'}, 600);
+        }).fail(function (data) {
+            $("span#device").text('Timezone offset not updated: Error');
+            $("div#cubeAndModeText").show('slide', {direction: 'left'}, 600).delay(1200).hide('slide', {direction: 'right'}, 600);
+            console.log('fail: ' + data.return_value);
+        });
+    }
+}
+
 function setAuxSwitches(id, checked) {
+    $('div.error-area').text('');
     if (typeof accessToken !== 'undefined' && accessToken !== null) {
         var deviceID = getDeviceID();
         var commandString = 'SETAUXSWITCH:' + id + ',' + (checked ? '1' : '0') + ';';
-        $.post("https://api.particle.io/v1/devices/" + deviceID + "/Function", {access_token: accessToken, args: commandString});
+        $.post("https://api.particle.io/v1/devices/" + deviceID + "/Function", {
+            access_token: accessToken, args: commandString
+        }).fail(function (data) {
+            $('div.error-area').text('Oh-oh! Could not update Aux Switches\' states');
+            console.log('fail: ' + data.return_value);
+        });
         console.log('commandString: ' + commandString);
         //updateAuxSwitchPanel();
     }
@@ -90,7 +119,7 @@ function getAuxSwitches() {
                 }
             }
             else {
-                $('div.error-area').text("Oh-oh! Could not retrieve Aux Switches' states from cloud.");
+                $('div.error-area').text("Oh-oh! Could not retrieve Aux Switches' states");
                 $('div.aux-panel-popover').slideDown(300, 'linear');
             }
         });
@@ -111,7 +140,7 @@ function populateInterval() {
                 $("a#updateListButton").html("Update List");
                 //$("span#mode").html(currentMode);
                 $("select#modes").fadeIn(300);
-                $("div#cubeAndModeText").fadeOut(); //fadeIn(300);
+                $("div#cubeAndModeText").hide('slide', {direction: 'right'}, 600); //fadeIn(300);
                 $("div#updateListDiv").fadeIn(300);
                 $("div#brightnessControl").fadeIn(300);
                 $("div#speedControl").fadeIn(300);
@@ -125,11 +154,15 @@ function populateInterval() {
                 setColors();
                 setSwitches();
                 setBrightness();
+                setTimeZoneOffset();
             }
             else {
                 // Set the selected mode in the modes dropdown
                 // This can fail: 
                 //$("select#modes").val(currentMode);
+                $.each($("select#modes option"), function (index, option) {
+                    option.selected = false;
+                });
                 $.each($("select#modes option"), function (index, option) {
                     //console.log('option: ' + option.value);
                     if (option.value === currentMode) {

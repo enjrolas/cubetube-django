@@ -61,6 +61,8 @@
 
             if (typeof accessToken !== 'undefined' && accessToken !== null)
                 cubeNameOnChange(); //populateInterval();
+            else
+                $('select#cubeName').fadeOut(100);
 
             initGame($canvas);  //initGame($canvas, $colors);
         });
@@ -100,8 +102,8 @@
                 // Show the modes list and brightness control
                 $("div#updateListDiv").fadeIn(300);
                 $("div#brightnessControl").fadeIn(300);
+                $('select#cubeName').fadeIn(300);
                 populateInterval();
-                setBrightness();
             }
             else {
                 // We don't have a valid selected device so delete the cookie and hide the controls
@@ -110,7 +112,7 @@
                 //$("span#mode").text('');
                 $("div#updateListDiv").fadeOut(100);
                 $("div#brightnessControl").fadeOut(100);
-                $("span#device").text($('select#cubeName').text() + " Selected");
+                $("span#device").text($('select#cubeName').text());
                 clearInterval(populateModesTimer);
                 //$('select#cubeName').val('-1');
             }
