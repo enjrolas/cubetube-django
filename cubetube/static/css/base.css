@@ -1142,8 +1142,8 @@ div.mobile-splitter {
         font-size: 12px;
     }
     div#updateListDiv, div#brightnessControl, div#speedControl {
-        width: 270px;
-        margin-left: -55px;
+        width: 280px;
+        margin-left: -60px;
         margin-right: 0px;
         font-size: 12px;
     }
