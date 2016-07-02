@@ -28,36 +28,30 @@
             $('.logo-box').off('mouseout');
             $('select#cubeName').css('margin-left', '-95px');
             $('select#cubeName').css('margin-top', '12px');
+            $("select#cubeName").hide();
+            $("span#device").text("Please Log In");
             $('a.logo-box span.cubetube').text('Spark Pixels');
             $('a.logo-box span.cubetube').css('color', '#fff');
 
             checkCookie();
             //console.log("accessToken: " + accessToken);
 
-            if (supportsLocalStorage()) {
-                if (localStorage["spark_pixels.brightness"])
-                    brightness = parseInt(localStorage["spark_pixels.brightness"]);
-                if (localStorage["spark_pixels.speed"])
-                    speed = parseInt(localStorage["spark_pixels.speed"]);
-                for(var count = 1; count <= 6; count++) {
-                    if (localStorage["spark_pixels.color" + count]) {
-                        $( "input#color" + count ).spectrum("set", "#" + localStorage["spark_pixels.color" + count]);
-                    }
-                    if(count <= 4) {
-                        if (localStorage["spark_pixels.switch" + count]) {
-                            //console.log("spark_pixels.switch" + count + ': ' + localStorage["spark_pixels.switch" + count]);
-                            $("input#switch" + count).prop('checked', localStorage["spark_pixels.switch" + count] === 'true' ? true : false);
-                        }
-                    }
-                }
-            }
-            $("#brightnessSlider").val(brightness);
-            $("#speedSlider").val(speed);
-
-            if (typeof accessToken !== 'undefined' && accessToken !== null)
+            if (typeof accessToken !== 'undefined' && accessToken !== null) {
+                if (supportsLocalStorage())
+                    localStorage["spark_pixels.accessToken"] = accessToken;
                 cubeNameOnChange(); //populateInterval();
+            }
             else
-                $('select#cubeName').fadeOut(100);
+                if (supportsLocalStorage())
+                    if (localStorage["spark_pixels.accessToken"]) {
+                        accessToken = localStorage["spark_pixels.accessToken"];
+                        cubeNameOnChange(); //populateInterval();
+                    }
+            
+            // Bind both touch and click events to the slider controls
+            // for compatibility with mobile and desktop devices
+            $("input#brightnessSlider").on("mouseup touchend", function() { changeBrightness(); });
+            $("input#speedSlider").on("mouseup touchend", function() { changeSpeed(); });
         });
         
         function getDeviceID() {
@@ -80,7 +74,8 @@
                 // Retrieve the name of the selected device from the dropdown
                 $("select#cubeName option").each(function () {
                     if ($(this).val() === deviceID)
-                        $("span#device").text($(this).text() + " Selected");  // Place the name in the device span
+                        $("span#device").html("Please Wait<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>");
+                        //$("span#device").text($(this).text() + " Selected");  // Place the name in the device span
                 });
 
                 coreID = deviceID;
@@ -90,10 +85,6 @@
                 $.cookie("coreID", coreID, {expires: date.getTime() + 86400, path: '/'});
 
                 // Show the modes list and brightness/speed controls
-                $("div#updateListDiv").fadeIn(300);
-                $("div#brightnessControl").fadeIn(300);
-                $("div#speedControl").fadeIn(300);
-                $('select#cubeName').fadeIn(300);
                 populateInterval();
             }
             else {
@@ -103,8 +94,8 @@
                 $("span#mode").text('');
                 $("span#device").text($('select#cubeName').text());
                 $("div#updateListDiv").fadeOut(100);
-                $("div#brightnessControl").fadeOut(100);
-                $("div#speedControl").fadeOut(100);
+                $("div#brightnessControl").slideUp(100);
+                $("div#speedControl").slideUp(100);
                 clearInterval(populateModesTimer);
             }
         }
@@ -131,6 +122,7 @@
 
         function changeBrightness() {
             brightness = $("#brightnessSlider").val();
+            updateBrightnessLabel(brightness);
             setBrightness();
             if (supportsLocalStorage())
                 localStorage["spark_pixels.brightness"] = brightness;
@@ -138,9 +130,49 @@
 
         function changeSpeed() {
             speed = $("#speedSlider").val();
+            updateSpeedLabel(speed);
             setSpeed();
             if (supportsLocalStorage())
                 localStorage["spark_pixels.speed"] = speed;
+        }
+        
+        function updateBrightnessLabel(brightnessValue) {
+            $("span#brightness").text("Brightness: " + brightnessValue);
+        }
+        
+        function updateSpeedLabel(speedValue) {
+            switch(Number(speedValue)) {
+                case 0:
+                    $("span#speed").text("Speed: Paint Drying");
+                    break;
+                case 1:
+                    $("span#speed").text("Speed: Turtle");
+                    break;
+                case 2:
+                    $("span#speed").text("Speed: Segway");
+                    break;
+                case 3:
+                    $("span#speed").text("Speed: Rabbit");
+                    break;
+                case 4:
+                    $("span#speed").text("Speed: Cheetah");
+                    break;
+                case 5:
+                    $("span#speed").text("Speed: Ricky Bobby");
+                    break;
+                case 6:
+                    $("span#speed").text("Speed: Jimmy Johns");
+                    break;
+                case 7:
+                    $("span#speed").text("Speed: My Bullet");
+                    break;
+                case 8:
+                    $("span#speed").text("Speed: Superman");
+                    break;
+                default:
+                    console.log('speed is ' + speedValue);
+                    break;
+            }
         }
     </script>
     {% load utils %}
@@ -172,15 +204,17 @@
                 </div>
                 <div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
                 <div id="brightnessControl">
-                    <div>Brightness:  <span style="margin-right: 10px" id="brightness"></span>
-                        <input id="brightnessSlider" type="range" min="0" max="100" step="1" value="20" onchange="changeBrightness();" />
-                    </div>
+                    <!--<div>-->
+                        <span style="float: left;" id="brightness"></span>
+                        <input id="brightnessSlider" type="range" min="0" max="100" step="1" value="20" />
+                    <!--</div>-->
                 </div>
                 <div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
                 <div id="speedControl">
-                    <div>Speed:  <span style="margin-right: 10px;" id="speed"></span><!--<br>-->
-                        <input id="speedSlider" type="range" min="0" max="8" step="1" value="5" onchange="changeSpeed();" />
-                    </div>
+                    <!--<div>-->
+                        <span style="float: left;" id="speed"></span><!--<br>-->
+                        <input id="speedSlider" type="range" min="0" max="8" step="1" value="5" />
+                    <!--</div>-->
                 </div>
             {% endif %}
         </div>

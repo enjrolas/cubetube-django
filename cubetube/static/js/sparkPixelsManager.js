@@ -54,7 +54,7 @@ function setTimeZoneOffset() {
             $("span#device").text('Timezone offset updated to ' + data.return_value);
             $("div#cubeAndModeText").show('slide', {direction: 'left'}, 600).delay(1200).hide('slide', {direction: 'right'}, 600);
         }).fail(function (data) {
-            $("span#device").text('Timezone offset not updated: Error');
+            $("span#device").text('Error: Timezone not updated');
             $("div#cubeAndModeText").show('slide', {direction: 'left'}, 600).delay(1200).hide('slide', {direction: 'right'}, 600);
             console.log('fail: ' + data.return_value);
         });
@@ -125,6 +125,8 @@ function populateInterval() {
     populateModesTimer = setInterval(function () {
         if (currentMode === null || currentMode === '' || currentMode === 'None') {
             $("select#modes").fadeOut(100);
+            $("div#brightnessControl").slideUp(100);
+            $("div#speedControl").slideUp(100);
             $("a#updateListButton").html("Please Wait<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>");
             //$("span#mode").html("Please Wait<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>");
             populateModes();
@@ -135,21 +137,22 @@ function populateInterval() {
                 isUserAlerted = true;
                 $("a#updateListButton").html("Update List");
                 //$("span#mode").html(currentMode);
-                $("select#modes").fadeIn(300);
-                $("div#cubeAndModeText").hide('slide', {direction: 'right'}, 600); //fadeIn(300);
                 $("div#updateListDiv").fadeIn(300);
-                $("div#brightnessControl").fadeIn(300);
-                $("div#speedControl").fadeIn(300);
+                $("select#modes").fadeIn(300);
+                $('select#cubeName').fadeIn(300);
+                $("div#cubeAndModeText").hide('slide', {direction: 'right'}, 600); //fadeIn(300);
                 //console.log('$("select#modes option:selected").val() = ' + $("select#modes option:selected").val());
-                var idx = $("select#modes option:selected").index();
-                if(modeParmList[idx] !== 'N') {
-                    clearModeOptions();
-                    parseModeOptions();
+                clearModeOptions();
+                for(var id=1; id<=6; id++) {
+                    getColor(id);
+                    if(id <= 4)
+                        getSwitchState(id);
                 }
-                setSpeed();
-                setColors();
-                setSwitches();
-                setBrightness();
+                var idx = $("select#modes option:selected").index();
+                if(modeParmList[idx] !== 'N')
+                    parseModeOptions();
+                getSpeed();         //setSpeed();
+                getBrightness();    //setBrightness();
                 setTimeZoneOffset();
             }
             else {
@@ -404,6 +407,99 @@ function parseRGBToHexString(r, g, b) {
     return (rHex + gHex + bHex).toUpperCase();
 }
 
+function parseIntToHexString(value) {
+    return ("000000" + value.toString(16)).slice(-6);
+}
+
+function getSwitchState(id) {
+    if (typeof accessToken !== 'undefined' && accessToken !== null) {
+        var deviceID = getDeviceID();
+        var commandString = 'GETSWITCHSTATE:' + id;
+        $.post("https://api.particle.io/v1/devices/" + deviceID + "/Function", {
+            access_token: accessToken, args: commandString
+        }).success(function (data) {
+            console.log('success! getSwitchState(' + id + '): ' + data.return_value);
+            if(data.return_value >= 0) {
+                var checked = data.return_value === 1 ? true : false;
+                $("input#switch" + id).prop('checked', checked);
+            }
+            else
+                console.log('fail getSwitchState(' + id + '): ' + data.return_value);
+        }).fail(function (data) {
+            console.log('fail getSwitchState(' + id + '): ' + data.return_value);
+            if (supportsLocalStorage())
+                $("input#switch" + id).prop('checked', localStorage["spark_pixels.switch" + id] === 'true' ? true : false);
+        });
+        //console.log('commandString: ' + commandString);
+    }
+}
+
+function getColor(id) {
+    if (typeof accessToken !== 'undefined' && accessToken !== null) {
+        var deviceID = getDeviceID();
+        var commandString = 'GETCOLOR:' + id;
+        $.post("https://api.particle.io/v1/devices/" + deviceID + "/Function", {
+            access_token: accessToken, args: commandString
+        }).success(function (data) {
+            if(data.return_value >= 0) {
+                var color = '#' + parseIntToHexString(data.return_value);
+                $("input#color" + id).spectrum('set', color);
+                console.log('success! getColor(' + id + '): ' + color + '/' + data.return_value);
+            }
+        }).fail(function (data) {
+            console.log('fail getColor(' + id + '): ' + data.return_value);
+            if (supportsLocalStorage())
+                $("input#color" + id).spectrum("set", "#" + localStorage["spark_pixels.color" + id]);
+        });
+    }
+}
+
+function getBrightness() {
+    if (typeof accessToken !== 'undefined' && accessToken !== null) {
+        var deviceID = getDeviceID();
+        // Retrieve the device's brightness variable from the cloud API
+        $.get("https://api.particle.io/v1/devices/" + deviceID + "/brightness/?access_token=" + accessToken)
+            .success(function(data) {
+                brightness = (parseInt(data.result) / 255) * 100;
+                console.log("success! getBrightness(): " + brightness.toFixed(0) + "/" + data.result);
+            }).fail(function(data) {
+                console.log('fail getBrightness(): ' + data.return_value);
+                if (supportsLocalStorage()) {
+                    if (localStorage["spark_pixels.brightness"])
+                        brightness = parseInt(localStorage["spark_pixels.brightness"]);
+                }
+            }).always(function() {
+                $("#brightnessSlider").val(brightness.toFixed(0));
+                updateBrightnessLabel(brightness.toFixed(0));
+                $("div#brightnessControl").slideDown(300);
+            });
+    }
+}
+
+function getSpeed() {
+    if (typeof accessToken !== 'undefined' && accessToken !== null) {
+        var deviceID = getDeviceID();
+        // Retrieve the device's brightness variable from the cloud API
+        $.get("https://api.particle.io/v1/devices/" + deviceID + "/speed/?access_token=" + accessToken)
+            .success(function(data) {
+                console.log("success! getSpeed(): " + data.result);
+                speed = parseInt(data.result);
+                $("#speedSlider").val(speed);
+                updateSpeedLabel(speed);
+            }).fail(function(data) {
+                console.log('fail getSpeed(): ' + data.return_value);
+                if (supportsLocalStorage()) {
+                    if (localStorage["spark_pixels.speed"])
+                        speed = parseInt(localStorage["spark_pixels.speed"]);
+                }
+            }).always(function() {
+                $("#speedSlider").val(speed);
+                updateBrightnessLabel(speed);
+                $("div#speedControl").slideDown(300);
+            });
+    }
+}
+
 function setColors() {
     var colorsString = '';
     for(var count = 1; count <= 6; count++) {
@@ -472,61 +568,40 @@ function setMode() {
             setSwitches();
 
             $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: commandString})
-                .done(function(data) {console.log('done setMode(): ' + data.return_value);})
+                .success(function(data) {console.log('success! setMode(): ' + data.return_value);})
                 .fail(function (data) {console.log('fail setMode(): ' + data.return_value);});
         }
     }
 }
 
 function setBrightness() {
-    $("span#brightness").text(brightness);
     if (typeof accessToken !== 'undefined' && accessToken !== null) {
         var deviceID = getDeviceID();
         if(deviceID !== '') {
             var commandString = 'B:' + (brightness > 0 ? brightness : 1) + ',';
-            $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: commandString});
+            $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {
+                access_token: accessToken, args: commandString
+            }).success(function(data) {
+                updateBrightnessLabel(brightness);
+            }).fail(function(data) {
+                console.log('fail setBrightness(): ' + data.return_value);
+            });
         }
     }
 }
 
 function setSpeed() {
-    switch(Number(speed)) {
-        case 0:
-            $("span#speed").text("Paint Drying");
-            break;
-        case 1:
-            $("span#speed").text("Turtle");
-            break;
-        case 2:
-            $("span#speed").text("Segway");
-            break;
-        case 3:
-            $("span#speed").text("Rabbit");
-            break;
-        case 4:
-            $("span#speed").text("Cheetah");
-            break;
-        case 5:
-            $("span#speed").text("Ricky Bobby");
-            break;
-        case 6:
-            $("span#speed").text("Jimmy Johns");
-            break;
-        case 7:
-            $("span#speed").text("My Bullet");
-            break;
-        case 8:
-            $("span#speed").text("Superman");
-            break;
-        default:
-            console.log('speed is ' + speed);
-            break;
-    }
     if (typeof accessToken !== 'undefined' && accessToken !== null) {
         var deviceID = getDeviceID();
         if(deviceID !== '') {
             var commandString = 'S:' + speed + ',';
-            $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: commandString});
+            $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {
+                access_token: accessToken, args: commandString
+            }).success(function(data) {
+                updateSpeedLabel(speed);
+            }).fail(function(data) {
+                console.log('fail setSpeed(): ' + data.return_value);
+            });
         }
     }
 }

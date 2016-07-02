@@ -794,7 +794,7 @@ span#switch4, span#text {
     font-weight: bold;
     color: #2bc6fb;
 }
-#updateListDiv, #brightnessControl, #speedControl {
+#updateListDiv {
     padding: 6px 22px; 
     width: 350px; /*310px; */
     /*margin-left: 25%;*/
@@ -804,6 +804,19 @@ span#switch4, span#text {
     color: #fff; 
     border-radius: 30px; 
     text-align: center;
+    box-shadow: 3px 4px 10px #770000;
+}
+#brightnessControl, #speedControl {
+    padding: 6px 22px; 
+    width: 350px; /*310px; */
+    height: 32px;
+    /*margin-left: 25%;*/
+    margin: 0 auto;
+    font-weight: bold;
+    background: #ee0026; 
+    color: #fff; 
+    border-radius: 30px; 
+    text-align: left;
     box-shadow: 3px 4px 10px #770000;
 }
 #brightnessSlider, #speedSlider {
@@ -817,7 +830,7 @@ a#updateListButton {
     color: #fff; 
     text-align: center; 
     text-decoration: none;
-    margin-right: 2%;
+    padding-right: 10px; /*margin-right: 2%;*/
 }
 div#canvas {
     text-align: center;
@@ -958,6 +971,9 @@ div.mobile-splitter {
         text-decoration: none;
         line-height: 22px;
         font-size: 12px;
+    }
+    select#modes {
+        max-width: 127px;
     }
     .logo-box {
         color: #1C1521 !important;
@@ -1479,6 +1495,9 @@ div.mobile-splitter {
         width: 370px;
         height: 40px;
     }
+    div#brightnessControl, div#speedControl {
+        height: 32px;
+    }
     #brightnessSlider, #speedSlider {
         width: 150px;
         height: 15px;
@@ -1490,7 +1509,7 @@ div.mobile-splitter {
         font-size: 16px !important;
     }
     span#mode, span#device {
-        font-size: 11px !important;
+        font-size: 10px !important;
     }
     span#currentLayer {
         font-size: 20px !important;
@@ -1629,7 +1648,7 @@ div.mobile-splitter {
     div#updateListDiv, div#brightnessControl, div#speedControl {
         /*margin-left: calc(100% - 480px) !important;*/
         font-size: 16px;
-        width: 325px;
+        width: 355px;
     }
     #brightnessSlider, #speedSlider {
         width: 150px;
@@ -1789,6 +1808,9 @@ div.mobile-splitter {
         text-decoration: none;
         line-height: 22px;
         font-size: 12px;
+    }
+    select#modes {
+        max-width: 127px;
     }
     .logo-box {
         color: #1C1521 !important;
