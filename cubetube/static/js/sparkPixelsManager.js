@@ -19,14 +19,12 @@ function AuxSwitch(id, description, onLabel, offLabel, value) {
 
 function showHideAuxSwitchPanel() {
     if($('div.aux-panel-popover').css('display') !== 'none') {
-        $("img#auxSwIcon").removeClass("icon-wait");
-        $("img#auxSwIcon").addClass("icon-switches");
+        $("img#auxWaitIcon").fadeOut(150, function() { $("img#auxSwitchIcon").fadeIn(300); });
         $('div.aux-panel-popover').slideUp(300, 'linear');
     }
     else {
         if (typeof accessToken !== 'undefined' && accessToken !== null)
-            $("img#auxSwIcon").removeClass("icon-switches");
-            $("img#auxSwIcon").addClass("icon-wait");
+            $("img#auxSwitchIcon").fadeOut(150, function() { $("img#auxWaitIcon").fadeIn(300) });
             getAuxSwitches();
     }
 }
@@ -92,16 +90,14 @@ function getAuxSwitches() {
                 var args = item.split(',');
                 auxSwtchList.push(new AuxSwitch(args[0], args[1], args[2], args[3], args[4]));
             });
-            $("img#auxSwIcon").removeClass("icon-wait");
-            $("img#auxSwIcon").addClass("icon-switches");
+            $("img#auxWaitIcon").fadeOut(150, function() { $("img#auxSwitchIcon").fadeIn(300) });
             if(auxSwtchList.length > 0) {
                 updateAuxSwitchPanel();
                 $('div.aux-panel-popover').slideDown(300, 'linear');
             }
         }
     }).fail(function (data) {
-            $("img#auxSwIcon").removeClass("icon-wait");
-            $("img#auxSwIcon").addClass("icon-switches");
+            $("img#auxWaitIcon").fadeOut(150, function() { $("img#auxSwitchIcon").fadeIn(300) });
             console.log('fail: ' + data.result);
             var message = '';
             var responseText = data.responseText;

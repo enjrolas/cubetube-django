@@ -164,7 +164,11 @@
                 <div id="updateListDiv">
                     <a id="updateListButton" href="javascript:void(0);" onclick="currentMode = ''; populateInterval();" title="Click here to refresh the modes list!">Update List</a>
                     <select id="modes" onchange="changeMode();"></select>
-                <a onclick="showHideAuxSwitchPanel();" title="Click to toggle the Aux Switch Panel!" href="javascript:void(0);" style="float: right; width: 10%; text-decoration:none;"><img id="auxSwIcon" class="icon-switches" /></a>
+                <a onclick="showHideAuxSwitchPanel();" title="Click to toggle the Aux Switch Panel!" href="javascript:void(0);" 
+                   style="float: right; width: 10%; text-decoration:none;">
+                    <img id="auxSwitchIcon" src="/static/images/icon-switches.png" class="icon-switches" />
+                    <img id="auxWaitIcon" src="/static/images/icon-loading.gif" class="icon-switches" style="display: none;"/>
+                </a>
                 </div>
                 <div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
                 <div id="brightnessControl">

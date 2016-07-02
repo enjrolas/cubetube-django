@@ -687,12 +687,6 @@ img.logo-menu {
 /**************************************/
 .icon-switches {
     width: 100%;
-    content: url("/static/images/icon-switches.png");
-    vertical-align: middle;
-}
-.icon-wait {
-    width: 100%;
-    content: url("/static/images/icon-loading.gif");
     vertical-align: middle;
 }
 .aux-panel-popover {
