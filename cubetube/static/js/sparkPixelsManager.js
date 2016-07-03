@@ -50,13 +50,13 @@ function setTimeZoneOffset() {
         $.post("https://api.particle.io/v1/devices/" + deviceID + "/Function", {
                 access_token: accessToken, args: commandString
         }).success(function (data) {
-            //console.log('success! localOffset: ' + data.return_value);
             $("span#device").text('Timezone offset updated to ' + data.return_value);
-            $("div#cubeAndModeText").show('slide', {direction: 'left'}, 600).delay(1200).hide('slide', {direction: 'right'}, 600);
+            console.log('success! localOffset: ' + data.return_value);
         }).fail(function (data) {
             $("span#device").text('Error: Timezone not updated');
+            console.log('fail setTimeZoneOffset(): ' + data.return_value);
+        }).always(function (data) {
             $("div#cubeAndModeText").show('slide', {direction: 'left'}, 600).delay(1200).hide('slide', {direction: 'right'}, 600);
-            console.log('fail: ' + data.return_value);
         });
     }
 }
@@ -145,7 +145,10 @@ function populateInterval() {
                 $("select#modes").fadeIn(300);
                 $('select#cubeName').fadeIn(300);
                 $("a#showHideAuxSwitchPanel").fadeIn(300);
-                $("div#cubeAndModeText").hide('slide', {direction: 'right'}, 600); //fadeIn(300);
+                $("div#cubeAndModeText").hide('slide', {direction: 'right'}, 600, function() {
+                    $("span#device").html("Still Loading, Please Wait<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>");
+                    $("div#cubeAndModeText").show('slide', {direction: 'left'}, 600);
+                }); //fadeIn(300);
                 //console.log('$("select#modes option:selected").val() = ' + $("select#modes option:selected").val());
                 clearModeOptions();
                 for(var id=1; id<=6; id++) {
@@ -156,9 +159,15 @@ function populateInterval() {
                 var idx = $("select#modes option:selected").index();
                 if(modeParmList[idx] !== 'N')
                     parseModeOptions();
+                
                 getSpeed();         //setSpeed();
                 getBrightness();    //setBrightness();
                 setTimeZoneOffset();
+                
+                var isSpeedVisible = $("div#speedControl").css('display' !== 'none');
+                var isBrightnessVisible = $("div#brightnessControl").css('display' !== 'none');
+                if(isSpeedVisible && isBrightnessVisible)
+                    $("div#cubeAndModeText").hide('slide', {direction: 'right'}, 600);
             }
             else {
                 // Set the selected mode in the modes dropdown
@@ -508,10 +517,8 @@ function getSpeed() {
         // Retrieve the device's brightness variable from the cloud API
         $.get("https://api.particle.io/v1/devices/" + deviceID + "/speed/?access_token=" + accessToken)
             .success(function(data) {
-                console.log("success! getSpeed(): " + data.result);
                 speed = parseInt(data.result);
-                $("#speedSlider").val(speed);
-                updateSpeedLabel(speed);
+                console.log("success! getSpeed(): " + data.result);
             }).fail(function(data) {
                 console.log('fail getSpeed(): ' + data.return_value);
                 if (supportsLocalStorage()) {
@@ -520,7 +527,7 @@ function getSpeed() {
                 }
             }).always(function() {
                 $("#speedSlider").val(speed);
-                updateBrightnessLabel(speed);
+                updateSpeedLabel(speed);
                 $("div#speedControl").fadeIn(300);
             });
     }
