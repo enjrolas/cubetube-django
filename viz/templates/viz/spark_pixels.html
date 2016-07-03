@@ -70,20 +70,19 @@
             console.log('#cubeName options: ' + $("select#cubeName option").length);
             console.log('#cubeName value: ' + $("select#cubeName").val());
 
-            if(deviceID !== '') {
+            if(deviceID.trim() !== '') {
                 // Retrieve the name of the selected device from the dropdown
-                $("select#cubeName option").each(function () {
+                /*$("select#cubeName option").each(function () {
                     if ($(this).val() === deviceID)
-                        $("span#device").html("Please Wait<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>");
-                        //$("span#device").text($(this).text() + " Selected");  // Place the name in the device span
-                });
-
+                        $("span#device").text($(this).text() + " Selected");  // Place the name in the device span
+                });*/
+                
                 coreID = deviceID;
                 // Freshen the cookie with the currently selected device from the dropdown
                 $.removeCookie("coreID", {path: '/'});
                 var date = new Date();
                 $.cookie("coreID", coreID, {expires: date.getTime() + 86400, path: '/'});
-
+                
                 // Show the modes list and brightness/speed controls
                 populateInterval();
             }
@@ -91,11 +90,13 @@
                 // We don't have a valid selected device so delete the cookie and hide the controls
                 $.removeCookie("coreID", {path: '/'});
                 coreID = null;
-                $("span#mode").text('');
+                //$("span#mode").text('');
                 $("span#device").text($('select#cubeName').text());
+                $("div#cubeAndModeText").show('slide', {direction: 'left'}, 600);
+                $("div#params").fadeOut(100);
                 $("div#updateListDiv").fadeOut(100);
-                $("div#brightnessControl").slideUp(100);
-                $("div#speedControl").slideUp(100);
+                $("div#brightnessControl").fadeOut(100);
+                $("div#speedControl").fadeOut(100);
                 clearInterval(populateModesTimer);
             }
         }
@@ -194,10 +195,13 @@
             {% if logged_in %}
                 <div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
                 <div id="updateListDiv">
-                    <a id="updateListButton" href="javascript:void(0);" onclick="currentMode = ''; populateInterval();" title="Click here to refresh the modes list!">Update List</a>
-                    <select id="modes" onchange="changeMode();"></select>
-                <a onclick="showHideAuxSwitchPanel();" title="Click to toggle the Aux Switch Panel!" href="javascript:void(0);" 
-                   style="float: right; width: 10%; text-decoration:none;">
+                    <a id="updateListButton" href="javascript:void(0);" onclick="currentMode = ''; populateInterval();" 
+                       title="Click here to refresh the modes list!">
+                        Loading, Please Wait<span class="one">.</span><span class="two">.</span><span class="three">.</span>
+                    </a>
+                    <select id="modes" onchange="changeMode();" style="display: none;"></select>
+                <a id="showHideAuxSwitchPanel" onclick="showHideAuxSwitchPanel();" title="Click to toggle the Aux Switch Panel!" href="javascript:void(0);" 
+                   style="float: right; width: 10%; text-decoration: none; display: none;">
                     <img id="auxSwitchIcon" src="/static/images/icon-switches.png" class="icon-switches" />
                     <img id="auxWaitIcon" src="/static/images/icon-loading.gif" class="icon-switches" style="display: none;"/>
                 </a>

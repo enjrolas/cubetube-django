@@ -2,8 +2,8 @@ var isUserAlerted = false;
 var currentMode = '';
 var brightness = 20;
 var speed = 5;
-var modeList;
-var modeParmList;
+var modeList = new Array();
+var modeParmList = new Array();
 var auxSwtchList = new Array();
 var populateModesTimer = null;
 var syncInterval = null;
@@ -79,26 +79,27 @@ function setAuxSwitches(id, checked) {
 
 function getAuxSwitches() {
     var deviceID = getDeviceID();
-
     // Retrieve the device's aux switches list from the cloud API and update array variable
-    $.get("https://api.particle.io/v1/devices/" + deviceID + "/auxSwtchList/?access_token=" + accessToken, function (data) {
-        console.log('success: ' + data.result);
-        var tmpAuxSwtch = data.result.slice(0, data.result.lastIndexOf(';')).split(';');
-        if(tmpAuxSwtch.length > 0) {
-            auxSwtchList = new Array();
-            tmpAuxSwtch.forEach( function(item, index) { 
-                var args = item.split(',');
-                auxSwtchList.push(new AuxSwitch(args[0], args[1], args[2], args[3], args[4]));
-            });
-            $("img#auxWaitIcon").fadeOut(150, function() { $("img#auxSwitchIcon").fadeIn(300) });
-            if(auxSwtchList.length > 0) {
-                updateAuxSwitchPanel();
-                $('div.aux-panel-popover').slideDown(300, 'linear');
+    $.get("https://api.particle.io/v1/devices/" + deviceID + "/auxSwtchList/?access_token=" + accessToken)
+        .success(function (data) {
+            console.log('success! getAuxSwitches(): ' + data.result);
+            var tmpAuxSwtch = data.result.slice(0, data.result.lastIndexOf(';')).split(';');
+            if(tmpAuxSwtch.length > 0) {
+                auxSwtchList = new Array();
+                tmpAuxSwtch.forEach( function(item, index) { 
+                    var args = item.split(',');
+                    auxSwtchList.push(new AuxSwitch(args[0], args[1], args[2], args[3], args[4]));
+                });
+                $("img#auxWaitIcon").fadeOut(150, function() { $("img#auxSwitchIcon").fadeIn(300) });
+                if(auxSwtchList.length > 0) {
+                    updateAuxSwitchPanel();
+                    $('div.aux-panel-popover').slideDown(300, 'linear');
+                }
             }
-        }
-    }).fail(function (data) {
+        })
+        .fail(function (data) {
             $("img#auxWaitIcon").fadeOut(150, function() { $("img#auxSwitchIcon").fadeIn(300) });
-            console.log('fail: ' + data.result);
+            console.log('fail getAuxSwitches(): ' + data.result);
             var message = '';
             var responseText = data.responseText;
             if (responseText.indexOf("Variable not found") >= 0) {
@@ -124,12 +125,16 @@ function getAuxSwitches() {
 function populateInterval() {
     populateModesTimer = setInterval(function () {
         if (currentMode === null || currentMode === '' || currentMode === 'None') {
-            $("select#modes").fadeOut(100);
-            $("div#brightnessControl").slideUp(100);
-            $("div#speedControl").slideUp(100);
-            $("a#updateListButton").html("Please Wait<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>");
-            //$("span#mode").html("Please Wait<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>");
+            $("div#cubeAndModeText").hide('slide', {direction: 'right'}, 600);
+            $("div#updateListDiv").fadeIn(300);
+            if($("select#modes").css('display') === 'block') {
+                $("select#modes").fadeOut(100);
+                $("a#showHideAuxSwitchPanel").fadeOut(100);
+                $("a#updateListButton").html("Loading, Please Wait<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>");
+            }
             populateModes();
+            populateModesList();
+            populateModeParams();
         }
         else {
             if ($("select#modes option:selected").val() === currentMode) {
@@ -137,9 +142,9 @@ function populateInterval() {
                 isUserAlerted = true;
                 $("a#updateListButton").html("Update List");
                 //$("span#mode").html(currentMode);
-                $("div#updateListDiv").fadeIn(300);
                 $("select#modes").fadeIn(300);
                 $('select#cubeName').fadeIn(300);
+                $("a#showHideAuxSwitchPanel").fadeIn(300);
                 $("div#cubeAndModeText").hide('slide', {direction: 'right'}, 600); //fadeIn(300);
                 //console.log('$("select#modes option:selected").val() = ' + $("select#modes option:selected").val());
                 clearModeOptions();
@@ -177,14 +182,17 @@ function populateInterval() {
 function populateModes() {
     var deviceID = getDeviceID();
     if (deviceID !== '') {
-        // Retrieve the device's current mode from the cloud API
-        $.get("https://api.particle.io/v1/devices/" + deviceID + "/mode/?access_token=" + accessToken, function (data) {
-            //console.log(data.result);
-            currentMode = data.result.trim();
-            console.log('currentMode: ' + currentMode);
-        }, "json").fail(function (data) {   // API call failed to get the mode variable from the cloud;
-                var message = '';           // device is likely not running Spark Pixels, or it hasn't
-                if (deviceID !== '') {      // successfully published the 'mode' cloud variable.
+        if (currentMode === null || currentMode === '' || currentMode === 'None') {
+            // Retrieve the device's current mode from the cloud API
+            $.get("https://api.particle.io/v1/devices/" + deviceID + "/mode/?access_token=" + accessToken, "json")
+            .success(function (data) {
+                //console.log(data.result);
+                currentMode = data.result.trim();
+                console.log('success! populateModes(): ' + currentMode);
+            })
+            .fail(function (data) {   // API call failed to get the mode variable from the cloud;
+                var message = '';     // device is likely not running Spark Pixels, or it hasn't
+                if (deviceID !== '') {// successfully published the 'mode' cloud variable.
                     var device = $("select#cubeName option[value = '" + deviceID + "']").text();
                     //if (typeof device !== 'undefined' && device !== null && device !== '') {
                     /*for ( var prop in data ) {
@@ -193,6 +201,7 @@ function populateModes() {
                     console.log("responseText: " + data.responseText);
                     console.log("responseJSON: " + data.responseJSON);*/
                     var responseText = data.responseText;
+                    console.log('fail populateModes(): ' + responseText);
                     if (responseText.indexOf("Variable not found") >= 0) {
                         message += 'The selected Cube (\"' + device.substr(device.indexOf(')') + 2)
                             + '\") does not appear to be running the Spark Pixels viz (it may be the Particle API acting up).';
@@ -234,84 +243,105 @@ function populateModes() {
                     }
                 }
             });
-        // Retrieve the device's modes list from the cloud API
-        $.get("https://api.particle.io/v1/devices/" + deviceID + "/modeList/?access_token=" + accessToken, function (data) {
-            console.log('success: ' + data.result.slice(0, data.result.lastIndexOf(';')));
-            modeList = data.result.split(";");
-            $("select#modes").empty();  //clear all the existing modes before appending new ones
-            for (var index = 0; index < modeList.length - 1; index++) {
-                var mode = modeList[index].trim();
-                $("select#modes").append("<option value=\"" + mode + "\">" + mode + "</option>");
-            }
-            //console.log('currentMode: ' + currentMode);
-        }, "json").fail(function (data) {
-            console.log('fail: ' + data.result);
-            var message = '';
-            var device = $("select#cubeName option[value = '" + deviceID + "']").text();
-            var responseText = data.responseText;
-            if (responseText.indexOf("Variable not found") >= 0) {
-                message += 'The selected Cube (\"' + device.substr(device.indexOf(')') + 2)
-                    + '\") does not appear to be running the Spark Pixels viz (it may be the Particle API acting up).';
-                message += '\nIf you would like to flash \"' + device.substr(device.indexOf(')') + 2) + '\" with ';
-                message += 'Spark Pixels now, just hit [OK].\nElse, click [Cancel] to return to where you were.';
-                if (!isUserAlerted) {
-                    isUserAlerted = true;
-                    if (confirm(message))
-                        flashCube();
-                    else
-                        clearInterval(populateModesTimer);
+        }
+    }
+}
+
+function populateModesList() {
+    var deviceID = getDeviceID();
+    if (deviceID !== '') {
+        if(!modeList.length) {
+            // Retrieve the device's modes list from the cloud API
+            $.get("https://api.particle.io/v1/devices/" + deviceID + "/modeList/?access_token=" + accessToken, "json")
+            .success(function (data) {
+                console.log('success! populateModesList(): ' + data.result.slice(0, data.result.lastIndexOf(';')));
+                modeList = data.result.split(";");
+                $("select#modes").empty();  //clear all the existing modes before appending new ones
+                for (var index = 0; index < modeList.length - 1; index++) {
+                    var mode = modeList[index].trim();
+                    $("select#modes").append("<option value=\"" + mode + "\">" + mode + "</option>");
                 }
-            }
-            else {
-                if (!isUserAlerted) {
-                    isUserAlerted = true;
-                    message = '';
-                    message+="Oh-oh! I tried to get the list of MODES from the Particle cloud, but it would not retrieve it!";
-                    message+="\nThis could be due to a network error. If your cube is breathing cyan,\nit may be the Particle API acting up.";
-                    message+="\nClick [OK] to retry, [Cancel] to give it a rest for a while.";
-                    if (confirm(message))
-                        window.location.reload();
-                    else
-                        clearInterval(populateModesTimer);
+                //console.log('currentMode: ' + currentMode);
+            })
+            .fail(function (data) {
+                console.log('fail populateModesList(): ' + data.result);
+                var message = '';
+                var device = $("select#cubeName option[value = '" + deviceID + "']").text();
+                var responseText = data.responseText;
+                if (responseText.indexOf("Variable not found") >= 0) {
+                    message += 'The selected Cube (\"' + device.substr(device.indexOf(')') + 2)
+                        + '\") does not appear to be running the Spark Pixels viz (it may be the Particle API acting up).';
+                    message += '\nIf you would like to flash \"' + device.substr(device.indexOf(')') + 2) + '\" with ';
+                    message += 'Spark Pixels now, just hit [OK].\nElse, click [Cancel] to return to where you were.';
+                    if (!isUserAlerted) {
+                        isUserAlerted = true;
+                        if (confirm(message))
+                            flashCube();
+                        else
+                            clearInterval(populateModesTimer);
+                    }
                 }
-            }
-        });
-        // Retrieve the device's parameters list from the cloud API
-        $.get("https://api.particle.io/v1/devices/" + deviceID + "/modeParmList/?access_token=" + accessToken, function (data) {
-            console.log('success: ' + data.result.slice(0, data.result.lastIndexOf(';')));
-            modeParmList = data.result.split(";");
-        }, "json").fail(function (data) {
-            console.log('fail: ' + data.result);
-            var device = $("select#cubeName option[value = '" + deviceID + "']").text();
-            var message = '';
-            var responseText = data.responseText;
-            if (responseText.indexOf("Variable not found") >= 0) {
-                message += 'The selected Cube (\"' + device.substr(device.indexOf(')') + 2)
-                    + '\") does not appear to be running the Spark Pixels viz (it may be the Particle API acting up).';
-                message += '\nIf you would like to flash \"' + device.substr(device.indexOf(')') + 2) + '\" with ';
-                message += 'Spark Pixels now, just hit [OK].\nElse, click [Cancel] to return to where you were.';
-                if (!isUserAlerted) {
-                    isUserAlerted = true;
-                    if (confirm(message))
-                        flashCube();
-                    else
-                        clearInterval(populateModesTimer);
+                else {
+                    if (!isUserAlerted) {
+                        isUserAlerted = true;
+                        message = '';
+                        message+="Oh-oh! I tried to get the list of MODES from the Particle cloud, but it would not retrieve it!";
+                        message+="\nThis could be due to a network error. If your cube is breathing cyan,\nit may be the Particle API acting up.";
+                        message+="\nClick [OK] to retry, [Cancel] to give it a rest for a while.";
+                        if (confirm(message))
+                            window.location.reload();
+                        else
+                            clearInterval(populateModesTimer);
+                    }
                 }
-            }
-            else {
-                if (!isUserAlerted) {
-                    isUserAlerted = true;
-                    message = '';
-                    message+="Oh-oh! I tried to get the list of PARAMETERS from Particle cloud, but it would not retrieve it!";
-                    message+="\nThis could be due to a network error. If your cube is breathing cyan,\nit may be the Particle API acting up.";
-                    message+="\nClick [OK] to retry, [Cancel] to give it a rest for a while.";
-                    if (confirm(message))
-                        window.location.reload();
-                    else
-                        clearInterval(populateModesTimer);
+            });
+        }
+    }
+}
+
+function populateModeParams() {
+    var deviceID = getDeviceID();
+    if (deviceID !== '') {
+        if(!modeParmList.length) {
+            // Retrieve the device's parameters list from the cloud API
+            $.get("https://api.particle.io/v1/devices/" + deviceID + "/modeParmList/?access_token=" + accessToken, "json")
+            .success(function (data) { 
+                console.log('success! populateModeParams(): ' + data.result.slice(0, data.result.lastIndexOf(';')));
+                modeParmList = data.result.split(";"); 
+            })
+            .fail(function (data) {
+                console.log('fail populateModeParams(): ' + data.result);
+                var device = $("select#cubeName option[value = '" + deviceID + "']").text();
+                var message = '';
+                var responseText = data.responseText;
+                if (responseText.indexOf("Variable not found") >= 0) {
+                    message += 'The selected Cube (\"' + device.substr(device.indexOf(')') + 2)
+                        + '\") does not appear to be running the Spark Pixels viz (it may be the Particle API acting up).';
+                    message += '\nIf you would like to flash \"' + device.substr(device.indexOf(')') + 2) + '\" with ';
+                    message += 'Spark Pixels now, just hit [OK].\nElse, click [Cancel] to return to where you were.';
+                    if (!isUserAlerted) {
+                        isUserAlerted = true;
+                        if (confirm(message))
+                            flashCube();
+                        else
+                            clearInterval(populateModesTimer);
+                    }
                 }
-            }
-        });
+                else {
+                    if (!isUserAlerted) {
+                        isUserAlerted = true;
+                        message = '';
+                        message+="Oh-oh! I tried to get the list of PARAMETERS from Particle cloud, but it would not retrieve it!";
+                        message+="\nThis could be due to a network error. If your cube is breathing cyan,\nit may be the Particle API acting up.";
+                        message+="\nClick [OK] to retry, [Cancel] to give it a rest for a while.";
+                        if (confirm(message))
+                            window.location.reload();
+                        else
+                            clearInterval(populateModesTimer);
+                    }
+                }
+            });
+        }
     }
 }
 
@@ -345,8 +375,8 @@ function flashCube() {
                 alert(output);
                 window.location.reload();
             },
-            error: function (data) {
-                console.log("fail");
+            fail: function (data) {
+                console.log("fail flashing");
                 console.log(data);
             }
         });
@@ -397,13 +427,9 @@ function parseModeOptions() {
 }
 
 function parseRGBToHexString(r, g, b) {
-    var rHex = Number(r).toString(16);
-    var gHex = Number(g).toString(16);
-    var bHex = Number(b).toString(16);
-    rHex = rHex.length > 1 ? rHex : '0' + rHex;
-    gHex = gHex.length > 1 ? gHex : '0' + gHex;
-    bHex = bHex.length > 1 ? bHex : '0' + bHex;
-
+    var rHex = ("00" + Number(r).toString(16)).slice(-2);
+    var gHex = ("00" + Number(g).toString(16)).slice(-2);
+    var bHex = ("00" + Number(b).toString(16)).slice(-2);
     return (rHex + gHex + bHex).toUpperCase();
 }
 
@@ -471,7 +497,7 @@ function getBrightness() {
             }).always(function() {
                 $("#brightnessSlider").val(brightness.toFixed(0));
                 updateBrightnessLabel(brightness.toFixed(0));
-                $("div#brightnessControl").slideDown(300);
+                $("div#brightnessControl").fadeIn(300);
             });
     }
 }
@@ -495,7 +521,7 @@ function getSpeed() {
             }).always(function() {
                 $("#speedSlider").val(speed);
                 updateBrightnessLabel(speed);
-                $("div#speedControl").slideDown(300);
+                $("div#speedControl").fadeIn(300);
             });
     }
 }
