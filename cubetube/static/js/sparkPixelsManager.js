@@ -173,13 +173,16 @@ function populateInterval() {
                 // This can fail: 
                 //$("select#modes").val(currentMode);
                 $.each($("select#modes option"), function (index, option) {
-                    option.selected = false;
+                    if(index < $("select#modes option").length)
+                        option.selected = false;
                 });
                 $.each($("select#modes option"), function (index, option) {
                     //console.log('option: ' + option.value);
-                    if (option.value === currentMode) {
-                        option.selected = true;
-                        return false;
+                    if(index < $("select#modes option").length) {
+                        if (option.value === currentMode) {
+                            option.selected = true;
+                            return false;
+                        }
                     }
                 });
             }
