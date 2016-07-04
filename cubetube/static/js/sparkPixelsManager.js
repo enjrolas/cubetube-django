@@ -249,7 +249,7 @@ function populateModesList() {
             $.get("https://api.particle.io/v1/devices/" + deviceID + "/modeList/?access_token=" + accessToken, "json")
             .success(function (data) {
                 console.log('success! populateModesList(): ' + data.result.slice(0, data.result.lastIndexOf(';')));
-                modeList = data.result.slice(0, data.result.lastIndexOf(';')).split(";");
+                modeList = data.result.split(";");
                 $("select#modes").empty();  //clear all the existing modes before appending new ones
                 for (var index = 0; index < modeList.length - 1; index++) {
                     var mode = modeList[index].trim();
