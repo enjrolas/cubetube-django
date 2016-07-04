@@ -127,10 +127,14 @@ function populateInterval() {
         if (currentMode === null || currentMode === '' || currentMode === 'None') {
             $("div#cubeAndModeText").hide('slide', {direction: 'right'}, 600);
             $("div#updateListDiv").fadeIn(300);
-            if($("select#modes").css('display') === 'block') {
-                $("select#modes").fadeOut(100);
+            if($("select#modes").css('display') !== 'none') {
+                // We only want to set these once
+                $("a#updateListButton").fadeOut(100);
                 $("a#showHideAuxSwitchPanel").fadeOut(100);
-                $("a#updateListButton").html("Loading, Please Wait<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>");
+                $("select#modes").fadeOut(100, function() {
+                    $("a#updateListButton").html("Loading, Please Wait<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>");
+                    $("a#updateListButton").fadeIn(300);
+                });
             }
             populateModes();
             populateModesList();
@@ -163,11 +167,6 @@ function populateInterval() {
                 getSpeed();         //setSpeed();
                 getBrightness();    //setBrightness();
                 setTimeZoneOffset();
-                
-                var isSpeedVisible = $("div#speedControl").css('display' !== 'none');
-                var isBrightnessVisible = $("div#brightnessControl").css('display' !== 'none');
-                if(isSpeedVisible && isBrightnessVisible)
-                    $("div#cubeAndModeText").hide('slide', {direction: 'right'}, 600);
             }
             else {
                 // Set the selected mode in the modes dropdown
@@ -195,7 +194,6 @@ function populateModes() {
             // Retrieve the device's current mode from the cloud API
             $.get("https://api.particle.io/v1/devices/" + deviceID + "/mode/?access_token=" + accessToken, "json")
             .success(function (data) {
-                //console.log(data.result);
                 currentMode = data.result.trim();
                 console.log('success! populateModes(): ' + currentMode);
             })
@@ -238,19 +236,6 @@ function populateModes() {
                         }
                     }
                 }
-                else {
-                    if (!isUserAlerted) {
-                        isUserAlerted = true;
-                        message = '';
-                        message+="Oh-oh! I tried to get the cube's DEVICE ID, but the Particle cloud reported it as OFFLINE!";
-                        message+="\nThis could be due to a network error. If your cube is breathing cyan,\nit may be the Particle API acting up.";
-                        message+="\nClick [OK] to retry, [Cancel] to give it a rest for a while. You may try resetting your cube prior to this.";
-                        if (confirm(message))
-                            window.location.reload();
-                        else
-                            clearInterval(populateModesTimer);
-                    }
-                }
             });
         }
     }
@@ -264,7 +249,7 @@ function populateModesList() {
             $.get("https://api.particle.io/v1/devices/" + deviceID + "/modeList/?access_token=" + accessToken, "json")
             .success(function (data) {
                 console.log('success! populateModesList(): ' + data.result.slice(0, data.result.lastIndexOf(';')));
-                modeList = data.result.split(";");
+                modeList = data.result.slice(0, data.result.lastIndexOf(';')).split(";");
                 $("select#modes").empty();  //clear all the existing modes before appending new ones
                 for (var index = 0; index < modeList.length - 1; index++) {
                     var mode = modeList[index].trim();
@@ -458,12 +443,17 @@ function getSwitchState(id) {
                 var checked = data.return_value === 1 ? true : false;
                 $("input#switch" + id).prop('checked', checked);
             }
-            else
+            else {
                 console.log('fail getSwitchState(' + id + '): ' + data.return_value);
+                if (supportsLocalStorage())
+                    if(localStorage["spark_pixels.switch" + id])
+                        $("input#switch" + id).prop('checked', localStorage["spark_pixels.switch" + id] === 'true' ? true : false);
+            }
         }).fail(function (data) {
             console.log('fail getSwitchState(' + id + '): ' + data.return_value);
             if (supportsLocalStorage())
-                $("input#switch" + id).prop('checked', localStorage["spark_pixels.switch" + id] === 'true' ? true : false);
+                if(localStorage["spark_pixels.switch" + id])
+                    $("input#switch" + id).prop('checked', localStorage["spark_pixels.switch" + id] === 'true' ? true : false);
         });
         //console.log('commandString: ' + commandString);
     }
@@ -481,10 +471,20 @@ function getColor(id) {
                 $("input#color" + id).spectrum('set', color);
                 console.log('success! getColor(' + id + '): ' + color + '/' + data.return_value);
             }
+            else {
+                if (supportsLocalStorage())
+                    if(localStorage["spark_pixels.color" + id])
+                        $("input#color" + id).spectrum("set", "#" + localStorage["spark_pixels.color" + id]);
+                    else
+                        $("input#color" + id).spectrum("set", "#ffebcd");
+            }
         }).fail(function (data) {
             console.log('fail getColor(' + id + '): ' + data.return_value);
             if (supportsLocalStorage())
-                $("input#color" + id).spectrum("set", "#" + localStorage["spark_pixels.color" + id]);
+                if(localStorage["spark_pixels.color" + id])
+                    $("input#color" + id).spectrum("set", "#" + localStorage["spark_pixels.color" + id]);
+                else
+                    $("input#color" + id).spectrum("set", "#ffebcd");
         });
     }
 }

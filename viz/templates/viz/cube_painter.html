@@ -53,17 +53,22 @@
             checkCookie();
             //console.log("accessToken: " + accessToken);
 
-            if (supportsLocalStorage()) {
-                if (localStorage["cubetube.brightness"])
-                    brightness = parseInt(localStorage["cubetube.brightness"]);
-            }
-            $("#brightnessSlider").val(brightness);
-
-            if (typeof accessToken !== 'undefined' && accessToken !== null)
+            if (typeof accessToken !== 'undefined' && accessToken !== null) {
+                if (supportsLocalStorage())
+                    localStorage["spark_pixels.accessToken"] = accessToken;
                 cubeNameOnChange(); //populateInterval();
+            }
             else
-                $('select#cubeName').fadeOut(100);
+                if (supportsLocalStorage())
+                    if (localStorage["spark_pixels.accessToken"]) {
+                        accessToken = localStorage["spark_pixels.accessToken"];
+                        cubeNameOnChange(); //populateInterval();
+                    }
 
+            // Bind both touch and click events to the slider control
+            // for compatibility with mobile and desktop devices
+            $("input#brightnessSlider").on("mouseup touchend", function() { changeBrightness(); });
+            
             initGame($canvas);  //initGame($canvas, $colors);
         });
 
@@ -85,24 +90,18 @@
 
             if(deviceID !== '') {
                 // Retrieve the name of the selected device from the dropdown
-                $("select#cubeName option").each(function () {
+                /*$("select#cubeName option").each(function () {
                     if ($(this).val() === deviceID)
                         $("span#device").text($(this).text() + " Selected");  // Place the name in the device span
-                });
+                });*/
 
-                /*coreID = $.cookie("coreID");
-                if (typeof coreID === 'undefined' || coreID === null)*/
                 coreID = deviceID;
                 // Freshen the cookie with the currently selected device from the dropdown
                 $.removeCookie("coreID", {path: '/'});
                 var date = new Date();
                 $.cookie("coreID", coreID, {expires: date.getTime() + 86400, path: '/'});
 
-            //if (coreID !== '-1') {
                 // Show the modes list and brightness control
-                $("div#updateListDiv").fadeIn(300);
-                $("div#brightnessControl").fadeIn(300);
-                $('select#cubeName').fadeIn(300);
                 populateInterval();
             }
             else {
@@ -110,9 +109,10 @@
                 $.removeCookie("coreID", {path: '/'});
                 coreID = null;
                 //$("span#mode").text('');
+                $("span#device").text($('select#cubeName').text());
+                $("div#cubeAndModeText").show('slide', {direction: 'left'}, 600);
                 $("div#updateListDiv").fadeOut(100);
                 $("div#brightnessControl").fadeOut(100);
-                $("span#device").text($('select#cubeName').text());
                 clearInterval(populateModesTimer);
                 //$('select#cubeName').val('-1');
             }
@@ -123,11 +123,16 @@
 
         function changeBrightness() {
             brightness = $("#brightnessSlider").val();
+            updateBrightnessLabel(brightness);
             setBrightness();
             if (supportsLocalStorage())
-                localStorage["cubetube.brightness"] = brightness;
+                localStorage["spark_pixels.brightness"] = brightness;
         }
-    </script>
+        
+        function updateBrightnessLabel(brightnessValue) {
+            $("span#brightness").text("Brightness: " + brightnessValue);
+        }
+</script>
     {% load utils %}
     {% logged_in_status as logged_in %}
     <div id="gallery-wrapper" class="viz-cards" style="padding-top: 0px !important;">
@@ -139,14 +144,18 @@
             {% if logged_in %}
                 <div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
                 <div id="updateListDiv">
-                    <a id="updateListButton" href="javascript:void(0);" onclick="currentMode = ''; populateInterval();" title="Click here to refresh the modes list!">Update List</a>
+                    <a id="updateListButton" href="javascript:void(0);" onclick="currentMode = ''; populateInterval();" 
+                       title="Click here to refresh the modes list!">
+                        Loading, Please Wait<span class="one">.</span><span class="two">.</span><span class="three">.</span>
+                    </a>
                     <select id="modes" onchange="setMode();"></select>
                 </div>
                 <div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
                 <div id="brightnessControl">
-                    <div>Brightness:  <span style="margin-right: 10px" id="brightness"></span>
-                        <input id="brightnessSlider" type="range" min="0" max="100" step="1" value="20" onchange="changeBrightness();" />
-                    </div>
+                    <!--<div>-->
+                        <span style="float: left;" id="brightness"></span>
+                        <input id="brightnessSlider" type="range" min="0" max="100" step="1" value="20" />
+                    <!--</div>-->
                 </div>
             {% endif %}
         </div>
