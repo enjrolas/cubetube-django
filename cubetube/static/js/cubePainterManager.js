@@ -750,7 +750,7 @@ function newGame() {
     for (var z=0; z<kBoardWidth; z++)
         for (var r=0; r<kBoardHeight; r++)
             for (var c=0; c<kBoardWidth; c++)
-                gPieces.push(new Cell(r, c, -1, "#ffebcd", false));
+                gPieces.push(new Cell(r, c, -1, "#00000", false));
 
     /*
      * Picker horizontal (8px width x 3px height) orientation

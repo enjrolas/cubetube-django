@@ -131,6 +131,7 @@
         
         function updateBrightnessLabel(brightnessValue) {
             $("span#brightness").text("Brightness: " + brightnessValue);
+            $("input#brightnessSlider").attr("title", $("span#brightness").text());
         }
 </script>
     {% load utils %}
