@@ -923,7 +923,10 @@ div.mobile-splitter {
 
 /* #### GALAXY S4/S5/S6/S7, Note 3/4 and Phablets Portrait #### */
 /* Had to specify the pixel ratio to avoid interfering with desktop layout */
-@media screen and (min-device-height: 640px) and (min-device-width: 360px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 2) {
+/* (max-aspect-ratio: 13/9): This specifies the portrait orientation with  */
+/* a fix to stop Android's software keyboard from breaking the CSS layout: */
+/* http://blog.abouthalf.com/development/orientation-media-query-challenges-in-android-browsers/ */
+@media screen and (min-device-height: 640px) and (min-device-width: 360px) and (max-aspect-ratio: 13/9) and (-webkit-min-device-pixel-ratio: 2) {
     .aux-panel-popover {
         width: 96%;
     }
@@ -1207,7 +1210,7 @@ div.mobile-splitter {
         width: 100%;
     }
     input#text {
-        width: 55%;
+        width: 57%;
     }
     div#canvas {
         padding: 10px 0 40px;
@@ -1340,7 +1343,7 @@ div.mobile-splitter {
         width: 100%;
     }
     input#text {
-        width: 65%;
+        width: 50%;
     }
     div#canvas {
         padding: 10px 0 40px;
@@ -1457,7 +1460,10 @@ div.mobile-splitter {
 }
 
 /* #### Android Tablets Portrait #### */
-@media screen and (min-device-width: 800px) and (max-device-width: 1280px) and (orientation: portrait) {
+/* (max-aspect-ratio: 13/9): This specifies the portrait orientation with  */
+/* a fix to stop Android's software keyboard from breaking the CSS layout: */
+/* http://blog.abouthalf.com/development/orientation-media-query-challenges-in-android-browsers/ */
+@media screen and (min-device-width: 800px) and (max-device-width: 1280px) and (max-aspect-ratio: 13/9) {
     .aux-panel-popover {
         width: 55%;
     }
@@ -1466,7 +1472,10 @@ div.mobile-splitter {
         margin-left: -100px !important;
     }
     div#params {
-        width: 55%;
+        width: 50%;
+    }
+    input#text {
+        width: 67%;
     }
     div#canvas {
         padding: 10px 0 40px;
@@ -1610,8 +1619,11 @@ div.mobile-splitter {
 }
 
 /* #### Android Tablets Landscape #### */
-/* Had to specify the pixel ratio to avoid interfering with desktop layout */
-@media screen and (min-device-width: 800px) and (max-device-width: 1280px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
+/* Had to specify the pixel ratio to avoid interfering with desktop layout  */
+/* (min-aspect-ratio: 13/9): This specifies the landscape orientation with  */
+/* a fix to stop Android's software keyboard from breaking the CSS layout:  */
+/* http://blog.abouthalf.com/development/orientation-media-query-challenges-in-android-browsers/ */
+@media screen and (min-device-width: 800px) and (max-device-width: 1280px) and (min-aspect-ratio: 13/9) and (-webkit-min-device-pixel-ratio: 1) {
     .aux-panel-popover {
         width: 45%;
     }
@@ -1619,10 +1631,10 @@ div.mobile-splitter {
         margin-left: -100px !important;
     }
     div#params {
-        width: 45%;
+        width: 32%;
     }
     input#text {
-        width: 50%;
+        width: 65%;
     }
     div#canvas {
         padding: 10px 0 40px;
@@ -1688,13 +1700,13 @@ div.mobile-splitter {
         width: 55%;
     }
     div#params {
-        width: 55%;
+        width: 40%;
     }
     #cubeName {
         margin-left: -100px !important;
     }
     input#text {
-        width: 50%;
+        width: 67%;
     }
     div#canvas {
         padding: 10px 0 40px;
@@ -1732,7 +1744,7 @@ div.mobile-splitter {
         font-size: 16px !important;
     }
     span#mode, span#device {
-        font-size: 15px !important;
+        font-size: 12px !important;
     }
     span#currentLayer {
         font-size: 20px !important;
@@ -1759,8 +1771,11 @@ div.mobile-splitter {
 }
 
 /* #### GALAXY S4/S5/S6/S7, Note 3/4 and Phablets Landscape #### */
-/* Had to specify the pixel ratio to avoid interfering with desktop layout */
-@media screen and (max-device-height: 360px) and (max-device-width: 640px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
+/* Had to specify the pixel ratio to avoid interfering with desktop layout  */
+/* (min-aspect-ratio: 13/9): This specifies the landscape orientation with  */
+/* a fix to stop Android's software keyboard from breaking the CSS layout:  */
+/* http://blog.abouthalf.com/development/orientation-media-query-challenges-in-android-browsers/ */
+@media screen and (max-device-height: 360px) and (max-device-width: 640px) and (min-aspect-ratio: 13/9) and (-webkit-min-device-pixel-ratio: 1) {
     .aux-panel-popover {
         width: 96%;
     }
@@ -1772,10 +1787,10 @@ div.mobile-splitter {
         font-size: 14px !important;
     }
     div#params {
-        width: 100%;
+        width: 50%;
     }
     input#text {
-        width: 35%;
+        width: 65%;
     }
     div#canvas {
         padding: 10px 0 40px;
@@ -1905,10 +1920,10 @@ div.mobile-splitter {
         margin-left: -103px !important;
     }
     div#params {
-        width: 100%;
+        width: 67%;
     }
     input#text {
-        width: 37%;
+        width: 55%;
     }
     div#canvas {
         padding: 10px 0 40px;
@@ -1954,10 +1969,10 @@ div.mobile-splitter {
         margin-left: -100px !important;
     }
     div#params {
-        width: 100%;
+        width: 55%;
     }
     input#text {
-        width: 40%;
+        width: 67%;
     }
     div#canvas {
         padding: 10px 0 40px;
@@ -1996,10 +2011,10 @@ div.mobile-splitter {
         margin-left: -100px !important;
     }
     div#params {
-        width: 100%;
+        width: 60%;
     }
     input#text {
-        width: 40%;
+        width: 67%;
     }
     div#canvas {
         padding: 10px 0 40px;
