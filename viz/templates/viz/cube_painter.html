@@ -45,25 +45,17 @@
             $("div.tagline").hide();
             $('.logo-box').off('mouseover');
             $('.logo-box').off('mouseout');
-            $('select#cubeName').css('margin-left', '-100px');
-            $('select#cubeName').css('margin-top', '12px');
             $('a.logo-box span.cubetube').text('Cube Painter');
             $('a.logo-box span.cubetube').css('color', '#fff');
 
             checkCookie();
-            //console.log("accessToken: " + accessToken);
+            console.log("accessToken: " + accessToken);
 
             if (typeof accessToken !== 'undefined' && accessToken !== null) {
-                if (supportsLocalStorage())
-                    localStorage["spark_pixels.accessToken"] = accessToken;
+                $("div#select-cube").fadeIn(300);
+                $("div#cubeAndModeText").hide('slide', {direction: 'right'}, 600);
                 cubeNameOnChange(); //populateInterval();
             }
-            else
-                if (supportsLocalStorage())
-                    if (localStorage["spark_pixels.accessToken"]) {
-                        accessToken = localStorage["spark_pixels.accessToken"];
-                        cubeNameOnChange(); //populateInterval();
-                    }
 
             // Bind both touch and click events to the slider control
             // for compatibility with mobile and desktop devices
@@ -88,7 +80,7 @@
             console.log('#cubeName options: ' + $("select#cubeName option").length);
             console.log('#cubeName value: ' + $("select#cubeName").val());
 
-            if(deviceID !== '') {
+            if(deviceID.trim() !== '') {
                 // Retrieve the name of the selected device from the dropdown
                 /*$("select#cubeName option").each(function () {
                     if ($(this).val() === deviceID)
@@ -108,17 +100,10 @@
                 // We don't have a valid selected device so delete the cookie and hide the controls
                 $.removeCookie("coreID", {path: '/'});
                 coreID = null;
-                //$("span#mode").text('');
-                $("span#device").text($('select#cubeName').text());
-                $("div#cubeAndModeText").show('slide', {direction: 'left'}, 600);
                 $("div#updateListDiv").fadeOut(100);
                 $("div#brightnessControl").fadeOut(100);
                 clearInterval(populateModesTimer);
-                //$('select#cubeName').val('-1');
             }
-            /*setBrightness();
-            clearInterval(populateModesTimer);
-            populateInterval();*/
         }
 
         function changeBrightness() {
@@ -144,12 +129,17 @@
             </div>
             {% if logged_in %}
                 <div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
+                <div id="select-cube" style="text-align: center;">
+                    <span style="padding-right: 10px;" >Device:</span>
+                    <select id="cubeName" onchange="cubeNameOnChange();"></select>
+                </div>
+                <div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
                 <div id="updateListDiv">
                     <a id="updateListButton" href="javascript:void(0);" onclick="currentMode = ''; populateInterval();" 
                        title="Click here to refresh the modes list!">
                         Loading, Please Wait<span class="one">.</span><span class="two">.</span><span class="three">.</span>
                     </a>
-                    <select id="modes" onchange="setMode();"></select>
+                    <select id="modes" onchange="setMode();" style="display: none;"></select>
                 </div>
                 <div style="clear: both; height: 10px; background: rgba(28, 21, 33, 0)"></div>
                 <div id="brightnessControl">

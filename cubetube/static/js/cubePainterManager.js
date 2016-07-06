@@ -100,7 +100,7 @@ function populateInterval() {
                         }
                     }
                 });
-             }
+            }
         }
     }, 1000);
 }
@@ -241,8 +241,8 @@ function flashCube() {
                 alert(output);
                 window.location.reload();
             },
-            error: function (data) {
-                console.log("fail");
+            fail: function (data) {
+                console.log("fail flashing");
                 console.log(data);
             }
         });

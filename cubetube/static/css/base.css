@@ -687,6 +687,7 @@ img.logo-menu {
 /**************************************/
 .icon-switches {
     width: 100%;
+    margin-top: -6px;
     vertical-align: middle;
 }
 .aux-panel-popover {
@@ -753,8 +754,8 @@ input#text {
     text-align: justify; 
     margin: 0 auto; /*margin-left: 30%;*/
 }
-#updateListDiv, a#layerButtons, 
-a#clearButtons, a#syncButton, a#setModeButton {
+a#layerButtons, a#clearButtons, 
+a#syncButton, a#setModeButton {
     width: 275px; 
     background: #ee0026; 
     color: #fff; 
@@ -794,7 +795,7 @@ span#switch4, span#text {
     font-weight: bold;
     color: #2bc6fb;
 }
-#updateListDiv {
+div#updateListDiv {
     padding: 6px 22px; 
     width: 350px; /*310px; */
     /*margin-left: 25%;*/
@@ -806,7 +807,7 @@ span#switch4, span#text {
     text-align: center;
     box-shadow: 3px 4px 10px #770000;
 }
-#brightnessControl, #speedControl {
+#brightnessControl, #speedControl, div#select-cube {
     padding: 6px 22px; 
     width: 350px; /*310px; */
     height: 32px;
@@ -930,9 +931,8 @@ div.mobile-splitter {
     .aux-panel-popover {
         width: 96%;
     }
-    #cubeName {
-        margin-top: 15px !important;
-        margin-left: -100px !important;
+    img.icon-switches {
+        margin-top: -3px;
     }
     span#currentLayer {
         font-size: 14px !important;
@@ -964,7 +964,8 @@ div.mobile-splitter {
     span#switch4, span#text {
         font-size: 12px;
     }
-    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton, a#setModeButton {
+    a#layerButtons, a#clearButtons, 
+    a#syncButton, a#setModeButton {
         width: 175px; 
         background: #ee0026; 
         color: #fff; 
@@ -1021,7 +1022,8 @@ div.mobile-splitter {
     span#switch4, span#text {
         font-size: 12px;
     }
-    div#updateListDiv, div#brightnessControl, div#speedControl {
+    div#updateListDiv, div#brightnessControl, 
+    div#speedControl, div#select-cube {
         width: 270px;
         height: 30px;
         margin-left: -45px;
@@ -1065,10 +1067,6 @@ div.mobile-splitter {
 @media screen and (device-height: 568px) and (device-width: 320px) and (orientation: portrait) {
     .aux-panel-popover {
         width: 96%;
-    }
-    #cubeName {
-        margin-top: 15px !important;
-        margin-left: -102px !important;
     }
     span#currentLayer {
         font-size: 14px !important;
@@ -1129,7 +1127,8 @@ div.mobile-splitter {
     span#switch4, span#text {
         font-size: 12px;
     }
-    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton, a#setModeButton {
+    a#layerButtons, a#clearButtons, 
+    a#syncButton, a#setModeButton {
         width: 175px; 
         background: #ee0026; 
         color: #fff; 
@@ -1154,12 +1153,20 @@ div.mobile-splitter {
     span#switch4, span#text {
         font-size: 12px;
     }
-    div#updateListDiv, div#brightnessControl, div#speedControl {
+    div#updateListDiv, div#brightnessControl, 
+    div#speedControl, div#select-cube {
         width: 280px;
         margin-left: -60px;
         margin-right: 0px;
         font-size: 12px;
+        height: 30px;
     }
+    select {
+        margin-top: -1px;
+    }
+    .icon-switches {
+        margin-top: -3px;
+    }    
     #brightnessSlider, #speedSlider {
         width: 100px;
         height: 15px;
@@ -1199,10 +1206,6 @@ div.mobile-splitter {
     .aux-panel-popover {
         width: 96%;
     }
-    #cubeName {
-        margin-top: 15px !important;
-        margin-left: -100px !important;
-    }
     span#currentLayer {
         font-size: 14px !important;
     }
@@ -1233,7 +1236,8 @@ div.mobile-splitter {
     span#switch4, span#text {
         font-size: 12px;
     }
-    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton, a#setModeButton {
+    a#layerButtons, a#clearButtons, 
+    a#syncButton, a#setModeButton {
         width: 175px; 
         background: #ee0026; 
         color: #fff; 
@@ -1287,11 +1291,15 @@ div.mobile-splitter {
     span#switch4, span#text {
         font-size: 12px;
     }
-    div#updateListDiv, div#brightnessControl, div#speedControl {
+    div#updateListDiv, div#brightnessControl, 
+    div#speedControl, div#select-cube {
         width: 270px;
         margin-left: -42px;
         margin-right: 0px;
         font-size: 12px;
+    }
+    select {
+        margin-top: -1px;
     }
     #brightnessSlider, #speedSlider {
         width: 100px;
@@ -1332,10 +1340,6 @@ div.mobile-splitter {
     .aux-panel-popover {
         width: 96%;
     }
-    #cubeName {
-        margin-top: 15px !important;
-        margin-left: -100px !important;
-    }
     span#currentLayer {
         font-size: 14px !important;
     }
@@ -1366,7 +1370,8 @@ div.mobile-splitter {
     span#switch4, span#text {
         font-size: 12px;
     }
-    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton, a#setModeButton {
+    a#layerButtons, a#clearButtons, 
+    a#syncButton, a#setModeButton {
         width: 175px; 
         background: #ee0026; 
         color: #fff; 
@@ -1420,7 +1425,8 @@ div.mobile-splitter {
     span#switch4, span#text {
         font-size: 12px;
     }
-    div#updateListDiv, div#brightnessControl, div#speedControl {
+    div#updateListDiv, div#brightnessControl, 
+    div#speedControl, div#select-cube {
         width: 270px;
         margin-left: -32px;
         margin-right: 0px;
@@ -1463,13 +1469,9 @@ div.mobile-splitter {
 /* (max-aspect-ratio: 13/9): This specifies the portrait orientation with  */
 /* a fix to stop Android's software keyboard from breaking the CSS layout: */
 /* http://blog.abouthalf.com/development/orientation-media-query-challenges-in-android-browsers/ */
-@media screen and (min-device-width: 800px) and (max-device-width: 1280px) and (max-aspect-ratio: 13/9) {
+@media screen and (min-device-width: 800px) and (max-device-width: 1280px) and (orientation: portrait) {
     .aux-panel-popover {
         width: 55%;
-    }
-    #cubeName {
-        margin-top: 15px !important;
-        margin-left: -100px !important;
     }
     div#params {
         width: 50%;
@@ -1498,13 +1500,13 @@ div.mobile-splitter {
     span#switch4, span#text {
         font-size: 16px;
     }
-    div#updateListDiv, div#brightnessControl, div#speedControl {
+    div#updateListDiv, div#brightnessControl, 
+    div#speedControl, div#select-cube {
         margin-left: calc(100% - 385px);
         font-size: 16px;
         width: 370px;
-        height: 40px;
     }
-    div#brightnessControl, div#speedControl {
+    div#brightnessControl, div#speedControl, div#select-cube {
         height: 32px;
     }
     #brightnessSlider, #speedSlider {
@@ -1523,7 +1525,8 @@ div.mobile-splitter {
     span#currentLayer {
         font-size: 20px !important;
     }
-    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton, a#setModeButton {
+    a#layerButtons, a#clearButtons, 
+    a#syncButton, a#setModeButton {
         padding: 4px 14px;
         font-size: 16px;
     }
@@ -1544,10 +1547,9 @@ div.mobile-splitter {
     .aux-panel-popover {
         width: 55%;
     }
-    #cubeName {
-        margin-top: 15px !important;
-        margin-left: -100px !important;
-    }
+    img.icon-switches {
+        margin-top: -6px;
+    }    
     div#params {
         width: 55%;
     }
@@ -1575,11 +1577,15 @@ div.mobile-splitter {
     span#switch4, span#text {
         font-size: 16px;
     }
-    div#updateListDiv, div#brightnessControl, div#speedControl {
+    div#updateListDiv, div#brightnessControl, 
+    div#speedControl, div#select-cube {
         margin-left: calc(100% - 368px);
         font-size: 16px;
         width: 360px;
-        height: 40px;
+        height: 35px;
+    }
+    select {
+        margin-top: -1px;
     }
     #brightnessSlider, #speedSlider {
         width: 150px;
@@ -1603,7 +1609,8 @@ div.mobile-splitter {
     span#switch4, span#text {
         font-size: 16px;
     }
-    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton, a#setModeButton {
+    a#layerButtons, a#clearButtons, 
+    a#syncButton, a#setModeButton {
         padding: 4px 14px;
         font-size: 16px;
     }
@@ -1623,12 +1630,9 @@ div.mobile-splitter {
 /* (min-aspect-ratio: 13/9): This specifies the landscape orientation with  */
 /* a fix to stop Android's software keyboard from breaking the CSS layout:  */
 /* http://blog.abouthalf.com/development/orientation-media-query-challenges-in-android-browsers/ */
-@media screen and (min-device-width: 800px) and (max-device-width: 1280px) and (min-aspect-ratio: 13/9) and (-webkit-min-device-pixel-ratio: 1) {
+@media screen and (min-device-width: 800px) and (max-device-width: 1280px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
     .aux-panel-popover {
         width: 45%;
-    }
-    #cubeName {
-        margin-left: -100px !important;
     }
     div#params {
         width: 32%;
@@ -1657,7 +1661,8 @@ div.mobile-splitter {
     span#switch4, span#text {
         font-size: 16px;
     }
-    div#updateListDiv, div#brightnessControl, div#speedControl {
+    div#updateListDiv, div#brightnessControl, 
+    div#speedControl, div#select-cube {
         /*margin-left: calc(100% - 480px) !important;*/
         font-size: 16px;
         width: 355px;
@@ -1678,7 +1683,8 @@ div.mobile-splitter {
     span#currentLayer {
         font-size: 20px !important;
     }
-    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton, a#setModeButton {
+    a#layerButtons, a#clearButtons, 
+    a#syncButton, a#setModeButton {
         padding: 4px 14px;
         font-size: 16px;
     }
@@ -1701,9 +1707,6 @@ div.mobile-splitter {
     }
     div#params {
         width: 40%;
-    }
-    #cubeName {
-        margin-left: -100px !important;
     }
     input#text {
         width: 67%;
@@ -1728,7 +1731,8 @@ div.mobile-splitter {
     span#switch4, span#text {
         font-size: 16px;
     }
-    div#updateListDiv, div#brightnessControl, div#speedControl {
+    div#updateListDiv, div#brightnessControl, 
+    div#speedControl, div#select-cube {
         margin-left: calc(100% - 436px) !important;
         font-size: 16px;
         width: 360px;
@@ -1755,7 +1759,8 @@ div.mobile-splitter {
     span#switch4, span#text {
         font-size: 16px;
     }
-    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton, a#setModeButton {
+    a#layerButtons, a#clearButtons, 
+    a#syncButton, a#setModeButton {
         padding: 4px 14px;
         font-size: 16px;
     }
@@ -1777,11 +1782,10 @@ div.mobile-splitter {
 /* http://blog.abouthalf.com/development/orientation-media-query-challenges-in-android-browsers/ */
 @media screen and (max-device-height: 360px) and (max-device-width: 640px) and (min-aspect-ratio: 13/9) and (-webkit-min-device-pixel-ratio: 1) {
     .aux-panel-popover {
-        width: 96%;
+        width: 65%;
     }
-    #cubeName {
-        margin-top: 15px !important;
-        margin-left: -100px !important;
+    img.icon-switches {
+        margin-top: -3px;
     }
     span#currentLayer {
         font-size: 14px !important;
@@ -1813,7 +1817,8 @@ div.mobile-splitter {
     span#switch4, span#text {
         font-size: 12px;
     }
-    #updateListDiv, a#layerButtons, a#clearButtons, a#syncButton, a#setModeButton {
+    a#layerButtons, a#clearButtons, 
+    a#syncButton, a#setModeButton {
         width: 175px; 
         background: #ee0026; 
         color: #fff; 
@@ -1870,7 +1875,8 @@ div.mobile-splitter {
     span#switch4, span#text {
         font-size: 12px;
     }
-    div#updateListDiv, div#brightnessControl, div#speedControl {
+    div#updateListDiv, div#brightnessControl, 
+    div#speedControl, div#select-cube {
         height: 30px;
         width: 270px;
         /*margin-left: 35px;
@@ -1915,10 +1921,6 @@ div.mobile-splitter {
     .aux-panel-popover {
         width: 96%;
     }
-    #cubeName {
-        /*margin-top: 15px !important;*/
-        margin-left: -103px !important;
-    }
     div#params {
         width: 67%;
     }
@@ -1940,9 +1942,13 @@ div.mobile-splitter {
     #colors_canvas {
         width: 90%;
     }
-    div#updateListDiv, div#brightnessControl, div#speedControl {
+    div#updateListDiv, div#brightnessControl, 
+    div#speedControl, div#select-cube {
         margin-left: calc(100% - 318px) !important;
     }
+    select {
+        margin-top: -1px;
+    }    
     #cubeAndModeText, #pleaseLogInText {
         font-size: 12px;
         /*margin-left: calc(100% - 290px) !important;*/
@@ -1962,17 +1968,11 @@ div.mobile-splitter {
 /* #### iPhone 6 plus and 6s plus Landscape #### */
 /* Had to specify the pixel ratio to avoid interfering with desktop layout */
 @media screen and (device-height: 736px) and (device-width: 414px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 3) {
-    .aux-panel-popover {
-        width: 96%;
-    }
-    #cubeName {
-        margin-left: -100px !important;
-    }
     div#params {
         width: 55%;
     }
     input#text {
-        width: 67%;
+        width: 70%;
     }
     div#canvas {
         padding: 10px 0 40px;
@@ -1989,8 +1989,15 @@ div.mobile-splitter {
     #colors_canvas {
         width: 90%;
     }
-    div#updateListDiv, div#brightnessControl, div#speedControl {
-        /*margin-left: calc(100% - 340px) !important;*/
+    /*div#updateListDiv, div#brightnessControl, 
+    div#speedControl, div#select-cube {
+        margin-left: calc(100% - 320px) !important;
+    }*/
+    select {
+        margin-top: -1px;
+    }
+    .aux-panel-popover {
+        width: 60%;
     }
     #cubeAndModeText, #pleaseLogInText {
         /*margin-left: calc(100% - 330px) !important;
@@ -2005,10 +2012,7 @@ div.mobile-splitter {
 /* Had to specify the pixel ratio to avoid interfering with desktop layout */
 @media screen and (device-height: 667px) and (device-width: 375px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 2) {
     .aux-panel-popover {
-        width: 96%;
-    }
-    #cubeName {
-        margin-left: -100px !important;
+        width: 65%;
     }
     div#params {
         width: 60%;
@@ -2031,13 +2035,17 @@ div.mobile-splitter {
     #colors_canvas {
         width: 90%;
     }    
-    div#updateListDiv, div#brightnessControl, div#speedControl {
-        /*margin-left: calc(100% - 320px) !important;*/
+    div#updateListDiv, div#brightnessControl, 
+    div#speedControl, div#select-cube {
+        margin-left: calc(100% - 340px) !important;
     }
-    #cubeAndModeText, #pleaseLogInText {
-        /*margin-left: calc(100% - 315px) !important;
-        width: 100%;*/
-    }
+    select {
+        margin-top: -2px;
+    }    
+    /*#cubeAndModeText, #pleaseLogInText {
+        margin-left: calc(100% - 315px) !important;
+        width: 100%;
+    }*/
     span#mode, span#device {
         font-size: 8px;
     }
