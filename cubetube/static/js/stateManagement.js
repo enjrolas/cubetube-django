@@ -64,7 +64,7 @@ function listCubes() {
                     // Is this device connected?
                     if (device.connected) {
                         //connectedCores++;
-                        deviceType = (device.productId === '0' ? 'Core' : 'Photon');
+                        deviceType = (device.productId == 0 ? 'Core' : 'Photon');
                         deviceInList = $("select#cubeName option[value = '" + device.id + "']").length;
 
                         // Is this the first device found connected?
