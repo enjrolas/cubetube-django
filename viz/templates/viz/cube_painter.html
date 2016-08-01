@@ -52,9 +52,11 @@
             console.log("accessToken: " + accessToken);
 
             if (typeof accessToken !== 'undefined' && accessToken !== null) {
-                $("div#select-cube").fadeIn(300);
-                $("div#cubeAndModeText").hide('slide', {direction: 'right'}, 600);
                 cubeNameOnChange(); //populateInterval();
+                if (typeof coreID !== 'undefined' && coreID !== null) {
+                    $("div#select-cube").fadeIn(300);
+                    $("div#cubeAndModeText").hide('slide', {direction: 'right'}, 600);
+                }
             }
 
             // Bind both touch and click events to the slider control
