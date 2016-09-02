@@ -108,6 +108,11 @@
                 setMode();
             else
                 parseModeOptions();
+            
+            if (currentMode.toUpperCase().indexOf("LISTENER") >= 0)
+                getDebugVariable();
+            else
+                $("div#cubeAndModeText").hide('slide', {direction: 'right'}, 600);
         }
 
         function changeBrightness() {

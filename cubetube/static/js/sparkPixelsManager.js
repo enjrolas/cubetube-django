@@ -61,6 +61,19 @@ function setTimeZoneOffset() {
     }
 }
 
+function getDebugVariable() {
+    var deviceID = getDeviceID();
+    // Retrieve the device's aux switches list from the cloud API and update array variable
+    $.get("https://api.particle.io/v1/devices/" + deviceID + "/debug/?access_token=" + accessToken)
+        .success(function (data) {
+            console.log('success! getDebugVariable(): ' + data.result);
+            $("span#device").text(data.result);
+            $("div#cubeAndModeText").show('slide', {direction: 'left'}, 600);
+        }).fail(function (data) {
+            console.log('fail setTimeZoneOffset(): ' + data.return_value);
+        });
+}
+
 function setAuxSwitches(id, checked) {
     $('div.error-area').text('');
     if (typeof accessToken !== 'undefined' && accessToken !== null) {
