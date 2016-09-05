@@ -48,14 +48,14 @@ $(function(){
 
     $('.run-sketch').click(function() {
 
-        var vizType = getEditVizType();
+        //var vizType = getEditVizType();
         
-        if( vizType === 'L3D') {
+        //if( vizType === 'L3D') {
             translateCode(document.getElementById("code").value);
             runSparkSketch();
-        } else if ( vizType === 'JS' ) {
+        /*} else if ( vizType === 'JS' ) {
             runSketch();
-        }
+        }*/
     })
 
 /*$('.save-code').click********************************************/

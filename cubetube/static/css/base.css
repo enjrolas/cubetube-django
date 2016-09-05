@@ -606,6 +606,7 @@ button {
     margin-top: 3px; }
 .create-wrapper .switch-box .switch-left,
 .create-wrapper .switch-box .switch-right {
+    background: rgba(43, 198, 251, 0.2);
     width: 50%;
     float: left;
     height: 32px;
@@ -620,7 +621,7 @@ button {
 .create-wrapper .switch-box .switch-left.off,
 .create-wrapper .switch-box .switch-right.off {
     background: rgba(0, 0, 0, 0.1);
-    color: rgba(0, 0, 0, 0.5); }
+    color: rgba(0, 0, 0, 0.2); }
 .create-wrapper .switch-box .switch-left {
     border-right: 1px solid rgba(0, 0, 0, 0.1); }
 .create-wrapper .switch-option {
@@ -639,7 +640,7 @@ button {
     float: right;
     cursor: pointer; }
 .create-wrapper .viz-code-header .switch-box .off {
-    color: #aaa;
+    color: rgba(255, 255, 255, 0.2);    /*#aaa*/;
     background: rgba(255, 255, 255, 0.2); }
 
 #cubeName {

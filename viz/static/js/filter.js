@@ -137,12 +137,12 @@ function getData() {
     var interactive = ($('.interactive .on').html() === 'Yes');
     var videoURL = $( '.video-url' ).val();
 
-    var vizType = getEditVizType();
+    /*var vizType = getEditVizType();
     if( vizType === 'JS') {
         vizType = 'javascript';
     } else {
         vizType = 'L3D'
-    }
+    }*/
 
     var code = $('.code').val();
 
@@ -151,7 +151,7 @@ function getData() {
         description: description,
         published: published,
         interactive: interactive,
-        "viz-type": vizType,
+        "viz-type": 'L3D',  //vizType,
         videoURL: videoURL,
         sourceCode: code
     }
