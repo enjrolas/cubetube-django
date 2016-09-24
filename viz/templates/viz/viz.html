@@ -367,7 +367,11 @@
   <div class="viz-nav">
     <a class="close-button" onclick="parent.closeViz(); parent.closeCreate();">Close</a>
     {% if source %}
-      <a class="round-button button-red view-code">View Code</a>
+        {% if logged_in %}
+            <a class="round-button button-red view-code">View Code</a>
+        {% else %}
+          <div class="nav-info">Sign in to view the code!</div>
+        {% endif %}
     {% endif %}
 
     {% if logged_in %}
