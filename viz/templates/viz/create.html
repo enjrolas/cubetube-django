@@ -20,10 +20,11 @@
 		$("a.sent-to-cube").fadeOut("slow").html("Compiling<span class=\"one\">.</span><span class=\"two\">.</span><span class=\"three\">.</span>")
 		.css({"color": "white", "background": "#12d396", "border-color": "#008376"}).fadeIn("fast");	//.animate({display: "block"});
 		
+                var vizLib = getEditVizType();
 		var request=$.ajax({
 			type:"POST",
 			url:"{% url 'cloudFlash' %}", 
-			data: {"code": $(".code").val(), "accessToken":accessToken, "deviceID":$("#cubeName").val(), "vizName": "{{ viz.name }}", "vizId":"{{ viz.pk }}" },
+			data: {"code": $(".code").val(), "accessToken":accessToken, "deviceID":$("#cubeName").val(), "vizName": "{{ viz.name }}", "vizId":"{{ viz.pk }}", "viz-lib": vizLib },
 			dataType:"text",
 			success: function(data){ 
 				console.log("success flashing");
@@ -85,12 +86,13 @@
 	    var interactive = ($('.interactive .on').html() === 'Yes');
 	    var videoURL = $( '.video-url' ).val();
 
-	    var vizType = getEditVizType();
+	    /*var vizType = getEditVizType();
 	    if( vizType === 'JS') {
 	        vizType = 'javascript';
 	    } else {
 	        vizType = 'L3D'
-	    }
+	    }*/
+            var vizLib = getEditVizType();
 
 	    var code = $('.code').val();
 
@@ -99,7 +101,8 @@
 	        description: description,
 	        published: published,
 	        interactive: interactive,
-	        "viz-type": vizType,
+	        "viz-type": 'L3D',  //vizType,
+                "viz-lib": vizLib,
 	        videoURL: videoURL,
 	        sourceCode: code
 	    }
@@ -268,30 +271,32 @@
         </div>
       </div>
 
-	  {% if viz %} 
-        <div class="switch-option interactive">
-	        <div class="label">Interactive</div>
-	        <div class="switch-box interactive">
-	            {% if viz.interactive %} 
-	              <div class="switch-part switch-left off">No</div>
-	              <div class="switch-part switch-right on">Yes</div>
-	            {% else %}
-	              <div class="switch-part switch-left on">No</div>
-	              <div class="switch-part switch-right off">Yes</div>
-		  		{% endif %}  
-	        </div>
-      	</div>
-	  {% else %}
-	  	<a href="#" title="This option has been temporarily disabled" style="cursor: none !important;">
-	      	<div class="switch-option interactive disabled" tabindex="-1">
-		        <div class="label" tabindex="-1">Interactive</div>
-		        <div class="switch-box interactive" tabindex="-1">
-			        <div class="switch-part switch-left on" tabindex="-1">No</div>
-			        <div class="switch-part switch-right off" tabindex="-1">Yes</div>
-		        </div>
-	      	</div>
+        {% if viz %} 
+        <a href="#" title="This option has been permanently disabled" style="cursor: none !important;">
+            <div class="switch-option interactive disabled" tabindex="-1">
+                <div class="label" tabindex="-1">Interactive</div>
+                <div class="switch-box interactive" tabindex="-1">
+                    {% if viz.interactive %} 
+                    <div class="switch-part switch-left off" tabindex="-1">No</div>
+                    <div class="switch-part switch-right on" tabindex="-1">Yes</div>
+                    {% else %}
+                    <div class="switch-part switch-left on" tabindex="-1">No</div>
+                    <div class="switch-part switch-right off" tabindex="-1">Yes</div>
+                    {% endif %}  
+                </div>
+            </div>
       	</a>
-	  {% endif %}
+        {% else %}
+        <a href="#" title="This option has been permanently disabled" style="cursor: none !important;">
+            <div class="switch-option interactive disabled" tabindex="-1">
+                <div class="label" tabindex="-1">Interactive</div>
+                <div class="switch-box interactive" tabindex="-1">
+                    <div class="switch-part switch-left on" tabindex="-1">No</div>
+                    <div class="switch-part switch-right off" tabindex="-1">Yes</div>
+                </div>
+            </div>
+      	</a>
+        {% endif %}
    	{% if viz %} 
        	{% if viz.videoURL %}
 	   		<input class="video-url" placeholder="Please add a youtube link here" value="{{ viz.videoURL }}"/>
@@ -312,26 +317,22 @@
    		<!-- <a id="btnDeleteViz" class="round-button button-transparent" onclick="deleteViz();">Delete this Viz</a> -->
    	{% endif %}
     <a class="round-button button-red run-sketch">Update Demo</a>
-	{% if viz %}
-		<div class="switch-box viz-type">
-			{% if viz.vizType == "javascript" %}
-				<div class="switch-part switch-left on">JS</div>
-				<div class="switch-part switch-right off">L3D</div>
-			{% else %}
-				<div class="switch-part switch-left off">JS</div>
-				<div class="switch-part switch-right on">L3D</div>
-			{% endif %}  
-		</div>
-     {% else %}
-     	<a href="#" title="This option has been temporarily disabled" style="cursor: none !important;">
-     		<div class="switch-option disabled" tabindex="-1">
-				<div class="switch-box viz-type" tabindex="-1">
-					<div class="switch-part switch-left on" tabindex="-1">L3D</div>
-		       		<div class="switch-part switch-right off" tabindex="-1">JS</div>
-				</div>
-			</div>
-		</a>
-     {% endif %}
+    {% if viz %}
+        <div class="switch-box viz-type" title="You can select which library to use with your code!">
+        {% if viz.vizLib == "NEOPIXEL" %}
+            <div class="switch-part switch-left off">FASTLED</div>
+            <div class="switch-part switch-right on">NEOPIXEL</div>
+        {% else %}
+            <div class="switch-part switch-left on">FASTLED</div>
+            <div class="switch-part switch-right off">NEOPIXEL</div>
+        {% endif %}  
+        </div>
+    {% else %}
+        <div class="switch-box viz-type" title="You can select which library to use with your code!">
+            <div class="switch-part switch-left on">NEOPIXEL</div>
+            <div class="switch-part switch-right off">FASTLED</div>
+        </div>
+    {% endif %}
     </div>
     <div class="code-area">
       <textarea rows="80" cols="120" id="code" class="code inout">{% if viz %}{{ source.code }}{% endif %}</textarea>

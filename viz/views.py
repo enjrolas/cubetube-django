@@ -53,6 +53,11 @@ def compile(request):
     code=request.POST['code']
     vizName=request.POST['vizName']
     vizId=request.POST['vizId']
+    vizLib=request.POST['viz-lib']
+    
+    if vizLib==None:
+        vizLib="NEOPIXEL"
+    
     if vizId==None:
         vizId=-1
     else:
@@ -61,7 +66,10 @@ def compile(request):
     if vizName==None:
         vizName="undefined"
 
-    code="%s\nchar* vizName=\"%s\";\nint vizId=%d;\n%s" % (settings.SPARK_LIBRARY, vizName, vizId, code)
+    if vizLib=="NEOPIXEL":
+        code="%s\nchar* vizName=\"%s\";\nint vizId=%d;\n%s" % (settings.SPARK_LIBRARY, vizName, vizId, code)
+    else:
+        code="%s\nchar* vizName=\"%s\";\nint vizId=%d;\n%s" % (settings.FASTLED_LIBRARY, vizName, vizId, code)
 
 
     lines=code.split('\n')
@@ -168,6 +176,10 @@ def cloudFlash(request):
     accessToken=request.POST['accessToken']
     vizName=request.POST['vizName']
     vizId=request.POST['vizId']
+    vizLib=request.POST['viz-lib']
+    
+    if vizLib==None:
+        vizLib="NEOPIXEL"
     
     if vizId==None:
         vizId=-1
@@ -189,7 +201,10 @@ def cloudFlash(request):
             log.debug("Code not found!" % vizId)
             return
     
-    code="%s\n%s" % (settings.SPARK_LIBRARY, code)
+    if vizLib=="NEOPIXEL":
+        code="%s\n%s" % (settings.SPARK_LIBRARY, code)
+    else:
+        code="%s\n%s" % (settings.FASTLED_LIBRARY, code)
 
     lines=code.split('\n')
     i=0
@@ -210,7 +225,7 @@ def cloudFlash(request):
     codeFile.write(code)
     codeFile.close()
     deviceID=request.POST['deviceID']        
-    command=['node', 'cloudflash.js', '%s' % accessToken, '%s' % deviceID, '%s' % filename]
+    command=['node', 'cloudflash.js', '%s' % accessToken, '%s' % deviceID, '%s' % filename, '%s' % vizLib]
     log.debug(command)
     p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=directory)
     jsonResult=""
@@ -239,7 +254,16 @@ def flashSparkle(request):
 @csrf_exempt
 def justCompile(request):
     code=request.POST['code']
-    code="%s\n%s" % (settings.SPARK_LIBRARY, code)
+    vizLib=request.POST['viz-lib']
+    
+    if vizLib==None:
+        vizLib="NEOPIXEL"
+    
+    if vizLib=="NEOPIXEL":
+        code="%s\n%s" % (settings.SPARK_LIBRARY, code)
+    else:
+        code="%s\n%s" % (settings.FASTLED_LIBRARY, code)
+    
     lines=code.split('\n')
     i=0
     code=""
@@ -708,8 +732,9 @@ def save(request):
         vizID         = request.POST['vizId']
         name          = request.POST['name']
         description   = request.POST['description']
-        code    = request.POST['sourceCode']
-        vizType=request.POST['viz-type']
+        code          = request.POST['sourceCode']
+        vizType       = request.POST['viz-type']
+        vizLib        = request.POST['viz-lib']
         videoURL=request.POST['videoURL']
         interactive     = request.POST['interactive']
         if interactive == 'false':
@@ -731,7 +756,8 @@ def save(request):
         viz.interactive = interactive
         viz.published   = published
         viz.videoURL    = videoURL
-        viz.vizType=vizType
+        viz.vizType     = vizType
+        viz.vizLib      = vizLib
         viz.save()
 
         newCode=SourceCode.objects.get(viz=viz)
@@ -781,6 +807,7 @@ def upload(request):
         description     = request.POST['description']
         code            = request.POST['sourceCode']
         videoURL        = request.POST['videoURL']
+        vizLib          = request.POST['viz-lib']
 
         interactive     = request.POST['interactive']
         if interactive == 'false':
@@ -799,6 +826,7 @@ def upload(request):
         viz.interactive = interactive
         viz.videoURL    = videoURL
         viz.published   = published
+        viz.vizLib      = vizLib
 
         viz.creator     = user
         viz.save()

@@ -66,7 +66,7 @@
 		var request=$.ajax({
 			type:"POST",
 			url:"{% url 'cloudFlash' %}", 
-			data: {"code": $(".code").val(), "accessToken":accessToken, "deviceID":$("select#cubeName").val(), "vizName": "{{ viz.name }}", "vizId":"{{ viz.pk }}" },
+			data: {"code": $(".code").val(), "accessToken":accessToken, "deviceID":$("select#cubeName").val(), "vizName": "{{ viz.name }}", "vizId":"{{ viz.pk }}", "viz-lib": "{{ viz.vizLib }}" },
 			dataType:"text",
 			success: function(data){ 
 				console.log("success flashing");
