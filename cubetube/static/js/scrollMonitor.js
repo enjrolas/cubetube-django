@@ -116,7 +116,21 @@ $('body').on('click', '.scroll', function(e) {
 			  		$('.viz-card').each(function() { $(this).animate({height: vizCardHeight}, 800, "linear"); });
 					break;
 	  		}
-	  		// Here we append the code returned by the view for the bottom blue paging buttons
+                        // (Code copied from jscard.html):
+                        // Here we calculate the date difference between current date and create date, 
+                        // and then we update the viz card with a "NEW" ribbon if it's less than 45 days old
+                        $('.viz-card').each(function() {
+                            var created = new Date($(this).attr("data-created"));
+                            var today = new Date();
+                            var timeDiff = Math.abs(today.getTime() - created.getTime());
+                            var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                            $(this).find("div.right").attr("title", "Create date: " + created.toLocaleDateString("en-US"));
+                            if(diffDays < 45) {
+                                $(this).find("div.viz-demo").addClass("new-tag");
+                                $(this).find("div.interactive-bg").css("cssText", $(this).find("div.interactive-bg").css("cssText") + "opacity: 0.2 !important;");
+                            }
+                        });
+                        // Here we append the code returned by the view for the bottom blue paging buttons
 	  		$("#scroll").replaceWith(scrollDiv);
 	  		$("#scroll").height(0);
 	  		if($("#scroll").length) 

@@ -562,11 +562,11 @@ def create(request):
 def scroll(request, page=1, filter="newestFirst", cardsPerPage=8):
     page=int(page)
     if filter=="newestFirst":
-        vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).order_by("-pageViews", "-created")[page*cardsPerPage:(page+1)*cardsPerPage]
+        vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).order_by("-averageRating", "-created")[page*cardsPerPage:(page+1)*cardsPerPage]
     elif filter=="all":
-        vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).order_by("-pageViews", "-created")
+        vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).order_by("-averageRating", "-created")
     else:
-        vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).order_by("-pageViews", "-created")[page*cardsPerPage:(page+1)*cardsPerPage]
+        vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).order_by("-averageRating", "-created")[page*cardsPerPage:(page+1)*cardsPerPage]
 
     if vizs is None:
         totalObjects=0
@@ -604,7 +604,7 @@ def search(request, page=1, filter='*', cardsPerPage=8):
     totalObjects=0
     
     if filter == '*':
-        vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).order_by("-pageViews", "-created")
+        vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).order_by("-averageRating", "-created")
     else:
         try:
             vizUsers=CubeUser.objects.all().filter(nickname__icontains=filter)
@@ -616,11 +616,11 @@ def search(request, page=1, filter='*', cardsPerPage=8):
                 vizs=vizs | Viz.objects.filter(vizType="L3D").filter(creator=user.id).exclude(published=False)
         '''else:'''
         try:
-            titleQuery=Viz.objects.filter(vizType="L3D").filter(name__icontains=filter).exclude(published=False).order_by("-pageViews", "-created")
+            titleQuery=Viz.objects.filter(vizType="L3D").filter(name__icontains=filter).exclude(published=False).order_by("-averageRating", "-created")
         except Viz.DoesNotExist:
             titleQuery=None
         try:
-            descrQuery=Viz.objects.filter(vizType="L3D").filter(description__icontains=filter).exclude(published=False).order_by("-pageViews", "-created")
+            descrQuery=Viz.objects.filter(vizType="L3D").filter(description__icontains=filter).exclude(published=False).order_by("-averageRating", "-created")
         except Viz.DoesNotExist:
             descrQuery=None
         

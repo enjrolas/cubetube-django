@@ -1,5 +1,5 @@
 {% load staticfiles %}
-<div class="viz-card" id="{{ viz.pk }}">
+<div class="viz-card" id="{{ viz.pk }}" data-created="{{ viz.created|date:'Y/m/d' }}">
   <a class="viz-card-anchor" href="{% url 'viz' viz.pk %}">
   <div class="viz-demo">
       {% if viz.videoURL %}
@@ -33,13 +33,17 @@
   </div>
 </div>
 <script type="text/javascript">
-    var created = new Date("{{ viz.created|date:'Y/m/d' }}");
-    var today = new Date();
-    var timeDiff = Math.abs(today.getTime() - created.getTime());
-    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));     
-    $("div.right").attr("title", "Created on " + created.toLocaleDateString("en-US"));
-    if(diffDays < 45) {
-        $("div.viz-demo").addClass("new-tag");
-        $("div.interactive-bg").css("cssText", $("div.interactive-bg").css("cssText") + "opacity: 0.2 !important;");
-    }
+    // Here we calculate the date difference between current date and create date, 
+    // and then we update the viz card with a "NEW" ribbon if it's less than 45 days old
+    $('.viz-card').each(function() {
+        var created = new Date($(this).attr("data-created"));
+        var today = new Date();
+        var timeDiff = Math.abs(today.getTime() - created.getTime());
+        var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));     
+        $(this).find("div.right").attr("title", "Create date: " + created.toLocaleDateString("en-US"));
+        if(diffDays < 45) {
+            $(this).find("div.viz-demo").addClass("new-tag");
+            $(this).find("div.interactive-bg").css("cssText", $(this).find("div.interactive-bg").css("cssText") + "opacity: 0.2 !important;");
+        }
+    });
 </script>
