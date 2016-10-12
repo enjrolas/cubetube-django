@@ -31,4 +31,15 @@
       {% endif %}
     </div>
   </div>
-</div>  
+</div>
+<script type="text/javascript">
+    var created = new Date("{{ viz.created|date:'Y/m/d' }}");
+    var today = new Date();
+    var timeDiff = Math.abs(today.getTime() - created.getTime());
+    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));     
+    $("div.right").attr("title", "Created on " + created.toLocaleDateString("en-US"));
+    if(diffDays < 45) {
+        $("div.viz-demo").addClass("new-tag");
+        $("div.interactive-bg").css("cssText", $("div.interactive-bg").css("cssText") + "opacity: 0.2 !important;");
+    }
+</script>

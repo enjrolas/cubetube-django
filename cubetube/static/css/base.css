@@ -685,6 +685,13 @@ img.logo-menu {
     margin-right: 5px; 
     vertical-align: middle;
 }
+.new-tag {
+    background-image: url("/static/images/new-tag.png") !important;
+    background-repeat: no-repeat !important;
+    background-attachment: local !important;
+    background-position: right top !important;
+    background-size: 60px 60px !important;
+}
 /**************************************/
 .icon-switches {
     width: 100%;

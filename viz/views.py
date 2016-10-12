@@ -354,7 +354,7 @@ def jsgallery(request, filter="newestFirst", filterTerm=None):
     if(filter=='newestFirst'):
         if filterTerm:
             featuredViz = int(filterTerm)
-        vizs=Viz.objects.filter(vizType="L3D").order_by("-pageViews", "-created").exclude(published=False)    
+        vizs=Viz.objects.filter(vizType="L3D").order_by("-averageRating", "-created").exclude(published=False)    
     elif(filter=='byCreator'):
         try:
             vizUser=CubeUser.objects.filter(nickname=filterTerm).first()
