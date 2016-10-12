@@ -316,7 +316,7 @@
  	{% if viz %}
    		<!-- <a id="btnDeleteViz" class="round-button button-transparent" onclick="deleteViz();">Delete this Viz</a> -->
    	{% endif %}
-    <a class="round-button button-red run-sketch">Update Demo</a>
+    <a href="javascript:void(0);" style="cursor: none !important; pointer-events: none !important; background: rgba(255, 255, 255, 0.2) !important; color: rgba(255, 255, 255, 0.2) !important;" class="round-button button-red run-sketch">Update Demo</a>
     {% if viz %}
         <div class="switch-box viz-type" title="You can select which library to use with your code!">
         {% if viz.vizLib == "NEOPIXEL" %}
