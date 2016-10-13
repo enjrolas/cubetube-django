@@ -423,6 +423,7 @@ def fork(request, vizId=None):
         forked.name=viz.name
         forked.description=viz.description
         forked.vizType=viz.vizType;
+        forked.vizLib=viz.vizLib;
         forked.creator=user
         forked.parent=viz
         forked.save()
