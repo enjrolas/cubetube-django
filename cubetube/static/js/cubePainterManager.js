@@ -218,7 +218,7 @@ function flashCube() {
         var request = $.ajax({
             type: "POST",
             url: "/cloudFlash/", /*"{% url 'cloudFlash' %}",*/
-            data: {"code": "", "accessToken": accessToken, "deviceID": deviceID, "vizName": "", "vizId": "1438"},
+            data: {"code": "", "accessToken": accessToken, "deviceID": deviceID, "vizName": "", "vizId": "1438", "viz-lib": null},
             dataType: "text",
             success: function (data) {
                 console.log("success flashing");
