@@ -178,9 +178,6 @@ def cloudFlash(request):
     vizId=request.POST['vizId']
     vizLib=request.POST['viz-lib']
     
-    if vizLib==None:
-        vizLib="NEOPIXEL"
-    
     if vizId==None:
         vizId=-1
     else:
@@ -188,6 +185,14 @@ def cloudFlash(request):
     log.debug(vizName);
     if vizName==None:
         vizName="undefined"
+    
+    if vizLib in [None, '']:
+        queryViz=Viz.objects.get(pk=vizId)
+        if queryViz==None:
+            log.debug("Viz %i not found!" % vizId)
+            return
+        else:
+            vizLib=queryViz.vizLib
     
     if code=="":
         queryViz=Viz.objects.get(pk=vizId)
