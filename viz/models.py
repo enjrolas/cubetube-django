@@ -6,6 +6,7 @@ class Viz(models.Model):
     description=models.TextField()
     creator=models.ForeignKey(CubeUser)
     created=models.DateTimeField(auto_now_add=True)
+    lastFlashed=models.DateTimeField(auto_now_add=False)
     sourceURL=models.TextField(blank=True)
     averageRating=models.FloatField(default=0)
     numberOfRatings=models.IntegerField(default=0)

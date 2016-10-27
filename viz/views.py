@@ -55,8 +55,13 @@ def compile(request):
     vizId=request.POST['vizId']
     vizLib=request.POST['viz-lib']
     
-    if vizLib==None:
-        vizLib="NEOPIXEL"
+    if vizLib in [None, '']:
+        queryViz=Viz.objects.get(pk=vizId)
+        if queryViz==None:
+            log.debug("Viz %i not found!" % vizId)
+            return
+        else:
+            vizLib=queryViz.vizLib
     
     if vizId==None:
         vizId=-1
@@ -218,6 +223,14 @@ def cloudFlash(request):
         code="%s\n%s" % (code, line)
         i+=1
 
+    queryViz=Viz.objects.get(pk=vizId)
+    if queryViz==None:
+        log.debug("Viz %i not found!" % vizId)
+        return
+    else:
+        queryViz.views=queryViz.views+1   # we need to update the flash count
+        queryViz.lastFlashed=datetime.datetime.now() # and the date it was last flashed
+        queryViz.save()
 
     timestamp=datetime.datetime.now().strftime('%Y-%m-%d--%H.%M.%S')
     filename=timestamp+".ino"
@@ -261,8 +274,13 @@ def justCompile(request):
     code=request.POST['code']
     vizLib=request.POST['viz-lib']
     
-    if vizLib==None:
-        vizLib="NEOPIXEL"
+    if vizLib in [None, '']:
+        queryViz=Viz.objects.get(pk=vizId)
+        if queryViz==None:
+            log.debug("Viz %i not found!" % vizId)
+            return
+        else:
+            vizLib=queryViz.vizLib
     
     if vizLib=="NEOPIXEL":
         code="%s\n%s" % (settings.SPARK_LIBRARY, code)
