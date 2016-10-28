@@ -5,6 +5,7 @@ class CubeUser(models.Model):
     accessToken=models.TextField()
     nickname=models.TextField()
     lastActivity=models.DateTimeField(auto_now_add=False)
+    lastPlaceVisited=models.TextField()
     def __str__(self):
         return "%s" % (self.nickname)
 

@@ -227,6 +227,7 @@ def cloudFlash(request):
     user=CubeUser.objects.filter(accessToken=accessToken).get() # try to find the user who issued this viz's flash
     if user:    # if user is found, then update the table with the date
         user.lastActivity=datetime.datetime.now() # log the date this user has last done something
+        user.lastPlaceVisited="FLASH: %s" % vizName
         user.save()
     
     # Log viz's activity in the db for stats

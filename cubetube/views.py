@@ -22,6 +22,7 @@ def login(request):
         else:
             user.accessToken=accessToken
             user.lastActivity=datetime.datetime.now() # log the date this user has last done something
+            user.lastPlaceVisited='LOGIN'
             user.save()
             response='{ "status":"ok", "nickname":"%s"}' % user.nickname
     else:
