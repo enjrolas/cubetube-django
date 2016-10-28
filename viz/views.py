@@ -223,12 +223,19 @@ def cloudFlash(request):
         code="%s\n%s" % (code, line)
         i+=1
 
+    # Log user's activity in the db for stats
+    user=CubeUser.objects.filter(accessToken=accessToken).get() # try to find the user who issued this viz's flash
+    if user:    # if user is found, then update the table with the date
+        user.lastActivity=datetime.datetime.now() # log the date this user has last done something
+        user.save()
+    
+    # Log viz's activity in the db for stats
     queryViz=Viz.objects.get(pk=vizId)
     if queryViz==None:
         log.debug("Viz %i not found!" % vizId)
         return
     else:
-        queryViz.views=queryViz.views+1   # we need to update the flash count
+        queryViz.views=queryViz.views+1              # we need to update the flash count
         queryViz.lastFlashed=datetime.datetime.now() # and the date it was last flashed
         queryViz.save()
 

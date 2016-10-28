@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from utils.strings import *
 from django.conf import settings
 import subprocess
+import datetime
 
 @csrf_exempt
 def login(request):
@@ -20,6 +21,7 @@ def login(request):
             response='{ "status":"ok", "nickname":"%s"}' % user.nickname
         else:
             user.accessToken=accessToken
+            user.lastActivity=datetime.datetime.now() # log the date this user has last done something
             user.save()
             response='{ "status":"ok", "nickname":"%s"}' % user.nickname
     else:

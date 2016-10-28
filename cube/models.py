@@ -4,6 +4,7 @@ class CubeUser(models.Model):
     email=models.TextField()
     accessToken=models.TextField()
     nickname=models.TextField()
+    lastActivity=models.DateTimeField(auto_now_add=False)
     def __str__(self):
         return "%s" % (self.nickname)
 
