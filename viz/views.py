@@ -227,7 +227,7 @@ def cloudFlash(request):
     user=CubeUser.objects.filter(accessToken=accessToken).get() # try to find the user who issued this viz's flash
     if user:    # if user is found, then update the table with the date
         user.lastActivity=datetime.datetime.now() # log the date this user has last done something
-        user.lastPlaceVisited="FLASH: %s" % vizName
+        user.lastPlaceVisited="FLASH: \"%s\"" % vizName.strip()
         user.save()
     
     # Log viz's activity in the db for stats
@@ -451,8 +451,8 @@ def fork(request, vizId=None):
     if user:
         viz=Viz.objects.get(pk=vizId)
         forked=Viz()
-        forked.name=viz.name
-        forked.description=viz.description
+        forked.name=viz.name.strip()
+        forked.description=viz.description.strip()
         forked.vizType=viz.vizType;
         forked.vizLib=viz.vizLib;
         forked.creator=user
@@ -783,8 +783,8 @@ def save(request):
         user=CubeUser.objects.get(accessToken=accessToken)
         viz=Viz.objects.get(pk=vizID)
 
-        viz.name=name
-        viz.description=description
+        viz.name=name.strip()
+        viz.description=description.strip()
         viz.interactive = interactive
         viz.published   = published
         viz.videoURL    = videoURL
@@ -853,8 +853,8 @@ def upload(request):
         else:
             published = True
 
-        viz.name        = name
-        viz.description = description
+        viz.name        = name.strip()
+        viz.description = description.strip()
         viz.interactive = interactive
         viz.videoURL    = videoURL
         viz.published   = published

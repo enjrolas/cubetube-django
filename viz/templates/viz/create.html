@@ -145,7 +145,7 @@
 		$('.save-code').click(function() {
 	        var saveData = getData();
 	        var goodToGo = validate(saveData);
-	        var validProgram=checkProgramValidity(saveData);
+	        //var validProgram=checkProgramValidity(saveData);
 	    	
 	        if( goodToGo ) {
 	            if( editing === false) {
@@ -250,8 +250,8 @@
   </div>
   <div class="viz-details">
     <div class="inner-wrapper">
-      <input class="viz-name" placeholder="Type an awesome name for your viz." value="{% if viz %} {{ viz.name }}{% endif %}"></input>
-      <textarea class="description" placeholder="Describe whats going on here! Including instructions if the viz requires an interactive component.">{% if viz %} {{ viz.description }}{% endif %}</textarea>
+      <input class="viz-name" placeholder="Type an awesome name for your viz." value="{% if viz %} {{ viz.name.strip }}{% endif %}"></input>
+      <textarea class="description" placeholder="Describe whats going on here! Including instructions if the viz requires an interactive component.">{% if viz %} {{ viz.description.strip }}{% endif %}</textarea>
       
       <div class="switch-option published">
         <div class="label">Published</div>
