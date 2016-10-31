@@ -47,6 +47,9 @@ function setTimeZoneOffset() {
     if (typeof accessToken !== 'undefined' && accessToken !== null) {
         var deviceID = getDeviceID();
         var commandString = 'SETTIMEZONE:' + localOffset;
+        
+        logEvent('SPARK PIXELS: LOADED');
+        
         $.post("https://api.particle.io/v1/devices/" + deviceID + "/Function", {
                 access_token: accessToken, args: commandString
         }).success(function (data) {
@@ -79,6 +82,9 @@ function setAuxSwitches(id, checked) {
     if (typeof accessToken !== 'undefined' && accessToken !== null) {
         var deviceID = getDeviceID();
         var commandString = 'SETAUXSWITCH:' + id + ',' + (checked ? '1' : '0') + ';';
+        
+        logEvent('SPARK PIXELS - SETAUXSWITCH: ' + id + ',' + (checked ? '1' : '0'));
+        
         $.post("https://api.particle.io/v1/devices/" + deviceID + "/Function", {
             access_token: accessToken, args: commandString
         }).fail(function (data) {
@@ -355,9 +361,38 @@ function populateModeParams() {
     }
 }
 
+function logEvent(event) {
+    if (typeof accessToken !== 'undefined' && accessToken !== null) {
+        var output;
+        var request = $.ajax({
+            type: "POST",
+            url: "/log_event/", /*"{% url 'log_event' %}",*/
+            data: {"event": event, "accessToken": accessToken},
+            dataType: "text",
+            success: function (data) {
+                var result = $.parseJSON(data);
+                var result = $.parseJSON(result);
+                output = "";
+                if (result.success) {
+                    output += "Logged event: " + result.message;
+                }
+                else {
+                    output += "Event logging unsuccessful: " + result.error;
+                }
+                console.log(output);  //alert(output);
+            },
+            fail: function (data) {
+                console.log("Event logging failed with error: " + data);
+                //console.log(data);
+            }
+        });
+    }
+}
+
 function flashCube() {
     var deviceID = getDeviceID();
     if (deviceID !== '') {
+        logEvent('SPARK PIXELS: FLASH');
         var output;
         var request = $.ajax({
             type: "POST",
@@ -564,6 +599,8 @@ function setColors() {
     if(colorsString.length > 0) {
         var deviceID = getDeviceID();
         if(deviceID !== '') {
+            logEvent('SPARK PIXELS - SET COLORS: ' + colorsString);
+            
             $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: colorsString})
                 .done(function(data) {console.log('done setColors(): ' + data.return_value);})
                 .fail(function (data) {console.log('fail setColors(): ' + data.return_value);});
@@ -585,6 +622,8 @@ function setSwitches() {
     if(switchesString.length > 0) {
         var deviceID = getDeviceID();
         if(deviceID !== '') {
+            logEvent('SPARK PIXELS - SET SWITCHES: ' + switchesString);
+            
             $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: switchesString})
                 .done(function(data) {console.log('done setSwitches(): ' + data.return_value);})
                 .fail(function (data) {console.log('fail setSwitches(): ' + data.return_value);});
@@ -596,6 +635,8 @@ function setText() {
     if ($("input#text").val().trim().length > 0) {
         var deviceID = getDeviceID();
         if(deviceID !== '') {
+            logEvent('SPARK PIXELS - SET TEXT: \"' + $("input#text").val().trim() + '\"');
+            
             $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetText", {access_token: accessToken, args: $("input#text").val().trim()})
                 .done(function(data) {console.log('done setText(): ' + data.return_value);})
                 .fail(function (data) {console.log('fail setText(): ' + data.return_value);});
@@ -615,6 +656,8 @@ function setMode() {
 
             setColors();
             setSwitches();
+            
+            logEvent('SPARK PIXELS - SET MODE: ' + currentMode);
 
             $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: commandString})
                 .success(function(data) {console.log('success! setMode(): ' + data.return_value);})
@@ -628,6 +671,9 @@ function setBrightness() {
         var deviceID = getDeviceID();
         if(deviceID !== '') {
             var commandString = 'B:' + (brightness > 0 ? brightness : 1) + ',';
+            
+            logEvent('SPARK PIXELS - SET BRIGHTNESS: ' + $("#brightnessSlider").val());
+            
             $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {
                 access_token: accessToken, args: commandString
             }).success(function(data) {
@@ -644,6 +690,9 @@ function setSpeed() {
         var deviceID = getDeviceID();
         if(deviceID !== '') {
             var commandString = 'S:' + speed + ',';
+            
+            logEvent('SPARK PIXELS - SET SPEED: ' + $("#speedSlider").val());
+            
             $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {
                 access_token: accessToken, args: commandString
             }).success(function(data) {

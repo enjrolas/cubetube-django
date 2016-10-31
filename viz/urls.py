@@ -42,4 +42,5 @@ urlpatterns = [
     url(r'^search/(?P<page>\d+)/(?P<filter>[\w\s*]+)/$', views.search, name='search'),
     url(r'^search/(?P<filter>[\w\s*]+)/(?P<cardsPerPage>\d+)/$', views.search, name='search'),
     url(r'^search/(?P<page>\d+)/(?P<filter>[\w\s*]+)/(?P<cardsPerPage>\d+)/$', views.search, name='search'),
+    url(r'^log_event/', views.log_event, name='log_event'),
 ]

@@ -16,6 +16,7 @@ from django.core.files import File
 from itertools import chain
 from django.db.models.query import QuerySet
 from datetime import date
+from django.utils import timezone
 log = logging.getLogger(__name__)
 
 def filter(request):
@@ -906,6 +907,27 @@ def upload(request):
                       { "nickname": nickname,
                         "accessToken": accessToken,
                         "authenticated":authenticate(nickname, accessToken)})
+
+
+@csrf_exempt
+def log_event(request):
+    event       = request.POST['event']
+    accessToken = request.POST['accessToken']
+    
+    # Log user's activity in the db for stats
+    user=CubeUser.objects.filter(accessToken=accessToken).get() # try to find the user who issued this event
+    if user:    # if user is found, then update the table with the date
+        #user.lastActivity=django.utils.timezone.now() # log the date this user has last done something
+        user.lastActivity=datetime.datetime.now() # log the date this user has last done something
+        user.lastPlaceVisited=event.strip()
+        user.save()
+    
+        message = "Logged: \"%s\"" % user.lastPlaceVisited
+        return JsonResponse({'success': true, 'message': message})
+    else:
+        error = "User with accessToken \"%s\" not found or invalid accessToken" % accessToken
+        return JsonResponse({'success': false , 'error': error})
+
 
 @csrf_exempt
 def flashWebsocketsListener(request, coreId, processor):
