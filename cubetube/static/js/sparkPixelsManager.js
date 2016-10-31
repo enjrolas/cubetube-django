@@ -371,12 +371,10 @@ function logEvent(event) {
             dataType: "json",
             success: function (data) {
                 output = "";
-                if (data.success) {
+                if (data.success)
                     output += data.message;
-                }
-                else {
+                else
                     output += "Event logging unsuccessful: " + data.error;
-                }
                 console.log(output);  //alert(output);
             },
             fail: function (data) {

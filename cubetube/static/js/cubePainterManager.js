@@ -211,9 +211,34 @@ function populateModesList() {
     }
 }
 
+function logEvent(event) {
+    if (typeof accessToken !== 'undefined' && accessToken !== null) {
+        var output;
+        var request = $.ajax({
+            type: "POST",
+            url: "/log_event/", /*"{% url 'log_event' %}",*/
+            data: {"event": event, "accessToken": accessToken},
+            dataType: "json",
+            success: function (data) {
+                output = "";
+                if (data.success)
+                    output += data.message;
+                else
+                    output += "Event logging unsuccessful: " + data.error;
+                console.log(output);  //alert(output);
+            },
+            fail: function (data) {
+                console.log("Event logging failed with error: " + data);
+                //console.log(data);
+            }
+        });
+    }
+}
+
 function flashCube() {
     var deviceID = getDeviceID();
     if (deviceID !== '') {
+        logEvent('CUBE PAINTER: FLASH');
         var output;
         var request = $.ajax({
             type: "POST",
@@ -277,6 +302,9 @@ function setBrightness() {
         var deviceID = getDeviceID();
         if(deviceID !== '') {
             var commandString = 'B:' + (brightness > 0 ? brightness : 1) + ',';
+            
+            logEvent('CUBE PAINTER - SET BRIGHTNESS: ' + $("#brightnessSlider").val());
+            
             $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {
                 access_token: accessToken, args: commandString
             }).success(function(data) {
@@ -294,6 +322,8 @@ function setMode() {
         if(deviceID !== '') {
             currentMode = $('#modes').find("option:selected").val();
             var commandString = 'M:' + currentMode + ',';
+            
+            logEvent('CUBE PAINTER - SET MODE: ' + currentMode);
 
             $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: commandString})
                 .success(function(data) {console.log('success! setMode(): ' + data.return_value);})
@@ -308,6 +338,9 @@ function setVoxel(index, color) {
         var deviceID = getDeviceID();
         if(deviceID !== '') {
             var commandString = 'I' + index + ',' + color + ',';
+            
+            logEvent('CUBE PAINTER - SET VOXEL: ' + commandString);
+            
             $.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", {access_token: accessToken, args: commandString});
         }
     }
@@ -320,6 +353,9 @@ function clearVoxels(startIdx, endIdx) {
         var deviceID = getDeviceID();
         if(deviceID !== '') {
             var commandString = 'C' + startIdx + ':' + endIdx + ',';
+            
+            logEvent('CUBE PAINTER - CLEAR VOXELS: ' + commandString);
+            
             $.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", {access_token: accessToken, args: commandString});
             clearPieces(startIdx, endIdx);
         }
@@ -333,6 +369,9 @@ function syncVoxels() {
         var deviceID = getDeviceID();
         if(deviceID !== '') {
             var commandString = 'C0:' + gNumPieces + ',';
+            
+            logEvent('CUBE PAINTER - SYNC VOXELS: ' + commandString);
+            
             $.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", {access_token: accessToken, args: commandString});
 
             var gDrawing = new Array();
@@ -405,6 +444,8 @@ function increaseLayer() {
         gLayer++;
     else
         gLayer = 7;
+    
+    logEvent('CUBE PAINTER - INCREASE LAYER: ' + gLayer);
     drawCube();
 }
 
@@ -413,6 +454,8 @@ function decreaseLayer() {
         gLayer--;
     else
         gLayer = 0;
+    
+    logEvent('CUBE PAINTER - DECREASE LAYER: ' + gLayer);
     drawCube();
 }
 
@@ -814,6 +857,8 @@ function initGame(canvasElement) {
     gVoxelImage = new Image();
     gVoxelImage.src = "/static/images/voxel.png";
     gVoxelImage.onload = function() {
+        logEvent('CUBE PAINTER: LOADED');
+        
         // At this point, the image is fully loaded
         if (!resumeGame())
             newGame();
