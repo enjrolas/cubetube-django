@@ -368,16 +368,14 @@ function logEvent(event) {
             type: "POST",
             url: "/log_event/", /*"{% url 'log_event' %}",*/
             data: {"event": event, "accessToken": accessToken},
-            dataType: "text",
+            dataType: "json",
             success: function (data) {
-                var result = $.parseJSON(data);
-                var result = $.parseJSON(result);
                 output = "";
-                if (result.success) {
-                    output += "Logged event: " + result.message;
+                if (data.success) {
+                    output += data.message;
                 }
                 else {
-                    output += "Event logging unsuccessful: " + result.error;
+                    output += "Event logging unsuccessful: " + data.error;
                 }
                 console.log(output);  //alert(output);
             },

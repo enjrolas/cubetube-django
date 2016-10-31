@@ -923,10 +923,10 @@ def log_event(request):
         user.save()
     
         message = "Logged: \"%s\"" % user.lastPlaceVisited
-        return JsonResponse({'success': true, 'message': message})
+        return JsonResponse({'success': 'true', 'message': message})
     else:
         error = "User with accessToken \"%s\" not found or invalid accessToken" % accessToken
-        return JsonResponse({'success': false , 'error': error})
+        return JsonResponse({'success': 'false' , 'error': error})
 
 
 @csrf_exempt
