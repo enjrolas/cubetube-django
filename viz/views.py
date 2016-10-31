@@ -464,6 +464,11 @@ def fork(request, vizId=None):
             newCode.viz=forked
             newCode.code=code.code
             newCode.save()
+    
+        # Log user's activity in the db for stats
+        user.lastActivity=datetime.datetime.now() # log the date this user has last done something
+        user.lastPlaceVisited="FORK: \"%s\"" % forked.name.strip()
+        user.save()
 
         return redirect('edit', id=forked.pk)
     else:
@@ -692,6 +697,14 @@ def delete(request):
             vizId=request.POST['vizId']
             viz=Viz.objects.get(pk=vizId)
             viz.delete()
+            
+            # Log user's activity in the db for stats
+            user=CubeUser.objects.filter(accessToken=accessToken).get() # try to find the user who issued this viz's flash
+            if user:    # if user is found, then update the table with the date
+                user.lastActivity=datetime.datetime.now() # log the date this user has last done something
+                user.lastPlaceVisited="DELETE: \"%s\"" % viz.name.strip()
+                user.save()
+            
             return HttpResponse('{ "success": true }', content_type="application/json")
         except Viz.DoesNotExist:
             viz = None
@@ -714,6 +727,13 @@ def rate(request):
             viz=Viz.objects.get(pk=vizId)
             user=CubeUser.objects.get(nickname=nickname)
             userRatings=Rating.objects.filter(reviewer=user.id)
+            
+            # Log user's activity in the db for stats
+            if user:    # if user is found, then update the table with the date
+                user.lastActivity=datetime.datetime.now() # log the date this user has last done something
+                user.lastPlaceVisited="RATE: \"%s\"" % viz.name.strip()
+                user.save()
+            
         except Viz.DoesNotExist:
             return HttpResponse('{ "success": false , "error" : "Viz %s does not exist" }' % vizId, content_type="application/json")
         except Rating.DoesNotExist:
@@ -795,6 +815,12 @@ def save(request):
         newCode=SourceCode.objects.get(viz=viz)
         newCode.code=code
         newCode.save()
+        
+        # Log user's activity in the db for stats
+        if user:    # if user is found, then update the table with the date
+            user.lastActivity=datetime.datetime.now() # log the date this user has last done something
+            user.lastPlaceVisited="EDIT: \"%s\"" % viz.name.strip()
+            user.save()
 
         return HttpResponse('{ "success": true , "id": "%s"}' % viz.pk, content_type="application/json")
     else:
@@ -867,6 +893,12 @@ def upload(request):
         newCode.viz = viz
         newCode.code = code
         newCode.save()
+        
+        # Log user's activity in the db for stats
+        if user:    # if user is found, then update the table with the date
+            user.lastActivity=datetime.datetime.now() # log the date this user has last done something
+            user.lastPlaceVisited="CREATE: \"%s\"" % viz.name.strip()
+            user.save()
 
         return HttpResponse('{ "success": true , "id": "%s"}' % viz.pk, content_type="application/json")
     else:
