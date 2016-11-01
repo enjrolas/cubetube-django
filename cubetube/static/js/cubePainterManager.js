@@ -221,7 +221,7 @@ function logEvent(event) {
             dataType: "json",
             success: function (data) {
                 output = "";
-                if (data.success)
+                if (data.success == 'true')
                     output += data.message;
                 else
                     output += "Event logging unsuccessful: " + data.error;
@@ -238,7 +238,6 @@ function logEvent(event) {
 function flashCube() {
     var deviceID = getDeviceID();
     if (deviceID !== '') {
-        logEvent('CUBE PAINTER: FLASH');
         var output;
         var request = $.ajax({
             type: "POST",
@@ -303,7 +302,7 @@ function setBrightness() {
         if(deviceID !== '') {
             var commandString = 'B:' + (brightness > 0 ? brightness : 1) + ',';
             
-            logEvent('CUBE PAINTER - SET BRIGHTNESS: ' + $("#brightnessSlider").val());
+            logEvent('CUBE PAINTER > SET BRIGHTNESS: ' + $("#brightnessSlider").val());
             
             $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {
                 access_token: accessToken, args: commandString
@@ -323,7 +322,7 @@ function setMode() {
             currentMode = $('#modes').find("option:selected").val();
             var commandString = 'M:' + currentMode + ',';
             
-            logEvent('CUBE PAINTER - SET MODE: ' + currentMode);
+            logEvent('CUBE PAINTER > SET MODE: ' + currentMode);
 
             $.post("https://api.particle.io/v1/devices/" + deviceID + "/SetMode", {access_token: accessToken, args: commandString})
                 .success(function(data) {console.log('success! setMode(): ' + data.return_value);})
@@ -332,14 +331,16 @@ function setMode() {
     }
 }
 
-function setVoxel(index, color) {
+function setVoxel(index, color, log) {
+    log = typeof log !== 'undefined' ? log : true;
+    
     if (typeof accessToken !== 'undefined' && accessToken !== null
         && currentMode.trim().toUpperCase() === 'CUBE PAINTER') {
         var deviceID = getDeviceID();
         if(deviceID !== '') {
             var commandString = 'I' + index + ',' + color + ',';
             
-            logEvent('CUBE PAINTER - SET VOXEL: ' + commandString);
+            if(log) logEvent('CUBE PAINTER > SET VOXEL: ' + commandString.substring(0, commandString.length - 1));
             
             $.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", {access_token: accessToken, args: commandString});
         }
@@ -354,7 +355,7 @@ function clearVoxels(startIdx, endIdx) {
         if(deviceID !== '') {
             var commandString = 'C' + startIdx + ':' + endIdx + ',';
             
-            logEvent('CUBE PAINTER - CLEAR VOXELS: ' + commandString);
+            logEvent('CUBE PAINTER > CLEAR VOXELS: ' + commandString.substring(0, commandString.length - 1));
             
             $.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", {access_token: accessToken, args: commandString});
             clearPieces(startIdx, endIdx);
@@ -370,7 +371,7 @@ function syncVoxels() {
         if(deviceID !== '') {
             var commandString = 'C0:' + gNumPieces + ',';
             
-            logEvent('CUBE PAINTER - SYNC VOXELS: ' + commandString);
+            logEvent('CUBE PAINTER > SYNC VOXELS: ' + commandString.substring(0, commandString.length - 1));
             
             $.post("https://api.particle.io/v1/devices/" + deviceID + "/CubePainter", {access_token: accessToken, args: commandString});
 
@@ -384,7 +385,7 @@ function syncVoxels() {
                 if (idxArr < gDrawing.length) {
                     var voxelIndex = ((gDrawing[idxArr].zIndex * kNumPieces) + (gDrawing[idxArr].column * (kNumPieces / kBoardWidth)) + (kBoardHeight - gDrawing[idxArr].row)) - 1;
                     //console.log('Setting voxel #' + voxelIndex);
-                    setVoxel(voxelIndex, gDrawing[idxArr].fillColor);
+                    setVoxel(voxelIndex, gDrawing[idxArr].fillColor, false);
                     idxArr++;
                 }
                 else
@@ -440,22 +441,22 @@ function getCell(row, column, cellArray) {
 }
 
 function increaseLayer() {
-    if(gLayer < 7)
+    if(gLayer < 7) {
         gLayer++;
+        logEvent('CUBE PAINTER > INCREASE LAYER: ' + gLayer);
+    }
     else
         gLayer = 7;
-    
-    logEvent('CUBE PAINTER - INCREASE LAYER: ' + gLayer);
     drawCube();
 }
 
 function decreaseLayer() {
-    if(gLayer > 0)
+    if(gLayer > 0) {
         gLayer--;
+        logEvent('CUBE PAINTER > DECREASE LAYER: ' + gLayer);
+    }
     else
         gLayer = 0;
-    
-    logEvent('CUBE PAINTER - DECREASE LAYER: ' + gLayer);
     drawCube();
 }
 
