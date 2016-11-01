@@ -835,24 +835,34 @@ div#updateListDiv {
     float: right;
 } 
 /* 
-   The 2 classes below are to force visibility of range controls 
+   The classes below are to force visibility of range controls 
    over browsers that don't support HTML5 pseudo-elements
 */
+input[type=range]{
+    -webkit-appearance: none;
+    background: rgba(238, 0, 38, 0.4);
+}
+input[type=range]:focus {
+    outline: none;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #ccc;
+}
 input[type="range"]::-webkit-slider-thumb {
-    border: 5px solid; 
-    border-color: rgb(238, 0, 38);
-    background-color: rgb(238, 0, 38);
-    border-radius: 33%; 
-    margin-top: -10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    -webkit-appearance: none;
+    border: none;
+    height: 16px;
+    width: 7px;
+    border-radius: 3px;
+    margin-top: -6px;
+    background: rgba(43, 198, 251, 0.8);
+    box-shadow: 0 2px 4px rgb(0, 0, 0);
 }
 input[type="range"]::-webkit-slider-runnable-track {
-    border: 1px solid; 
-    border-color: rgba(43, 198, 251, 0.2); 
-    border-style: inset;
-    background-color: rgba(238, 0, 38, 0.2); 
-    height: 3px;
-    border-radius: 2px;
+    height: 5px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;    
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
