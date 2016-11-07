@@ -1009,7 +1009,7 @@ def unique_daily_users(request):
     for item in grouped_query:
         #date = datetime.datetime.strptime(item['fmtlastActivity'], "%m/%d/%Y")
         #data = [calendar.timegm(date.timetuple()) * 1000, int(item['count'])]
-        data = [item['fmtlastActivity'], int(item['count'])]
+        data = [item['fmtLastActivity'], int(item['count'])]
         series.append(data)
     
     response={ "label": "Users in %s, %d" % (calendar.month_name[int(month)], today.year) ,
