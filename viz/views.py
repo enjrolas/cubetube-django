@@ -946,7 +946,7 @@ def viz_created(request):
     log.debug("endDate: %s" % endDate)
 
 
-    vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).filter(created__gte=startDate, created__lt=endDate)
+    vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).filter(created__gte=startDate, created__lt=endDate).order_by("created")
     log.debug("SQL QUERY: %s" % vizs.extra(select={'day':'DATE_FORMAT(created,\'%%d\')','fmtCreated':'DATE_FORMAT(created,\'%%m/%%d/%%Y\')'}).values('day').annotate(count=Count('pk')).values('fmtCreated','count').query.__str__())
     grouped_query=list(vizs.extra(select={'day':'DATE_FORMAT(created,\'%%d\')','fmtCreated':'DATE_FORMAT(created,\'%%m/%%d/%%Y\')'}).values('day').annotate(count=Count('pk')).values('fmtCreated','count'))
     #grouped_query=list(vizs.extra(select={'day':'strftime(''%%d'',created)','fmtCreated':'strftime(''%%m/%%d/%%Y'',created)'}).values('day').annotate(count=Count('pk')).values('fmtCreated','count'))
@@ -974,9 +974,9 @@ def viz_flashed(request):
     log.debug("startDate: %s" % startDate)
     log.debug("endDate: %s" % endDate)
 
-    vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).filter(lastFlashed__gte=startDate, lastFlashed__lt=endDate)
+    vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).filter(lastFlashed__gte=startDate, lastFlashed__lt=endDate).order_by("lastFlashed")
     log.debug("SQL QUERY: %s" % vizs.extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').query.__str__())
-    grouped_query=list(vizs.extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count'))
+    grouped_query=vizs.extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count')
     series = []
     for item in grouped_query:
         #date = datetime.datetime.strptime(item['fmtLastFlashed'], "%m/%d/%Y")
@@ -1000,7 +1000,7 @@ def unique_daily_users(request):
     log.debug("startDate: %s" % startDate)
     log.debug("endDate: %s" % endDate)
     
-    users=CubeUser.objects.filter(lastActivity__gte=startDate, lastActivity__lt=endDate).distinct()
+    users=CubeUser.objects.filter(lastActivity__gte=startDate, lastActivity__lt=endDate).distinct().order_by("lastActivity")
     log.debug("SQL QUERY: %s" % users.extra(select={'day':'DATE_FORMAT(lastActivity,\'%%d\')','fmtLastActivity':'DATE_FORMAT(lastActivity,\'%%m/%%d/%%Y\')'}).values('day').annotate(count=Count('pk')).values('fmtLastActivity','count').query.__str__())
     grouped_query=list(users.extra(select={'day':'DATE_FORMAT(lastActivity,\'%%d\')','fmtLastActivity':'DATE_FORMAT(lastActivity,\'%%m/%%d/%%Y\')'}).values('day').annotate(count=Count('pk')).values('fmtLastActivity','count'))
     #grouped_query=list(users.extra(select={'day':'strftime(''%%d'',lastActivity)','fmtlastActivity':'strftime(''%%m/%%d/%%Y'',lastActivity)'}).values('day').annotate(count=Count('pk')).values('fmtlastActivity','count'))
