@@ -1,0 +1,169 @@
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+{% extends "cubetube/base.html" %}
+{% load staticfiles %}
+{% block headx %}
+    <!-- META -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- to keep this view from reloading from the cache (especially nasty after deletions) -->
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+{% endblock %}
+
+{% block header %}
+    {% include "cubetube/partials/_header.html" %}
+    <!-- CSS -->
+    <link href="{% static 'js/flot/examples/examples.css' %}" rel="stylesheet" type="text/css">
+
+    <!-- JS -->
+    <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="{% static 'js/flot/excanvas.min.js' %}"></script><![endif]-->
+    <script language="javascript" type="text/javascript" src="{% static 'js/flot/jquery.flot.min.js' %}"></script>
+    <script language="javascript" type="text/javascript" src="{% static 'js/flot/jquery.flot.time.min.js' %}"></script>
+    <script language="javascript" type="text/javascript" src="{% static 'js/flot/jquery.flot.categories.min.js' %}"></script>
+    <script type="text/javascript">
+        $(function() {
+            var options = {
+                //lines: { show: true },
+                //lines: { show: true, fill: true },
+                //points: { show: true },
+                //bars: { show: true },
+                series: {
+                    bars: {
+                        show: true,
+                        barWidth: 0.4,
+                        align: "center"
+                    }
+                },
+                xaxis: {
+                    //mode: "time",
+                    //timeformat: "%b %d",
+                    mode: "categories",
+                    tickLength: 0
+                },
+                yaxis: {
+                    tickDecimals: 0,
+                    tickSize: 1
+                }
+            };
+            
+            var $container = $(".demo-container");
+            var $placeholder = $("#placeholder");
+            
+            function onDataReceived(series) {
+                if(!series.data.length) {
+                    alert("No data to display for " + series.label);    //$('label[for="' + $checkbox.attr('id') + '"]').html());
+                    var keywords = series.label.substr(0, series.label.indexOf("in")-1).replace(' ','_').toLowerCase();
+                    //console.log(keywords);
+                    var $checkbox = $("input:checkbox[id*='" + keywords + "']");
+                    if($checkbox.length) $checkbox.prop('checked',false);
+                    if(alreadyFetched[series.label]) {
+                        var index = alreadyFetched.indexOf(series.label);
+                        if(index >= 0) alreadyFetched.splice(index, 1);
+                    }
+                    return;
+                }
+                
+                // Push the new data onto our existing data array
+                if (!alreadyFetched[series.label]) {
+                    alreadyFetched[series.label] = true;
+                    data.push(series);
+                }
+
+                $.plot($placeholder, data, options);
+            }
+
+            $("button.fetchSeries").click(function () {
+                $.each($('input:checked'), function() {
+                    var $checkbox = $(this);
+                    //console.log("Checkbox for " + $('label[for="' + $checkbox.attr('id') + '"]').html() + ": " + $checkbox.prop("checked").toString());
+                    // Find the URL in the link right next to us, then fetch the data
+                    var dataurl = $checkbox.attr("data-url");
+
+                    $.ajax({
+                        url: dataurl,
+                        data: {"month": parseInt($("select#select-months").val())},
+                        type: "GET",
+                        dataType: "json",
+                        success: onDataReceived
+                    });
+                });
+            });
+            
+            $("button#button_clear").click(function () {
+                data = [];
+                alreadyFetched = {};
+                $.plot($placeholder, data, options);
+                $('canvas.flot-overlay').width(784).height(540);
+                $('canvas.flot-base').width(784).height(540);
+            });
+            
+            // Fetch one series, adding to what we already have
+            var alreadyFetched;
+            var data;
+            //$.plot(placeholder, data, options);*/
+            $("button#button_clear").click();
+                
+            // Load the first series by default, so we don't have an empty plot
+            var d = new Date();
+            $("select#select-months").val(d.getMonth()+1);
+            //$("button.fetchSeries:first").click();
+
+            // Add the Flot version string to the footer
+            $("#footer").prepend("Powered by: Flot " + $.plot.version + " &ndash; ");
+        });
+    </script>
+    {% block title %} Cubetube - Usage Statistics {% endblock %}
+{% endblock %}
+
+{% block content %}
+    {% load utils %}
+    {% logged_in_status as logged_in %}
+    <div id="header" style='margin-top: 50px;'>
+        <h2>Cubetube - Usage Metrics</h2>
+    </div>
+
+    <div id="content">
+        {% if logged_in %}
+            <div class="demo-container" style="width: 1008px; height: 600px; margin-left: -70px;">
+                <div id="placeholder" class="demo-placeholder" style="float:left; width:800px;"></div>
+                <p id="choices">
+                    <input type='checkbox' id='viz_flashed' data-url="/viz_flashed/" /><label for='viz_flashed'>Viz flashed</label><br/>
+                    <input type='checkbox' id='viz_created' data-url="/viz_created/" /><label for='viz_created'>Viz created</label><br/>
+                    <input type='checkbox' id='unique_daily_users' data-url="/unique_daily_users/" /><label for='unique_daily_users'>Unique daily users</label><br/><br/>
+                </p>
+                <p>
+                    <select id="select-months" style="font-size: 18px; padding: 1px 2px;">
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select><br/>
+                    <button class="fetchSeries">Fetch data</button>
+                    <button id="button_clear" style="font-size: 18px; padding: 1px 7px;" >Clear data</button>
+                </p>
+            </div>
+        {% else %}
+            <div class="demo-container" style="display: none;">
+                <div id="placeholder" class="demo-placeholder"></div>
+            </div>
+            <div style="width: 15%; font-weight: bold; color: #2bc6fb; text-align: justify; margin: 0 auto;">
+                <div><span id="device">Please Log In</span></div>
+            </div>
+        {% endif %}
+    </div>
+    <div id="footer">
+        Copyright &copy; 2007 - 2014 IOLA and Ole Laursen
+    </div>
+{% endblock %}
