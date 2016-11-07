@@ -14,9 +14,12 @@ import subprocess
 import os
 from django.core.files import File
 from itertools import chain
-from django.db.models.query import QuerySet
-from datetime import date
-from django.utils import timezone
+#from django.db.models.query import QuerySet
+from django.db.models import Count
+import calendar
+#from datetime import date, timedelta
+#from django.utils import timezone
+from array import *
 log = logging.getLogger(__name__)
 
 def filter(request):
@@ -524,6 +527,8 @@ def spark_pixels(request):
     return render(request, "viz/spark_pixels.html")
 def cube_painter(request):
     return render(request, "viz/cube_painter.html")
+def metrics(request): 
+    return render(request, "viz/admin_stats.html")
 
 def vizText(request, id):
     currentViz=Viz.objects.get(pk=id)
@@ -927,6 +932,72 @@ def log_event(request):
     else:
         error = "User with accessToken \"%s\" not found or invalid accessToken" % accessToken
         return JsonResponse({'success': 'false' , 'error': error})
+
+
+@csrf_exempt
+def viz_created(request):
+    month       = request.GET['month']
+    today       = datetime.datetime.today()
+    next_year   = today.year if (int(month) < 12) else today.year + 1
+    next_month  = int(month) + 1 if (int(month) < 12) else 1
+
+    vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).filter(created__gte=datetime.date(today.year, int(month), 1), created__lt=datetime.date(next_year, next_month, 1))
+    grouped_query=list(vizs.extra(select={'day':'strftime(\'%d\', created)', 'fmtCreated':'strftime(\'%m/%d/%Y\', created)'}).values('day').annotate(count=Count('pk')).values('fmtCreated', 'count'))
+
+    series = []
+    for item in grouped_query:
+        #date = datetime.datetime.strptime(item['fmtCreated'], "%m/%d/%Y")
+        #data = [calendar.timegm(date.timetuple()) * 1000, int(item['count'])]
+        data = [item['fmtCreated'], int(item['count'])]
+        series.append(data)
+    
+    response={ "label": "Viz created in %s, %d" % (calendar.month_name[int(month)], today.year) ,
+               "data" : series }
+    return JsonResponse(response)
+
+
+@csrf_exempt
+def viz_flashed(request):
+    month       = request.GET['month']
+    today       = datetime.datetime.today()
+    next_year   = today.year if (int(month) < 12) else today.year + 1
+    next_month  = int(month) + 1 if (int(month) < 12) else 1
+
+    vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).filter(lastFlashed__gte=datetime.date(today.year, int(month), 1), lastFlashed__lt=datetime.date(next_year, next_month, 1))
+    grouped_query=list(vizs.extra(select={'day':'strftime(\'%d\', lastFlashed)', 'fmtLastFlashed':'strftime(\'%m/%d/%Y\', lastFlashed)'}).values('day').annotate(count=Count('pk')).values('fmtLastFlashed', 'count'))
+    
+    series = []
+    for item in grouped_query:
+        #date = datetime.datetime.strptime(item['fmtLastFlashed'], "%m/%d/%Y")
+        #data = [calendar.timegm(date.timetuple()) * 1000, int(item['count'])]
+        data = [item['fmtLastFlashed'], int(item['count'])]
+        series.append(data)
+    
+    response={ "label": "Viz flashed in %s, %d" % (calendar.month_name[int(month)], today.year) ,
+               "data" : series }
+    return JsonResponse(response)
+
+
+@csrf_exempt
+def unique_daily_users(request):
+    month       = request.GET['month']
+    today       = datetime.datetime.today()
+    next_year   = today.year if (int(month) < 12) else today.year + 1
+    next_month  = int(month) + 1 if (int(month) < 12) else 1
+    
+    users=CubeUser.objects.filter(lastActivity__gte=datetime.date(today.year, int(month), 1), lastActivity__lt=datetime.date(next_year, next_month, 1)).distinct()
+    grouped_query=list(users.extra(select={'day':'strftime(\'%d\', lastActivity)', 'fmtlastActivity':'strftime(\'%m/%d/%Y\', lastActivity)'}).values('day').annotate(count=Count('pk')).values('fmtlastActivity', 'count'))
+    
+    series = []
+    for item in grouped_query:
+        #date = datetime.datetime.strptime(item['fmtlastActivity'], "%m/%d/%Y")
+        #data = [calendar.timegm(date.timetuple()) * 1000, int(item['count'])]
+        data = [item['fmtlastActivity'], int(item['count'])]
+        series.append(data)
+    
+    response={ "label": "Users in %s, %d" % (calendar.month_name[int(month)], today.year) ,
+               "data" : series }
+    return JsonResponse(response)
 
 
 @csrf_exempt

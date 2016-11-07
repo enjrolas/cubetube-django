@@ -43,4 +43,8 @@ urlpatterns = [
     url(r'^search/(?P<filter>[\w\s*]+)/(?P<cardsPerPage>\d+)/$', views.search, name='search'),
     url(r'^search/(?P<page>\d+)/(?P<filter>[\w\s*]+)/(?P<cardsPerPage>\d+)/$', views.search, name='search'),
     url(r'^log_event/', views.log_event, name='log_event'),
+    url(r'^metrics/$', views.metrics, name='metrics'),
+    url(r'^viz_created/', views.viz_created, name='viz_created'),
+    url(r'^viz_flashed/', views.viz_flashed, name='viz_flashed'),
+    url(r'^unique_daily_users/', views.unique_daily_users, name='unique_daily_users'),
 ]
