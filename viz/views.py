@@ -964,8 +964,8 @@ def viz_flashed(request):
     next_month  = int(month) + 1 if (int(month) < 12) else 1
 
     #vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).filter(lastFlashed__gte=datetime.date(today.year, int(month), 1), lastFlashed__lt=datetime.date(next_year, next_month, 1))
-    startDate = datetime.datetime.strptime("%s-%s-%s" % (today.year, int(month), 1),"%Y-%m-%d")
-    endDate = datetime.datetime.strptime("%s-%s-%s" % (today.year, next_month, 1),"%Y-%m-%d")
+    startDate = datetime.datetime.strptime("%s-%s-%s" % (today.year, int(month), 1),"%Y-%m-%d").split()[0]
+    endDate = datetime.datetime.strptime("%s-%s-%s" % (today.year, next_month, 1),"%Y-%m-%d").split()[0]
     log.debug("startDate: %s" % startDate)
     log.debug("endDate: %s" % endDate)
     vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).filter(lastFlashed__gte=startDate.date(), lastFlashed__lt=endDate.date())
