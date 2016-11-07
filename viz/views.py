@@ -971,8 +971,8 @@ def viz_flashed(request):
     next_month  = int(month) + 1 if (int(month) < 12) else 1
     startDate = datetime.datetime.strptime("%s-%s-%s" % (today.year, int(month), 1),"%Y-%m-%d")
     endDate = datetime.datetime.strptime("%s-%s-%s" % (today.year, next_month, 1),"%Y-%m-%d")
-    log.debug("startDate: %s" % startDate)
-    log.debug("endDate: %s" % endDate)
+    log.debug("startDate: %s" % startDate.strftime('%Y-%m-%d'))
+    log.debug("endDate: %s" % endDate.strftime('%Y-%m-%d'))
 
     vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).filter(lastFlashed__gte=startDate.strftime('%Y-%m-%d'), lastFlashed__lt=endDate.strftime('%Y-%m-%d')).order_by("lastFlashed")
     log.debug("SQL QUERY: %s" % vizs.extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').query.__str__())
