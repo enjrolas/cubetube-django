@@ -964,8 +964,10 @@ def viz_flashed(request):
     next_month  = int(month) + 1 if (int(month) < 12) else 1
 
     #vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).filter(lastFlashed__gte=datetime.date(today.year, int(month), 1), lastFlashed__lt=datetime.date(next_year, next_month, 1))
-    startDate = datetime.datetime.strptime("%s %s %s" % (today.year, int(month), 1),"%Y-%m-%d").date()
-    endDate = datetime.datetime.strptime("%s %s %s" % (next_year, next_month, 1),"%Y-%m-%d").date()
+    #startDate = datetime.datetime.strptime("%s %s %s" % (today.year, int(month), 1),"%Y-%m-%d").date()
+    #endDate = datetime.datetime.strptime("%s %s %s" % (next_year, next_month, 1),"%Y-%m-%d").date()
+    startDate = datetime.datetime.date((today.year, int(month), 1),"%Y-%m-%d")
+    endDate = datetime.datetime.date((next_year, next_month, 1),"%Y-%m-%d")
     vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).filter(lastFlashed__gte=startDate, lastFlashed__lt=endDate)
     log.debug("SQL QUERY: %s" % vizs.extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').query.__str__())
     grouped_query=list(vizs.extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count'))
