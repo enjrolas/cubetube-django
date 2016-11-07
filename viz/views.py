@@ -977,11 +977,11 @@ def viz_flashed(request):
     #vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).filter(lastFlashed__gte="\'%s\'" % startDate, lastFlashed__lt="\'%s\'" % endDate).order_by("lastFlashed")
     subquery = """(SELECT DATE_FORMAT(lastFlashed,'%m/%d/%Y')) AS `fmtLastFlashed`, COUNT(id) AS `count` 
                    FROM viz_viz 
-                   GROUP BY `fmtLastFlashed`"""
+                   GROUP BY `fmtLastFlashed`""" # Group by
     condition = 'vizType = \'L3D\' AND published = True AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % (startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d')) # Join
     orderBy = 'lastFlashed'
     #log.debug("SQL QUERY: %s" % vizs.extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}, where=['lastFlashed >= \'%s\' AND lastFlashed < \'%s\'' % (startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').query.__str__())
-    log.debug("SQL QUERY: %s" % Viz.objects.get_queryset().extra(tables=[subquery], where=[condition]).order_by(orderBy).query.__str__())
+    log.debug("SQL QUERY: %s" % (Viz.objects.get_queryset().extra(tables=[subquery], where=[condition]).order_by(orderBy)).query.__str__())
     grouped_query=Viz.objects.get_queryset().extra(tables=[subquery], where=[condition]).order_by(orderBy)
     #grouped_query=vizs.extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count')
     series = []
