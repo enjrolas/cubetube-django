@@ -942,7 +942,7 @@ def viz_created(request):
     next_month  = int(month) + 1 if (int(month) < 12) else 1
 
     vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).filter(created__gte=datetime.date(today.year, int(month), 1), created__lt=datetime.date(next_year, next_month, 1))
-    grouped_query=list(vizs.extra(select={'day':'strftime(\'%d\', created)', 'fmtCreated':'strftime(\'%m/%d/%Y\', created)'}).values('day').annotate(count=Count('pk')).values('fmtCreated', 'count'))
+    grouped_query=list(vizs.extra(select={'day':'strftime(\'%%d\', created)', 'fmtCreated':'strftime(\'%%m/%%d/%%Y\', created)'}).values('day').annotate(count=Count('pk')).values('fmtCreated', 'count'))
 
     series = []
     for item in grouped_query:
@@ -964,7 +964,7 @@ def viz_flashed(request):
     next_month  = int(month) + 1 if (int(month) < 12) else 1
 
     vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).filter(lastFlashed__gte=datetime.date(today.year, int(month), 1), lastFlashed__lt=datetime.date(next_year, next_month, 1))
-    grouped_query=list(vizs.extra(select={'day':'strftime(\'%d\', lastFlashed)', 'fmtLastFlashed':'strftime(\'%m/%d/%Y\', lastFlashed)'}).values('day').annotate(count=Count('pk')).values('fmtLastFlashed', 'count'))
+    grouped_query=list(vizs.extra(select={'day':'strftime(\'%%d\', lastFlashed)', 'fmtLastFlashed':'strftime(\'%%m/%%d/%%Y\', lastFlashed)'}).values('day').annotate(count=Count('pk')).values('fmtLastFlashed', 'count'))
     
     series = []
     for item in grouped_query:
@@ -986,7 +986,7 @@ def unique_daily_users(request):
     next_month  = int(month) + 1 if (int(month) < 12) else 1
     
     users=CubeUser.objects.filter(lastActivity__gte=datetime.date(today.year, int(month), 1), lastActivity__lt=datetime.date(next_year, next_month, 1)).distinct()
-    grouped_query=list(users.extra(select={'day':'strftime(\'%d\', lastActivity)', 'fmtlastActivity':'strftime(\'%m/%d/%Y\', lastActivity)'}).values('day').annotate(count=Count('pk')).values('fmtlastActivity', 'count'))
+    grouped_query=list(users.extra(select={'day':'strftime(\'%%d\', lastActivity)', 'fmtlastActivity':'strftime(\'%%m/%%d/%%Y\', lastActivity)'}).values('day').annotate(count=Count('pk')).values('fmtlastActivity', 'count'))
     
     series = []
     for item in grouped_query:
