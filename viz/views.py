@@ -974,7 +974,7 @@ def viz_flashed(request):
     log.debug("startDate: %s" % startDate)
     log.debug("endDate: %s" % endDate)
 
-    vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).filter(lastFlashed__gte=startDate, lastFlashed__lt=endDate).order_by("lastFlashed")
+    vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).filter(lastFlashed__gte=startDate.strftime('%Y-%m-%d'), lastFlashed__lt=endDate.strftime('%Y-%m-%d')).order_by("lastFlashed")
     log.debug("SQL QUERY: %s" % vizs.extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').query.__str__())
     grouped_query=vizs.extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count')
     series = []
