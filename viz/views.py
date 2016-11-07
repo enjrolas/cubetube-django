@@ -974,9 +974,10 @@ def viz_flashed(request):
     log.debug("startDate: %s" % startDate.strftime('%Y-%m-%d'))
     log.debug("endDate: %s" % endDate.strftime('%Y-%m-%d'))
 
-    vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).filter(lastFlashed__gte=r"\'%s\'" % startDate, lastFlashed__lt=r"\'%s\'" % endDate).order_by("lastFlashed")
-    log.debug("SQL QUERY: %s" % vizs.extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').query.__str__())
-    grouped_query=vizs.extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count')
+    #vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).filter(lastFlashed__gte="\'%s\'" % startDate, lastFlashed__lt="\'%s\'" % endDate).order_by("lastFlashed")
+    vizs=Viz.objects.filter(vizType="L3D").exclude(published=False).order_by("lastFlashed")
+    log.debug("SQL QUERY: %s" % vizs.extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}, where=['lastFlashed >= \'%s\' AND lastFlashed < \'%s\'' % (startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').query.__str__())
+    grouped_query=vizs.extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}, where=['lastFlashed >= \'%s\' AND lastFlashed < \'%s\'' % (startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count')
     series = []
     for item in grouped_query:
         #date = datetime.datetime.strptime(item['fmtLastFlashed'], "%m/%d/%Y")
