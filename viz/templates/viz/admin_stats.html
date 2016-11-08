@@ -86,35 +86,35 @@ and open the template in the editor.
             }
             
             $(".stackControls input").click(function (e) {
-                    //e.preventDefault();
-                    //console.log("Stack bars: " + $(this).prop("checked"));
-                    stack = $(this).prop("checked") ? true : null;  //text() == "With stacking" ? true : null;
-                    options = {
-                        series: {
-                            stack: stack,
-                            lines: {
-                                show: lines,
-                                fill: true,
-                                steps: steps
-                            },
-                            bars: {
-                                show: bars,
-                                barWidth: 0.4,
-                                align: "center"
-                            }
+                //e.preventDefault();
+                //console.log("Stack bars: " + $(this).prop("checked"));
+                stack = $(this).prop("checked");    //? true : null;  //text() == "With stacking" ? true : null;
+                options = {
+                    series: {
+                        stack: stack,
+                        lines: {
+                            show: lines,
+                            fill: true,
+                            steps: steps
                         },
-                        xaxis: {
-                            //mode: "time",
-                            //timeformat: "%b %d",
-                            mode: "categories",
-                            tickLength: 0
-                        },
-                        yaxis: {
-                            tickDecimals: 0,
-                            tickSize: 1
+                        bars: {
+                            show: bars,
+                            barWidth: 0.4,
+                            align: "center"
                         }
-                    };
-                    $.plot($placeholder, data, options);
+                    },
+                    xaxis: {
+                        //mode: "time",
+                        //timeformat: "%b %d",
+                        mode: "categories",
+                        tickLength: 0
+                    },
+                    yaxis: {
+                        tickDecimals: 0,
+                        tickSize: 1
+                    }
+                };
+                $.plot($placeholder, data, options);
             });
             
             $(".graphControls button").click(function (e) {
@@ -168,6 +168,10 @@ and open the template in the editor.
             });
             
             $("button#button_clear").click(function () {
+                stack = 0;
+                bars = true;
+                lines = false;
+                steps = false;
                 data = [];
                 alreadyFetched = {};
                 $.plot($placeholder, data, options);
@@ -227,7 +231,7 @@ and open the template in the editor.
                     <button class="fetchSeries">Fetch data</button>
                     <button id="button_clear" style="font-size: 18px; padding: 1px 7px;" >Clear data</button>
                     <p class="stackControls">
-                        <input type='checkbox' id='stacking' /><label for='stacking'>Stack bars</label>
+                        <input type='checkbox' id='stacking' /><label for='stacking'>Stack graphs</label>
                     </p>
                     <p class="graphControls">
                         <button>Bars</button>
