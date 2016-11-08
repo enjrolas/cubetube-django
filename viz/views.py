@@ -1019,7 +1019,7 @@ def unique_daily_users(request):
     except Exception as e:
         log.debug('QUERY ERROR: %s: %s (%s)' % (e.message, type(e), sys.exc_info()[0]))
         response={ "label": "error" ,
-                   "data" : 'QUERY ERROR: %s: %s (%s)' % (e.message, type(e), sys.exc_info()[0]) }
+                   "data" : 'QUERY ERROR: %s: %s (%s)' % (e.message, type(e), e.args) }
         return JsonResponse(response)
 
 
