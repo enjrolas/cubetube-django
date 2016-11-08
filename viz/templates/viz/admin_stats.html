@@ -66,14 +66,16 @@ and open the template in the editor.
                     }
                     return;
                 }
-                
-                // Push the new data onto our existing data array
-                if (!alreadyFetched[series.label]) {
-                    alreadyFetched[series.label] = true;
-                    data.push(series);
+                if(series.label != 'error') {
+                    // Push the new data onto our existing data array
+                    if (!alreadyFetched[series.label]) {
+                        alreadyFetched[series.label] = true;
+                        data.push(series);
+                    }
+                    $.plot($placeholder, data, options);
                 }
-
-                $.plot($placeholder, data, options);
+                else
+                    alert("An error occurred while fetching data:\n" + series.data);
             }
 
             $("button.fetchSeries").click(function () {

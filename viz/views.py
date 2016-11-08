@@ -1017,7 +1017,10 @@ def unique_daily_users(request):
                    "data" : series }
         return JsonResponse(response)
     except Exception as e:
-        log.debug('QUERY ERROR: %s (%s)' % (e.message, type(e)))
+        log.debug('QUERY ERROR: %s: %s (%s)' % (e.message, type(e), sys.exc_info()[0]))
+        response={ "label": "error" ,
+                   "data" : 'QUERY ERROR: %s: %s (%s)' % (e.message, type(e), sys.exc_info()[0]) }
+        return JsonResponse(response)
 
 
 @csrf_exempt
