@@ -27,38 +27,44 @@ and open the template in the editor.
     <script language="javascript" type="text/javascript" src="{% static 'js/flot/jquery.flot.stack.min.js' %}"></script>
     <script type="text/javascript">
         $(function() {
-            var stack = $(".stackControls input").prop('checked');
-            var bars = true;
-            var lines = false;
-            var steps = false;
-            var options = {
-                series: {
-                    stack: stack,
-                    lines: {
-                        show: lines,
-                        fill: true,
-                        steps: steps
-                    },
-                    bars: {
-                        show: bars,
-                        barWidth: 0.4,
-                        align: "center"
-                    }
-                },
-                xaxis: {
-                    //mode: "time",
-                    //timeformat: "%b %d",
-                    mode: "categories",
-                    tickLength: 0
-                },
-                yaxis: {
-                    tickDecimals: 0,
-                    tickSize: 1
-                }
-            };
-            
             var $container = $(".demo-container");
             var $placeholder = $("#placeholder");
+            var $stackControl = $(".stackControls input");
+            
+            var alreadyFetched;
+            var data;
+            var bars;
+            var lines;
+            var steps;
+            var options;
+            
+            function setGraphicsOptions() {
+                options = {
+                    series: {
+                        stack: $stackControl.prop('checked'),
+                        lines: {
+                            show: lines,
+                            fill: true,
+                            steps: steps
+                        },
+                        bars: {
+                            show: bars,
+                            barWidth: 0.4,
+                            align: "center"
+                        }
+                    },
+                    xaxis: {
+                        //mode: "time",
+                        //timeformat: "%b %d",
+                        mode: "categories",
+                        tickLength: 0
+                    },
+                    yaxis: {
+                        tickDecimals: 0,
+                        tickSize: 1
+                    }
+                };
+            }
             
             function onDataReceived(series) {
                 if(!series.data.length) {
@@ -74,6 +80,7 @@ and open the template in the editor.
                     return;
                 }
                 if(series.label != 'error') {
+                    setGraphicsOptions();
                     // Push the new data onto our existing data array
                     if (!alreadyFetched[series.label]) {
                         alreadyFetched[series.label] = true;
@@ -81,39 +88,16 @@ and open the template in the editor.
                     }
                     $.plot($placeholder, data, options);
                 }
-                else
+                else {
+                    $("button#button_clear").click();
                     alert("An error occurred while fetching data:\n" + series.data);
+                }
             }
             
             $(".stackControls input").click(function (e) {
                 //e.preventDefault();
                 //console.log("Stack bars: " + $(this).prop("checked"));
-                stack = $(this).prop("checked");    //? true : null;  //text() == "With stacking" ? true : null;
-                options = {
-                    series: {
-                        stack: stack,
-                        lines: {
-                            show: lines,
-                            fill: true,
-                            steps: steps
-                        },
-                        bars: {
-                            show: bars,
-                            barWidth: 0.4,
-                            align: "center"
-                        }
-                    },
-                    xaxis: {
-                        //mode: "time",
-                        //timeformat: "%b %d",
-                        mode: "categories",
-                        tickLength: 0
-                    },
-                    yaxis: {
-                        tickDecimals: 0,
-                        tickSize: 1
-                    }
-                };
+                setGraphicsOptions();
                 $.plot($placeholder, data, options);
             });
             
@@ -122,31 +106,7 @@ and open the template in the editor.
                 bars = $(this).text().indexOf("Bars") != -1;
                 lines = $(this).text().indexOf("Lines") != -1;
                 steps = $(this).text().indexOf("steps") != -1;
-                options = {
-                    series: {
-                        stack: stack,
-                        lines: {
-                            show: lines,
-                            fill: true,
-                            steps: steps
-                        },
-                        bars: {
-                            show: bars,
-                            barWidth: 0.4,
-                            align: "center"
-                        }
-                    },
-                    xaxis: {
-                        //mode: "time",
-                        //timeformat: "%b %d",
-                        mode: "categories",
-                        tickLength: 0
-                    },
-                    yaxis: {
-                        tickDecimals: 0,
-                        tickSize: 1
-                    }
-                };
+                setGraphicsOptions();
                 $.plot($placeholder, data, options);
             });
 
@@ -168,55 +128,25 @@ and open the template in the editor.
             });
             
             $("button#button_clear").click(function () {
-                stack = 0;
                 bars = true;
                 lines = false;
                 steps = false;
                 data = [];
                 alreadyFetched = {};
                 $(".stackControls input").prop('checked',false);
-                options = {
-                    series: {
-                        stack: stack,
-                        lines: {
-                            show: lines,
-                            fill: true,
-                            steps: steps
-                        },
-                        bars: {
-                            show: bars,
-                            barWidth: 0.4,
-                            align: "center"
-                        }
-                    },
-                    xaxis: {
-                        //mode: "time",
-                        //timeformat: "%b %d",
-                        mode: "categories",
-                        tickLength: 0
-                    },
-                    yaxis: {
-                        tickDecimals: 0,
-                        tickSize: 1
-                    }
-                };
-                
+                setGraphicsOptions();
                 $.plot($placeholder, data, options);
                 $('canvas.flot-overlay').width(784).height(540);
                 $('canvas.flot-base').width(784).height(540);
             });
             
-            // Fetch one series, adding to what we already have
-            var alreadyFetched;
-            var data;
-            //$.plot(placeholder, data, options);*/
-            $("button#button_clear").click();
-                
-            // Load the first series by default, so we don't have an empty plot
             var d = new Date();
             $("select#select-months").val(d.getMonth()+1);
             //$("button.fetchSeries:first").click();
 
+            // Reset all plot variables and then load an empty plot at first
+            $("button#button_clear").click();
+                
             // Add the Flot version string to the footer
             $("#footer").prepend("Powered by: Flot " + $.plot.version + " &ndash; ");
         });
