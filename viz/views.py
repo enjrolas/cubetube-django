@@ -942,14 +942,20 @@ def viz_created(request):
     next_month  = int(month) + 1 if (int(month) < 12) else 1
     startDate = datetime.datetime.strptime("%s-%s-%s" % (today.year, int(month), 1),"%Y-%m-%d")
     endDate = datetime.datetime.strptime("%s-%s-%s" % (next_year, next_month, 1),"%Y-%m-%d")
+    db_engine = settings.DATABASES['default']['ENGINE']
     
     log.debug("startDate: %s" % startDate.strftime('%Y-%m-%d'))
     log.debug("endDate: %s" % endDate.strftime('%Y-%m-%d'))
-    log.debug("SQL QUERY: %s" % Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(created,\'%%d\')','fmtCreated':'DATE_FORMAT(created,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (created >= \'%s\' AND created < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtCreated','count').distinct().order_by("fmtCreated").query.__str__())
+    if "sqlite" in db_engine:
+        log.debug("SQL QUERY: %s" % Viz.objects.get_queryset().extra(select={'day':'STRFTIME(\'%%d\',created)','fmtCreated':'STRFTIME(\'%%m/%%d/%%Y\',created)'}, where=['vizType = \'%s\' AND (created >= \'%s\' AND created < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtCreated','count').distinct().order_by("fmtCreated").query.__str__())
+    else:
+        log.debug("SQL QUERY: %s" % Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(created,\'%%d\')','fmtCreated':'DATE_FORMAT(created,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (created >= \'%s\' AND created < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtCreated','count').distinct().order_by("fmtCreated").query.__str__())
 
     try:
-        grouped_query=Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(created,\'%%d\')','fmtCreated':'DATE_FORMAT(created,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (created >= \'%s\' AND created < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtCreated','count').distinct().order_by("fmtCreated")
-        #grouped_query=list(vizs.extra(select={'day':'strftime(''%%d'',created)','fmtCreated':'strftime(''%%m/%%d/%%Y'',created)'}).values('day').annotate(count=Count('pk')).values('fmtCreated','count'))
+        if "sqlite" in db_engine:
+            grouped_query=Viz.objects.get_queryset().extra(select={'day':'STRFTIME(\'%%d\',created)','fmtCreated':'STRFTIME(\'%%m/%%d/%%Y\',created)'}, where=['vizType = \'%s\' AND (created >= \'%s\' AND created < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtCreated','count').distinct().order_by("fmtCreated")
+        else:
+            grouped_query=Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(created,\'%%d\')','fmtCreated':'DATE_FORMAT(created,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (created >= \'%s\' AND created < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtCreated','count').distinct().order_by("fmtCreated")
 
         series = []
         for item in grouped_query:
@@ -976,14 +982,21 @@ def viz_flashed(request):
     next_month  = int(month) + 1 if (int(month) < 12) else 1
     startDate = datetime.datetime.strptime("%s-%s-%s" % (today.year, int(month), 1),"%Y-%m-%d")
     endDate = datetime.datetime.strptime("%s-%s-%s" % (next_year, next_month, 1),"%Y-%m-%d")
+    db_engine = settings.DATABASES['default']['ENGINE']
     
     log.debug("startDate: %s" % startDate.strftime('%Y-%m-%d'))
     log.debug("endDate: %s" % endDate.strftime('%Y-%m-%d'))
-    log.debug("SQL QUERY: %s" % Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').distinct().order_by("fmtLastFlashed").query.__str__())
-    
+    if "sqlite" in db_engine:
+        log.debug("SQL QUERY: %s" % Viz.objects.get_queryset().extra(select={'day':'STRFTIME(\'%%d\',lastFlashed)','fmtLastFlashed':'STRFTIME(\'%%m/%%d/%%Y\',lastFlashed)'}, where=['vizType = \'%s\' AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').distinct().order_by("fmtLastFlashed").query.__str__())
+    else:
+        log.debug("SQL QUERY: %s" % Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').distinct().order_by("fmtLastFlashed").query.__str__())
+        
     try:
-        grouped_query=Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').distinct().order_by("fmtLastFlashed")
-    
+        if "sqlite" in db_engine:
+            grouped_query=Viz.objects.get_queryset().extra(select={'day':'STRFTIME(\'%%d\',lastFlashed)','fmtLastFlashed':'STRFTIME(\'%%m/%%d/%%Y\',lastFlashed)'}, where=['vizType = \'%s\' AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').distinct().order_by("fmtLastFlashed")
+        else:
+            grouped_query=Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').distinct().order_by("fmtLastFlashed")
+        
         series = []
         for item in grouped_query:
             #date = datetime.datetime.strptime(item['fmtLastFlashed'], "%m/%d/%Y")
@@ -1009,15 +1022,20 @@ def unique_daily_users(request):
     next_month  = int(month) + 1 if (int(month) < 12) else 1
     startDate = datetime.datetime.strptime("%s-%s-%s" % (today.year, int(month), 1),"%Y-%m-%d")
     endDate = datetime.datetime.strptime("%s-%s-%s" % (next_year, next_month, 1),"%Y-%m-%d")
+    db_engine = settings.DATABASES['default']['ENGINE']
     
     log.debug("startDate: %s" % startDate.strftime('%Y-%m-%d'))
     log.debug("endDate: %s" % endDate.strftime('%Y-%m-%d'))
-    log.debug("SQL QUERY: %s" % CubeUser.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastActivity,\'%%d\')','fmtLastActivity':'DATE_FORMAT(lastActivity,\'%%m/%%d/%%Y\')'}, where=['(lastActivity >= \'%s\' AND lastActivity < \'%s\')' % (startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastActivity','count').distinct().order_by("fmtLastActivity").query.__str__())
+    if "sqlite" in db_engine:
+        log.debug("SQL QUERY: %s" % CubeUser.objects.get_queryset().extra(select={'day':'STRFTIME(\'%%d\',lastActivity)','fmtLastActivity':'STRFTIME(\'%%m/%%d/%%Y\',lastActivity)'}, where=['(lastActivity >= \'%s\' AND lastActivity < \'%s\')' % (startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastActivity','count').distinct().order_by("fmtLastActivity").query.__str__())
+    else:
+        log.debug("SQL QUERY: %s" % CubeUser.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastActivity,\'%%d\')','fmtLastActivity':'DATE_FORMAT(lastActivity,\'%%m/%%d/%%Y\')'}, where=['(lastActivity >= \'%s\' AND lastActivity < \'%s\')' % (startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastActivity','count').distinct().order_by("fmtLastActivity").query.__str__())
     
     try:
-        grouped_query=CubeUser.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastActivity,\'%%d\')','fmtLastActivity':'DATE_FORMAT(lastActivity,\'%%m/%%d/%%Y\')'}, where=['(lastActivity >= \'%s\' AND lastActivity < \'%s\')' % (startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastActivity','count').distinct().order_by("fmtLastActivity")
-    #grouped_query=list(users.extra(select={'day':'DATE_FORMAT(lastActivity,\'%%d\')','fmtLastActivity':'DATE_FORMAT(lastActivity,\'%%m/%%d/%%Y\')'}).values('day').annotate(count=Count('pk')).values('fmtLastActivity','count'))
-    #grouped_query=list(users.extra(select={'day':'strftime(''%%d'',lastActivity)','fmtlastActivity':'strftime(''%%m/%%d/%%Y'',lastActivity)'}).values('day').annotate(count=Count('pk')).values('fmtlastActivity','count'))
+        if "sqlite" in db_engine:
+            grouped_query=CubeUser.objects.get_queryset().extra(select={'day':'STRFTIME(\'%%d\',lastActivity)','fmtLastActivity':'STRFTIME(\'%%m/%%d/%%Y\',lastActivity)'}, where=['(lastActivity >= \'%s\' AND lastActivity < \'%s\')' % (startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastActivity','count').distinct().order_by("fmtLastActivity")
+        else:
+            grouped_query=CubeUser.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastActivity,\'%%d\')','fmtLastActivity':'DATE_FORMAT(lastActivity,\'%%m/%%d/%%Y\')'}, where=['(lastActivity >= \'%s\' AND lastActivity < \'%s\')' % (startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastActivity','count').distinct().order_by("fmtLastActivity")
     
         series = []
         for item in grouped_query:

@@ -24,16 +24,23 @@ and open the template in the editor.
     <script language="javascript" type="text/javascript" src="{% static 'js/flot/jquery.flot.min.js' %}"></script>
     <script language="javascript" type="text/javascript" src="{% static 'js/flot/jquery.flot.time.min.js' %}"></script>
     <script language="javascript" type="text/javascript" src="{% static 'js/flot/jquery.flot.categories.min.js' %}"></script>
+    <script language="javascript" type="text/javascript" src="{% static 'js/flot/jquery.flot.stack.min.js' %}"></script>
     <script type="text/javascript">
         $(function() {
+            var stack = 0,
+                bars = true,
+                lines = false,
+                steps = false;
             var options = {
-                //lines: { show: true },
-                //lines: { show: true, fill: true },
-                //points: { show: true },
-                //bars: { show: true },
                 series: {
+                    stack: stack,
+                    lines: {
+                        show: lines,
+                        fill: true,
+                        steps: steps
+                    },
                     bars: {
-                        show: true,
+                        show: bars,
                         barWidth: 0.4,
                         align: "center"
                     }
@@ -77,6 +84,71 @@ and open the template in the editor.
                 else
                     alert("An error occurred while fetching data:\n" + series.data);
             }
+            
+            $(".stackControls input").click(function (e) {
+                    //e.preventDefault();
+                    //console.log("Stack bars: " + $(this).prop("checked"));
+                    stack = $(this).prop("checked") ? true : null;  //text() == "With stacking" ? true : null;
+                    options = {
+                        series: {
+                            stack: stack,
+                            lines: {
+                                show: lines,
+                                fill: true,
+                                steps: steps
+                            },
+                            bars: {
+                                show: bars,
+                                barWidth: 0.4,
+                                align: "center"
+                            }
+                        },
+                        xaxis: {
+                            //mode: "time",
+                            //timeformat: "%b %d",
+                            mode: "categories",
+                            tickLength: 0
+                        },
+                        yaxis: {
+                            tickDecimals: 0,
+                            tickSize: 1
+                        }
+                    };
+                    $.plot($placeholder, data, options);
+            });
+            
+            $(".graphControls button").click(function (e) {
+                //e.preventDefault();
+                bars = $(this).text().indexOf("Bars") != -1;
+                lines = $(this).text().indexOf("Lines") != -1;
+                steps = $(this).text().indexOf("steps") != -1;
+                options = {
+                    series: {
+                        stack: stack,
+                        lines: {
+                            show: lines,
+                            fill: true,
+                            steps: steps
+                        },
+                        bars: {
+                            show: bars,
+                            barWidth: 0.4,
+                            align: "center"
+                        }
+                    },
+                    xaxis: {
+                        //mode: "time",
+                        //timeformat: "%b %d",
+                        mode: "categories",
+                        tickLength: 0
+                    },
+                    yaxis: {
+                        tickDecimals: 0,
+                        tickSize: 1
+                    }
+                };
+                $.plot($placeholder, data, options);
+            });
 
             $("button.fetchSeries").click(function () {
                 $.each($('input:checked'), function() {
@@ -154,6 +226,14 @@ and open the template in the editor.
                     </select><br/>
                     <button class="fetchSeries">Fetch data</button>
                     <button id="button_clear" style="font-size: 18px; padding: 1px 7px;" >Clear data</button>
+                    <p class="stackControls">
+                        <input type='checkbox' id='stacking' /><label for='stacking'>Stack bars</label>
+                    </p>
+                    <p class="graphControls">
+                        <button>Bars</button>
+                        <button>Lines</button>
+                        <button>Lines with steps</button>
+                    </p>
                 </p>
             </div>
         {% else %}
