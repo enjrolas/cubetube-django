@@ -27,10 +27,10 @@ and open the template in the editor.
     <script language="javascript" type="text/javascript" src="{% static 'js/flot/jquery.flot.stack.min.js' %}"></script>
     <script type="text/javascript">
         $(function() {
-            var stack = false,
-                bars = true,
-                lines = false,
-                steps = false;
+            var stack = $(".stackControls input").prop('checked');
+            var bars = true;
+            var lines = false;
+            var steps = false;
             var options = {
                 series: {
                     stack: stack,
