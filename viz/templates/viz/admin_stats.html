@@ -27,7 +27,7 @@ and open the template in the editor.
     <script language="javascript" type="text/javascript" src="{% static 'js/flot/jquery.flot.stack.min.js' %}"></script>
     <script type="text/javascript">
         $(function() {
-            var stack = 0,
+            var stack = false,
                 bars = true,
                 lines = false,
                 steps = false;
@@ -175,6 +175,32 @@ and open the template in the editor.
                 data = [];
                 alreadyFetched = {};
                 $(".stackControls input").prop('checked',false);
+                options = {
+                    series: {
+                        stack: stack,
+                        lines: {
+                            show: lines,
+                            fill: true,
+                            steps: steps
+                        },
+                        bars: {
+                            show: bars,
+                            barWidth: 0.4,
+                            align: "center"
+                        }
+                    },
+                    xaxis: {
+                        //mode: "time",
+                        //timeformat: "%b %d",
+                        mode: "categories",
+                        tickLength: 0
+                    },
+                    yaxis: {
+                        tickDecimals: 0,
+                        tickSize: 1
+                    }
+                };
+                
                 $.plot($placeholder, data, options);
                 $('canvas.flot-overlay').width(784).height(540);
                 $('canvas.flot-base').width(784).height(540);
