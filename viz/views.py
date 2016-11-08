@@ -947,19 +947,25 @@ def viz_created(request):
     log.debug("endDate: %s" % endDate.strftime('%Y-%m-%d'))
     log.debug("SQL QUERY: %s" % Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(created,\'%%d\')','fmtCreated':'DATE_FORMAT(created,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (created >= \'%s\' AND created < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtCreated','count').distinct().order_by("fmtCreated").query.__str__())
 
-    grouped_query=Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(created,\'%%d\')','fmtCreated':'DATE_FORMAT(created,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (created >= \'%s\' AND created < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtCreated','count').distinct().order_by("fmtCreated")
-    #grouped_query=list(vizs.extra(select={'day':'strftime(''%%d'',created)','fmtCreated':'strftime(''%%m/%%d/%%Y'',created)'}).values('day').annotate(count=Count('pk')).values('fmtCreated','count'))
+    try:
+        grouped_query=Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(created,\'%%d\')','fmtCreated':'DATE_FORMAT(created,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (created >= \'%s\' AND created < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtCreated','count').distinct().order_by("fmtCreated")
+        #grouped_query=list(vizs.extra(select={'day':'strftime(''%%d'',created)','fmtCreated':'strftime(''%%m/%%d/%%Y'',created)'}).values('day').annotate(count=Count('pk')).values('fmtCreated','count'))
 
-    series = []
-    for item in grouped_query:
-        #date = datetime.datetime.strptime(item['fmtCreated'], "%m/%d/%Y")
-        #data = [calendar.timegm(date.timetuple()) * 1000, int(item['count'])]
-        data = [item['fmtCreated'], int(item['count'])]
-        series.append(data)
-    
-    response={ "label": "Viz created in %s, %d" % (calendar.month_name[int(month)], today.year) ,
-               "data" : series }
-    return JsonResponse(response)
+        series = []
+        for item in grouped_query:
+            #date = datetime.datetime.strptime(item['fmtCreated'], "%m/%d/%Y")
+            #data = [calendar.timegm(date.timetuple()) * 1000, int(item['count'])]
+            data = [item['fmtCreated'], int(item['count'])]
+            series.append(data)
+
+        response={ "label": "Viz created in %s, %d" % (calendar.month_name[int(month)], today.year) ,
+                   "data" : series }
+        return JsonResponse(response)
+    except Exception as e:
+        log.debug('QUERY ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args))
+        response={ "label": "error" ,
+                   "data" : 'QUERY ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args) }
+        return JsonResponse(response)
 
 
 @csrf_exempt
@@ -975,18 +981,24 @@ def viz_flashed(request):
     log.debug("endDate: %s" % endDate.strftime('%Y-%m-%d'))
     log.debug("SQL QUERY: %s" % Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').distinct().order_by("fmtLastFlashed").query.__str__())
     
-    grouped_query=Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').distinct().order_by("fmtLastFlashed")
+    try:
+        grouped_query=Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').distinct().order_by("fmtLastFlashed")
     
-    series = []
-    for item in grouped_query:
-        #date = datetime.datetime.strptime(item['fmtLastFlashed'], "%m/%d/%Y")
-        #data = [calendar.timegm(date.timetuple()) * 1000, int(item['count'])]
-        data = [item['fmtLastFlashed'], int(item['count'])]
-        series.append(data)
-    
-    response={ "label": "Viz flashed in %s, %d" % (calendar.month_name[int(month)], today.year) ,
-               "data" : series }
-    return JsonResponse(response)
+        series = []
+        for item in grouped_query:
+            #date = datetime.datetime.strptime(item['fmtLastFlashed'], "%m/%d/%Y")
+            #data = [calendar.timegm(date.timetuple()) * 1000, int(item['count'])]
+            data = [item['fmtLastFlashed'], int(item['count'])]
+            series.append(data)
+
+        response={ "label": "Viz flashed in %s, %d" % (calendar.month_name[int(month)], today.year) ,
+                   "data" : series }
+        return JsonResponse(response)
+    except Exception as e:
+        log.debug('QUERY ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args))
+        response={ "label": "error" ,
+                   "data" : 'QUERY ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args) }
+        return JsonResponse(response)
 
 
 @csrf_exempt
@@ -1000,9 +1012,10 @@ def unique_daily_users(request):
     
     log.debug("startDate: %s" % startDate.strftime('%Y-%m-%d'))
     log.debug("endDate: %s" % endDate.strftime('%Y-%m-%d'))
-    log.debug("SQL QUERY: %s" % CubeUser.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastActivity,\'%%d\')','fmtLastActivity':'DATE_FORMAT(lastActivity,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (lastActivity >= \'%s\' AND lastActivity < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastActivity','count').distinct().order_by("fmtLastActivity").query.__str__())
+    log.debug("SQL QUERY: %s" % CubeUser.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastActivity,\'%%d\')','fmtLastActivity':'DATE_FORMAT(lastActivity,\'%%m/%%d/%%Y\')'}, where=['(lastActivity >= \'%s\' AND lastActivity < \'%s\')' % (startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastActivity','count').distinct().order_by("fmtLastActivity").query.__str__())
+    
     try:
-        grouped_query=CubeUser.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastActivity,\'%%d\')','fmtLastActivity':'DATE_FORMAT(lastActivity,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (lastActivity >= \'%s\' AND lastActivity < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastActivity','count').distinct().order_by("fmtLastActivity")
+        grouped_query=CubeUser.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastActivity,\'%%d\')','fmtLastActivity':'DATE_FORMAT(lastActivity,\'%%m/%%d/%%Y\')'}, where=['(lastActivity >= \'%s\' AND lastActivity < \'%s\')' % (startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastActivity','count').distinct().order_by("fmtLastActivity")
     #grouped_query=list(users.extra(select={'day':'DATE_FORMAT(lastActivity,\'%%d\')','fmtLastActivity':'DATE_FORMAT(lastActivity,\'%%m/%%d/%%Y\')'}).values('day').annotate(count=Count('pk')).values('fmtLastActivity','count'))
     #grouped_query=list(users.extra(select={'day':'strftime(''%%d'',lastActivity)','fmtlastActivity':'strftime(''%%m/%%d/%%Y'',lastActivity)'}).values('day').annotate(count=Count('pk')).values('fmtlastActivity','count'))
     
