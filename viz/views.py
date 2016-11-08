@@ -1000,22 +1000,24 @@ def unique_daily_users(request):
     
     log.debug("startDate: %s" % startDate.strftime('%Y-%m-%d'))
     log.debug("endDate: %s" % endDate.strftime('%Y-%m-%d'))
-    log.debug("SQL QUERY: %s" % CubeUser.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastActivity,\'%%d\')','fmtLastActivity':'DATE_FORMAT(lastActivity,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (lastActivity >= \'%s\' AND lastActivity < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastActivity','count').distinct('pk').order_by("fmtLastActivity").query.__str__())
-    
-    grouped_query=CubeUser.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastActivity,\'%%d\')','fmtLastActivity':'DATE_FORMAT(lastActivity,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (lastActivity >= \'%s\' AND lastActivity < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastActivity','count').distinct('pk').order_by("fmtLastActivity")
+    log.debug("SQL QUERY: %s" % CubeUser.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastActivity,\'%%d\')','fmtLastActivity':'DATE_FORMAT(lastActivity,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (lastActivity >= \'%s\' AND lastActivity < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastActivity','count').distinct().order_by("fmtLastActivity").query.__str__())
+    try:
+        grouped_query=CubeUser.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastActivity,\'%%d\')','fmtLastActivity':'DATE_FORMAT(lastActivity,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (lastActivity >= \'%s\' AND lastActivity < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastActivity','count').distinct().order_by("fmtLastActivity")
     #grouped_query=list(users.extra(select={'day':'DATE_FORMAT(lastActivity,\'%%d\')','fmtLastActivity':'DATE_FORMAT(lastActivity,\'%%m/%%d/%%Y\')'}).values('day').annotate(count=Count('pk')).values('fmtLastActivity','count'))
     #grouped_query=list(users.extra(select={'day':'strftime(''%%d'',lastActivity)','fmtlastActivity':'strftime(''%%m/%%d/%%Y'',lastActivity)'}).values('day').annotate(count=Count('pk')).values('fmtlastActivity','count'))
     
-    series = []
-    for item in grouped_query:
-        #date = datetime.datetime.strptime(item['fmtlastActivity'], "%m/%d/%Y")
-        #data = [calendar.timegm(date.timetuple()) * 1000, int(item['count'])]
-        data = [item['fmtLastActivity'], int(item['count'])]
-        series.append(data)
-    
-    response={ "label": "Users in %s, %d" % (calendar.month_name[int(month)], today.year) ,
-               "data" : series }
-    return JsonResponse(response)
+        series = []
+        for item in grouped_query:
+            #date = datetime.datetime.strptime(item['fmtlastActivity'], "%m/%d/%Y")
+            #data = [calendar.timegm(date.timetuple()) * 1000, int(item['count'])]
+            data = [item['fmtLastActivity'], int(item['count'])]
+            series.append(data)
+
+        response={ "label": "Users in %s, %d" % (calendar.month_name[int(month)], today.year) ,
+                   "data" : series }
+        return JsonResponse(response)
+    except Exception as e:
+        log.debug('QUERY ERROR: %s (%s)' % (e.message, type(e)))
 
 
 @csrf_exempt
