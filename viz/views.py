@@ -947,15 +947,15 @@ def viz_created(request):
     log.debug("startDate: %s" % startDate.strftime('%Y-%m-%d'))
     log.debug("endDate: %s" % endDate.strftime('%Y-%m-%d'))
     if "sqlite" in db_engine:
-        log.debug("SQL QUERY: %s" % Viz.objects.get_queryset().extra(select={'day':'STRFTIME(\'%%d\',created)','fmtCreated':'STRFTIME(\'%%m/%%d/%%Y\',created)'}, where=['vizType = \'%s\' AND (created >= \'%s\' AND created < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtCreated','count').distinct().order_by("fmtCreated").query.__str__())
+        log.debug("SQL QUERY: %s" % Viz.objects.get_queryset().extra(select={'day':'STRFTIME(\'%%d\',created)','fmtCreated':'STRFTIME(\'%%m/%%d/%%Y\',created)'}, where=['vizType = \'%s\' AND published = true AND (created >= \'%s\' AND created < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtCreated','count').distinct().order_by("fmtCreated").query.__str__())
     else:
-        log.debug("SQL QUERY: %s" % Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(created,\'%%d\')','fmtCreated':'DATE_FORMAT(created,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (created >= \'%s\' AND created < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtCreated','count').distinct().order_by("fmtCreated").query.__str__())
+        log.debug("SQL QUERY: %s" % Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(created,\'%%d\')','fmtCreated':'DATE_FORMAT(created,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND published = true AND (created >= \'%s\' AND created < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtCreated','count').distinct().order_by("fmtCreated").query.__str__())
 
     try:
         if "sqlite" in db_engine:
-            grouped_query=Viz.objects.get_queryset().extra(select={'day':'STRFTIME(\'%%d\',created)','fmtCreated':'STRFTIME(\'%%m/%%d/%%Y\',created)'}, where=['vizType = \'%s\' AND (created >= \'%s\' AND created < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtCreated','count').distinct().order_by("fmtCreated")
+            grouped_query=Viz.objects.get_queryset().extra(select={'day':'STRFTIME(\'%%d\',created)','fmtCreated':'STRFTIME(\'%%m/%%d/%%Y\',created)'}, where=['vizType = \'%s\' AND published = true AND (created >= \'%s\' AND created < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtCreated','count').distinct().order_by("fmtCreated")
         else:
-            grouped_query=Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(created,\'%%d\')','fmtCreated':'DATE_FORMAT(created,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (created >= \'%s\' AND created < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtCreated','count').distinct().order_by("fmtCreated")
+            grouped_query=Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(created,\'%%d\')','fmtCreated':'DATE_FORMAT(created,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND published = true AND (created >= \'%s\' AND created < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtCreated','count').distinct().order_by("fmtCreated")
 
         series = []
         for item in grouped_query:
@@ -987,15 +987,15 @@ def viz_flashed(request):
     log.debug("startDate: %s" % startDate.strftime('%Y-%m-%d'))
     log.debug("endDate: %s" % endDate.strftime('%Y-%m-%d'))
     if "sqlite" in db_engine:
-        log.debug("SQL QUERY: %s" % Viz.objects.get_queryset().extra(select={'day':'STRFTIME(\'%%d\',lastFlashed)','fmtLastFlashed':'STRFTIME(\'%%m/%%d/%%Y\',lastFlashed)'}, where=['vizType = \'%s\' AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').distinct().order_by("fmtLastFlashed").query.__str__())
+        log.debug("SQL QUERY: %s" % Viz.objects.get_queryset().extra(select={'day':'STRFTIME(\'%%d\',lastFlashed)','fmtLastFlashed':'STRFTIME(\'%%m/%%d/%%Y\',lastFlashed)'}, where=['vizType = \'%s\' AND published = true AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').distinct().order_by("fmtLastFlashed").query.__str__())
     else:
-        log.debug("SQL QUERY: %s" % Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').distinct().order_by("fmtLastFlashed").query.__str__())
+        log.debug("SQL QUERY: %s" % Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND published = true AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').distinct().order_by("fmtLastFlashed").query.__str__())
         
     try:
         if "sqlite" in db_engine:
-            grouped_query=Viz.objects.get_queryset().extra(select={'day':'STRFTIME(\'%%d\',lastFlashed)','fmtLastFlashed':'STRFTIME(\'%%m/%%d/%%Y\',lastFlashed)'}, where=['vizType = \'%s\' AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').distinct().order_by("fmtLastFlashed")
+            grouped_query=Viz.objects.get_queryset().extra(select={'day':'STRFTIME(\'%%d\',lastFlashed)','fmtLastFlashed':'STRFTIME(\'%%m/%%d/%%Y\',lastFlashed)'}, where=['vizType = \'%s\' AND published = true AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').distinct().order_by("fmtLastFlashed")
         else:
-            grouped_query=Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').distinct().order_by("fmtLastFlashed")
+            grouped_query=Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND published = true AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').distinct().order_by("fmtLastFlashed")
         
         series = []
         for item in grouped_query:
