@@ -112,6 +112,10 @@ and open the template in the editor.
                 steps = $(this).text().indexOf("steps") != -1;
                 setGraphicsOptions();
                 $.plot($placeholder, data, options);
+                if(!data.length) {
+                    $('canvas.flot-overlay').width(784).height(540);
+                    $('canvas.flot-base').width(784).height(540);
+                }
             });
 
             $("button.fetchSeries").click(function () {
