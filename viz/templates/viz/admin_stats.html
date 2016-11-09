@@ -30,7 +30,7 @@ and open the template in the editor.
             var $container = $(".demo-container");
             var $placeholder = $("#placeholder");
             var $choices = $("#choices input");
-            //var $stackControl = $(".stackControls input#stacking");
+            var $stackControl = $(".stackControls input#stacking");
             var $graphControls = $(".graphControls button");
             
             var alreadyFetched;
@@ -43,7 +43,7 @@ and open the template in the editor.
             function setGraphicsOptions() {
                 options = {
                     series: {
-                        stack: true,    //$stackControl.prop('checked'),
+                        stack: $stackControl.prop('checked'),
                         lines: {
                             show: lines,
                             fill: true,
@@ -83,6 +83,7 @@ and open the template in the editor.
                 }
                 if(series.label != 'error') {
                     // Push the new data onto our existing data array
+                    series.sort(function(a, b){return a-b});
                     if (!alreadyFetched[series.label]) {
                         alreadyFetched[series.label] = true;
                         data.push(series);
@@ -96,7 +97,7 @@ and open the template in the editor.
                 }
             }
             
-            /*$stackControl.click(function (e) {
+            $stackControl.click(function (e) {
                 //e.preventDefault();
                 //console.log("Stack bars: " + $stackControl.prop("checked"));
                 //setGraphicsOptions();
@@ -106,7 +107,7 @@ and open the template in the editor.
                     $('canvas.flot-overlay').width(784).height(540);
                     $('canvas.flot-base').width(784).height(540);
                 }
-            });*/
+            });
             
             $choices.click(function (e) {
                 //if(data.length) {
@@ -232,11 +233,9 @@ and open the template in the editor.
                     <p>
                         <button class="fetchSeries">Refresh graph</button>
                     </p>
-                    <!--
                     <p class="stackControls">
                         <input type='checkbox' id='stacking' /><label for='stacking'>Stack graphs</label>
                     </p>
-                    -->
                     <p class="graphControls">
                         <button>Bars</button>
                         <button>Lines</button>
