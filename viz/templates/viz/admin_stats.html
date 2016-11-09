@@ -27,6 +27,20 @@ and open the template in the editor.
     <script language="javascript" type="text/javascript" src="{% static 'js/flot/jquery.flot.stack.min.js' %}"></script>
     <script type="text/javascript">
         $(function() {
+            var months = [
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December"
+            ];
             var $container = $(".demo-container");
             var $placeholder = $("#placeholder");
             var $choices = $("#choices input");
@@ -89,14 +103,16 @@ and open the template in the editor.
                         var seriesEndIndex = series.label.indexOf(",");
                         var seriesCharCount = seriesEndIndex - seriesStartIndex;
                         var seriesMonthName = series.label.substr(seriesStartIndex, seriesCharCount);
-                        console.log("seriesMonthName: [" + seriesMonthName + "]");
+                        var seriesMonth = months.indexOf(seriesMonthName) + 1;
+                        console.log("seriesMonth: [" + seriesMonth + "]");
 
                         if(data.length) {
                             var dataStartIndex = data[0].label.indexOf(" in ")+4;
                             var dataEndIndex = data[0].label.indexOf(",");
                             var dataCharCount = dataEndIndex - dataStartIndex;
                             var firstMonthName = data[0].label.substr(dataStartIndex, dataCharCount);
-                            console.log("firstMonthName: [" + firstMonthName + "]");
+                            var firstMonth = months.indexOf(firstMonthName) + 1;
+                            console.log("firstMonth: [" + firstMonth + "]");
                         }
                         var selectedMonth = $("select#select-months option:selected").val();
                         console.log("selectedMonth: " + selectedMonth);
