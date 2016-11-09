@@ -108,13 +108,13 @@ and open the template in the editor.
             });
             
             $choices.click(function (e) {
-               if(data.length) {
+                //if(data.length) {
                     //console.log("data = " + JSON.stringify(data));
                     //console.log("alreadyFetched = " + JSON.stringify(alreadyFetched));
+                    var label = $('label[for="' + $(this).attr('id') + '"]').html();
+                    var keywords = label.substr(label.lastIndexOf(" ")+1) + " in " + $("select#select-months option:selected").html().toLowerCase();
+                    //console.log("This checkbox: " + keywords);
                     if(!$(this).prop('checked')) {
-                        var label = $('label[for="' + $(this).attr('id') + '"]').html();
-                        var keywords = label.substr(label.lastIndexOf(" ")+1) + " in " + $("select#select-months option:selected").html().toLowerCase();
-                        //console.log("This checkbox: " + keywords);
                         for (index = 0; index < data.length; index++) {
                             if(data[index].label.toLowerCase().indexOf(keywords) >= 0) {
                                 alreadyFetched[data[index].label] = false;
@@ -128,7 +128,10 @@ and open the template in the editor.
                             $('canvas.flot-base').width(784).height(540);
                         }
                     }
-                }
+                    else {
+                        fetchData();    //$("button.fetchSeries").click();
+                    }
+                //}
             });
             
             $graphControls.click(function (e) {
@@ -144,7 +147,7 @@ and open the template in the editor.
                 }
             });
 
-            $("button.fetchSeries").click(function () {
+            function fetchData() {  //$("button.fetchSeries").click(function () {
                 $.each($('#choices input:checked'), function() {
                     var $checkbox = $(this);
                     //console.log("Checkbox for " + $('label[for="' + $checkbox.attr('id') + '"]').html() + ": " + $checkbox.prop("checked").toString());
@@ -159,7 +162,7 @@ and open the template in the editor.
                         success: onDataReceived
                     });
                 });
-            });
+            }   //});
             
             $("button#button_clear").click(function () {
                 bars = true;
@@ -172,6 +175,10 @@ and open the template in the editor.
                 $.plot($placeholder, data, options);
                 $('canvas.flot-overlay').width(784).height(540);
                 $('canvas.flot-base').width(784).height(540);
+            });
+            
+            $("select#select-months").change(function () {
+                fetchData();
             });
             
             var d = new Date();
@@ -219,8 +226,10 @@ and open the template in the editor.
                         <option value="11">November</option>
                         <option value="12">December</option>
                     </select><br/>
+                    <!--
                     <button class="fetchSeries">Fetch data</button>
-                    <button id="button_clear" style="font-size: 18px; padding: 1px 7px;" >Clear data</button>
+                    -->
+                    <p><button id="button_clear" style="font-size: 18px; padding: 1px 7px;" >Clear data</button></p>
                     <p class="stackControls">
                         <input type='checkbox' id='stacking' /><label for='stacking'>Stack graphs</label>
                     </p>
