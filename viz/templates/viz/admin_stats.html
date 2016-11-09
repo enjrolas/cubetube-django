@@ -157,16 +157,16 @@ and open the template in the editor.
 
             $placeholder.bind("plothover", function (event, pos, item) {
                 if (item) {
-                    //var x = item.datapoint[0].toFixed(2);
+                    var x = item.datapoint[0];
                     var y = item.datapoint[1] - item.datapoint[2];
                     //console.log("item = " + JSON.stringify(item));
                     //console.log("item.datapoint.length = " + item.datapoint.length);
                     //console.log("item.datapoint = " + item.datapoint);
-                    console.log("item.datapoint[0] = " + item.datapoint[0]);
-                    console.log("item.datapoint[1] = " + item.datapoint[1]);
-                    console.log("item.datapoint[2] = " + item.datapoint[2]);
+                    //console.log("item.datapoint[0] = " + item.datapoint[0]);
+                    //console.log("item.datapoint[1] = " + item.datapoint[1]);
+                    //console.log("item.datapoint[2] = " + item.datapoint[2]);
 
-                    $("#tooltip").html(item.series.label + " = " + y)
+                    $("#tooltip").html(item.xaxis.categories[x] + " = " + y)
                         .css({top: item.pageY+5, left: item.pageX+5})
                         .fadeIn(200);
                 } else
