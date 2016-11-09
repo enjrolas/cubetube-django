@@ -83,10 +83,10 @@ and open the template in the editor.
                 }
                 if(series.label != 'error') {
                     // Push the new data onto our existing data array
-                    series.sort(function(a, b){return a-b});
                     if (!alreadyFetched[series.label]) {
                         alreadyFetched[series.label] = true;
                         data.push(series);
+                        data.sort(function(a, b){return a-b});
                     }
                     setGraphicsOptions();
                     $.plot($placeholder, data, options);
