@@ -166,9 +166,9 @@ and open the template in the editor.
                     //console.log("item.datapoint[1] = " + item.datapoint[1]);
                     //console.log("item.datapoint[2] = " + item.datapoint[2]);
                     console.log("item.series.label.substr(): " + item.series.label.substr(0, item.series.label.indexOf("in")+1));
-                    console.log("item.xaxis.categories[" + x + "]: " + item.xaxis.categories[x]);
+                    console.log("item.series.xaxis.categories[" + x + "]: " + item.series.xaxis.categories[x]);
 
-                    $("#tooltip").html(item.series.label.substr(0, item.series.label.indexOf("in")+1) + item.xaxis.categories[x] + " = " + y)
+                    $("#tooltip").html(item.series.label.substr(0, item.series.label.indexOf("in")+1) + item.series.xaxis.categories[x] + " = " + y)
                         .css({top: item.pageY+5, left: item.pageX+5})
                         .fadeIn(200);
                 } else
