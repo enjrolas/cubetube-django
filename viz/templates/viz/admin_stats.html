@@ -92,7 +92,7 @@ and open the template in the editor.
                     $.plot($placeholder, data, options);
                 }
                 else {
-                    clearAll(); //$("button#button_clear").click();
+                    $("button#button_clear").click();
                     alert("An error occurred while fetching data:\n" + series.data);
                 }
             }
@@ -108,7 +108,7 @@ and open the template in the editor.
                 //e.preventDefault();
                 //console.log("Stack bars: " + $stackControl.prop("checked"));
                 //setGraphicsOptions();
-                //clearAll(); //$("button#button_clear").click();
+                //$("button#button_clear").click();
                 console.log("data = " + JSON.stringify(data));
                 $("button.fetchSeries").click();
                 if(!data.length) {
@@ -134,7 +134,8 @@ and open the template in the editor.
                         setGraphicsOptions();
                         $.plot($placeholder, data, options);
                         if(!data.length) {
-                            clearAll();
+                            $('canvas.flot-overlay').width(784).height(540);
+                            $('canvas.flot-base').width(784).height(540);
                         }
                     }
                     else
@@ -172,7 +173,7 @@ and open the template in the editor.
                 });
             });
             
-            function clearAll() {   //$("button#button_clear").click(function () {
+            $("button#button_clear").click(function () {
                 bars = true;
                 lines = false;
                 steps = false;
@@ -183,7 +184,7 @@ and open the template in the editor.
                 $.plot($placeholder, data, options);
                 $('canvas.flot-overlay').width(784).height(540);
                 $('canvas.flot-base').width(784).height(540);
-            }   //});
+            });
             
             $("select#select-months").change(function () {
                 $("button.fetchSeries").click();
@@ -194,7 +195,7 @@ and open the template in the editor.
             //$("button.fetchSeries:first").click();
 
             // Reset all plot variables and then load an empty plot at first
-            clearAll(); //$("button#button_clear").click();
+            $("button#button_clear").click();
                 
             // Add the Flot version string to the footer
             $("#footer").prepend("Powered by: Flot " + $.plot.version + " &ndash; ");
@@ -235,10 +236,10 @@ and open the template in the editor.
                         <option value="12">December</option>
                     </select><br/>
                     <!--
-                        <button id="button_clear" style="font-size: 18px; padding: 1px 7px;" >Clear data</button>
                     -->
                     <p>
                         <button class="fetchSeries">Refresh graph</button>
+                        <button id="button_clear" style="font-size: 18px; padding: 1px 7px;" >Clear data</button>
                     </p>
                     <p class="stackControls">
                         <input type='checkbox' id='stacking' /><label for='stacking'>Stack graphs</label>
