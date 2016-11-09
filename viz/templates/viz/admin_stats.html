@@ -87,7 +87,7 @@ and open the template in the editor.
                         alreadyFetched[series.label] = true;
                         data.push(series);
                     }
-                    data.sort();
+                    sortData();
                     setGraphicsOptions();
                     $.plot($placeholder, data, options);
                 }
@@ -95,6 +95,13 @@ and open the template in the editor.
                     clearAll(); //$("button#button_clear").click();
                     alert("An error occurred while fetching data:\n" + series.data);
                 }
+            }
+            
+            function sortData() {
+                for (index = 0; index < data.length; index++) {
+                    data[index].data.sort();
+                }
+                data.sort();
             }
             
             $stackControl.click(function (e) {
