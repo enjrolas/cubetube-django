@@ -86,8 +86,8 @@ and open the template in the editor.
                     if (!alreadyFetched[series.label]) {
                         alreadyFetched[series.label] = true;
                         data.push(series);
-                        data.sort();
                     }
+                    data.sort();
                     setGraphicsOptions();
                     $.plot($placeholder, data, options);
                 }
