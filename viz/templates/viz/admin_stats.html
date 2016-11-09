@@ -85,11 +85,11 @@ and open the template in the editor.
                     // Push the new data onto our existing data array
                     if (!alreadyFetched[series.label]) {
                         alreadyFetched[series.label] = true;
-                        var seriesMonthName = series.label.substr(series.label.indexOf(" in ")+3, (series.label.indexOf(",")) - (series.label.indexOf(" in ")+3));
+                        var seriesMonthName = series.label.substr(series.label.indexOf(" in ")+4, (series.label.indexOf(",")) - (series.label.indexOf(" in ")+4));
                         console.log("seriesMonthName: [" + seriesMonthName + "]");
                         //var seriesMonth=$("select#select-months option).find()
                         if(data.length) {
-                            var firstMonth = data[0].label.substr(data[0].label.indexOf(" in ")+3, (data[0].label.indexOf(",")) - (data[0].label.indexOf(" in ")+3));
+                            var firstMonth = data[0].label.substr(data[0].label.indexOf(" in ")+4, (data[0].label.indexOf(",")) - (data[0].label.indexOf(" in ")+4));
                             console.log("firstMonth: [" + firstMonth + "]");
                         }
                         var selectedMonth = $("select#select-months option:selected").val();
