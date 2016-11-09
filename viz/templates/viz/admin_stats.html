@@ -108,19 +108,8 @@ and open the template in the editor.
                 //e.preventDefault();
                 //console.log("Stack bars: " + $stackControl.prop("checked"));
                 console.log("data = " + JSON.stringify(data));
-                $.each($('#choices input:checked'), function() {
-                    var $checkbox = $(this);
-                    var dataurl = $checkbox.attr("data-url");
-
-                    $.ajax({
-                        url: dataurl,
-                        data: {"month": parseInt($("select#select-months").val())},
-                        type: "GET",
-                        dataType: "json",
-                        success: onDataReceived
-                    });
-                });
-                //$("button.fetchSeries").click();
+                $("button#button_clear").click();
+                $("button.fetchSeries").click();
                 if(!data.length) {
                     $('canvas.flot-overlay').width(784).height(540);
                     $('canvas.flot-base').width(784).height(540);
