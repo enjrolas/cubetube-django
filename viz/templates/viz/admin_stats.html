@@ -108,7 +108,9 @@ and open the template in the editor.
                 //e.preventDefault();
                 //console.log("Stack bars: " + $stackControl.prop("checked"));
                 console.log("data = " + JSON.stringify(data));
-                sortDataArray();
+                $.each($('#choices input'), function() {
+                    $(this).click();
+                });
                 $("button.fetchSeries").click();
                 if(!data.length) {
                     $('canvas.flot-overlay').width(784).height(540);
