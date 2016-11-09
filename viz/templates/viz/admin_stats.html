@@ -107,19 +107,23 @@ and open the template in the editor.
                         //console.log("seriesMonth: [" + seriesMonth + "]");
 
                         if(data.length) {
-                            var dataStartIndex = data[0].label.indexOf(" in ")+4;
-                            var dataEndIndex = data[0].label.indexOf(",");
-                            var dataCharCount = dataEndIndex - dataStartIndex;
-                            var firstMonthName = data[0].label.substr(dataStartIndex, dataCharCount);
-                            var firstMonth = months.indexOf(firstMonthName) + 1;
-                            if(seriesMonth > firstMonth)
-                                data.push(series);
-                            else
-                                data.unshift(series);
+                            var inserted = false;
+                            for (index = 0; index < data.length; index++) {
+                                var dataStartIndex = data[index].label.indexOf(" in ")+4;
+                                var dataEndIndex = data[index].label.indexOf(",");
+                                var dataCharCount = dataEndIndex - dataStartIndex;
+                                var thisMonthName = data[index].label.substr(dataStartIndex, dataCharCount);
+                                var thisMonth = months.indexOf(thisMonthName) + 1;
+                                if(seriesMonth < thisMonth) {
+                                    data.splice(index, 0, series);
+                                    inserted = true;
+                                    break;
+                                }
+                            }
+                            if(!inserted) data.push(series);
                             //console.log("firstMonth: [" + firstMonth + "]");
                         }
-                        else
-                            data.push(series);
+                        else data.push(series);
                         //var selectedMonth = $("select#select-months option:selected").val();
                         //console.log("selectedMonth: " + selectedMonth);
                         //data.push(series);
