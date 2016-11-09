@@ -87,7 +87,7 @@ and open the template in the editor.
                         alreadyFetched[series.label] = true;
                         data.push(series);
                     }
-                    sortData();
+                    sortDataArray();
                     setGraphicsOptions();
                     $.plot($placeholder, data, options);
                 }
@@ -97,7 +97,7 @@ and open the template in the editor.
                 }
             }
             
-            function sortData() {
+            function sortDataArray() {
                 for (index = 0; index < data.length; index++) {
                     data[index].data.sort();
                 }
@@ -107,8 +107,6 @@ and open the template in the editor.
             $stackControl.click(function (e) {
                 //e.preventDefault();
                 //console.log("Stack bars: " + $stackControl.prop("checked"));
-                //setGraphicsOptions();
-                //$("button#button_clear").click();
                 console.log("data = " + JSON.stringify(data));
                 $("button.fetchSeries").click();
                 if(!data.length) {
@@ -118,29 +116,27 @@ and open the template in the editor.
             });
             
             $choices.click(function (e) {
-                //if(data.length) {
-                    //console.log("data = " + JSON.stringify(data));
-                    //console.log("alreadyFetched = " + JSON.stringify(alreadyFetched));
-                    var label = $('label[for="' + $(this).attr('id') + '"]').html();
-                    var keywords = label.substr(label.lastIndexOf(" ")+1) + " in " + $("select#select-months option:selected").html().toLowerCase();
-                    //console.log("This checkbox: " + keywords);
-                    if(!$(this).prop('checked')) {
-                        for (index = 0; index < data.length; index++) {
-                            if(data[index].label.toLowerCase().indexOf(keywords) >= 0) {
-                                alreadyFetched[data[index].label] = false;
-                                data.splice(index, 1);
-                            }
-                        }
-                        setGraphicsOptions();
-                        $.plot($placeholder, data, options);
-                        if(!data.length) {
-                            $('canvas.flot-overlay').width(784).height(540);
-                            $('canvas.flot-base').width(784).height(540);
+                //console.log("data = " + JSON.stringify(data));
+                //console.log("alreadyFetched = " + JSON.stringify(alreadyFetched));
+                var label = $('label[for="' + $(this).attr('id') + '"]').html();
+                var keywords = label.substr(label.lastIndexOf(" ")+1) + " in " + $("select#select-months option:selected").html().toLowerCase();
+                //console.log("This checkbox: " + keywords);
+                if(!$(this).prop('checked')) {
+                    for (index = 0; index < data.length; index++) {
+                        if(data[index].label.toLowerCase().indexOf(keywords) >= 0) {
+                            alreadyFetched[data[index].label] = false;
+                            data.splice(index, 1);
                         }
                     }
-                    else
-                        $("button.fetchSeries").click();
-                //}
+                    setGraphicsOptions();
+                    $.plot($placeholder, data, options);
+                    if(!data.length) {
+                        $('canvas.flot-overlay').width(784).height(540);
+                        $('canvas.flot-base').width(784).height(540);
+                    }
+                }
+                else
+                    $("button.fetchSeries").click();
             });
             
             $graphControls.click(function (e) {
