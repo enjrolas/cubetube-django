@@ -29,7 +29,9 @@ and open the template in the editor.
         $(function() {
             var $container = $(".demo-container");
             var $placeholder = $("#placeholder");
+            var $choices = $("#choices input");
             var $stackControl = $(".stackControls input");
+            var $graphControls = $(".graphControls button");
             
             var alreadyFetched;
             var data;
@@ -71,21 +73,21 @@ and open the template in the editor.
                     alert("No data to display for " + series.label);    //$('label[for="' + $checkbox.attr('id') + '"]').html());
                     var keywords = series.label.substr(0, series.label.indexOf("in")-1).replace(' ','_').toLowerCase();
                     //console.log(keywords);
-                    var $checkbox = $("input:checkbox[id*='" + keywords + "']");
+                    var $checkbox = $("#choices input:checkbox[id*='" + keywords + "']");
                     if($checkbox.length) $checkbox.prop('checked',false);
-                    if(alreadyFetched[series.label]) {
+                    /*if(alreadyFetched[series.label]) {
                         var index = alreadyFetched.indexOf(series.label);
                         if(index >= 0) alreadyFetched.splice(index, 1);
-                    }
+                    }*/
                     return;
                 }
                 if(series.label != 'error') {
-                    setGraphicsOptions();
                     // Push the new data onto our existing data array
                     if (!alreadyFetched[series.label]) {
                         alreadyFetched[series.label] = true;
                         data.push(series);
                     }
+                    setGraphicsOptions();
                     $.plot($placeholder, data, options);
                 }
                 else {
@@ -105,7 +107,31 @@ and open the template in the editor.
                 }
             });
             
-            $(".graphControls button").click(function (e) {
+            $choices.click(function (e) {
+               if(data.length) {
+                    //console.log("data = " + JSON.stringify(data));
+                    //console.log("alreadyFetched = " + JSON.stringify(alreadyFetched));
+                    if(!$(this).prop('checked')) {
+                        var label = $('label[for="' + $(this).attr('id') + '"]').html();
+                        var keywords = label.substr(label.lastIndexOf(" ")+1) + " in " + $("select#select-months option:selected").html().toLowerCase();
+                        //console.log("This checkbox: " + keywords);
+                        for (index = 0; index < data.length; index++) {
+                            if(data[index].label.toLowerCase().indexOf(keywords) >= 0) {
+                                alreadyFetched[data[index].label] = false;
+                                data.splice(index, 1);
+                            }
+                        }
+                        setGraphicsOptions();
+                        $.plot($placeholder, data, options);
+                        if(!data.length) {
+                            $('canvas.flot-overlay').width(784).height(540);
+                            $('canvas.flot-base').width(784).height(540);
+                        }
+                    }
+                }
+            });
+            
+            $graphControls.click(function (e) {
                 //e.preventDefault();
                 bars = $(this).text().indexOf("Bars") != -1;
                 lines = $(this).text().indexOf("Lines") != -1;
@@ -119,7 +145,7 @@ and open the template in the editor.
             });
 
             $("button.fetchSeries").click(function () {
-                $.each($('input:checked'), function() {
+                $.each($('#choices input:checked'), function() {
                     var $checkbox = $(this);
                     //console.log("Checkbox for " + $('label[for="' + $checkbox.attr('id') + '"]').html() + ": " + $checkbox.prop("checked").toString());
                     // Find the URL in the link right next to us, then fetch the data
