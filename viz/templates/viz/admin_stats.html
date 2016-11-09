@@ -99,8 +99,8 @@ and open the template in the editor.
             $stackControl.click(function (e) {
                 //e.preventDefault();
                 //console.log("Stack bars: " + $stackControl.prop("checked"));
-                setGraphicsOptions();
-                $.plot($placeholder, data, options);
+                //setGraphicsOptions();
+                $("button.fetchSeries").click();
                 if(!data.length) {
                     $('canvas.flot-overlay').width(784).height(540);
                     $('canvas.flot-base').width(784).height(540);
@@ -128,9 +128,8 @@ and open the template in the editor.
                             $('canvas.flot-base').width(784).height(540);
                         }
                     }
-                    else {
-                        fetchData();    //$("button.fetchSeries").click();
-                    }
+                    else
+                        $("button.fetchSeries").click();
                 //}
             });
             
@@ -147,7 +146,7 @@ and open the template in the editor.
                 }
             });
 
-            function fetchData() {  //$("button.fetchSeries").click(function () {
+            $("button.fetchSeries").click(function () {
                 $.each($('#choices input:checked'), function() {
                     var $checkbox = $(this);
                     //console.log("Checkbox for " + $('label[for="' + $checkbox.attr('id') + '"]').html() + ": " + $checkbox.prop("checked").toString());
@@ -162,7 +161,7 @@ and open the template in the editor.
                         success: onDataReceived
                     });
                 });
-            }   //});
+            });
             
             $("button#button_clear").click(function () {
                 bars = true;
@@ -178,7 +177,7 @@ and open the template in the editor.
             });
             
             $("select#select-months").change(function () {
-                fetchData();
+                $("button.fetchSeries").click();
             });
             
             var d = new Date();
@@ -227,9 +226,11 @@ and open the template in the editor.
                         <option value="12">December</option>
                     </select><br/>
                     <!--
-                    <button class="fetchSeries">Fetch data</button>
                     -->
-                    <p><button id="button_clear" style="font-size: 18px; padding: 1px 7px;" >Clear data</button></p>
+                    <p>
+                        <button class="fetchSeries">Refresh graph</button>
+                        <button id="button_clear" style="font-size: 18px; padding: 1px 7px;" >Clear data</button>
+                    </p>
                     <p class="stackControls">
                         <input type='checkbox' id='stacking' /><label for='stacking'>Stack graphs</label>
                     </p>
