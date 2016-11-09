@@ -108,6 +108,7 @@ and open the template in the editor.
                 //e.preventDefault();
                 //console.log("Stack bars: " + $stackControl.prop("checked"));
                 console.log("data = " + JSON.stringify(data));
+                sortDataArray();
                 $("button.fetchSeries").click();
                 if(!data.length) {
                     $('canvas.flot-overlay').width(784).height(540);
@@ -175,7 +176,7 @@ and open the template in the editor.
                 steps = false;
                 data = [];
                 alreadyFetched = {};
-                //$stackControl.prop('checked',false);
+                $stackControl.prop('checked',false);
                 setGraphicsOptions();
                 $.plot($placeholder, data, options);
                 $('canvas.flot-overlay').width(784).height(540);
