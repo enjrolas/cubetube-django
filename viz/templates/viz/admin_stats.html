@@ -163,7 +163,7 @@ and open the template in the editor.
                     var labelPt2 = item.series.xaxis.ticks[x].label + " = " + y;
                     var labelFull = labelPt1 + labelPt2;
                     $("#tooltip").html(labelFull)
-                        .css({top: item.pageY+5, left: item.pageX+5, "background-color": series.color})
+                        .css({top: item.pageY+5, left: item.pageX+5, "background-color": item.series.color})
                         .fadeIn(200);
                 } else
                     $("#tooltip").hide();
