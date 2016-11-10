@@ -44,8 +44,10 @@ and open the template in the editor.
             var $container = $(".demo-container");
             var $placeholder = $("#placeholder");
             var $choices = $("#choices input");
-            var $stackControl = $(".stackControls input#stacking");
-            var $graphControls = $(".graphControls button");
+            var $stackControl = $("p.stackControls input#stacking");
+            var $graphControls = $("p.graphControls button");
+            var $axisControls = $("p.axisControls input");
+            
             
             var alreadyFetched;
             var data;
@@ -172,13 +174,20 @@ and open the template in the editor.
             $stackControl.click(function (e) {
                 //e.preventDefault();
                 //console.log("Stack bars: " + $stackControl.prop("checked"));
-                console.log("data = " + JSON.stringify(data));
+                //console.log("data = " + JSON.stringify(data));
                 //$("button#button_clear").click();
                 $("button.fetchSeries").click();
                 if(!data.length) {
                     $('canvas.flot-overlay').width(784).height(540);
                     $('canvas.flot-base').width(784).height(540);
                 }
+            });
+            
+            $axisControls.click(function (e) {
+                if(!$(this).prop("checked"))
+                    $("div." + $(this).attr("id")).fadeIn(200);
+                else
+                    $("div." + $(this).attr("id")).fadeOut(200);
             });
             
             $choices.click(function (e) {
@@ -242,6 +251,7 @@ and open the template in the editor.
                 data = [];
                 alreadyFetched = {};
                 $stackControl.prop('checked',false);
+                $axisControls.prop('checked',false);
                 setGraphicsOptions();
                 $.plot($placeholder, data, options);
                 $('canvas.flot-overlay').width(784).height(540);
@@ -305,6 +315,10 @@ and open the template in the editor.
                     </p>
                     <p class="stackControls">
                         <input type='checkbox' id='stacking' /><label for='stacking'>Stack graphs</label>
+                    </p>
+                    <p class="axisControls">
+                        <input type='checkbox' id='flot-y-axis' /><label for='flot-y-axis'>Hide Y-axis' labels</label>
+                        <input type='checkbox' id='flot-x-axis' /><label for='flot-x-axis'>Hide X-axis' labels</label>
                     </p>
                     <p class="graphControls">
                         <button>Bars</button>
