@@ -87,7 +87,8 @@ and open the template in the editor.
                         tickSize: 1,
                         min: 0
                         //max: 50
-                    }
+                    },
+                    hooks: { processDatapoints: [processDatapoints] }
                 };
             }
             
@@ -181,9 +182,13 @@ and open the template in the editor.
                     $("#tooltip").hide();
             });
             
-            $placeholder.bind("processDatapoints", function (plot, series, datapoints) {
-                console.log("datapoints: " + JSON.stringify(datapoints));
-            });
+            function processDatapoints(plot, series, datapoints) {
+                //console.log("plot: " + JSON.stringify(plot));
+                //console.log("series: " + JSON.stringify(series));
+                //console.log("datapoints: " + JSON.stringify(datapoints));
+                series.stack = $stackControl.prop('checked');
+                sortDataArray();
+            };
                 
             $stackControl.click(function (e) {
                 //e.preventDefault();
