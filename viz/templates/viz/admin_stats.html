@@ -180,6 +180,10 @@ and open the template in the editor.
                 } else
                     $("#tooltip").hide();
             });
+            
+            $placeholder.bind("processDatapoints", function (plot, series, datapoints) {
+                console.log("datapoints: " + JSON.stringify(datapoints));
+            });
                 
             $stackControl.click(function (e) {
                 //e.preventDefault();
