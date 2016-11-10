@@ -151,8 +151,6 @@ and open the template in the editor.
                     for (index = 0; index < data.length; index++) {
                         var series = data[index];
                         series.data.sort();
-                        //series.xaxis.categories.sort();
-                        //series.xaxis.ticks.label.sort();
                         //console.log("series: " + JSON.stringify(series));
                     }
                     data.sort();
@@ -186,6 +184,8 @@ and open the template in the editor.
                 //console.log("plot: " + JSON.stringify(plot));
                 //console.log("series: " + JSON.stringify(series));
                 //console.log("datapoints: " + JSON.stringify(datapoints));
+                //series.xaxis.ticks.sort();
+                series.xaxis.categories.sort();
                 series.stack = $stackControl.prop('checked');
                 sortDataArray();
             };
