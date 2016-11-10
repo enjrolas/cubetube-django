@@ -134,6 +134,7 @@ and open the template in the editor.
                     sortDataArray();
                     setGraphicsOptions();
                     $.plot($placeholder, data, options);
+                    showHideAxisLabels();
                 }
                 else {
                     $("button#button_clear").click();
@@ -184,15 +185,22 @@ and open the template in the editor.
             });
             
             $axisControls.click(function (e) {
-                showHideAxisLabels();
+                showHideAxisLabels(true);
             });
             
-            function showHideAxisLabels() {
+            function showHideAxisLabels(slow) {
+                slow = typeof slow !== 'undefined' ? slow : false;
                 $axisControls.each(function() {
                     if(!$(this).prop("checked"))
-                        $("div." + $(this).attr("id")).fadeIn(200);
+                        if(slow)
+                            $("div." + $(this).attr("id")).fadeIn(200);
+                        else
+                            $("div." + $(this).attr("id")).show();
                     else
-                        $("div." + $(this).attr("id")).fadeOut(200);
+                        if(slow)
+                            $("div." + $(this).attr("id")).fadeOut(200);
+                        else
+                            $("div." + $(this).attr("id")).hide();
                 });
             }
             
@@ -211,6 +219,7 @@ and open the template in the editor.
                     }
                     setGraphicsOptions();
                     $.plot($placeholder, data, options);
+                    showHideAxisLabels();
                     if(!data.length) {
                         $('canvas.flot-overlay').width(784).height(540);
                         $('canvas.flot-base').width(784).height(540);
@@ -261,6 +270,7 @@ and open the template in the editor.
                 $axisControls.prop('checked',false);
                 setGraphicsOptions();
                 $.plot($placeholder, data, options);
+                showHideAxisLabels();
                 $('canvas.flot-overlay').width(784).height(540);
                 $('canvas.flot-base').width(784).height(540);
             });
