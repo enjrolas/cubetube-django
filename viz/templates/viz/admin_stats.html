@@ -145,9 +145,11 @@ and open the template in the editor.
             function sortDataArray() {
                 if(data.length) {
                     for (index = 0; index < data.length; index++) {
-                        data[index].data.sort();
-                        data[index].xaxis.categories.sort();
-                        //data[index].xaxis.ticks.label.sort();
+                        var series = data[index];
+                        series.data.sort();
+                        //series.xaxis.categories.sort();
+                        console.log("series: " + JSON.stringify(series));
+                        //series.xaxis.ticks.label.sort();
                     }
                     data.sort();
                 }
