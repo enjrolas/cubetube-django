@@ -78,7 +78,9 @@ and open the template in the editor.
                         //mode: "time",
                         //timeformat: "%b %d",
                         mode: "categories",
-                        tickLength: 0
+                        tickLength: 0,
+                        transform: function (v) { return v; },
+                        inverseTransform: function (v) { return v; }
                     },
                     yaxis: {
                         tickDecimals: 0,
@@ -144,13 +146,13 @@ and open the template in the editor.
             
             function sortDataArray() {
                 if(data.length) {
-                    console.log("data: " + JSON.stringify(data));
+                    //console.log("data: " + JSON.stringify(data));
                     for (index = 0; index < data.length; index++) {
                         var series = data[index];
                         series.data.sort();
                         //series.xaxis.categories.sort();
                         //series.xaxis.ticks.label.sort();
-                        console.log("series: " + JSON.stringify(series));
+                        //console.log("series: " + JSON.stringify(series));
                     }
                     data.sort();
                 }
