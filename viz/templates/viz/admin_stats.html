@@ -109,8 +109,6 @@ and open the template in the editor.
                         var seriesMonth = months.indexOf(seriesMonthName) + 1;
                         //console.log("seriesMonth: [" + seriesMonth + "]");
 
-                        series.xaxis.categories.sort();
-                        series.stack = $stackControl.prop('checked');
                         if(data.length) {
                             var inserted = false;
                             for (index = 0; index < data.length; index++) {
