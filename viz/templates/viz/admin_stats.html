@@ -143,10 +143,14 @@ and open the template in the editor.
             }
             
             function sortDataArray() {
-                for (index = 0; index < data.length; index++) {
-                    data[index].data.sort();
+                if(data.length) {
+                    for (index = 0; index < data.length; index++) {
+                        data[index].data.sort();
+                        data[index].xaxis.categories.sort();
+                        //data[index].xaxis.ticks.label.sort();
+                    }
+                    data.sort();
                 }
-                data.sort();
             }
             
             $("<div id='tooltip'></div>").css({
@@ -177,8 +181,10 @@ and open the template in the editor.
                 //console.log("Stack bars: " + $stackControl.prop("checked"));
                 //console.log("data = " + JSON.stringify(data));
                 //$("button#button_clear").click();
+                sortDataArray();
                 setGraphicsOptions();
-                $("button.fetchSeries").click();
+                $.plot($placeholder, data, options);
+                //$("button.fetchSeries").click();
                 if(!data.length) {
                     $('canvas.flot-overlay').width(784).height(540);
                     $('canvas.flot-base').width(784).height(540);
