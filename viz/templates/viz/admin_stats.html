@@ -184,11 +184,17 @@ and open the template in the editor.
             });
             
             $axisControls.click(function (e) {
-                if(!$(this).prop("checked"))
-                    $("div." + $(this).attr("id")).fadeIn(200);
-                else
-                    $("div." + $(this).attr("id")).fadeOut(200);
+                showHideAxisLabels();
             });
+            
+            function showHideAxisLabels() {
+                $axisControls.each(function() {
+                    if(!$(this).prop("checked"))
+                        $("div." + $(this).attr("id")).fadeIn(200);
+                    else
+                        $("div." + $(this).attr("id")).fadeOut(200);
+                });
+            }
             
             $choices.click(function (e) {
                 //console.log("data = " + JSON.stringify(data));
@@ -220,8 +226,8 @@ and open the template in the editor.
                 lines = $(this).text().indexOf("Lines") != -1;
                 steps = $(this).text().indexOf("steps") != -1;
                 setGraphicsOptions();
-                $axisControls.click();
                 $.plot($placeholder, data, options);
+                showHideAxisLabels();
                 if(!data.length) {
                     $('canvas.flot-overlay').width(784).height(540);
                     $('canvas.flot-base').width(784).height(540);
