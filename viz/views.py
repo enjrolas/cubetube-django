@@ -957,6 +957,13 @@ def viz_created(request):
         else:
             grouped_query=Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(created,\'%%d\')','fmtCreated':'DATE_FORMAT(created,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND published = true AND (created >= \'%s\' AND created < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtCreated','count').distinct().order_by("fmtCreated")
 
+    except Exception as e:
+        log.debug('QUERY ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args))
+        response={ "label": "error" ,
+                   "data" : 'QUERY ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args) }
+        return JsonResponse(response)
+
+    try:
         series = []
         for item in grouped_query:
             #date = datetime.datetime.strptime(item['fmtCreated'], "%m/%d/%Y")
@@ -967,10 +974,11 @@ def viz_created(request):
         response={ "label": "Viz created in %s, %d" % (calendar.month_name[int(month)], today.year) ,
                    "data" : series }
         return JsonResponse(response)
+    
     except Exception as e:
-        log.debug('QUERY ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args))
+        log.debug('PARSE ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args))
         response={ "label": "error" ,
-                   "data" : 'QUERY ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args) }
+                   "data" : 'PARSE ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args) }
         return JsonResponse(response)
 
 
@@ -996,7 +1004,14 @@ def viz_flashed(request):
             grouped_query=Viz.objects.get_queryset().extra(select={'day':'STRFTIME(\'%%d\',lastFlashed)','fmtLastFlashed':'STRFTIME(\'%%m/%%d/%%Y\',lastFlashed)'}, where=['vizType = \'%s\' AND published = \'true\' AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').distinct().order_by("fmtLastFlashed")
         else:
             grouped_query=Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')'}, where=['vizType = \'%s\' AND published = true AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').distinct().order_by("fmtLastFlashed")
+    
+    except Exception as e:
+        log.debug('QUERY ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args))
+        response={ "label": "error" ,
+                   "data" : 'QUERY ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args) }
+        return JsonResponse(response)
         
+    try:
         series = []
         for item in grouped_query:
             #date = datetime.datetime.strptime(item['fmtLastFlashed'], "%m/%d/%Y")
@@ -1007,10 +1022,11 @@ def viz_flashed(request):
         response={ "label": "Viz flashed in %s, %d" % (calendar.month_name[int(month)], today.year) ,
                    "data" : series }
         return JsonResponse(response)
+    
     except Exception as e:
-        log.debug('QUERY ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args))
+        log.debug('PARSE ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args))
         response={ "label": "error" ,
-                   "data" : 'QUERY ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args) }
+                   "data" : 'PARSE ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args) }
         return JsonResponse(response)
 
 
@@ -1027,31 +1043,36 @@ def viz_most_flashed(request):
     log.debug("startDate: %s" % startDate.strftime('%Y-%m-%d'))
     log.debug("endDate: %s" % endDate.strftime('%Y-%m-%d'))
     if "sqlite" in db_engine:
-        log.debug("SQL QUERY: %s" % Viz.objects.raw("SELECT DISTINCT id, STRFTIME(\'%%m/%%d/%%Y\',lastFlashed) AS \'fmtLastFlashed\', LTRIM(RTRIM(name)) AS \'name\', MAX(views) AS \'count\' FROM \'viz_viz\' WHERE (vizType = \'L3D\' AND published = \'true\' AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')) GROUP BY \'fmtLastFlashed\' ORDER BY \'fmtLastFlashed\' ASC" % (startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))).__str__())
-    #else:
-        #log.debug("SQL QUERY: %s" % Viz.objects.raw("SELECT DISTINCT id, DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\') AS \'fmtLastFlashed\', LTRIM(RTRIM(name)) AS \'name\', MAX(views) AS \'count\' FROM \'viz_viz\' WHERE (vizType = \'L3D\' AND published = true AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')) GROUP BY \'fmtLastFlashed\' ORDER BY \'fmtLastFlashed\' ASC" % (startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))).__str__())
+        log.debug("SQL QUERY: %s" % Viz.objects.raw("SELECT DISTINCT id, STRFTIME(\'%%m/%%d/%%Y\',lastFlashed) AS \'fmtLastFlashed\', LTRIM(RTRIM(name)) AS \'name\', MAX(views) AS \'count\' FROM \'viz_viz\' WHERE (vizType = \'L3D\' AND published = \'true\' AND (lastFlashed >= \'{0}\' AND lastFlashed < \'{1}\')) GROUP BY STRFTIME(\'%%m/%%d/%%Y\',lastFlashed) ORDER BY STRFTIME(\'%%m/%%d/%%Y\',lastFlashed) ASC".format(startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))))
+    else:
+        log.debug("SQL QUERY: %s" % Viz.objects.raw("SELECT DISTINCT id, DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\') AS \'fmtLastFlashed\', LTRIM(RTRIM(name)) AS \'name\', MAX(views) AS \'count\' FROM viz_viz WHERE (vizType = \'L3D\' AND published = true AND (lastFlashed >= \'{0}\' AND lastFlashed < \'{1}\')) GROUP BY DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\') ORDER BY DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\') ASC".format(startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))))
         
     try:
         if "sqlite" in db_engine:
-            grouped_query=Viz.objects.raw("SELECT DISTINCT id, STRFTIME(\'%%m/%%d/%%Y\',lastFlashed) AS \'fmtLastFlashed\', LTRIM(RTRIM(name)) AS \'name\', MAX(views) AS \'count\' FROM \'viz_viz\' WHERE (vizType = \'L3D\' AND published = \'true\' AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')) GROUP BY \'fmtLastFlashed\' ORDER BY \'fmtLastFlashed\' ASC" % (startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d')))
+            grouped_query=Viz.objects.raw("SELECT DISTINCT id, STRFTIME(\'%%m/%%d/%%Y\',lastFlashed) AS \'fmtLastFlashed\', LTRIM(RTRIM(name)) AS \'name\', MAX(views) AS \'count\' FROM \'viz_viz\' WHERE (vizType = \'L3D\' AND published = \'true\' AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')) GROUP BY STRFTIME(\'%%m/%%d/%%Y\',lastFlashed) ORDER BY STRFTIME(\'%%m/%%d/%%Y\',lastFlashed) ASC" % (startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d')))
         else:
-            grouped_query=Viz.objects.raw("SELECT DISTINCT id, DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\') AS \'fmtLastFlashed\', LTRIM(RTRIM(name)) AS \'name\', MAX(views) AS \'count\' FROM \'viz_viz\' WHERE (vizType = \'L3D\' AND published = true AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')) GROUP BY \'fmtLastFlashed\' ORDER BY \'fmtLastFlashed\' ASC" % (startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))) 
-        
-        series = []
-        for item in grouped_query:
-            #date = datetime.datetime.strptime(item['fmtLastFlashed'], "%m/%d/%Y")
-            #data = [calendar.timegm(date.timetuple()) * 1000, int(item['count'])]
-            #data = [item['fmtLastFlashed'], int(item['count']), item['name']]
-            data = [item.fmtLastFlashed, int(item.count), item.name]
-            series.append(data)
-
-        response={ "label": "Viz most flashed in %s, %d" % (calendar.month_name[int(month)], today.year) ,
-                   "data" : series }
-        return JsonResponse(response)
+            grouped_query=Viz.objects.raw("SELECT DISTINCT id, DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\') AS \'fmtLastFlashed\', LTRIM(RTRIM(name)) AS \'name\', MAX(views) AS \'count\' FROM viz_viz WHERE (vizType = \'L3D\' AND published = true AND (lastFlashed >= \'{0}\' AND lastFlashed < \'{1}\')) GROUP BY DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\') ORDER BY DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\') ASC".format(startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d')))
+    
     except Exception as e:
         log.debug('QUERY ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args))
         response={ "label": "error" ,
                    "data" : 'QUERY ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args) }
+        return JsonResponse(response)
+        
+    try:
+        series = []
+        for item in grouped_query:
+            data = [item.fmtLastFlashed, int(item.count), item.name]
+            series.append(data)
+        #log.debug("QuerySet grouped_query returned %d rows" % len(list(grouped_query)))
+        response={ "label": "Viz most flashed in %s, %d" % (calendar.month_name[int(month)], today.year) ,
+                   "data" : series }
+        return JsonResponse(response)
+    
+    except Exception as e:
+        log.debug('PARSE ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args))
+        response={ "label": "error" ,
+                   "data" : 'PARSE ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args) }
         return JsonResponse(response)
 
 
@@ -1078,6 +1099,13 @@ def unique_daily_users(request):
         else:
             grouped_query=CubeUser.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastActivity,\'%%d\')','fmtLastActivity':'DATE_FORMAT(lastActivity,\'%%m/%%d/%%Y\')'}, where=['(lastActivity >= \'%s\' AND lastActivity < \'%s\')' % (startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastActivity','count').distinct().order_by("fmtLastActivity")
     
+    except Exception as e:
+        log.debug('QUERY ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args))
+        response={ "label": "error" ,
+                   "data" : 'QUERY ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args) }
+        return JsonResponse(response)
+    
+    try:
         series = []
         for item in grouped_query:
             #date = datetime.datetime.strptime(item['fmtlastActivity'], "%m/%d/%Y")
@@ -1088,10 +1116,11 @@ def unique_daily_users(request):
         response={ "label": "Daily users in %s, %d" % (calendar.month_name[int(month)], today.year) ,
                    "data" : series }
         return JsonResponse(response)
+    
     except Exception as e:
-        log.debug('QUERY ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args))
+        log.debug('PARSE ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args))
         response={ "label": "error" ,
-                   "data" : 'QUERY ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args) }
+                   "data" : 'PARSE ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args) }
         return JsonResponse(response)
 
 

@@ -177,8 +177,8 @@ and open the template in the editor.
                         labelPt2 = item.series.xaxis.ticks[x].label + ": " + y;
                     }
                     else {
-                        labelPt1 = "\"" + item.series.data[x][2];
-                        labelPt2 = "\" > Flashed " + y + " times";
+                        labelPt1 = "On " + item.series.xaxis.ticks[x].label + ": \"" + item.series.data[x][2];
+                        labelPt2 = "\" > Flashed " + y + " time" + (y > 1 ? "s" : "");
                     }
                     $("#tooltip").html(labelPt1 + labelPt2)
                         .css({top: item.pageY+5, left: item.pageX+5, "background-color": item.series.color})
@@ -337,7 +337,7 @@ and open the template in the editor.
                 <p id="choices">
                     <input type='checkbox' id='viz_flashed' data-url="/viz_flashed/" /><label for='viz_flashed'>Viz flashed</label><br/>
                     <input type='checkbox' id='viz_created' data-url="/viz_created/" /><label for='viz_created'>Viz created</label><br/>
-<!--                    <input type='checkbox' id='viz_most_flashed' data-url="/viz_most_flashed/" /><label for='viz_most_flashed'>Viz most flashed</label><br/>-->
+                    <input type='checkbox' id='viz_most_flashed' data-url="/viz_most_flashed/" /><label for='viz_most_flashed'>Viz most flashed</label><br/>
                     <input type='checkbox' id='unique_daily_users' data-url="/unique_daily_users/" /><label for='unique_daily_users'>Unique daily users</label><br/><br/>
                 </p>
                 <p>
