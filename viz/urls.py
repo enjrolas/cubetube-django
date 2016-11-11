@@ -46,5 +46,6 @@ urlpatterns = [
     url(r'^metrics/$', views.metrics, name='metrics'),
     url(r'^viz_created/', views.viz_created, name='viz_created'),
     url(r'^viz_flashed/', views.viz_flashed, name='viz_flashed'),
+    url(r'^viz_most_flashed/', views.viz_most_flashed, name='viz_most_flashed'),
     url(r'^unique_daily_users/', views.unique_daily_users, name='unique_daily_users'),
 ]

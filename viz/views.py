@@ -15,7 +15,7 @@ import os
 from django.core.files import File
 from itertools import chain
 #from django.db.models.query import QuerySet
-from django.db.models import Count
+from django.db.models import Count, Max
 import calendar
 #from datetime import date, timedelta
 #from django.utils import timezone
@@ -1015,6 +1015,49 @@ def viz_flashed(request):
 
 
 @csrf_exempt
+def viz_most_flashed(request):
+    month       = request.GET['month']
+    today       = datetime.datetime.today()
+    next_year   = today.year if (int(month) < 12) else today.year + 1
+    next_month  = int(month) + 1 if (int(month) < 12) else 1
+    startDate = datetime.datetime.strptime("%s-%s-%s" % (today.year, int(month), 1),"%Y-%m-%d")
+    endDate = datetime.datetime.strptime("%s-%s-%s" % (next_year, next_month, 1),"%Y-%m-%d")
+    db_engine = settings.DATABASES['default']['ENGINE']
+    
+    log.debug("startDate: %s" % startDate.strftime('%Y-%m-%d'))
+    log.debug("endDate: %s" % endDate.strftime('%Y-%m-%d'))
+    if "sqlite" in db_engine:
+        log.debug("SQL QUERY: %s" % Viz.objects.raw("SELECT DISTINCT id, STRFTIME(\'%%m/%%d/%%Y\',lastFlashed) AS \'fmtLastFlashed\', LTRIM(RTRIM(name)) AS \'name\', MAX(views) AS \'count\' FROM \'viz_viz\' WHERE (vizType = \'L3D\' AND published = \'true\' AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')) GROUP BY \'fmtLastFlashed\' ORDER BY \'fmtLastFlashed\' ASC" % (startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))).__str__())
+        #log.debug("SQL QUERY: %s" % Viz.objects.get_queryset().extra(select={'fmtLastFlashed':'STRFTIME(\'%%m/%%d/%%Y\',lastFlashed)','name':'LTRIM(RTRIM(name))'}, where=['vizType = \'%s\' AND published = \'true\' AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('fmtLastFlashed').annotate(count=Max('views')).values('fmtLastFlashed','count').distinct().order_by("fmtLastFlashed").query.__str__())
+    #else:
+        #log.debug("SQL QUERY: %s" % Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')','name':'LTRIM(RTRIM(name))'}, where=['vizType = \'%s\' AND published = true AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').distinct().order_by("fmtLastFlashed").query.__str__())
+        
+    try:
+        if "sqlite" in db_engine:
+            grouped_query=Viz.objects.raw("SELECT DISTINCT id, STRFTIME(\'%%m/%%d/%%Y\',lastFlashed) AS \'fmtLastFlashed\', LTRIM(RTRIM(name)) AS \'name\', MAX(views) AS \'count\' FROM \'viz_viz\' WHERE (vizType = \'L3D\' AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')) GROUP BY \'fmtLastFlashed\' ORDER BY \'fmtLastFlashed\' ASC" % (startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d')))
+            #grouped_query=Viz.objects.get_queryset().extra(select={'day':'STRFTIME(\'%%d\',lastFlashed)','fmtLastFlashed':'STRFTIME(\'%%m/%%d/%%Y\',lastFlashed)','name':'LTRIM(RTRIM(name))'}, where=['vizType = \'%s\' AND published = \'true\' AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').distinct().order_by("fmtLastFlashed")
+        else:
+            grouped_query=Viz.objects.get_queryset().extra(select={'day':'DATE_FORMAT(lastFlashed,\'%%d\')','fmtLastFlashed':'DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\')','name':'LTRIM(RTRIM(name))'}, where=['vizType = \'%s\' AND published = true AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')' % ("L3D", startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))]).values('day').annotate(count=Count('pk')).values('fmtLastFlashed','count').distinct().order_by("fmtLastFlashed")
+        
+        series = []
+        for item in grouped_query:
+            #date = datetime.datetime.strptime(item['fmtLastFlashed'], "%m/%d/%Y")
+            #data = [calendar.timegm(date.timetuple()) * 1000, int(item['count'])]
+            #data = [item['fmtLastFlashed'], int(item['count']), item['name']]
+            data = [item.fmtLastFlashed, int(item.count), item.name]
+            series.append(data)
+
+        response={ "label": "Viz most flashed in %s, %d" % (calendar.month_name[int(month)], today.year) ,
+                   "data" : series }
+        return JsonResponse(response)
+    except Exception as e:
+        log.debug('QUERY ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args))
+        response={ "label": "error" ,
+                   "data" : 'QUERY ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args) }
+        return JsonResponse(response)
+
+
+@csrf_exempt
 def unique_daily_users(request):
     month       = request.GET['month']
     today       = datetime.datetime.today()
@@ -1044,7 +1087,7 @@ def unique_daily_users(request):
             data = [item['fmtLastActivity'], int(item['count'])]
             series.append(data)
 
-        response={ "label": "Users in %s, %d" % (calendar.month_name[int(month)], today.year) ,
+        response={ "label": "Daily users in %s, %d" % (calendar.month_name[int(month)], today.year) ,
                    "data" : series }
         return JsonResponse(response)
     except Exception as e:

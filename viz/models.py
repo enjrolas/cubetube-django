@@ -21,7 +21,6 @@ class Viz(models.Model):
     featured=models.BooleanField(default=False)
     pageViews=models.IntegerField(default=0)
     parent=models.ForeignKey('self', null=True, blank=True, default = None)
-
     def __str__(self):
         return "%s, created by %s on %s" %(self.name, self.creator, self.created)
 
