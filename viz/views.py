@@ -1028,8 +1028,8 @@ def viz_most_flashed(request):
     log.debug("endDate: %s" % endDate.strftime('%Y-%m-%d'))
     if "sqlite" in db_engine:
         log.debug("SQL QUERY: %s" % Viz.objects.raw("SELECT DISTINCT id, STRFTIME(\'%%m/%%d/%%Y\',lastFlashed) AS \'fmtLastFlashed\', LTRIM(RTRIM(name)) AS \'name\', MAX(views) AS \'count\' FROM \'viz_viz\' WHERE (vizType = \'L3D\' AND published = \'true\' AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')) GROUP BY \'fmtLastFlashed\' ORDER BY \'fmtLastFlashed\' ASC" % (startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))).__str__())
-    else:
-        log.debug("SQL QUERY: %s" % Viz.objects.raw("SELECT DISTINCT id, DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\') AS \'fmtLastFlashed\', LTRIM(RTRIM(name)) AS \'name\', MAX(views) AS \'count\' FROM \'viz_viz\' WHERE (vizType = \'L3D\' AND published = true AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')) GROUP BY \'fmtLastFlashed\' ORDER BY \'fmtLastFlashed\' ASC" % (startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))).__str__())
+    #else:
+        #log.debug("SQL QUERY: %s" % Viz.objects.raw("SELECT DISTINCT id, DATE_FORMAT(lastFlashed,\'%%m/%%d/%%Y\') AS \'fmtLastFlashed\', LTRIM(RTRIM(name)) AS \'name\', MAX(views) AS \'count\' FROM \'viz_viz\' WHERE (vizType = \'L3D\' AND published = true AND (lastFlashed >= \'%s\' AND lastFlashed < \'%s\')) GROUP BY \'fmtLastFlashed\' ORDER BY \'fmtLastFlashed\' ASC" % (startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))).__str__())
         
     try:
         if "sqlite" in db_engine:
