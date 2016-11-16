@@ -80,13 +80,13 @@ and open the template in the editor.
                         mode: "categories",
                         tickLength: 0,
                         transform: function (v) { return v; },
-                        inverseTransform: function (v) { return v; }
+                        inverseTransform: function (v) { return v; },
+                        min: 0
                     },
                     yaxis: {
                         tickDecimals: 0,
                         tickSize: 1,
                         min: 0
-                        //max: 50
                     },
                     hooks: { processDatapoints: [processDatapoints] }
                 };
@@ -187,8 +187,8 @@ and open the template in the editor.
                                 break;
                             }
                         }
-                        console.log("x = " + x);
-                        console.log("xOffset = " + xOffset);
+                        //console.log("x = " + x);
+                        //console.log("xOffset = " + xOffset);
                         labelPt1 = "On " + item.series.xaxis.ticks[x].label + ": \"" + item.series.data[x-xOffset][2];
                         labelPt2 = "\" > Flashed " + y + " time" + (y > 1 ? "s" : "");
                     }
