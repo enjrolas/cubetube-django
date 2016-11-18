@@ -240,6 +240,14 @@ def cloudFlash(request):
         log.debug("Viz %i not found!" % vizId)
         return
     else:
+        # First we check whether this is the first time this viz is flashed in the current date;
+        # If this is true, we need to reset our flash counter and our dateChange flag
+        if queryViz.dateChanged:  # has the current date been altered by our db robot?
+                queryViz.viewsTotal=queryViz.viewsTotal+queryViz.views  # totalize our viz's flash count
+                queryViz.views=0                                        # and reset it for the current date
+                queryViz.dateChanged=False                              # reset our 'dateChanged' flag
+                #queryViz.save()
+        
         queryViz.views=queryViz.views+1              # we need to update the flash count
         queryViz.lastFlashed=datetime.datetime.now() # and the date it was last flashed
         queryViz.save()
@@ -1042,14 +1050,14 @@ def viz_most_flashed(request):
     log.debug("startDate: %s" % startDate.strftime('%Y-%m-%d'))
     log.debug("endDate: %s" % endDate.strftime('%Y-%m-%d'))
     if "sqlite" in db_engine:
-        log.debug("SQL QUERY: %s" % Viz.objects.raw("SELECT DISTINCT A.id as \'id\', STRFTIME(\'%%m/%%d/%%Y\',A.lastFlashed) AS \'fmtLastFlashed\', LTRIM(RTRIM(A.name)) AS \'name\', A.views AS \'count\' FROM \'viz_viz\' A WHERE (A.vizType = \'L3D\' AND A.published = \'true\' AND (A.lastFlashed >= \'{0}\' AND A.lastFlashed < \'{1}\') AND A.views = (SELECT MAX(B.views) FROM viz_viz B WHERE B.lastFlashed = A.lastFlashed)) GROUP BY STRFTIME(\'%%m/%%d/%%Y\',A.lastFlashed) ORDER BY STRFTIME(\'%%m/%%d/%%Y\',A.lastFlashed) ASC".format(startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))))
+        log.debug("SQL QUERY: %s" % Viz.objects.raw("SELECT DISTINCT A.id as \'id\', STRFTIME(\'%%m/%%d/%%Y\',A.lastFlashed) AS \'fmtLastFlashed\', LTRIM(RTRIM(A.name)) AS \'name\', A.views AS \'count\' FROM \'viz_viz\' A WHERE (A.vizType = \'L3D\' AND A.published = \'true\' AND (A.lastFlashed >= \'{0}\' AND A.lastFlashed < \'{1}\') AND A.views = (SELECT MAX(B.views) FROM viz_viz B WHERE STRFTIME(\'%%m/%%d/%%Y\',B.lastFlashed) = STRFTIME(\'%%m/%%d/%%Y\',A.lastFlashed))) GROUP BY STRFTIME(\'%%m/%%d/%%Y\',A.lastFlashed) ORDER BY STRFTIME(\'%%m/%%d/%%Y\',A.lastFlashed) ASC".format(startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))))
     else:
-        log.debug("SQL QUERY: %s" % Viz.objects.raw("SELECT DISTINCT A.id as \'id\', DATE_FORMAT(A.lastFlashed,\'%%m/%%d/%%Y\') AS \'fmtLastFlashed\', LTRIM(RTRIM(A.name)) AS \'name\', A.views AS \'count\' FROM viz_viz A WHERE (A.vizType = \'L3D\' AND A.published = true AND (A.lastFlashed >= \'{0}\' AND A.lastFlashed < \'{1}\') AND A.views = (SELECT MAX(B.views) FROM viz_viz B WHERE B.lastFlashed = A.lastFlashed)) GROUP BY DATE_FORMAT(A.lastFlashed,\'%%m/%%d/%%Y\') ORDER BY DATE_FORMAT(A.lastFlashed,\'%%m/%%d/%%Y\') ASC".format(startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))))        
+        log.debug("SQL QUERY: %s" % Viz.objects.raw("SELECT DISTINCT A.id as \'id\', DATE_FORMAT(A.lastFlashed,\'%%m/%%d/%%Y\') AS \'fmtLastFlashed\', LTRIM(RTRIM(A.name)) AS \'name\', A.views AS \'count\' FROM viz_viz A WHERE (A.vizType = \'L3D\' AND A.published = true AND (A.lastFlashed >= \'{0}\' AND A.lastFlashed < \'{1}\') AND A.views = (SELECT MAX(B.views) FROM viz_viz B WHERE DATE_FORMAT(B.lastFlashed,\'%%m/%%d/%%Y\') = DATE_FORMAT(A.lastFlashed,\'%%m/%%d/%%Y\'))) GROUP BY DATE_FORMAT(A.lastFlashed,\'%%m/%%d/%%Y\') ORDER BY DATE_FORMAT(A.lastFlashed,\'%%m/%%d/%%Y\') ASC".format(startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d'))))        
     try:
         if "sqlite" in db_engine:
             grouped_query=Viz.objects.raw("SELECT DISTINCT A.id as \'id\', STRFTIME(\'%%m/%%d/%%Y\',A.lastFlashed) AS \'fmtLastFlashed\', LTRIM(RTRIM(A.name)) AS \'name\', A.views AS \'count\' FROM \'viz_viz\' A WHERE (A.vizType = \'L3D\' AND A.published = \'true\' AND (A.lastFlashed >= \'{0}\' AND A.lastFlashed < \'{1}\') AND A.views = (SELECT MAX(B.views) FROM viz_viz B WHERE B.lastFlashed = A.lastFlashed)) GROUP BY STRFTIME(\'%%m/%%d/%%Y\',A.lastFlashed) ORDER BY STRFTIME(\'%%m/%%d/%%Y\',A.lastFlashed) ASC".format(startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d')))
         else:
-            grouped_query=Viz.objects.raw("SELECT DISTINCT A.id as \'id\', DATE_FORMAT(A.lastFlashed,\'%%m/%%d/%%Y\') AS \'fmtLastFlashed\', LTRIM(RTRIM(A.name)) AS \'name\', A.views AS \'count\' FROM viz_viz A WHERE (A.vizType = \'L3D\' AND A.published = true AND (A.lastFlashed >= \'{0}\' AND A.lastFlashed < \'{1}\') AND A.views = (SELECT MAX(B.views) FROM viz_viz B WHERE B.lastFlashed = A.lastFlashed)) GROUP BY DATE_FORMAT(A.lastFlashed,\'%%m/%%d/%%Y\') ORDER BY DATE_FORMAT(A.lastFlashed,\'%%m/%%d/%%Y\') ASC".format(startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d')))
+            grouped_query=Viz.objects.raw("SELECT DISTINCT A.id as \'id\', DATE_FORMAT(A.lastFlashed,\'%%m/%%d/%%Y\') AS \'fmtLastFlashed\', LTRIM(RTRIM(A.name)) AS \'name\', A.views AS \'count\' FROM viz_viz A WHERE (A.vizType = \'L3D\' AND A.published = true AND (A.lastFlashed >= \'{0}\' AND A.lastFlashed < \'{1}\') AND A.views = (SELECT MAX(B.views) FROM viz_viz B WHERE DATE_FORMAT(B.lastFlashed,\'%%m/%%d/%%Y\') = DATE_FORMAT(A.lastFlashed,\'%%m/%%d/%%Y\'))) GROUP BY DATE_FORMAT(A.lastFlashed,\'%%m/%%d/%%Y\') ORDER BY DATE_FORMAT(A.lastFlashed,\'%%m/%%d/%%Y\') ASC".format(startDate.strftime('%Y-%m-%d'), endDate.strftime('%Y-%m-%d')))
     
     except Exception as e:
         log.debug('QUERY ERROR > Message: %s, Type: %s, Args: [%s]' % (e.message, type(e), e.args))
