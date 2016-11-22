@@ -1068,8 +1068,8 @@ def viz_most_flashed(request):
     try:
         series = []
         for item in grouped_query:
-            #data = [item.fmtLastFlashed, int(item.count), item.name]
-            data = [item.name, int(item.count), item.fmtLastFlashed]
+            data = [item.fmtLastFlashed, int(item.count), item.name]
+            #data = [item.name, int(item.count), item.fmtLastFlashed]
             series.append(data)
         #log.debug("QuerySet grouped_query returned %d rows" % len(list(grouped_query)))
         response={ "label": "Viz most flashed in %s, %d" % (calendar.month_name[int(month)], today.year) ,
