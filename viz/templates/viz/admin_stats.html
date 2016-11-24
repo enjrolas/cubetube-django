@@ -114,14 +114,12 @@ and open the template in the editor.
 
                         if(data.length) {
                             var inserted = false;
-                            for (index = 0; index < data.length; index++) {
-                                var dataStartIndex = data[index].label.indexOf(" in ")+4;
-                                var dataEndIndex = data[index].label.indexOf(",");
-                                var dataCharCount = dataEndIndex - dataStartIndex;
-                                var thisMonthName = data[index].label.substr(dataStartIndex, dataCharCount);
-                                var thisMonth = months.indexOf(thisMonthName) + 1;
-                                if(seriesMonth < thisMonth) {
-                                    data.splice(index, 0, series);
+                            for (i = 0; i < data.length; i++) {
+                                var seriesFirstDate = new Date(series.data[0][0]);
+                                var dataFirstDate = new Date(data[i].data[0][0]);
+                                //console.log("seriesFirstDate <= dataFirstDate = " + (seriesFirstDate <= dataFirstDate).toString());
+                                if(seriesFirstDate <= dataFirstDate) {
+                                    data.splice(i, 0, series);
                                     inserted = true;
                                     break;
                                 }
@@ -130,9 +128,6 @@ and open the template in the editor.
                             //console.log("firstMonth: [" + firstMonth + "]");
                         }
                         else data.push(series);
-                        //var selectedMonth = $("select#select-months option:selected").val();
-                        //console.log("selectedMonth: " + selectedMonth);
-                        //data.push(series);
                     }
                     sortDataArray();
                     setGraphicsOptions();
@@ -349,7 +344,7 @@ and open the template in the editor.
                 <p id="choices">
                     <input type='checkbox' id='viz_flashed' data-url="/viz_flashed/" /><label for='viz_flashed'>Viz flashed</label><br/>
                     <input type='checkbox' id='viz_created' data-url="/viz_created/" /><label for='viz_created'>Viz created</label><br/>
-                    <!-- <input type='checkbox' id='viz_most_flashed' data-url="/viz_most_flashed/" /><label for='viz_most_flashed'>Viz most flashed</label><br/> -->
+                    <input type='checkbox' id='viz_most_flashed' data-url="/viz_most_flashed/" /><label for='viz_most_flashed'>Viz most flashed</label><br/>
                     <input type='checkbox' id='unique_daily_users' data-url="/unique_daily_users/" /><label for='unique_daily_users'>Unique daily users</label><br/><br/>
                 </p>
                 <p>
